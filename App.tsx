@@ -18,7 +18,10 @@ const App: React.FC = () => {
         <img
           src="/logo.png"
           alt="Q4 Studio"
-          className="h-8 md:h-10 w-auto"
+          className="h-8 md:h-10 w-auto cursor-pointer"
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
         />
         <button
           onClick={() => {

@@ -106,9 +106,24 @@ const Footer: React.FC = () => {
             <div>
                 <h4 className="text-white font-bold mb-4">Servizi</h4>
                 <ul className="space-y-2">
-                    <li className="hover:text-indigo-400 cursor-pointer transition-colors">B2B Lead Generation</li>
-                    <li className="hover:text-indigo-400 cursor-pointer transition-colors">Automazioni AI</li>
-                    <li className="hover:text-indigo-400 cursor-pointer transition-colors">Cold Email Infrastructure</li>
+                    <li
+                        className="hover:text-indigo-400 cursor-pointer transition-colors"
+                        onClick={() => {
+                            const servicesSection = document.getElementById('services');
+                            servicesSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }}
+                    >
+                        B2B Lead Generation
+                    </li>
+                    <li
+                        className="hover:text-indigo-400 cursor-pointer transition-colors"
+                        onClick={() => {
+                            const servicesSection = document.getElementById('services');
+                            servicesSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }}
+                    >
+                        Automazioni AI
+                    </li>
                 </ul>
             </div>
             <div>
@@ -116,7 +131,6 @@ const Footer: React.FC = () => {
                 <ul className="space-y-2">
                     <li className="hover:text-indigo-400 cursor-pointer transition-colors">Privacy Policy</li>
                     <li className="hover:text-indigo-400 cursor-pointer transition-colors">Cookie Policy</li>
-                    <li className="hover:text-indigo-400 cursor-pointer transition-colors">Termini e Condizioni</li>
                 </ul>
             </div>
         </div>

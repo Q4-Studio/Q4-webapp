@@ -63,7 +63,7 @@ const Services: React.FC = () => {
   };
 
   return (
-    <section className="py-32 px-6 bg-[#050505] text-white">
+    <section id="services" className="py-32 px-6 bg-[#050505] text-white">
       <div className="max-w-7xl mx-auto">
         <div className="mb-20">
           <span className="text-indigo-500 font-mono tracking-widest mb-6 block text-sm uppercase">I Nostri Servizi</span>
