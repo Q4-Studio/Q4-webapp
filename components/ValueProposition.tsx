@@ -7,23 +7,23 @@ gsap.registerPlugin(ScrollTrigger);
 
 const features = [
   {
-    icon: <Target className="w-8 h-8 text-indigo-400" />,
-    title: "Specialisti Meta, Non Generalisti",
+    icon: <Target className="w-8 h-8 text-blue-400" />,
+    title: "Specialisti, non generalisti",
     desc: "Il nostro core è Meta Advertising (Facebook e Instagram), dove abbiamo generato i risultati più significativi. Integriamo cold email e LinkedIn quando serve, ma Meta è dove eccelliamo davvero. Focus significa risultati superiori."
   },
   {
-    icon: <Zap className="w-8 h-8 text-purple-400" />,
-    title: "Sistema di Risposta Istantanea",
+    icon: <Zap className="w-8 h-8 text-cyan-400" />,
+    title: "Sistema di risposta istantanea",
     desc: "Ogni lead genera una notifica WhatsApp in tempo reale al tuo team commerciale. Il nostro approccio garantisce che nessun contatto venga perso o raffreddato. Velocità di risposta = tasso di conversione più alto."
   },
   {
-    icon: <Database className="w-8 h-8 text-cyan-400" />,
-    title: "Tecnologia No-Code, Costi Reali",
+    icon: <Database className="w-8 h-8 text-purple-400" />,
+    title: "Tecnologia no-code, costi reali",
     desc: "Le automazioni AI personalizzate non devono costare una fortuna. Il nostro stack no-code ci permette di costruire soluzioni enterprise-grade mantenendo prezzi accessibili. Qualità senza sprechi."
   },
   {
-    icon: <TrendingUp className="w-8 h-8 text-emerald-400" />,
-    title: "Da Concept a Deploy in Giorni",
+    icon: <TrendingUp className="w-8 h-8 text-pink-400" />,
+    title: "Da concept a deploy in giorni",
     desc: "Mentre altri ci mettono mesi, noi deployamo sistemi funzionanti in giorni. L'agilità del nostro processo significa che inizi a vedere risultati quando i competitor stanno ancora pianificando."
   }
 ];
@@ -52,40 +52,6 @@ const ValueProposition: React.FC = () => {
           end: "bottom bottom",
           pin: leftColRef.current,
           scrub: true,
-        });
-
-        // Parallax effect for text elements (desktop only)
-        gsap.to(labelRef.current, {
-          y: 20,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: true
-          }
-        });
-
-        gsap.to(titleRef.current, {
-          y: 50,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: true
-          }
-        });
-
-        gsap.to(descRef.current, {
-          y: 80,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: true
-          }
         });
       }
 
@@ -125,7 +91,7 @@ const ValueProposition: React.FC = () => {
           </h2>
           <p ref={descRef} className="text-xl text-gray-400 leading-relaxed max-w-2xl">
             Non vendiamo consulenze teoriche. Costruiamo infrastrutture tecniche che lavorano h24.
-            Da un lato campagne Meta che portano contatti qualificati, dall'altro sistemi AI che automatizzano processi. Zero fronzoli, solo metriche che contano.
+            Da un lato campagne Meta che portano contatti qualificati, dall'altro sistemi AI che automatizzano processi.
           </p>
         </div>
 

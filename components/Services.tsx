@@ -11,14 +11,14 @@ const services: ServiceItem[] = [
     id: 1,
     title: "B2B Lead Generation",
     description: "La nostra forza è Meta Advertising (Facebook e Instagram), dove abbiamo generato i risultati più significativi per i nostri clienti. Costruiamo campagne multicanale integrando anche cold email e LinkedIn. Ogni lead viene tracciato in tempo reale: ricevi notifiche istantanee su WhatsApp e i nostri setter sono pronti a chiamare immediatamente per non perdere opportunità mentre il contatto è caldo.",
-    icon: <Users className="w-12 h-12 text-white" />,
+    icon: <Users className="w-12 h-12 text-cyan-400" />,
     span: "md:col-span-1"
   },
   {
     id: 2,
     title: "Automazioni AI",
-    description: "Realizziamo automazioni AI completamente personalizzate senza i costi proibitivi del mercato tradizionale. Il nostro modello snello no-code ci permette di costruire e deployare workflow intelligenti in pochi giorni, non mesi. Gestiamo lead enrichment, qualificazione automatica, follow-up personalizzati e sincronizzazione CRM. Il tuo team si concentra solo sulle conversazioni ad alto valore.",
-    icon: <Bot className="w-12 h-12 text-indigo-400" />,
+    description: "Realizziamo automazioni AI completamente personalizzate senza i costi proibitivi del mercato tradizionale. Il nostro modello snello no-code ci permette di costruire e deployare workflow intelligenti in pochi giorni, non mesi. Automatizziamo invio ordini, processi aziendali interni, attività ripetitive, data entry e collegamento tra software diversi. Il tuo team si libera dalle operazioni manuali e si concentra sul valore.",
+    icon: <Bot className="w-12 h-12 text-purple-400" />,
     span: "md:col-span-1"
   }
 ];
@@ -91,12 +91,6 @@ const Services: React.FC = () => {
                 <div className="mb-6">{service.icon}</div>
                 <h3 className="text-2xl font-bold mb-3">{service.title}</h3>
                 <p className="text-gray-400 leading-relaxed text-sm md:text-base">{service.description}</p>
-              </div>
-
-              <div className="relative z-10 mt-auto flex justify-end">
-                <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                  <span className="text-lg">→</span>
-                </div>
               </div>
             </div>
           ))}

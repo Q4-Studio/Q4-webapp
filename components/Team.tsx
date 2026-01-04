@@ -16,7 +16,8 @@ const teamMembers = [
     role: "Co-Founder",
     specialty: "Responsabile Tecnico",
     image: "/team/sebastiano.jpg",
-    linkedin: "https://www.linkedin.com/in/sebastianoriva"
+    linkedin: "https://www.linkedin.com/in/sebastianoriva",
+    bio: "Esperto in sviluppo software e automazioni no-code. Gestisce l'infrastruttura tecnica di Q4 Studio, progettando e implementando sistemi di automazione AI personalizzati per i nostri clienti. Specializzato in integrazione di software e workflow intelligenti."
   },
   {
     id: 2,
@@ -24,7 +25,8 @@ const teamMembers = [
     role: "Co-Founder",
     specialty: "Responsabile Commerciale",
     image: "/team/riccardo.jpg",
-    linkedin: "https://www.linkedin.com/in/riccardo-splisteser"
+    linkedin: "https://www.linkedin.com/in/riccardo-splisteser",
+    bio: "Specialista in strategie di vendita B2B e lead generation. Coordina il team commerciale di Q4 Studio, assicurando che ogni lead venga gestito con tempistiche perfette. Esperto in processi di qualificazione e conversione ad alto valore."
   },
   {
     id: 3,
@@ -32,7 +34,8 @@ const teamMembers = [
     role: "Co-Founder",
     specialty: "Responsabile Marketing",
     image: "/team/nicolo.jpg",
-    linkedin: "https://www.linkedin.com/in/nicolo-pozzato"
+    linkedin: "https://www.linkedin.com/in/nicolo-pozzato",
+    bio: "Esperto in Meta Advertising e strategie di acquisizione clienti. Gestisce campagne Meta (Facebook e Instagram) ad alte performance, con focus su targeting chirurgico e ottimizzazione continua. Specializzato in lead generation B2B e funnel multicanale."
   }
 ];
 
@@ -124,13 +127,28 @@ const Team: React.FC = () => {
                   />
                 </div>
 
-                {/* Content Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
-                  <h3 className="text-3xl font-bold mb-2 group-hover:text-indigo-300 transition-colors duration-300">
+                {/* Content Overlay - hidden on hover */}
+                <div className="absolute bottom-0 left-0 right-0 p-8 z-20 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
+                  <h3 className="text-3xl font-bold mb-2">
                     {member.name}
                   </h3>
                   <p className="text-indigo-400 font-medium text-sm mb-1">{member.role}</p>
                   <p className="text-gray-400 text-sm">{member.specialty}</p>
+                </div>
+
+                {/* Biography Hover Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/95 via-[#050505]/98 to-[#050505] z-[35] opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 pointer-events-none">
+                  <div className="transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
+                    <h3 className="text-3xl font-bold mb-2 text-indigo-300">
+                      {member.name}
+                    </h3>
+                    <p className="text-indigo-400 font-medium text-sm mb-1">{member.role}</p>
+                    <p className="text-gray-400 text-sm mb-4">{member.specialty}</p>
+                    <div className="w-12 h-px bg-gradient-to-r from-indigo-500 to-purple-500 mb-4" />
+                    <p className="text-gray-300 text-sm leading-relaxed">
+                      {member.bio}
+                    </p>
+                  </div>
                 </div>
 
                 {/* LinkedIn Button */}
@@ -138,14 +156,14 @@ const Team: React.FC = () => {
                   href={member.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute top-6 right-6 z-30 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-indigo-500 hover:border-indigo-400 transition-all duration-300 group/linkedin"
+                  className="absolute top-6 right-6 z-40 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-indigo-500 hover:border-indigo-400 transition-all duration-300 group/linkedin"
                   aria-label={`LinkedIn di ${member.name}`}
                 >
                   <Linkedin className="w-5 h-5 text-white" />
                 </a>
 
                 {/* Hover Indicator Line */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left z-30" />
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left z-40" />
               </div>
             </div>
           ))}

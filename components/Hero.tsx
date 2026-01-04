@@ -10,6 +10,14 @@ const Hero: React.FC = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Refs for orbital spheres
+  const orbitRef1 = useRef<HTMLDivElement>(null);
+  const orbitRef2 = useRef<HTMLDivElement>(null);
+  const orbitRef3 = useRef<HTMLDivElement>(null);
+  const orbitRef4 = useRef<HTMLDivElement>(null);
+  const orbitRef5 = useRef<HTMLDivElement>(null);
+  const orbitRef6 = useRef<HTMLDivElement>(null);
+
   // Particle System Effect
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -126,12 +134,12 @@ const Hero: React.FC = () => {
   // GSAP Animations
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Grid Warp Effect
+      // Grid Warp Effect + Orbital Sphere Magnetic Interaction
       const handleMouseMove = (e: MouseEvent) => {
         if(!gridRef.current) return;
         const xPos = (e.clientX / window.innerWidth - 0.5);
         const yPos = (e.clientY / window.innerHeight - 0.5);
-        
+
         // 3D Perspective Grid Warp
         gsap.to(gridRef.current, {
           rotationX: -yPos * 25, // Vertical tilt
@@ -148,8 +156,50 @@ const Hero: React.FC = () => {
           duration: 2,
           ease: "power3.out"
         });
+
+        // Magnetic interaction with orbital spheres - ENHANCED
+        const orbitRefs = [orbitRef1, orbitRef2, orbitRef3, orbitRef4, orbitRef5, orbitRef6];
+        orbitRefs.forEach((ref) => {
+          if (!ref.current) return;
+
+          const rect = ref.current.getBoundingClientRect();
+          const sphereX = rect.left + rect.width / 2;
+          const sphereY = rect.top + rect.height / 2;
+
+          const dx = e.clientX - sphereX;
+          const dy = e.clientY - sphereY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          const maxDistance = 280; // Even larger interaction radius
+
+          if (distance < maxDistance) {
+            const force = (maxDistance - distance) / maxDistance;
+            const angle = Math.atan2(dy, dx);
+
+            // Push away from cursor (repel effect) - ULTRA STRONG
+            const offsetX = -Math.cos(angle) * force * 120;
+            const offsetY = -Math.sin(angle) * force * 120;
+
+            gsap.to(ref.current, {
+              x: offsetX,
+              y: offsetY,
+              scale: 1 + force * 0.8,
+              duration: 0.15,
+              ease: "power4.out"
+            });
+          } else {
+            // Return to original position
+            gsap.to(ref.current, {
+              x: 0,
+              y: 0,
+              scale: 1,
+              duration: 0.8,
+              ease: "elastic.out(1, 0.3)"
+            });
+          }
+        });
       };
-      
+
       window.addEventListener('mousemove', handleMouseMove);
 
       // Manual SplitText Implementation (Word-safe)
@@ -248,13 +298,61 @@ const Hero: React.FC = () => {
         }}
       />
 
-      {/* Floating Abstract Shape */}
+      {/* Orbital System */}
       <div className="absolute right-[10%] top-[20%] z-0 hidden lg:block perspective-1000">
         <div ref={shapeRef} className="w-96 h-96 relative preserve-3d">
-          <div className="absolute inset-0 border border-indigo-500/30 rounded-full animate-[spin_10s_linear_infinite]" />
-          <div className="absolute inset-4 border border-purple-500/30 rounded-full animate-[spin_15s_linear_infinite_reverse]" />
-          <div className="absolute inset-12 border border-white/10 rounded-full animate-[pulse_4s_ease-in-out_infinite]" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-indigo-500 rounded-full shadow-[0_0_40px_20px_rgba(99,102,241,0.3)]" />
+          {/* Central Core */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full shadow-[0_0_60px_30px_rgba(99,102,241,0.4)] z-20" />
+
+          {/* Orbit Rings */}
+          <div className="absolute inset-0 border border-indigo-500/20 rounded-full" />
+          <div className="absolute inset-8 border border-purple-500/15 rounded-full" />
+          <div className="absolute inset-16 border border-white/10 rounded-full" />
+
+          {/* Orbiting Elements - Meta (Blue) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full animate-[spin_12s_linear_infinite]">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 animate-[orbit-fade_12s_ease-in-out_infinite]">
+              <div ref={orbitRef1} className="w-6 h-6 bg-blue-500 rounded-full shadow-[0_0_20px_8px_rgba(59,130,246,0.5)] flex items-center justify-center transition-all duration-300">
+                <div className="w-2 h-2 bg-white rounded-full" />
+              </div>
+            </div>
+          </div>
+
+          {/* Orbiting Elements - AI (Purple) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full animate-[spin_8s_linear_infinite_reverse]">
+            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 animate-[orbit-fade_8s_ease-in-out_infinite]">
+              <div ref={orbitRef2} className="w-6 h-6 bg-purple-500 rounded-full shadow-[0_0_20px_8px_rgba(168,85,247,0.5)] flex items-center justify-center transition-all duration-300">
+                <div className="w-2 h-2 bg-white rounded-full" />
+              </div>
+            </div>
+          </div>
+
+          {/* Secondary Orbit - Lead Gen (Cyan) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[85%] animate-[spin_15s_linear_infinite]">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 animate-[orbit-fade_15s_ease-in-out_infinite]">
+              <div ref={orbitRef3} className="w-4 h-4 bg-cyan-400 rounded-full shadow-[0_0_15px_6px_rgba(34,211,238,0.4)] transition-all duration-300" />
+            </div>
+          </div>
+
+          {/* Secondary Orbit - Automation (Pink) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[85%] animate-[spin_10s_linear_infinite_reverse]">
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 animate-[orbit-fade_10s_ease-in-out_infinite]">
+              <div ref={orbitRef4} className="w-4 h-4 bg-pink-400 rounded-full shadow-[0_0_15px_6px_rgba(244,114,182,0.4)] transition-all duration-300" />
+            </div>
+          </div>
+
+          {/* Tertiary Small Orbits (Data Points) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] animate-[spin_20s_linear_infinite]">
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 animate-[orbit-fade_20s_ease-in-out_infinite]">
+              <div ref={orbitRef5} className="w-2 h-2 bg-indigo-300 rounded-full shadow-[0_0_10px_4px_rgba(165,180,252,0.3)] transition-all duration-300" />
+            </div>
+          </div>
+
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] animate-[spin_18s_linear_infinite_reverse]">
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 animate-[orbit-fade_18s_ease-in-out_infinite]">
+              <div ref={orbitRef6} className="w-2 h-2 bg-purple-300 rounded-full shadow-[0_0_10px_4px_rgba(216,180,254,0.3)] transition-all duration-300" />
+            </div>
+          </div>
         </div>
       </div>
 
