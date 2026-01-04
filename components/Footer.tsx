@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Instagram, Linkedin } from 'lucide-react';
 import MagneticButton from './MagneticButton';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -66,25 +66,49 @@ const Footer: React.FC = () => {
         </h2>
         
         <div ref={buttonWrapperRef} className="mb-24">
-            <MagneticButton className="group text-2xl md:text-4xl px-12 py-6 md:px-16 md:py-8 font-semibold hover:shadow-[0_0_60px_-15px_rgba(99,102,241,0.6)] transition-shadow duration-500 border border-white/10 hover:border-white/30">
-                <span className="mr-4">Parla con un esperto</span>
-                <ArrowUpRight className="inline-block w-8 h-8 md:w-12 md:h-12 transition-transform duration-300 group-hover:translate-x-2 group-hover:-translate-y-2" />
+            <MagneticButton
+              className="group text-lg md:text-xl px-8 py-4 md:px-10 md:py-5 font-semibold hover:shadow-[0_0_60px_-15px_rgba(99,102,241,0.6)] transition-shadow duration-500 border border-white/10 hover:border-white/30"
+              onClick={() => {
+                const contactForm = document.querySelector('section:has(form)');
+                contactForm?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }}
+            >
+                <span className="mr-3">Parla con un esperto</span>
+                <ArrowUpRight className="inline-block w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:translate-x-2 group-hover:-translate-y-2" />
             </MagneticButton>
         </div>
 
         <div ref={linksRef} className="w-full grid grid-cols-1 md:grid-cols-4 gap-8 border-t border-white/10 pt-10 text-sm text-gray-400">
-            <div className="col-span-1 md:col-span-2">
+            <div className="col-span-1 md:col-span-2 text-center md:text-left">
                 <h3 className="text-white font-bold text-lg mb-4">Q4 STUDIO</h3>
-                <p className="max-w-xs">
-                    L'agenzia di automazione B2B che trasforma i processi in profitto.
+                <p className="max-w-xs mb-4 mx-auto md:mx-0">
+                    Specialisti in B2B Lead Generation e Automazioni AI.
                 </p>
+                <div className="flex gap-4 mt-6 justify-center md:justify-start">
+                    <a
+                        href="https://www.instagram.com/q4.studio"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-indigo-400 hover:text-indigo-400 transition-all duration-300 hover:scale-110"
+                    >
+                        <Instagram className="w-5 h-5" />
+                    </a>
+                    <a
+                        href="https://www.linkedin.com/company/q4studio/about/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-indigo-400 hover:text-indigo-400 transition-all duration-300 hover:scale-110"
+                    >
+                        <Linkedin className="w-5 h-5" />
+                    </a>
+                </div>
             </div>
             <div>
                 <h4 className="text-white font-bold mb-4">Servizi</h4>
                 <ul className="space-y-2">
-                    <li className="hover:text-indigo-400 cursor-pointer transition-colors">Lead Generation</li>
-                    <li className="hover:text-indigo-400 cursor-pointer transition-colors">AI Automation</li>
-                    <li className="hover:text-indigo-400 cursor-pointer transition-colors">CRM Consulting</li>
+                    <li className="hover:text-indigo-400 cursor-pointer transition-colors">B2B Lead Generation</li>
+                    <li className="hover:text-indigo-400 cursor-pointer transition-colors">Automazioni AI</li>
+                    <li className="hover:text-indigo-400 cursor-pointer transition-colors">Cold Email Infrastructure</li>
                 </ul>
             </div>
             <div>
@@ -97,9 +121,9 @@ const Footer: React.FC = () => {
             </div>
         </div>
         
-        <div ref={bottomRef} className="w-full flex justify-between items-center mt-20 text-xs text-gray-600 font-mono">
-            <span>© 2024 Q4 Studio. Tutti i diritti riservati.</span>
-            <span>Milano, Italia</span>
+        <div ref={bottomRef} className="w-full flex flex-col md:flex-row justify-between items-center gap-2 mt-20 text-xs text-gray-600 font-mono">
+            <span>© {new Date().getFullYear()} Q4 Studio. Tutti i diritti riservati. • P.I. 05018960236</span>
+            <span>Verona / Reggio Emilia</span>
         </div>
       </div>
     </footer>

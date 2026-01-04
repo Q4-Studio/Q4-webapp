@@ -262,22 +262,40 @@ const Hero: React.FC = () => {
         <div className="flex flex-col gap-6 max-w-4xl">
           <div className="flex items-center gap-2 text-indigo-400 font-mono text-sm tracking-widest uppercase mb-4">
             <span className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></span>
-            Q4 Studio Rebrand 2.0
+            Performance, Non Promesse
           </div>
-          
-          <h1 ref={titleRef} className="text-6xl md:text-8xl lg:text-9xl font-bold leading-tight tracking-tighter text-white mix-blend-difference">
-            Il futuro della crescita B2B è automatizzato.
-          </h1>
 
-          <p ref={subRef} className="text-xl md:text-2xl text-gray-400 max-w-2xl leading-relaxed mt-4">
-            Abbandona i processi manuali. Costruiamo ecosistemi di Lead Generation e AI Workflow che scalano la tua azienda mentre dormi.
+          <h1 ref={titleRef} className="text-6xl md:text-8xl lg:text-9xl font-bold leading-tight tracking-tighter text-white mix-blend-difference">
+            Meta + AI
+          </h1>
+          <p className="text-2xl md:text-3xl text-gray-300 font-light mt-2">
+            Lead Generation che converte. Automazioni che scalano.
+          </p>
+
+          <p ref={subRef} className="text-xl md:text-2xl text-gray-400 max-w-2xl leading-relaxed mt-8">
+            Specialisti in Lead Generation B2B su Meta e Automazioni AI personalizzate. Due servizi distinti, stesso obiettivo: eliminare inefficienze e moltiplicare i risultati del tuo business.
           </p>
           
           <div className="mt-8 flex items-center gap-4">
-             <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center animate-bounce mt-10">
-               <ArrowDownRight className="text-white opacity-50" />
-             </div>
-             <span className="mt-10 text-sm text-gray-500 font-mono">SCROLL TO EXPLORE</span>
+             <button
+               onClick={() => {
+                 const nextSection = document.querySelector('section');
+                 nextSection?.scrollIntoView({ behavior: 'smooth' });
+               }}
+               className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center animate-bounce mt-10 hover:border-indigo-500 hover:bg-indigo-500/10 transition-all duration-300 cursor-pointer group"
+               aria-label="Scorri per esplorare"
+             >
+               <ArrowDownRight className="text-white opacity-50 group-hover:opacity-100 transition-opacity" />
+             </button>
+             <button
+               onClick={() => {
+                 const nextSection = document.querySelector('section');
+                 nextSection?.scrollIntoView({ behavior: 'smooth' });
+               }}
+               className="mt-10 text-sm text-gray-500 font-mono hover:text-indigo-400 transition-colors cursor-pointer"
+             >
+               SCORRI PER ESPLORARE
+             </button>
           </div>
         </div>
       </div>

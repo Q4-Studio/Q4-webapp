@@ -4,9 +4,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Array di loghi clienti reali
 const logos = [
-  "Acme Corp", "GlobalTech", "Nebula", "Trio", "FoxRun", "Circle", 
-  "Hexagon", "Velocità", "Luce", "Sfera", "Vertex", "Orion"
+  { name: "MES Connettori", path: "/logos/mes-connettori.png" },
+  { name: "RR Auto", path: "/logos/rr-auto.png" },
+  { name: "Senza Stress Ristrutturare", path: "/logos/senza-stress-ristrutturare.png" },
+  { name: "Trenove", path: "/logos/trenove.png" },
 ];
 
 const Marquee: React.FC = () => {
@@ -14,50 +17,48 @@ const Marquee: React.FC = () => {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // 1. Entrance Animation
-      // Using fromTo ensures we animate from hidden/offset to visible/zero regardless of initial CSS state
-      gsap.fromTo(containerRef.current, 
-        {
-          y: 50,
-          opacity: 0
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
-          }
+    // 1. Entrance Animation
+    gsap.fromTo(containerRef.current,
+      {
+        y: 50,
+        opacity: 0
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 85%",
+          toggleActions: "play none none reverse"
         }
-      );
+      }
+    );
 
-      // 2. Infinite Scroll Animation
-      if (trackRef.current) {
-        // Clone the content to ensure seamless loop (idempotent check)
-        if (trackRef.current.children.length === logos.length) {
-             const content = trackRef.current.innerHTML;
-             trackRef.current.innerHTML = content + content;
-        }
+    // 2. Infinite Scroll Animation
+    if (trackRef.current) {
+      const track = trackRef.current;
 
-        const width = trackRef.current.scrollWidth / 2;
-        
-        gsap.to(trackRef.current, {
-          x: -width,
+      // Calculate the width of one set of logos (we rendered 3 sets)
+      const singleSetWidth = track.scrollWidth / 3;
+
+      // Animate seamlessly
+      gsap.fromTo(track,
+        { x: 0 },
+        {
+          x: -singleSetWidth,
           duration: 30,
           ease: "none",
-          repeat: -1,
-          modifiers: {
-            x: gsap.utils.unitize(x => parseFloat(x) % width) // Ensure smooth reset
-          }
-        });
-      }
-    }, containerRef);
+          repeat: -1
+        }
+      );
+    }
 
-    return () => ctx.revert();
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      gsap.killTweensOf(trackRef.current);
+    };
   }, []);
 
   return (
@@ -66,10 +67,15 @@ const Marquee: React.FC = () => {
             <p className="text-sm font-mono text-gray-500 uppercase tracking-widest">Aziende che scalano con noi</p>
         </div>
       <div className="relative w-full overflow-hidden">
-        <div ref={trackRef} className="flex whitespace-nowrap gap-20 items-center">
-            {logos.map((logo, index) => (
-                <div key={index} className="text-2xl md:text-4xl font-bold text-gray-700 hover:text-white transition-colors duration-300 font-['Space_Grotesk'] uppercase opacity-50 hover:opacity-100 cursor-default">
-                    {logo}
+        <div ref={trackRef} className="flex whitespace-nowrap gap-16 md:gap-24 items-center">
+            {/* Render logos twice for seamless loop */}
+            {[...logos, ...logos, ...logos].map((logo, index) => (
+                <div key={index} className="flex-shrink-0 h-12 md:h-16 flex items-center grayscale opacity-40 hover:opacity-80 hover:grayscale-0 transition-all duration-300 cursor-default">
+                    <img
+                        src={logo.path}
+                        alt={logo.name}
+                        className="h-full w-auto object-contain"
+                    />
                 </div>
             ))}
         </div>

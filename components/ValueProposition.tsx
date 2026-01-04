@@ -8,23 +8,23 @@ gsap.registerPlugin(ScrollTrigger);
 const features = [
   {
     icon: <Target className="w-8 h-8 text-indigo-400" />,
-    title: "Precisione Chirurgica",
-    desc: "Non spariamo nel mucchio. Identifichiamo i decisori ideali con sistemi di arricchimento dati proprietari."
+    title: "Specialisti Meta, Non Generalisti",
+    desc: "Il nostro core è Meta Advertising (Facebook e Instagram), dove abbiamo generato i risultati più significativi. Integriamo cold email e LinkedIn quando serve, ma Meta è dove eccelliamo davvero. Focus significa risultati superiori."
   },
   {
     icon: <Zap className="w-8 h-8 text-purple-400" />,
-    title: "Velocità di Esecuzione",
-    desc: "Ciò che richiedeva settimane, ora richiede minuti. I nostri workflow AI eliminano i colli di bottiglia operativi."
+    title: "Sistema di Risposta Istantanea",
+    desc: "Ogni lead genera una notifica WhatsApp in tempo reale al tuo team commerciale. Il nostro approccio garantisce che nessun contatto venga perso o raffreddato. Velocità di risposta = tasso di conversione più alto."
   },
   {
     icon: <Database className="w-8 h-8 text-cyan-400" />,
-    title: "Database Proprietari",
-    desc: "Accesso a milioni di contatti B2B verificati in tempo reale. Il tuo CRM non sarà mai più vuoto."
+    title: "Tecnologia No-Code, Costi Reali",
+    desc: "Le automazioni AI personalizzate non devono costare una fortuna. Il nostro stack no-code ci permette di costruire soluzioni enterprise-grade mantenendo prezzi accessibili. Qualità senza sprechi."
   },
   {
     icon: <TrendingUp className="w-8 h-8 text-emerald-400" />,
-    title: "Scalabilità Infinita",
-    desc: "Il sistema impara e migliora. Più lead gestisci, più l'IA diventa intelligente nel convertirli."
+    title: "Da Concept a Deploy in Giorni",
+    desc: "Mentre altri ci mettono mesi, noi deployamo sistemi funzionanti in giorni. L'agilità del nostro processo significa che inizi a vedere risultati quando i competitor stanno ancora pianificando."
   }
 ];
 
@@ -41,49 +41,53 @@ const ValueProposition: React.FC = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Pin the left column while the right column scrolls
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        pin: leftColRef.current,
-        scrub: true,
-      });
+      // Check if we're on mobile
+      const isMobile = window.innerWidth < 768;
 
-      // Parallax effect for text elements
-      // Moving them slightly down during scroll creates a "heavy" or "slow" feel relative to the scroll direction
-      gsap.to(labelRef.current, {
-        y: 20,
-        ease: "none",
-        scrollTrigger: {
+      // Pin the left column while the right column scrolls (desktop only)
+      if (!isMobile) {
+        ScrollTrigger.create({
           trigger: sectionRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: true
-        }
-      });
+          pin: leftColRef.current,
+          scrub: true,
+        });
 
-      gsap.to(titleRef.current, {
-        y: 50,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: true
-        }
-      });
+        // Parallax effect for text elements (desktop only)
+        gsap.to(labelRef.current, {
+          y: 20,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: true
+          }
+        });
 
-      gsap.to(descRef.current, {
-        y: 80,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: true
-        }
-      });
+        gsap.to(titleRef.current, {
+          y: 50,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: true
+          }
+        });
+
+        gsap.to(descRef.current, {
+          y: 80,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: true
+          }
+        });
+      }
 
       // Animate cards entry
       cardRefs.current.forEach((card, i) => {
@@ -112,16 +116,16 @@ const ValueProposition: React.FC = () => {
         
         {/* Left Column (Pinned) */}
         <div ref={leftColRef} className="md:w-1/2 h-fit flex flex-col justify-center py-12">
-          <span ref={labelRef} className="text-indigo-500 font-mono tracking-widest mb-4 block">IL VANTAGGIO COMPETITIVO</span>
-          <h2 ref={titleRef} className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
-            Perché passare all'<br/>
+          <span ref={labelRef} className="text-indigo-500 font-mono tracking-widest mb-6 block text-sm uppercase">COSA CI DISTINGUE</span>
+          <h2 ref={titleRef} className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            Perché siamo<br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
-              Automazione?
+              Diversi.
             </span>
           </h2>
-          <p ref={descRef} className="text-xl text-gray-400 leading-relaxed max-w-lg">
-            I metodi tradizionali di acquisizione clienti sono lenti, costosi e non scalabili. 
-            Noi trasformiamo il caos in una macchina prevedibile che genera opportunità commerciali 24/7.
+          <p ref={descRef} className="text-xl text-gray-400 leading-relaxed max-w-2xl">
+            Non vendiamo consulenze teoriche. Costruiamo infrastrutture tecniche che lavorano h24.
+            Da un lato campagne Meta che portano contatti qualificati, dall'altro sistemi AI che automatizzano processi. Zero fronzoli, solo metriche che contano.
           </p>
         </div>
 
