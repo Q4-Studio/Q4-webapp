@@ -607,7 +607,7 @@ useEffect(() => {
 - [ ] Paginazione blog (se > 20 articoli)
 - [ ] Filtri per categoria
 - [ ] Search bar per articoli
-- [ ] Admin panel per gestione blog
+- [✅] Admin panel per gestione blog
 - [ ] Preview mode per bozze
 - [ ] Newsletter signup
 - [ ] Analytics integration

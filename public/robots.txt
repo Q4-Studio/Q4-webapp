@@ -1,0 +1,13 @@
+# robots.txt for Q4 Studio
+# https://q4studio.it
+
+User-agent: *
+Allow: /
+Disallow: /dashq4login
+Disallow: /dashboard
+
+# Sitemap
+Sitemap: https://q4studio.it/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1

@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { Calendar, Clock, ArrowLeft, Linkedin } from 'lucide-react';
 import { BlogPost } from '../types/blog';
+import BlogSchema from './BlogSchema';
+import SEOHead from './SEOHead';
 
 interface BlogArticleProps {
   post: BlogPost;
@@ -112,6 +114,23 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
 
   return (
     <article ref={articleRef} className="relative pt-32 pb-20 px-6 bg-[#050505] text-white min-h-screen">
+      {/* SEO: Schema.org BlogPosting structured data */}
+      <BlogSchema post={post} />
+
+      {/* SEO: Dynamic meta tags */}
+      <SEOHead
+        title={`${post.title} | Q4 Studio Blog`}
+        description={post.excerpt}
+        image={post.coverImage}
+        url={`https://q4studio.it/#blog/${post.slug}`}
+        type="article"
+        article={{
+          publishedTime: post.date,
+          author: post.author.name,
+          section: post.category
+        }}
+      />
+
       {/* Background gradient */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
 

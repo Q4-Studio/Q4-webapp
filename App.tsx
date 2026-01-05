@@ -12,10 +12,12 @@ import BlogArticle from './components/BlogArticle';
 import NotFound from './components/NotFound';
 import DashboardLogin from './components/DashboardLogin';
 import Dashboard from './components/Dashboard';
+import Privacy from './components/Privacy';
+import CookieBanner from './components/CookieBanner';
 import { BlogPost } from './types/blog';
 import { getBlogPosts } from './lib/supabase';
 
-type Page = 'home' | 'blog' | 'blog-article' | 'dashq4login' | 'dashboard' | '404';
+type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -67,6 +69,8 @@ const App: React.FC = () => {
         }
       } else if (hash === 'blog') {
         setCurrentPage('blog');
+      } else if (hash === 'privacy') {
+        setCurrentPage('privacy');
       } else if (hash === 'dashq4login') {
         setCurrentPage('dashq4login');
       } else if (hash === 'dashboard') {
@@ -134,6 +138,7 @@ const App: React.FC = () => {
       </nav>
 
       <CustomCursor />
+      <CookieBanner />
 
       {/* Page Routing */}
       {currentPage === 'home' && (
@@ -166,6 +171,13 @@ const App: React.FC = () => {
             post={currentArticle}
             onBack={() => navigateTo('blog')}
           />
+          <Footer />
+        </>
+      )}
+
+      {currentPage === 'privacy' && (
+        <>
+          <Privacy />
           <Footer />
         </>
       )}

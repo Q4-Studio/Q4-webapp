@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Calendar, Clock, ArrowRight, Loader2 } from 'lucide-react';
 import { BlogPost } from '../types/blog';
+import SEOHead from './SEOHead';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -52,6 +53,13 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
 
   return (
     <section ref={sectionRef} className="relative pt-40 pb-32 px-6 bg-[#050505] text-white min-h-screen">
+      {/* SEO: Dynamic meta tags for blog listing */}
+      <SEOHead
+        title="Blog Q4 Studio | Guide Meta Advertising e AI Automation"
+        description="Scopri strategie avanzate di Lead Generation B2B con Meta Ads, case study e guide pratiche su automazioni AI. Il blog di Q4 Studio per far crescere il tuo business."
+        url="https://q4studio.it/#blog"
+      />
+
       {/* Background gradient */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
 

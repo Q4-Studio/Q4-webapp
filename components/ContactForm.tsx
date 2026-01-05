@@ -97,7 +97,7 @@ const ContactForm: React.FC = () => {
         <div className="text-center mb-16">
           <span className="text-indigo-500 font-mono tracking-widest mb-4 block">CONTATTACI</span>
           <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            Iniziamo a <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Scalare</span>
+            Iniziamo a <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Crescere</span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Raccontaci la tua sfida. Ti mostreremo come automatizzare la crescita del tuo business B2B.

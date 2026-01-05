@@ -64,7 +64,7 @@ const Footer: React.FC = () => {
 
       <div className="max-w-7xl mx-auto relative z-10 flex flex-col items-center text-center">
         <h2 ref={titleRef} className="text-5xl md:text-8xl font-bold tracking-tighter mb-12">
-          Pronto a scalare?
+          Pronto a crescere?
         </h2>
         
         <div ref={buttonWrapperRef} className="mb-24">
@@ -111,8 +111,17 @@ const Footer: React.FC = () => {
                     <li
                         className="hover:text-indigo-400 cursor-pointer transition-colors"
                         onClick={() => {
-                            const servicesSection = document.getElementById('services');
-                            servicesSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            // If not on home page, navigate to home first
+                            if (window.location.hash && window.location.hash !== '#' && window.location.hash !== '#home') {
+                                window.location.hash = 'home';
+                                setTimeout(() => {
+                                    const servicesSection = document.getElementById('services');
+                                    servicesSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }, 100);
+                            } else {
+                                const servicesSection = document.getElementById('services');
+                                servicesSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
                         }}
                     >
                         B2B Lead Generation
@@ -120,8 +129,17 @@ const Footer: React.FC = () => {
                     <li
                         className="hover:text-indigo-400 cursor-pointer transition-colors"
                         onClick={() => {
-                            const servicesSection = document.getElementById('services');
-                            servicesSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            // If not on home page, navigate to home first
+                            if (window.location.hash && window.location.hash !== '#' && window.location.hash !== '#home') {
+                                window.location.hash = 'home';
+                                setTimeout(() => {
+                                    const servicesSection = document.getElementById('services');
+                                    servicesSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }, 100);
+                            } else {
+                                const servicesSection = document.getElementById('services');
+                                servicesSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
                         }}
                     >
                         Automazioni AI
@@ -131,8 +149,12 @@ const Footer: React.FC = () => {
             <div>
                  <h4 className="text-white font-bold mb-4">Legale</h4>
                 <ul className="space-y-2">
-                    <li className="hover:text-indigo-400 cursor-pointer transition-colors">Privacy Policy</li>
-                    <li className="hover:text-indigo-400 cursor-pointer transition-colors">Cookie Policy</li>
+                    <li
+                        className="hover:text-indigo-400 cursor-pointer transition-colors"
+                        onClick={() => { window.location.hash = 'privacy'; }}
+                    >
+                        Privacy & Cookie Policy
+                    </li>
                 </ul>
             </div>
         </div>

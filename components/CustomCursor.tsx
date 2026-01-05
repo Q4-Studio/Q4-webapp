@@ -83,7 +83,7 @@ const CustomCursor: React.FC = () => {
       {/* Main Cursor Dot */}
       <div
         ref={cursorRef}
-        className="fixed top-0 left-0 w-2 h-2 bg-indigo-500 rounded-full pointer-events-none z-[9999] mix-blend-difference"
+        className="fixed top-0 left-0 w-2 h-2 bg-indigo-500 rounded-full pointer-events-none z-[10000] mix-blend-difference"
         style={{
           transform: 'translate(-50%, -50%)',
           boxShadow: '0 0 10px 2px rgba(99, 102, 241, 0.6)'
@@ -93,7 +93,7 @@ const CustomCursor: React.FC = () => {
       {/* Follower Circle */}
       <div
         ref={followerRef}
-        className="fixed top-0 left-0 w-8 h-8 border border-indigo-400/50 rounded-full pointer-events-none z-[9998] mix-blend-difference"
+        className="fixed top-0 left-0 w-8 h-8 border border-indigo-400/50 rounded-full pointer-events-none z-[10000] mix-blend-difference"
         style={{
           transform: 'translate(-50%, -50%)'
         }}
