@@ -133,6 +133,8 @@ const Hero: React.FC = () => {
 
   // GSAP Animations
   useEffect(() => {
+    if (!containerRef.current) return;
+
     const ctx = gsap.context(() => {
       // Grid Warp Effect + Orbital Sphere Magnetic Interaction
       const handleMouseMove = (e: MouseEvent) => {

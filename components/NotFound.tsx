@@ -9,6 +9,8 @@ const NotFound: React.FC = () => {
   const buttonsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!containerRef.current) return;
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
 

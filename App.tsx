@@ -11,56 +11,35 @@ import Blog from './components/Blog';
 import BlogArticle from './components/BlogArticle';
 import NotFound from './components/NotFound';
 import { BlogPost } from './types/blog';
+import { getBlogPosts } from './lib/supabase';
 
 type Page = 'home' | 'blog' | 'blog-article' | '404';
-
-// Blog posts data (shared between Blog and BlogArticle)
-export const blogPosts: BlogPost[] = [
-  {
-    id: '1',
-    slug: 'algoritmo-andromeda-meta-creativita-leva-competitiva',
-    title: 'Algoritmo Andromeda di Meta: la creatività come leva competitiva',
-    excerpt: 'Nel nuovo scenario Ads guidato dall\'algoritmo Andromeda, la creatività diventa la vera leva competitiva. Scopri come Meta ha rivoluzionato il targeting privilegiando la rilevanza contestuale.',
-    content: `
-# Algoritmo Andromeda di Meta: la creatività come leva competitiva
-
-Nel nuovo scenario Ads, guidato dall'algoritmo **Andromeda di Meta**, la creatività diventa la vera **leva competitiva**.
-
-Andromeda, infatti, non privilegia più il targeting selettivo, ma premia la **rilevanza contestuale**, la **qualità del messaggio** e la **capacità di generare interazioni autentiche**.
-
-## Come funziona Andromeda
-
-Il sistema sfrutta l'**intelligenza artificiale** per combinare automaticamente centinaia di varianti creative — immagini, video e testo — adattandole dinamicamente ai **comportamenti** e agli **interessi dell'utente** in tempo reale.
-
-In questo contesto, la creatività non è più solo estetica, ma un **elemento tattico di targeting**, in grado di "auto-selezionare" il pubblico più reattivo attraverso segnali di engagement.
-
-## Cosa cambia per gli advertiser
-
-1. **Focus sulla qualità creativa**: Non basta più targetizzare bene, serve creare contenuti che generano interazioni autentiche
-2. **Test continui**: L'algoritmo premia chi testa multiple varianti creative
-3. **Rilevanza contestuale**: Il messaggio giusto al momento giusto conta più del pubblico "perfetto"
-4. **Performance-driven**: I segnali di engagement determinano chi vede le tue ads
-
-## Il nostro approccio
-
-In Q4 Studio, sfruttiamo Andromeda creando **decine di varianti creative** per ogni campagna, lasciando che sia l'algoritmo a identificare le combinazioni vincenti per ogni micro-segmento di pubblico.
-
-Il risultato? **CPL più bassi** e **conversion rate più alti**, perché ogni utente vede esattamente il messaggio più rilevante per lui.
-    `,
-    coverImage: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=500&fit=crop',
-    category: 'Meta Advertising',
-    date: '2025-01-04',
-    readTime: '5 min',
-    author: {
-      name: 'Nicolò Pozzato',
-      image: '/team/nicolo.jpg'
-    }
-  }
-];
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [currentArticleSlug, setCurrentArticleSlug] = useState<string>('');
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [isLoadingBlog, setIsLoadingBlog] = useState(true);
+  const [blogError, setBlogError] = useState<string | null>(null);
+
+  // Fetch blog posts from Supabase on mount
+  useEffect(() => {
+    const fetchBlogPosts = async () => {
+      try {
+        setIsLoadingBlog(true);
+        setBlogError(null);
+        const posts = await getBlogPosts();
+        setBlogPosts(posts);
+      } catch (error) {
+        console.error('Failed to fetch blog posts:', error);
+        setBlogError('Impossibile caricare gli articoli del blog. Riprova più tardi.');
+      } finally {
+        setIsLoadingBlog(false);
+      }
+    };
+
+    fetchBlogPosts();
+  }, []);
 
   // Get blog post by slug
   const getBlogPostBySlug = (slug: string) => {
@@ -79,7 +58,10 @@ const App: React.FC = () => {
           setCurrentArticleSlug(slug);
           setCurrentPage('blog-article');
         } else {
-          setCurrentPage('404');
+          // Only set 404 if we've finished loading posts
+          if (!isLoadingBlog) {
+            setCurrentPage('404');
+          }
         }
       } else if (hash === 'blog') {
         setCurrentPage('blog');
@@ -96,7 +78,7 @@ const App: React.FC = () => {
     handleHashChange(); // Initial load
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
+  }, [blogPosts, isLoadingBlog]);
 
   const navigateTo = (page: Page, slug?: string) => {
     if (page === 'blog-article' && slug) {
@@ -162,7 +144,12 @@ const App: React.FC = () => {
 
       {currentPage === 'blog' && (
         <>
-          <Blog onArticleClick={(slug) => navigateTo('blog-article', slug)} />
+          <Blog
+            posts={blogPosts}
+            isLoading={isLoadingBlog}
+            error={blogError}
+            onArticleClick={(slug) => navigateTo('blog-article', slug)}
+          />
           <Footer />
         </>
       )}

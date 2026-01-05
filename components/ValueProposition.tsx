@@ -40,6 +40,8 @@ const ValueProposition: React.FC = () => {
   const descRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
+    if (!sectionRef.current) return;
+
     const ctx = gsap.context(() => {
       // Check if we're on mobile
       const isMobile = window.innerWidth < 768;

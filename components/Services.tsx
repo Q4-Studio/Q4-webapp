@@ -28,6 +28,8 @@ const Services: React.FC = () => {
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
+    if (!gridRef.current) return;
+
     const ctx = gsap.context(() => {
       gsap.from(itemsRef.current, {
         scrollTrigger: {

@@ -16,6 +16,8 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
   useEffect(() => {
     window.scrollTo({ top: 0 });
 
+    if (!articleRef.current) return;
+
     const ctx = gsap.context(() => {
       gsap.from(headerRef.current, {
         y: 50,

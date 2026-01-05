@@ -46,6 +46,8 @@ const Team: React.FC = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   useEffect(() => {
+    if (!sectionRef.current) return;
+
     const ctx = gsap.context(() => {
       // Animate title entrance
       gsap.from(titleRef.current, {

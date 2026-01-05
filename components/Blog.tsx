@@ -1,21 +1,26 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Calendar, Clock, ArrowRight } from 'lucide-react';
-import { blogPosts } from '../App';
+import { Calendar, Clock, ArrowRight, Loader2 } from 'lucide-react';
+import { BlogPost } from '../types/blog';
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface BlogProps {
+  posts: BlogPost[];
+  isLoading: boolean;
+  error: string | null;
   onArticleClick: (slug: string) => void;
 }
 
-const Blog: React.FC<BlogProps> = ({ onArticleClick }) => {
+const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
+    if (!sectionRef.current) return;
+
     const ctx = gsap.context(() => {
       gsap.from(titleRef.current, {
         scrollTrigger: {
@@ -64,9 +69,31 @@ const Blog: React.FC<BlogProps> = ({ onArticleClick }) => {
           </p>
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <Loader2 className="w-12 h-12 text-indigo-500 animate-spin mb-4" />
+            <p className="text-gray-400 text-lg">Caricamento articoli...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !isLoading && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="max-w-md text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/10 flex items-center justify-center">
+                <span className="text-3xl">⚠️</span>
+              </div>
+              <p className="text-red-400 text-lg mb-2">Errore</p>
+              <p className="text-gray-400">{error}</p>
+            </div>
+          </div>
+        )}
+
         {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogPosts.map((post, index) => (
+        {!isLoading && !error && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post, index) => (
             <div
               key={post.id}
               ref={(el) => { cardsRef.current[index] = el }}
@@ -136,15 +163,26 @@ const Blog: React.FC<BlogProps> = ({ onArticleClick }) => {
               {/* Hover Line */}
               <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Coming Soon Message (se ci sono pochi articoli) */}
-        {blogPosts.length < 3 && (
+        {!isLoading && !error && posts.length < 3 && posts.length > 0 && (
           <div className="mt-12 text-center">
             <p className="text-gray-500 text-sm">
               Altri articoli in arrivo presto...
             </p>
+          </div>
+        )}
+
+        {/* No posts message */}
+        {!isLoading && !error && posts.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="max-w-md text-center">
+              <p className="text-gray-400 text-lg">Nessun articolo disponibile al momento.</p>
+              <p className="text-gray-500 text-sm mt-2">Torna presto per nuovi contenuti!</p>
+            </div>
           </div>
         )}
       </div>
