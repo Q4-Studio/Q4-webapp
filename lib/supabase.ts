@@ -14,6 +14,76 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // Create Supabase client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// ============================================
+// Authentication API
+// ============================================
+
+/**
+ * Sign in with email and password
+ */
+export const signIn = async (email: string, password: string) => {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    console.error('Error signing in:', error);
+    throw error;
+  }
+
+  return data;
+};
+
+/**
+ * Sign out current user
+ */
+export const signOut = async () => {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error('Error signing out:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get current session
+ */
+export const getSession = async () => {
+  const { data, error } = await supabase.auth.getSession();
+
+  if (error) {
+    console.error('Error getting session:', error);
+    throw error;
+  }
+
+  return data.session;
+};
+
+/**
+ * Get current user
+ */
+export const getCurrentUser = async () => {
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error) {
+    console.error('Error getting user:', error);
+    throw error;
+  }
+
+  return data.user;
+};
+
+/**
+ * Listen to auth state changes
+ */
+export const onAuthStateChange = (callback: (session: any) => void) => {
+  return supabase.auth.onAuthStateChange((_event, session) => {
+    callback(session);
+  });
+};
+
 // Database types
 interface BlogPostDB {
   id: string;

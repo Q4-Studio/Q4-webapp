@@ -10,10 +10,12 @@ import CustomCursor from './components/CustomCursor';
 import Blog from './components/Blog';
 import BlogArticle from './components/BlogArticle';
 import NotFound from './components/NotFound';
+import DashboardLogin from './components/DashboardLogin';
+import Dashboard from './components/Dashboard';
 import { BlogPost } from './types/blog';
 import { getBlogPosts } from './lib/supabase';
 
-type Page = 'home' | 'blog' | 'blog-article' | '404';
+type Page = 'home' | 'blog' | 'blog-article' | 'dashq4login' | 'dashboard' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -65,6 +67,10 @@ const App: React.FC = () => {
         }
       } else if (hash === 'blog') {
         setCurrentPage('blog');
+      } else if (hash === 'dashq4login') {
+        setCurrentPage('dashq4login');
+      } else if (hash === 'dashboard') {
+        setCurrentPage('dashboard');
       } else if (hash === '404') {
         setCurrentPage('404');
       } else if (hash === '' || hash === 'home') {
@@ -162,6 +168,18 @@ const App: React.FC = () => {
           />
           <Footer />
         </>
+      )}
+
+      {currentPage === 'dashq4login' && (
+        <DashboardLogin
+          onLoginSuccess={() => navigateTo('dashboard')}
+        />
+      )}
+
+      {currentPage === 'dashboard' && (
+        <Dashboard
+          onLogout={() => navigateTo('dashq4login')}
+        />
       )}
 
       {currentPage === '404' && (

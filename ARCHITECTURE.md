@@ -102,6 +102,8 @@ D:\-- MAIN\- Progetti\Q4\Web Q4\
 - `home`: Homepage completa (Hero, Services, Team, Contact)
 - `blog`: Lista articoli
 - `blog-article`: Singolo articolo
+- `dashq4login`: Login dashboard (mascherato per sicurezza)
+- `dashboard`: Gestione articoli blog (richiede autenticazione)
 - `404`: Not found
 
 ### 2. Hero.tsx
@@ -225,6 +227,203 @@ interface BlogPost {
     image: string;          // Path or URL
   };
 }
+```
+
+---
+
+## Dashboard System
+
+Sistema di gestione articoli per collaboratori. Permette a più utenti autenticati di creare, modificare ed eliminare articoli blog in autonomia.
+
+### Architettura
+
+**Route Mascherata**: `/#dashq4login` (non `/#admin` per evitare bot)
+
+**Flow**:
+```
+1. Utente visita /#dashq4login
+2. DashboardLogin → Form email/password
+3. Login Success → Redirect a /#dashboard
+4. Dashboard → DashboardArticles (lista) o DashboardEditor (CRUD)
+5. Logout → Torna a /#dashq4login
+```
+
+### Componenti Dashboard
+
+#### 1. DashboardLogin.tsx (/#dashq4login)
+**Responsabilità**: Pagina di login mascherata
+
+**Features**:
+- Form email/password con validazione
+- Toggle visibilità password
+- Error handling con messaggi user-friendly
+- Loading state durante autenticazione
+- GSAP animations per UI fluida
+- Design coerente con resto del sito
+
+**Props**:
+```typescript
+interface DashboardLoginProps {
+  onLoginSuccess: () => void;  // Callback per redirect a dashboard
+}
+```
+
+#### 2. Dashboard.tsx (/#dashboard)
+**Responsabilità**: Container con auth guard
+
+**Features**:
+- Verifica sessione Supabase al mount
+- Auth listener per session changes
+- Redirect automatico a login se non autenticato
+- Loading state durante check auth
+- Gestione view switching (list ↔ editor)
+
+**Props**:
+```typescript
+interface DashboardProps {
+  onLogout: () => void;  // Callback per logout
+}
+```
+
+**Views**:
+- `list`: Mostra DashboardArticles
+- `create`: Mostra DashboardEditor vuoto
+- `edit`: Mostra DashboardEditor con post esistente
+
+#### 3. DashboardArticles.tsx
+**Responsabilità**: Lista articoli con azioni CRUD
+
+**Features**:
+- Fetch TUTTI gli articoli (published e draft)
+- Grid view con thumbnail cover image
+- Azioni per ogni articolo:
+  - ✏️ Modifica (apre editor)
+  - 🗑️ Elimina (con conferma)
+- Pulsante "Nuovo Articolo"
+- Logout button
+- Loading/error states
+- Empty state quando nessun articolo
+
+**Props**:
+```typescript
+interface DashboardArticlesProps {
+  onCreateNew: () => void;
+  onEdit: (post: BlogPost) => void;
+  onLogout: () => void;
+}
+```
+
+#### 4. DashboardEditor.tsx
+**Responsabilità**: Editor markdown per articoli
+
+**Features**:
+- **Form completo** con tutti i campi:
+  - Titolo
+  - Slug (auto-generato da titolo)
+  - Categoria (dropdown)
+  - Estratto (textarea)
+  - Contenuto (markdown editor)
+  - Cover image URL
+  - Tempo lettura
+  - Autore (dropdown team)
+- **Toggle Preview/Edit**: Anteprima live del markdown
+- **Markdown Support**: H1, H2, H3, grassetto, liste
+- **Auto-save slug**: Genera slug SEO-friendly da titolo
+- **Auto-set author image**: Seleziona foto in base all'autore
+- **Validazione**: Tutti i campi obbligatori
+- **Error handling**: Messaggi chiari in caso di errore
+
+**Props**:
+```typescript
+interface DashboardEditorProps {
+  post: BlogPost | null;  // null = create, BlogPost = edit
+  onBack: () => void;     // Torna a lista
+  onSave: () => void;     // Callback dopo save success
+}
+```
+
+### Autenticazione
+
+**Sistema**: Supabase Auth con email/password
+
+**Auth Helper Functions** (lib/supabase.ts):
+```typescript
+// Login
+signIn(email: string, password: string): Promise<AuthData>
+
+// Logout
+signOut(): Promise<void>
+
+// Get session corrente
+getSession(): Promise<Session | null>
+
+// Get utente corrente
+getCurrentUser(): Promise<User | null>
+
+// Listen auth changes
+onAuthStateChange(callback: (session: Session) => void)
+```
+
+### Setup Autenticazione
+
+**Step 1: Abilita Email Auth su Supabase**
+1. Dashboard Supabase → Authentication → Providers
+2. Abilita "Email" provider
+3. Disabilita "Confirm email" (per testing)
+
+**Step 2: Crea Utenti per Collaboratori**
+1. Dashboard Supabase → Authentication → Users
+2. Click "Invite user" o "Add user"
+3. Inserisci email collaboratore
+4. Setta password temporanea
+5. Invia credenziali al collaboratore
+
+**Step 3: Collaboratori Accedono**
+1. Visita `yoursite.com/#dashq4login`
+2. Login con email/password fornite
+3. Accesso a dashboard completo
+
+### Security
+
+**Row Level Security (RLS)**:
+```sql
+-- Policy read: pubblico può leggere articoli pubblicati
+CREATE POLICY "Allow public read access to published posts"
+  ON blog_posts FOR SELECT
+  USING (published = true);
+
+-- Policy write: solo autenticati possono scrivere
+CREATE POLICY "Allow authenticated users full access"
+  ON blog_posts FOR ALL
+  USING (auth.role() = 'authenticated');
+```
+
+**Best Practices**:
+- ✅ Route login mascherata (`dashq4login` non `admin`)
+- ✅ Session persistente con Supabase Auth
+- ✅ RLS policies per proteggere DB
+- ✅ Solo chiave `anon` nel browser (mai `service_role`)
+- ✅ Redirect automatico se non autenticato
+- ✅ Logout sicuro con cleanup session
+
+### Workflow Creazione Articolo
+
+```
+1. Utente fa login su /#dashq4login
+2. Redirect automatico a /#dashboard
+3. Click "Nuovo Articolo"
+4. Compila form editor:
+   - Scrive titolo → Slug auto-generato
+   - Seleziona categoria
+   - Scrive estratto
+   - Scrive contenuto in markdown
+   - Inserisce URL cover image
+   - Seleziona autore → Immagine auto-settata
+5. Click "Anteprima" per vedere rendering
+6. Click "Salva" → Validazione
+7. Se OK → Salvataggio su Supabase
+8. Redirect a lista articoli
+9. Articolo appare sul blog pubblico immediatamente
 ```
 
 ---
