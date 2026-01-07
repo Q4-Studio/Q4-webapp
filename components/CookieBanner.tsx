@@ -1,6 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Cookie, X, Settings } from 'lucide-react';
 
+// Type-safe GTM dataLayer interface
+declare global {
+  interface Window {
+    dataLayer?: any[];
+  }
+}
+
+// Utility function to update GTM consent
+const updateGTMConsent = (preferences: { analytics: boolean; marketing: boolean }) => {
+  if (typeof window !== 'undefined' && window.dataLayer) {
+    window.dataLayer.push({
+      event: 'consent_update',
+      analytics_storage: preferences.analytics ? 'granted' : 'denied',
+      ad_storage: preferences.marketing ? 'granted' : 'denied',
+    });
+  }
+};
+
 const CookieBanner: React.FC = () => {
   const [showBanner, setShowBanner] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -21,6 +39,9 @@ const CookieBanner: React.FC = () => {
       try {
         const saved = JSON.parse(consent);
         setPreferences(saved);
+        
+        // Apply existing consent to GTM
+        updateGTMConsent(saved);
       } catch (e) {
         console.error('Error parsing cookie consent:', e);
       }
@@ -32,6 +53,9 @@ const CookieBanner: React.FC = () => {
     localStorage.setItem('cookie_consent_date', new Date().toISOString());
     setShowBanner(false);
     setShowSettings(false);
+
+    // Initialize GTM consent mode
+    updateGTMConsent(prefs);
 
     // Here you would initialize/disable analytics and marketing scripts
     if (prefs.analytics) {
