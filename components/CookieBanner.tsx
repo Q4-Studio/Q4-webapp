@@ -21,6 +21,15 @@ const CookieBanner: React.FC = () => {
       try {
         const saved = JSON.parse(consent);
         setPreferences(saved);
+        
+        // Apply existing consent to GTM
+        if (typeof window !== 'undefined' && (window as any).dataLayer) {
+          (window as any).dataLayer.push({
+            event: 'consent_update',
+            analytics_storage: saved.analytics ? 'granted' : 'denied',
+            ad_storage: saved.marketing ? 'granted' : 'denied',
+          });
+        }
       } catch (e) {
         console.error('Error parsing cookie consent:', e);
       }
@@ -32,6 +41,15 @@ const CookieBanner: React.FC = () => {
     localStorage.setItem('cookie_consent_date', new Date().toISOString());
     setShowBanner(false);
     setShowSettings(false);
+
+    // Initialize GTM consent mode
+    if (typeof window !== 'undefined' && (window as any).dataLayer) {
+      (window as any).dataLayer.push({
+        event: 'consent_update',
+        analytics_storage: prefs.analytics ? 'granted' : 'denied',
+        ad_storage: prefs.marketing ? 'granted' : 'denied',
+      });
+    }
 
     // Here you would initialize/disable analytics and marketing scripts
     if (prefs.analytics) {
