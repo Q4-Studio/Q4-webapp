@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Hero from './components/Hero';
 import ValueProposition from './components/ValueProposition';
 import Services from './components/Services';
@@ -102,6 +103,7 @@ const App: React.FC = () => {
 
   return (
     <main className="w-full min-h-screen bg-[#050505] text-white selection:bg-indigo-500 selection:text-white cursor-none">
+      <SpeedInsights />
       {/* Navbar overlay - simplified for immersive feel */}
       <nav className="fixed top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference">
         <img
