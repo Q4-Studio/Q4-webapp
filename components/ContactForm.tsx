@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { OBFUSCATED, decode } from '../utils/obfuscate';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,6 +18,11 @@ const ContactForm: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    setEmail(decode(OBFUSCATED.email));
+  }, []);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -232,9 +238,11 @@ const ContactForm: React.FC = () => {
 
         <p className="text-center text-sm text-gray-500 mt-8">
           Oppure scrivici direttamente a{' '}
-          <a href="mailto:info@q4.studio" className="text-indigo-400 hover:text-indigo-300 transition-colors">
-            info@q4.studio
-          </a>
+          {email && (
+            <a href={`mailto:${email}`} className="text-indigo-400 hover:text-indigo-300 transition-colors">
+              {email}
+            </a>
+          )}
         </p>
       </div>
     </section>

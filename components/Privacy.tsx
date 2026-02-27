@@ -1,11 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { Shield, Cookie, Eye, Mail, FileText } from 'lucide-react';
+import { OBFUSCATED, decode } from '../utils/obfuscate';
 
 const Privacy: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    setEmail(decode(OBFUSCATED.email));
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -65,7 +71,7 @@ const Privacy: React.FC = () => {
                 <h3 className="text-xl font-semibold text-white mb-3">1. Titolare del Trattamento</h3>
                 <p>
                   Q4 Studio - P.IVA 05018960236<br />
-                  Email: <a href="mailto:info@q4.studio" className="text-indigo-400 hover:underline">info@q4.studio</a>
+                  Email: {email && <a href={`mailto:${email}`} className="text-indigo-400 hover:underline">{email}</a>}
                 </p>
               </div>
 
@@ -128,9 +134,11 @@ const Privacy: React.FC = () => {
                 </ul>
                 <p className="mt-4">
                   Per esercitare i tuoi diritti, contattaci all'email{' '}
-                  <a href="mailto:info@q4.studio" className="text-indigo-400 hover:underline">
-                    info@q4.studio
-                  </a>
+                  {email && (
+                    <a href={`mailto:${email}`} className="text-indigo-400 hover:underline">
+                      {email}
+                    </a>
+                  )}
                 </p>
               </div>
             </div>
@@ -251,12 +259,14 @@ const Privacy: React.FC = () => {
             <p className="text-gray-300 mb-4">
               Per qualsiasi domanda relativa alla privacy o ai cookie, contattaci:
             </p>
-            <a
-              href="mailto:info@q4.studio"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all duration-300"
-            >
-              info@q4.studio
-            </a>
+            {email && (
+              <a
+                href={`mailto:${email}`}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all duration-300"
+              >
+                {email}
+              </a>
+            )}
           </section>
         </div>
       </div>
