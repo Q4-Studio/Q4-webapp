@@ -3,6 +3,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import Hero from './components/Hero';
 import ValueProposition from './components/ValueProposition';
 import Services from './components/Services';
+import HowItWorks from './components/HowItWorks';
 import Team from './components/Team';
 import Marquee from './components/Marquee';
 import ContactForm from './components/ContactForm';
@@ -148,6 +149,7 @@ const App: React.FC = () => {
           <Hero />
           <ValueProposition />
           <Services />
+          <HowItWorks />
           <Team />
           <Marquee />
           <ContactForm />

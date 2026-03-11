@@ -369,11 +369,11 @@ const Hero: React.FC = () => {
             Meta + AI
           </h1>
           <p className="text-2xl md:text-3xl text-gray-300 font-light mt-2">
-            Lead Generation che converte. Automazioni che scalano.
+            Lead Generation che converte. Agenti che scalano.
           </p>
 
           <p ref={subRef} className="text-xl md:text-2xl text-gray-400 max-w-2xl leading-relaxed mt-8">
-            Specialisti in Lead Generation B2B su Meta e Automazioni AI personalizzate. Due servizi distinti, stesso obiettivo: eliminare inefficienze e moltiplicare i risultati del tuo business.
+            Specialisti in Lead Generation B2B su Meta e Agenti AI personalizzati. Due servizi distinti, stesso obiettivo: eliminare inefficienze e moltiplicare i risultati del tuo business.
           </p>
           
           <div className="mt-8 flex items-center gap-4">

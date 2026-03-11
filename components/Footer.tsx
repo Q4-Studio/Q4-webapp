@@ -92,7 +92,7 @@ const Footer: React.FC = () => {
             <div className="col-span-1 md:col-span-2 text-center md:text-left">
                 <h3 className="text-white font-bold text-lg mb-4">Q4 STUDIO</h3>
                 <p className="max-w-xs mb-4 mx-auto md:mx-0">
-                    Specialisti in B2B Lead Generation e Automazioni AI.
+                    Specialisti in B2B Lead Generation e Agenti AI.
                 </p>
                 <div className="flex flex-col gap-2 mt-4 mb-4">
                   {phone && (
@@ -164,7 +164,7 @@ const Footer: React.FC = () => {
                             }
                         }}
                     >
-                        Automazioni AI
+                        Agenti AI
                     </li>
                 </ul>
             </div>

@@ -42,7 +42,7 @@ const BlogSchema: React.FC<BlogSchemaProps> = ({ post }) => {
         "meta advertising",
         "lead generation",
         "b2b marketing",
-        "automazioni ai",
+        "agenti ai",
         post.category.toLowerCase()
       ],
       "inLanguage": "it-IT",
