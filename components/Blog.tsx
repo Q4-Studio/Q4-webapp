@@ -56,7 +56,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
       {/* SEO: Dynamic meta tags for blog listing */}
       <SEOHead
         title="Blog Q4 Studio | Guide Meta Advertising e AI Automation"
-        description="Scopri strategie avanzate di Lead Generation B2B con Meta Ads, case study e guide pratiche su automazioni AI. Il blog di Q4 Studio per far crescere il tuo business."
+        description="Scopri strategie avanzate di Lead Generation B2B con Meta Ads, case study e guide pratiche su agenti AI. Il blog di Q4 Studio per far crescere il tuo business."
         url="https://q4studio.it/#blog"
       />
 
@@ -73,7 +73,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
             Il nostro <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Automazioni AI.
+            Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Agenti AI.
           </p>
         </div>
 

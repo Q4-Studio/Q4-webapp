@@ -17,7 +17,7 @@ const teamMembers = [
     specialty: "Responsabile Tecnico",
     image: "/team/sebastiano.jpg",
     linkedin: "https://www.linkedin.com/in/sebastianoriva",
-    bio: "Esperto in sviluppo software e automazioni no-code. Gestisce l'infrastruttura tecnica di Q4 Studio, progettando e implementando sistemi di automazione AI personalizzati per i nostri clienti. Specializzato in integrazione di software e workflow intelligenti."
+    bio: "Esperto in sviluppo software e agenti no-code. Gestisce l'infrastruttura tecnica di Q4 Studio, progettando e implementando agenti AI personalizzati per i nostri clienti. Specializzato in integrazione di software e workflow intelligenti."
   },
   {
     id: 2,
