@@ -6,6 +6,7 @@ interface SEOHeadProps {
   image?: string;
   url?: string;
   type?: 'website' | 'article';
+  noIndex?: boolean;
   article?: {
     publishedTime?: string;
     author?: string;
@@ -23,6 +24,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   image = 'https://q4studio.it/og-image.jpg',
   url = 'https://q4studio.it/',
   type = 'website',
+  noIndex = false,
   article
 }) => {
   useEffect(() => {
@@ -42,6 +44,9 @@ const SEOHead: React.FC<SEOHeadProps> = ({
 
       element.content = content;
     };
+
+    // Update robots meta tag
+    updateMetaTag('robots', noIndex ? 'noindex, nofollow' : 'index, follow');
 
     // Update basic meta tags
     updateMetaTag('description', description);
@@ -81,7 +86,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
         updateMetaTag('article:section', article.section, true);
       }
     }
-  }, [title, description, image, url, type, article]);
+  }, [title, description, image, url, type, noIndex, article]);
 
   // This component doesn't render anything visible
   return null;
