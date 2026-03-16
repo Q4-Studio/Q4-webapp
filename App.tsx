@@ -16,10 +16,12 @@ import DashboardLogin from './components/DashboardLogin';
 import Dashboard from './components/Dashboard';
 import Privacy from './components/Privacy';
 import CookieBanner from './components/CookieBanner';
+import AppSupport from './components/AppSupport';
+import SEOHead from './components/SEOHead';
 import { BlogPost } from './types/blog';
 import { getBlogPosts } from './lib/supabase';
 
-type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | '404';
+type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -73,6 +75,8 @@ const App: React.FC = () => {
         setCurrentPage('blog');
       } else if (hash === 'privacy') {
         setCurrentPage('privacy');
+      } else if (hash === 'app-support') {
+        setCurrentPage('app-support');
       } else if (hash === 'dashq4login') {
         setCurrentPage('dashq4login');
       } else if (hash === 'dashboard') {
@@ -105,6 +109,13 @@ const App: React.FC = () => {
   return (
     <main className="w-full min-h-screen bg-[#050505] text-white selection:bg-indigo-500 selection:text-white cursor-none">
       <SpeedInsights />
+      {currentPage === 'app-support' && (
+        <SEOHead
+          title="Supporto App Q4 CRM"
+          description="Pagina di supporto per l'app Q4 CRM. Contattaci per assistenza."
+          noIndex={true}
+        />
+      )}
       {/* Navbar overlay - simplified for immersive feel */}
       <nav className="fixed top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference">
         <img
@@ -182,6 +193,13 @@ const App: React.FC = () => {
       {currentPage === 'privacy' && (
         <>
           <Privacy />
+          <Footer />
+        </>
+      )}
+
+      {currentPage === 'app-support' && (
+        <>
+          <AppSupport />
           <Footer />
         </>
       )}
