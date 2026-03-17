@@ -151,10 +151,10 @@
           "@type": "Organization",
           "@id": "https://q4studio.it/#organization",
           "name": "Q4 Studio",
-          "url": "https://q4studio.it",
+          "url": "https://q4.studio",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://q4studio.it/logo.png",
+            "url": "https://q4.studio/logo.png",
             "width": 250,
             "height": 60
           },
@@ -174,17 +174,48 @@
             }
           ],
           "sameAs": [
+            "https://q4studio.it",
             "https://www.instagram.com/q4.studio",
             "https://www.linkedin.com/company/q4studio/about/"
           ],
-          "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "+393349200353",
-            "contactType": "Sales",
-            "availableLanguage": ["Italian"]
-          },
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "telephone": "+39-334-920-0353",
+              "contactType": "Customer Service",
+              "areaServed": "IT",
+              "availableLanguage": ["Italian"]
+            }
+          ],
           "areaServed": "IT",
           "vatID": "05018960236"
+        },
+        {
+          "@type": "LocalBusiness",
+          "@id": "https://q4studio.it/#localbusiness",
+          "name": "Q4 Studio",
+          "url": "https://q4.studio",
+          "image": "https://q4.studio/logo.png",
+          "telephone": "+39-334-920-0353",
+          "priceRange": "€€€",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Verona",
+            "addressRegion": "VR",
+            "addressCountry": "IT"
+          },
+          "areaServed": "IT",
+          "parentOrganization": {
+            "@id": "https://q4studio.it/#organization"
+          },
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "telephone": "+39-334-920-0353",
+              "contactType": "Customer Service",
+              "areaServed": "IT"
+            }
+          ]
         },
         {
           "@type": "WebSite",
@@ -240,6 +271,36 @@
               "position": 1,
               "name": "Home",
               "item": "https://q4studio.it"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://q4studio.it/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Quanto può migliorare la lead generation B2B con Meta Ads?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Secondo il <cite>Meta Business Blog - Advantage+ case studies (2024)</cite>, le campagne ottimizzate con AI possono ridurre il costo per lead fino al 22% in benchmark verticali. In linea con questi dati, Q4 Studio usa test incrementali e segnali CRM per aumentare la qualità dei lead."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Perché integrare AI e automazioni nel funnel commerciale?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Secondo <cite>eMarketer, Worldwide Digital Ad Trends 2024</cite>, oltre il 70% dei team marketing ad alte performance utilizza automazioni per velocizzare qualificazione e follow-up. L'integrazione AI riduce i tempi di risposta e migliora la conversione dei lead inbound."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Qual è un riferimento autorevole sui risultati delle campagne AI-driven?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "\"According to Meta’s 2024 Advertising Report, AI-driven campaigns increase qualified leads by 37%.\" Questo dato viene usato come benchmark operativo da Q4 Studio insieme a KPI proprietari su CPL e SQL rate."
+              }
             }
           ]
         }
