@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import Hero from './components/Hero';
 import ValueProposition from './components/ValueProposition';
@@ -9,17 +9,18 @@ import Marquee from './components/Marquee';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
-import Blog from './components/Blog';
-import BlogArticle from './components/BlogArticle';
-import NotFound from './components/NotFound';
-import DashboardLogin from './components/DashboardLogin';
-import Dashboard from './components/Dashboard';
-import Privacy from './components/Privacy';
 import CookieBanner from './components/CookieBanner';
-import AppSupport from './components/AppSupport';
 import SEOHead from './components/SEOHead';
 import { BlogPost } from './types/blog';
 import { getBlogPosts } from './lib/supabase';
+
+const Blog = lazy(() => import('./components/Blog'));
+const BlogArticle = lazy(() => import('./components/BlogArticle'));
+const NotFound = lazy(() => import('./components/NotFound'));
+const DashboardLogin = lazy(() => import('./components/DashboardLogin'));
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const Privacy = lazy(() => import('./components/Privacy'));
+const AppSupport = lazy(() => import('./components/AppSupport'));
 
 type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | '404';
 
@@ -119,8 +120,12 @@ const App: React.FC = () => {
       {/* Navbar overlay - simplified for immersive feel */}
       <nav className="fixed top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference">
         <img
-          src="/logo.png"
+          src="/logo.webp"
           alt="Q4 Studio"
+          width={250}
+          height={60}
+          loading="eager"
+          fetchPriority="high"
           className="h-8 md:h-10 w-auto cursor-pointer"
           onClick={() => navigateTo('home')}
         />
@@ -168,57 +173,59 @@ const App: React.FC = () => {
         </>
       )}
 
-      {currentPage === 'blog' && (
-        <>
-          <Blog
-            posts={blogPosts}
-            isLoading={isLoadingBlog}
-            error={blogError}
-            onArticleClick={(slug) => navigateTo('blog-article', slug)}
+      <Suspense fallback={null}>
+        {currentPage === 'blog' && (
+          <>
+            <Blog
+              posts={blogPosts}
+              isLoading={isLoadingBlog}
+              error={blogError}
+              onArticleClick={(slug) => navigateTo('blog-article', slug)}
+            />
+            <Footer />
+          </>
+        )}
+
+        {currentPage === 'blog-article' && currentArticle && (
+          <>
+            <BlogArticle
+              post={currentArticle}
+              onBack={() => navigateTo('blog')}
+            />
+            <Footer />
+          </>
+        )}
+
+        {currentPage === 'privacy' && (
+          <>
+            <Privacy />
+            <Footer />
+          </>
+        )}
+
+        {currentPage === 'app-support' && (
+          <>
+            <AppSupport />
+            <Footer />
+          </>
+        )}
+
+        {currentPage === 'dashq4login' && (
+          <DashboardLogin
+            onLoginSuccess={() => navigateTo('dashboard')}
           />
-          <Footer />
-        </>
-      )}
+        )}
 
-      {currentPage === 'blog-article' && currentArticle && (
-        <>
-          <BlogArticle
-            post={currentArticle}
-            onBack={() => navigateTo('blog')}
+        {currentPage === 'dashboard' && (
+          <Dashboard
+            onLogout={() => navigateTo('dashq4login')}
           />
-          <Footer />
-        </>
-      )}
+        )}
 
-      {currentPage === 'privacy' && (
-        <>
-          <Privacy />
-          <Footer />
-        </>
-      )}
-
-      {currentPage === 'app-support' && (
-        <>
-          <AppSupport />
-          <Footer />
-        </>
-      )}
-
-      {currentPage === 'dashq4login' && (
-        <DashboardLogin
-          onLoginSuccess={() => navigateTo('dashboard')}
-        />
-      )}
-
-      {currentPage === 'dashboard' && (
-        <Dashboard
-          onLogout={() => navigateTo('dashq4login')}
-        />
-      )}
-
-      {currentPage === '404' && (
-        <NotFound />
-      )}
+        {currentPage === '404' && (
+          <NotFound />
+        )}
+      </Suspense>
 
     </main>
   );

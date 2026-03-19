@@ -113,6 +113,8 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
                 <img
                   src={post.coverImage}
                   alt={post.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent" />
@@ -153,6 +155,8 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
                     <img
                       src={post.author.image}
                       alt={post.author.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-8 h-8 rounded-full object-cover"
                       onError={(e) => {
                         e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=64`;
