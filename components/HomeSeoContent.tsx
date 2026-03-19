@@ -74,17 +74,15 @@ const HomeSeoContent: React.FC = () => {
         </p>
 
         <h2 className="text-3xl md:text-4xl font-bold text-white">Domande Frequenti (FAQ)</h2>
-        <h3 className="text-2xl font-semibold text-white">Cos&apos;è la B2B Lead Generation su Meta?</h3>
+        <h3 className="text-2xl font-semibold text-white">In pratica, cos&apos;è la B2B Lead Generation su Meta?</h3>
         <p className="text-lg leading-relaxed">
           La B2B Lead Generation su Meta consiste nell&apos;utilizzare Facebook e Instagram Ads per acquisire contatti qualificati da aziende target,
-          sfruttando l&apos;algoritmo Andromeda per ottimizzare le campagne. L&apos;obiettivo non è solo aumentare i lead, ma migliorare la probabilità
-          che diventino opportunità concrete per il reparto commerciale.
+          sfruttando l&apos;algoritmo Andromeda per ottimizzare le campagne.
         </p>
         <h3 className="text-2xl font-semibold text-white">Cosa sono gli Agenti AI personalizzati?</h3>
         <p className="text-lg leading-relaxed">
           Gli Agenti AI personalizzati sono sistemi automatizzati costruiti su misura per automatizzare processi di vendita, qualificazione lead
-          e customer service del tuo business. Operano su workflow reali e si integrano con gli strumenti già in uso per ridurre tempi operativi,
-          errori manuali e dispersione dei contatti.
+          e customer service del tuo business.
         </p>
       </div>
     </section>
