@@ -365,9 +365,9 @@ const Hero: React.FC = () => {
             Performance, Non Promesse
           </div>
 
-          <h1 ref={titleRef} className="text-6xl md:text-8xl lg:text-9xl font-bold leading-tight tracking-tighter text-white mix-blend-difference">
+          <h2 ref={titleRef} className="text-6xl md:text-8xl lg:text-9xl font-bold leading-tight tracking-tighter text-white mix-blend-difference">
             Meta + AI
-          </h1>
+          </h2>
           <p className="text-2xl md:text-3xl text-gray-300 font-light mt-2">
             Lead Generation che converte. Agenti che scalano.
           </p>
