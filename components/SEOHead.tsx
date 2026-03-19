@@ -19,8 +19,8 @@ interface SEOHeadProps {
  * Use this component to set page-specific SEO meta tags
  */
 const SEOHead: React.FC<SEOHeadProps> = ({
-  title = 'Q4 Studio | B2B Lead Generation e Agenti AI | Meta Advertising Specialist',
-  description = 'Specialisti in Lead Generation B2B su Meta (Facebook & Instagram) e Agenti AI personalizzati. Aumenta i contatti qualificati e automatizza i processi del tuo business con l\'algoritmo Andromeda di Meta.',
+  title = 'Q4 Studio | B2B Lead Generation & Agenti AI',
+  description = 'Specialisti in Lead Generation B2B su Meta Ads e Agenti AI personalizzati. Aumenta i contatti qualificati e automatizza i processi con l\'algoritmo Andromeda.',
   image = 'https://q4studio.it/og-image.jpg',
   url = 'https://q4studio.it/',
   type = 'website',

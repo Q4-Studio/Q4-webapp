@@ -18,6 +18,7 @@ import Privacy from './components/Privacy';
 import CookieBanner from './components/CookieBanner';
 import AppSupport from './components/AppSupport';
 import SEOHead from './components/SEOHead';
+import HomeSeoContent from './components/HomeSeoContent';
 import { BlogPost } from './types/blog';
 import { getBlogPosts } from './lib/supabase';
 
@@ -157,12 +158,21 @@ const App: React.FC = () => {
       {/* Page Routing */}
       {currentPage === 'home' && (
         <>
+          <SEOHead
+            title="Q4 Studio | B2B Lead Generation & Agenti AI"
+            description="Specialisti in Lead Generation B2B su Meta Ads e Agenti AI personalizzati. Aumenta i contatti qualificati e automatizza i processi con l'algoritmo Andromeda."
+            url="https://q4.studio/"
+          />
+          <section className="sr-only">
+            <h1>Agenzia di B2B Lead Generation su Meta Ads e Agenti AI Personalizzati</h1>
+          </section>
           <Hero />
           <ValueProposition />
           <Services />
           <HowItWorks />
           <Team />
           <Marquee />
+          <HomeSeoContent />
           <ContactForm />
           <Footer />
         </>
