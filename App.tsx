@@ -122,8 +122,8 @@ const App: React.FC = () => {
         <img
           src="/logo.webp"
           alt="Q4 Studio"
-          width={250}
-          height={60}
+          width={130}
+          height={40}
           loading="eager"
           fetchPriority="high"
           className="h-8 md:h-10 w-auto cursor-pointer"
