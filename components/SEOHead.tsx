@@ -6,6 +6,7 @@ interface SEOHeadProps {
   image?: string;
   url?: string;
   type?: 'website' | 'article';
+  noIndex?: boolean;
   article?: {
     publishedTime?: string;
     author?: string;
@@ -18,11 +19,12 @@ interface SEOHeadProps {
  * Use this component to set page-specific SEO meta tags
  */
 const SEOHead: React.FC<SEOHeadProps> = ({
-  title = 'Q4 Studio | B2B Lead Generation e Automazioni AI | Meta Advertising Specialist',
-  description = 'Specialisti in Lead Generation B2B su Meta (Facebook & Instagram) e Automazioni AI personalizzate. Aumenta i contatti qualificati e automatizza i processi del tuo business con l\'algoritmo Andromeda di Meta.',
+  title = 'Q4 Studio | B2B Lead Generation & Agenti AI',
+  description = 'Specialisti in Lead Generation B2B su Meta Ads e Agenti AI personalizzati. Aumenta i contatti qualificati e automatizza i processi con l\'algoritmo Andromeda.',
   image = 'https://q4studio.it/og-image.jpg',
   url = 'https://q4studio.it/',
   type = 'website',
+  noIndex = false,
   article
 }) => {
   useEffect(() => {
@@ -42,6 +44,9 @@ const SEOHead: React.FC<SEOHeadProps> = ({
 
       element.content = content;
     };
+
+    // Update robots meta tag
+    updateMetaTag('robots', noIndex ? 'noindex, nofollow' : 'index, follow');
 
     // Update basic meta tags
     updateMetaTag('description', description);
@@ -81,7 +86,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
         updateMetaTag('article:section', article.section, true);
       }
     }
-  }, [title, description, image, url, type, article]);
+  }, [title, description, image, url, type, noIndex, article]);
 
   // This component doesn't render anything visible
   return null;

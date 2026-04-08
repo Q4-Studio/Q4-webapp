@@ -2,21 +2,33 @@
 <html lang="it" class="bg-[#050505]">
   <head>
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-TS9PFGLR');</script>
+    <script>
+      window.addEventListener('load', function () {
+        const loadGtm = function () {
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-TS9PFGLR');
+        };
+
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadGtm, { timeout: 2500 });
+        } else {
+          setTimeout(loadGtm, 0);
+        }
+      });
+    </script>
     <!-- End Google Tag Manager -->
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Primary Meta Tags -->
-    <title>Q4 Studio | B2B Lead Generation e Automazioni AI | Meta Advertising Specialist</title>
-    <meta name="title" content="Q4 Studio | B2B Lead Generation e Automazioni AI | Meta Advertising Specialist" />
-    <meta name="description" content="Specialisti in Lead Generation B2B su Meta (Facebook & Instagram) e Automazioni AI personalizzate. Aumenta i contatti qualificati e automatizza i processi del tuo business con l'algoritmo Andromeda di Meta." />
-    <meta name="keywords" content="lead generation b2b, meta advertising, facebook ads b2b, instagram ads b2b, automazioni ai, ai automation, meta ads specialist, algoritmo andromeda, lead generation italia, crm automation, whatsapp automation" />
+    <title>Q4 Studio | B2B Lead Generation & Agenti AI</title>
+    <meta name="title" content="Q4 Studio | B2B Lead Generation & Agenti AI" />
+    <meta name="description" content="Specialisti in Lead Generation B2B su Meta Ads e Agenti AI personalizzati. Aumenta i contatti qualificati e automatizza i processi con l'algoritmo Andromeda." />
+    <meta name="keywords" content="lead generation b2b, meta advertising, facebook ads b2b, instagram ads b2b, agenti ai, ai automation, meta ads specialist, algoritmo andromeda, lead generation italia, crm automation, whatsapp automation" />
     <meta name="author" content="Q4 Studio" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://q4studio.it/" />
@@ -24,8 +36,8 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://q4studio.it/" />
-    <meta property="og:title" content="Q4 Studio | B2B Lead Generation e Automazioni AI" />
-    <meta property="og:description" content="Specialisti in Lead Generation B2B su Meta e Automazioni AI. Trasforma il tuo marketing B2B con campagne Meta ads performanti e automazioni intelligenti." />
+    <meta property="og:title" content="Q4 Studio | B2B Lead Generation e Agenti AI" />
+    <meta property="og:description" content="Specialisti in Lead Generation B2B su Meta e Agenti AI. Trasforma il tuo marketing B2B con campagne Meta ads performanti e agenti intelligenti." />
     <meta property="og:image" content="https://q4studio.it/og-image.jpg" />
     <meta property="og:locale" content="it_IT" />
     <meta property="og:site_name" content="Q4 Studio" />
@@ -33,8 +45,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://q4studio.it/" />
-    <meta name="twitter:title" content="Q4 Studio | B2B Lead Generation e Automazioni AI" />
-    <meta name="twitter:description" content="Specialisti in Lead Generation B2B su Meta e Automazioni AI. Aumenta i contatti qualificati del tuo business." />
+    <meta name="twitter:title" content="Q4 Studio | B2B Lead Generation e Agenti AI" />
+    <meta name="twitter:description" content="Specialisti in Lead Generation B2B su Meta e Agenti AI. Aumenta i contatti qualificati del tuo business." />
     <meta name="twitter:image" content="https://q4studio.it/og-image.jpg" />
 
     <!-- Geo Tags -->
@@ -50,7 +62,7 @@
     <link rel="manifest" href="/favicon/site.webmanifest">
     <link rel="shortcut icon" href="/favicon/favicon.ico">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -146,101 +158,40 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@graph": [
+      "@type": "Organization",
+      "name": "Q4 Studio",
+      "url": "https://q4.studio",
+      "description": "Specialisti in B2B Lead Generation su Meta Ads e Agenti AI personalizzati per aziende italiane.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "IT"
+      },
+      "sameAs": [
+        "https://www.facebook.com/q4studio",
+        "https://www.linkedin.com/company/q4studio"
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
         {
-          "@type": "Organization",
-          "@id": "https://q4studio.it/#organization",
-          "name": "Q4 Studio",
-          "url": "https://q4studio.it",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://q4studio.it/logo.png",
-            "width": 250,
-            "height": 60
-          },
-          "description": "Specialisti in B2B Lead Generation su Meta e Automazioni AI personalizzate. Aiutiamo le aziende B2B ad aumentare i contatti qualificati attraverso Meta Advertising e automazioni intelligenti.",
-          "address": [
-            {
-              "@type": "PostalAddress",
-              "addressLocality": "Verona",
-              "addressRegion": "VR",
-              "addressCountry": "IT"
-            },
-            {
-              "@type": "PostalAddress",
-              "addressLocality": "Reggio Emilia",
-              "addressRegion": "RE",
-              "addressCountry": "IT"
-            }
-          ],
-          "sameAs": [
-            "https://www.instagram.com/q4.studio",
-            "https://www.linkedin.com/company/q4studio/about/"
-          ],
-          "contactPoint": {
-            "@type": "ContactPoint",
-            "contactType": "Sales",
-            "availableLanguage": ["Italian"]
-          },
-          "areaServed": "IT",
-          "vatID": "05018960236"
-        },
-        {
-          "@type": "WebSite",
-          "@id": "https://q4studio.it/#website",
-          "url": "https://q4studio.it",
-          "name": "Q4 Studio",
-          "description": "B2B Lead Generation e Automazioni AI",
-          "publisher": {
-            "@id": "https://q4studio.it/#organization"
-          },
-          "inLanguage": "it-IT"
-        },
-        {
-          "@type": "ProfessionalService",
-          "@id": "https://q4studio.it/#service",
-          "name": "Q4 Studio - Servizi di Marketing Digitale B2B",
-          "url": "https://q4studio.it",
-          "priceRange": "€€€",
-          "areaServed": {
-            "@type": "Country",
-            "name": "Italy"
-          },
-          "serviceType": ["Lead Generation", "Meta Advertising", "Marketing Automation", "AI Automation"],
-          "hasOfferCatalog": {
-            "@type": "OfferCatalog",
-            "name": "Servizi Q4 Studio",
-            "itemListElement": [
-              {
-                "@type": "Offer",
-                "itemOffered": {
-                  "@type": "Service",
-                  "name": "B2B Lead Generation con Meta Ads",
-                  "description": "Campagne pubblicitarie su Facebook e Instagram ottimizzate per generare contatti qualificati B2B. Sfruttiamo l'algoritmo Andromeda di Meta per massimizzare i risultati."
-                }
-              },
-              {
-                "@type": "Offer",
-                "itemOffered": {
-                  "@type": "Service",
-                  "name": "Automazioni AI Personalizzate",
-                  "description": "Sistemi di automazione basati su AI per CRM, WhatsApp, email marketing e processi aziendali. Risparmia tempo e scala il tuo business."
-                }
-              }
-            ]
+          "@type": "Question",
+          "name": "Cos'è la B2B Lead Generation su Meta?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La B2B Lead Generation su Meta consiste nell'utilizzare Facebook e Instagram Ads per acquisire contatti qualificati da aziende target, sfruttando l'algoritmo Andromeda per ottimizzare le campagne."
           }
         },
         {
-          "@type": "BreadcrumbList",
-          "@id": "https://q4studio.it/#breadcrumb",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://q4studio.it"
-            }
-          ]
+          "@type": "Question",
+          "name": "Cosa sono gli Agenti AI personalizzati?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Gli Agenti AI personalizzati sono sistemi automatizzati costruiti su misura per automatizzare processi di vendita, qualificazione lead e customer service del tuo business."
+          }
         }
       ]
     }

@@ -42,7 +42,7 @@ Per condivisioni ottimizzate su:
 ### ✅ Schema.org Structured Data (JSON-LD)
 
 #### Homepage Schema
-**File**: `index.html` (linee 138-239)
+**File**: `index.html` (blocco JSON-LD in `<head>`)
 
 **Tipi implementati**:
 
@@ -53,20 +53,30 @@ Per condivisioni ottimizzate su:
    - P.IVA
    - Contact point
 
-2. **WebSite**
+2. **LocalBusiness**
+   - Business locale (Italia)
+   - Telefono e contatto customer service
+   - Parent organization collegata
+
+3. **WebSite**
    - URL principale
    - Publisher reference
    - Lingua
 
-3. **ProfessionalService**
+4. **ProfessionalService**
    - Tipologia servizi
    - Area servita (Italia)
    - Catalogo offerte:
      - B2B Lead Generation con Meta Ads
      - Automazioni AI Personalizzate
 
-4. **BreadcrumbList**
+5. **BreadcrumbList**
    - Navigazione strutturata
+
+6. **FAQPage**
+   - FAQ su lead generation B2B
+   - Risposte con statistiche e citazioni autorevoli
+   - Quote attribuite per GEO (ChatGPT, Claude, Gemini, Perplexity)
 
 **Benefici SEO**:
 - Rich snippets nei risultati Google
@@ -456,7 +466,7 @@ Traccia:
 
 ### Medium-term (3-6 mesi)
 
-- [ ] **FAQ Schema**: Aggiungere per domande comuni
+- [x] **FAQ Schema**: Aggiungere per domande comuni
 - [ ] **Video SEO**: Embed video YouTube ottimizzati
 - [ ] **Case studies**: Pagine dedicate con schema
 - [ ] **Service pages**: Pagine dedicate per ogni servizio

@@ -15,16 +15,16 @@ const teamMembers = [
     name: "Sebastiano Riva",
     role: "Co-Founder",
     specialty: "Responsabile Tecnico",
-    image: "/team/sebastiano.jpg",
+    image: "/team/sebastiano.webp",
     linkedin: "https://www.linkedin.com/in/sebastianoriva",
-    bio: "Esperto in sviluppo software e automazioni no-code. Gestisce l'infrastruttura tecnica di Q4 Studio, progettando e implementando sistemi di automazione AI personalizzati per i nostri clienti. Specializzato in integrazione di software e workflow intelligenti."
+    bio: "Esperto in sviluppo software e agenti no-code. Gestisce l'infrastruttura tecnica di Q4 Studio, progettando e implementando agenti AI personalizzati per i nostri clienti. Specializzato in integrazione di software e workflow intelligenti."
   },
   {
     id: 2,
     name: "Riccardo Splisteser",
     role: "Co-Founder",
     specialty: "Responsabile Commerciale",
-    image: "/team/riccardo.jpg",
+    image: "/team/riccardo.webp",
     linkedin: "https://www.linkedin.com/in/riccardo-splisteser",
     bio: "Specialista in strategie di vendita B2B e lead generation. Coordina il team commerciale di Q4 Studio, assicurando che ogni lead venga gestito con tempistiche perfette. Esperto in processi di qualificazione e conversione ad alto valore."
   },
@@ -122,6 +122,8 @@ const Team: React.FC = () => {
                   <img
                     src={member.image}
                     alt={member.name}
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                     onError={(e) => {
                       e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=4f46e5&color=fff&size=800`;

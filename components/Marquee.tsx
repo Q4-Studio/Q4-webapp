@@ -6,12 +6,12 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Array di loghi clienti reali
 const logos = [
-  { name: "MES Connettori", path: "/logos/mes-connettori.png" },
-  { name: "RR Auto", path: "/logos/rr-auto.png" },
-  { name: "Senza Stress Ristrutturare", path: "/logos/senza-stress-ristrutturare.png" },
-  { name: "Trenove", path: "/logos/trenove.png" },
-  { name: "GP Meccatronica", path: "/logos/gp-meccatronica.png" },
-  { name: "Posenato", path: "/logos/posenato.png" },
+  { name: "MES Connettori", path: "/logos/mes-connettori.webp" },
+  { name: "RR Auto", path: "/logos/rr-auto.webp" },
+  { name: "Senza Stress Ristrutturare", path: "/logos/senza-stress-ristrutturare.webp" },
+  { name: "Trenove", path: "/logos/trenove.webp" },
+  { name: "GP Meccatronica", path: "/logos/gp-meccatronica.webp" },
+  { name: "Posenato", path: "/logos/posenato.webp" },
 ];
 
 const Marquee: React.FC = () => {
@@ -76,6 +76,8 @@ const Marquee: React.FC = () => {
                     <img
                         src={logo.path}
                         alt={logo.name}
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-auto object-contain"
                     />
                 </div>

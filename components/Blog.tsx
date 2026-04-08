@@ -56,7 +56,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
       {/* SEO: Dynamic meta tags for blog listing */}
       <SEOHead
         title="Blog Q4 Studio | Guide Meta Advertising e AI Automation"
-        description="Scopri strategie avanzate di Lead Generation B2B con Meta Ads, case study e guide pratiche su automazioni AI. Il blog di Q4 Studio per far crescere il tuo business."
+        description="Scopri strategie avanzate di Lead Generation B2B con Meta Ads, case study e guide pratiche su agenti AI. Il blog di Q4 Studio per far crescere il tuo business."
         url="https://q4studio.it/#blog"
       />
 
@@ -73,7 +73,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
             Il nostro <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Automazioni AI.
+            Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Agenti AI.
           </p>
         </div>
 
@@ -113,6 +113,8 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
                 <img
                   src={post.coverImage}
                   alt={post.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent" />
@@ -153,6 +155,8 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
                     <img
                       src={post.author.image}
                       alt={post.author.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-8 h-8 rounded-full object-cover"
                       onError={(e) => {
                         e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=64`;

@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowUpRight, Instagram, Linkedin } from 'lucide-react';
+import { ArrowUpRight, Instagram, Linkedin, Phone, Mail } from 'lucide-react';
 import MagneticButton from './MagneticButton';
+import { OBFUSCATED, decode } from '../utils/obfuscate';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,6 +13,13 @@ const Footer: React.FC = () => {
   const buttonWrapperRef = useRef<HTMLDivElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    setPhone(decode(OBFUSCATED.phone));
+    setEmail(decode(OBFUSCATED.email));
+  }, []);
 
   useEffect(() => {
     if (!footerRef.current) return;
@@ -84,8 +92,22 @@ const Footer: React.FC = () => {
             <div className="col-span-1 md:col-span-2 text-center md:text-left">
                 <h3 className="text-white font-bold text-lg mb-4">Q4 STUDIO</h3>
                 <p className="max-w-xs mb-4 mx-auto md:mx-0">
-                    Specialisti in B2B Lead Generation e Automazioni AI.
+                    Specialisti in B2B Lead Generation e Agenti AI.
                 </p>
+                <div className="flex flex-col gap-2 mt-4 mb-4">
+                  {phone && (
+                    <a href={`tel:${phone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-gray-400 hover:text-indigo-400 transition-colors justify-center md:justify-start">
+                      <Phone className="w-4 h-4 flex-shrink-0" />
+                      <span>{phone}</span>
+                    </a>
+                  )}
+                  {email && (
+                    <a href={`mailto:${email}`} className="flex items-center gap-2 text-gray-400 hover:text-indigo-400 transition-colors justify-center md:justify-start">
+                      <Mail className="w-4 h-4 flex-shrink-0" />
+                      <span>{email}</span>
+                    </a>
+                  )}
+                </div>
                 <div className="flex gap-4 mt-6 justify-center md:justify-start">
                     <a
                         href="https://www.instagram.com/q4.studio"
@@ -142,7 +164,7 @@ const Footer: React.FC = () => {
                             }
                         }}
                     >
-                        Automazioni AI
+                        Agenti AI
                     </li>
                 </ul>
             </div>

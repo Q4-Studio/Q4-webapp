@@ -16,8 +16,8 @@ const services: ServiceItem[] = [
   },
   {
     id: 2,
-    title: "Automazioni AI",
-    description: "Realizziamo automazioni AI completamente personalizzate senza i costi proibitivi del mercato tradizionale. Il nostro modello snello no-code ci permette di costruire e deployare workflow intelligenti in pochi giorni, non mesi. Automatizziamo invio ordini, processi aziendali interni, attività ripetitive, data entry e collegamento tra software diversi. Il tuo team si libera dalle operazioni manuali e si concentra sul valore.",
+    title: "Agenti AI",
+    description: "Realizziamo agenti AI completamente personalizzati senza i costi proibitivi del mercato tradizionale. Il nostro modello snello no-code ci permette di costruire e deployare workflow intelligenti in pochi giorni, non mesi. Automatizziamo invio ordini, processi aziendali interni, attività ripetitive, data entry e collegamento tra software diversi. Il tuo team si libera dalle operazioni manuali e si concentra sul valore.",
     icon: <Bot className="w-12 h-12 text-purple-400" />,
     span: "md:col-span-1"
   }
@@ -73,7 +73,7 @@ const Services: React.FC = () => {
             Le nostre <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Soluzioni</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl leading-relaxed">
-            Due servizi core e indipendenti. Da un lato, generiamo lead qualificati su Meta con targeting chirurgico. Dall'altro, costruiamo automazioni AI su misura per eliminare task ripetitivi e scalare operazioni. Entrambi progettati per massimizzare il ROI.
+            Due servizi core e indipendenti. Da un lato, generiamo lead qualificati su Meta con targeting chirurgico. Dall'altro, costruiamo agenti AI su misura per eliminare task ripetitivi e scalare operazioni. Entrambi progettati per massimizzare il ROI.
           </p>
         </div>
 

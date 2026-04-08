@@ -19,7 +19,7 @@ const features = [
   {
     icon: <Database className="w-8 h-8 text-purple-400" />,
     title: "Tecnologia no-code, costi reali",
-    desc: "Le automazioni AI personalizzate non devono costare una fortuna. Il nostro stack no-code ci permette di costruire soluzioni enterprise-grade mantenendo prezzi accessibili. Qualità senza sprechi."
+    desc: "Gli agenti AI personalizzati non devono costare una fortuna. Il nostro stack no-code ci permette di costruire soluzioni enterprise-grade mantenendo prezzi accessibili. Qualità senza sprechi."
   },
   {
     icon: <TrendingUp className="w-8 h-8 text-pink-400" />,

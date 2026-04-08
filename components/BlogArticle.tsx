@@ -162,6 +162,8 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
               <img
                 src={post.author.image}
                 alt={post.author.name}
+                loading="lazy"
+                decoding="async"
                 className="w-12 h-12 rounded-full object-cover"
                 onError={(e) => {
                   e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=96`;
@@ -188,6 +190,8 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
             <img
               src={post.coverImage}
               alt={post.title}
+              loading="eager"
+              fetchPriority="high"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
@@ -205,6 +209,8 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
             <img
               src={post.author.image}
               alt={post.author.name}
+              loading="lazy"
+              decoding="async"
               className="w-20 h-20 rounded-full object-cover"
               onError={(e) => {
                 e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=160`;
