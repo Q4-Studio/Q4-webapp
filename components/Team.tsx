@@ -33,7 +33,7 @@ const teamMembers = [
     name: "Nicolò Pozzato",
     role: "Co-Founder",
     specialty: "Responsabile Marketing",
-    image: "/team/nicolo.webp",
+    image: "/team/nicolop.jpg",
     linkedin: "https://www.linkedin.com/in/nicolo-pozzato",
     bio: "Esperto in Meta Advertising e strategie di acquisizione clienti. Gestisce campagne Meta (Facebook e Instagram) ad alte performance, con focus su targeting chirurgico e ottimizzazione continua. Specializzato in lead generation B2B e funnel multicanale."
   }

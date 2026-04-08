@@ -19,7 +19,7 @@ const DashboardEditor: React.FC<DashboardEditorProps> = ({ post, onBack, onSave 
   const [category, setCategory] = useState(post?.category || 'Meta Advertising');
   const [readTime, setReadTime] = useState(post?.readTime || '5 min');
   const [authorName, setAuthorName] = useState(post?.author.name || 'Nicolò Pozzato');
-  const [authorImage, setAuthorImage] = useState(post?.author.image || '/team/nicolo.jpg');
+  const [authorImage, setAuthorImage] = useState(post?.author.image || '/team/nicolop.jpg');
   const [showPreview, setShowPreview] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -297,15 +297,15 @@ const DashboardEditor: React.FC<DashboardEditorProps> = ({ post, onBack, onSave 
                   onChange={(e) => {
                     setAuthorName(e.target.value);
                     // Auto-set author image based on name
-                    if (e.target.value === 'Nicolò Pozzato') setAuthorImage('/team/nicolo.jpg');
-                    if (e.target.value === 'Sebastiano Zanardo') setAuthorImage('/team/sebastiano.jpg');
-                    if (e.target.value === 'Lorenzo Bianchi') setAuthorImage('/team/lorenzo.jpg');
+                    if (e.target.value === 'Nicolò Pozzato') setAuthorImage('/team/nicolop.jpg');
+                    if (e.target.value === 'Sebastiano Riva') setAuthorImage('/team/sebastiano.jpg');
+                    if (e.target.value === 'Riccardo Splisteser') setAuthorImage('/team/riccardo.jpg');
                   }}
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors"
                 >
                   <option value="Nicolò Pozzato">Nicolò Pozzato</option>
-                  <option value="Sebastiano Zanardo">Sebastiano Zanardo</option>
-                  <option value="Lorenzo Bianchi">Lorenzo Bianchi</option>
+                  <option value="Sebastiano Riva">Sebastiano Riva</option>
+                  <option value="Riccardo Splisteser">Riccardo Splisteser</option>
                 </select>
               </div>
 
