@@ -3,8 +3,12 @@
 
 User-agent: *
 Allow: /
+Allow: /directory
+Allow: /seo/
 Disallow: /dashq4login
 Disallow: /dashboard
+Disallow: /#dashq4login
+Disallow: /#dashboard
 
 # Sitemap
 Sitemap: https://q4studio.it/sitemap.xml

@@ -14,6 +14,7 @@ import SEOHead from './components/SEOHead';
 import HomeSeoContent from './components/HomeSeoContent';
 import { BlogPost } from './types/blog';
 import { getBlogPosts } from './lib/supabase';
+import { getSeoPageBySlug, siteUrl } from './data/seoPages';
 
 const Blog = lazy(() => import('./components/Blog'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
@@ -22,12 +23,15 @@ const DashboardLogin = lazy(() => import('./components/DashboardLogin'));
 const Dashboard = lazy(() => import('./components/Dashboard'));
 const Privacy = lazy(() => import('./components/Privacy'));
 const AppSupport = lazy(() => import('./components/AppSupport'));
+const SeoDirectory = lazy(() => import('./components/SeoDirectory'));
+const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
 
-type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | '404';
+type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [currentArticleSlug, setCurrentArticleSlug] = useState<string>('');
+  const [currentSeoSlug, setCurrentSeoSlug] = useState<string>('');
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoadingBlog, setIsLoadingBlog] = useState(true);
   const [blogError, setBlogError] = useState<string | null>(null);
@@ -56,12 +60,24 @@ const App: React.FC = () => {
     return blogPosts.find(post => post.slug === slug);
   };
 
-  // Simple hash-based routing
+  // Route public SEO pages with real paths; keep legacy hash routes for the existing blog/dashboard UI.
   useEffect(() => {
-    const handleHashChange = () => {
+    const handleRouteChange = () => {
+      const path = window.location.pathname.replace(/\/$/, '') || '/';
       const hash = window.location.hash.slice(1); // Remove #
 
-      if (hash.startsWith('blog/')) {
+      if (path === '/directory') {
+        setCurrentPage('directory');
+        setCurrentSeoSlug('');
+      } else if (path.startsWith('/seo/')) {
+        const slug = path.replace('/seo/', '');
+        if (getSeoPageBySlug(slug)) {
+          setCurrentSeoSlug(slug);
+          setCurrentPage('seo-page');
+        } else {
+          setCurrentPage('404');
+        }
+      } else if (hash.startsWith('blog/')) {
         const slug = hash.replace('blog/', '');
         const post = getBlogPostBySlug(slug);
         if (post) {
@@ -93,20 +109,35 @@ const App: React.FC = () => {
       window.scrollTo({ top: 0 });
     };
 
-    handleHashChange(); // Initial load
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    handleRouteChange(); // Initial load
+    window.addEventListener('hashchange', handleRouteChange);
+    window.addEventListener('popstate', handleRouteChange);
+    return () => {
+      window.removeEventListener('hashchange', handleRouteChange);
+      window.removeEventListener('popstate', handleRouteChange);
+    };
   }, [blogPosts, isLoadingBlog]);
 
   const navigateTo = (page: Page, slug?: string) => {
     if (page === 'blog-article' && slug) {
+      if (window.location.pathname !== '/') {
+        window.history.pushState(null, '', '/');
+      }
       window.location.hash = `blog/${slug}`;
+    } else if (page === 'home') {
+      window.history.pushState(null, '', '/');
+      setCurrentPage('home');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
+      if (window.location.pathname !== '/') {
+        window.history.pushState(null, '', '/');
+      }
       window.location.hash = page === 'home' ? '' : page;
     }
   };
 
   const currentArticle = currentArticleSlug ? getBlogPostBySlug(currentArticleSlug) : null;
+  const currentSeoPage = currentSeoSlug ? getSeoPageBySlug(currentSeoSlug) : null;
 
   return (
     <main className="w-full min-h-screen bg-[#050505] text-white selection:bg-indigo-500 selection:text-white cursor-none">
@@ -166,7 +197,7 @@ const App: React.FC = () => {
           <SEOHead
             title="Q4 Studio | B2B Lead Generation & Agenti AI"
             description="Specialisti in Lead Generation B2B su Meta Ads e Agenti AI personalizzati. Aumenta i contatti qualificati e automatizza i processi con l'algoritmo Andromeda."
-            url="https://q4.studio/"
+            url={`${siteUrl}/`}
           />
           <section className="sr-only">
             <h1>Agenzia di B2B Lead Generation su Meta Ads e Agenti AI Personalizzati</h1>
@@ -216,6 +247,20 @@ const App: React.FC = () => {
         {currentPage === 'app-support' && (
           <>
             <AppSupport />
+            <Footer />
+          </>
+        )}
+
+        {currentPage === 'directory' && (
+          <>
+            <SeoDirectory />
+            <Footer />
+          </>
+        )}
+
+        {currentPage === 'seo-page' && currentSeoPage && (
+          <>
+            <SeoLandingPage page={currentSeoPage} />
             <Footer />
           </>
         )}

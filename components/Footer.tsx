@@ -21,6 +21,19 @@ const Footer: React.FC = () => {
     setEmail(decode(OBFUSCATED.email));
   }, []);
 
+  const scrollHomeSection = (sectionId: string) => {
+    if (window.location.pathname !== '/' || (window.location.hash && window.location.hash !== '#' && window.location.hash !== '#home')) {
+      window.history.pushState(null, '', '/');
+      window.dispatchEvent(new Event('popstate'));
+      setTimeout(() => {
+        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+      return;
+    }
+
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
   useEffect(() => {
     if (!footerRef.current) return;
 
@@ -132,37 +145,13 @@ const Footer: React.FC = () => {
                 <ul className="space-y-2">
                     <li
                         className="hover:text-indigo-400 cursor-pointer transition-colors"
-                        onClick={() => {
-                            // If not on home page, navigate to home first
-                            if (window.location.hash && window.location.hash !== '#' && window.location.hash !== '#home') {
-                                window.location.hash = 'home';
-                                setTimeout(() => {
-                                    const servicesSection = document.getElementById('services');
-                                    servicesSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                }, 100);
-                            } else {
-                                const servicesSection = document.getElementById('services');
-                                servicesSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            }
-                        }}
+                        onClick={() => scrollHomeSection('services')}
                     >
                         B2B Lead Generation
                     </li>
                     <li
                         className="hover:text-indigo-400 cursor-pointer transition-colors"
-                        onClick={() => {
-                            // If not on home page, navigate to home first
-                            if (window.location.hash && window.location.hash !== '#' && window.location.hash !== '#home') {
-                                window.location.hash = 'home';
-                                setTimeout(() => {
-                                    const servicesSection = document.getElementById('services');
-                                    servicesSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                }, 100);
-                            } else {
-                                const servicesSection = document.getElementById('services');
-                                servicesSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            }
-                        }}
+                        onClick={() => scrollHomeSection('services')}
                     >
                         Agenti AI
                     </li>
@@ -171,9 +160,19 @@ const Footer: React.FC = () => {
             <div>
                  <h4 className="text-white font-bold mb-4">Legale</h4>
                 <ul className="space-y-2">
+                    <li>
+                        <a href="/directory" className="hover:text-indigo-400 transition-colors">
+                            Directory SEO
+                        </a>
+                    </li>
                     <li
                         className="hover:text-indigo-400 cursor-pointer transition-colors"
-                        onClick={() => { window.location.hash = 'privacy'; }}
+                        onClick={() => {
+                            if (window.location.pathname !== '/') {
+                                window.history.pushState(null, '', '/');
+                            }
+                            window.location.hash = 'privacy';
+                        }}
                     >
                         Privacy & Cookie Policy
                     </li>

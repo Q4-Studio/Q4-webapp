@@ -1,4 +1,14 @@
 {
+  "rewrites": [
+    {
+      "source": "/directory",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/seo/:slug",
+      "destination": "/index.html"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

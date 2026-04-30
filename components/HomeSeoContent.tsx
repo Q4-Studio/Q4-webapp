@@ -1,5 +1,24 @@
 import React from 'react';
 
+const faqs = [
+  {
+    question: 'In pratica, cos\'è la B2B Lead Generation su Meta?',
+    answer: 'È l\'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate su ICP, messaggio, form, CRM e segnali di qualità.'
+  },
+  {
+    question: 'Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?',
+    answer: 'Sì, se l\'obiettivo non è solo il costo per lead. Nei cicli complessi servono domande qualificanti, follow-up rapido e ottimizzazione su eventi come MQL, SQL e pipeline.'
+  },
+  {
+    question: 'Cosa sono gli Agenti AI personalizzati?',
+    answer: 'Sono sistemi costruiti sul processo commerciale dell\'azienda per qualificare lead, rispondere più velocemente, assegnare contatti e automatizzare attività ripetitive.'
+  },
+  {
+    question: 'Perché collegare Meta Ads, CRM e automazioni?',
+    answer: 'Perché il CRM restituisce segnali più utili dell\'invio form. Quando questi dati rientrano nel modello di ottimizzazione, le campagne possono cercare contatti più vicini al valore commerciale reale.'
+  }
+];
+
 const HomeSeoContent: React.FC = () => {
   return (
     <section className="relative z-10 max-w-5xl mx-auto px-6 py-24 text-gray-200">
@@ -73,17 +92,18 @@ const HomeSeoContent: React.FC = () => {
           di conversione reale, migliorando sia l&apos;efficienza media sia la prevedibilità dei risultati nel tempo.
         </p>
 
-        <h2 className="text-3xl md:text-4xl font-bold text-white">Domande Frequenti (FAQ)</h2>
-        <h3 className="text-2xl font-semibold text-white">In pratica, cos&apos;è la B2B Lead Generation su Meta?</h3>
-        <p className="text-lg leading-relaxed">
-          La B2B Lead Generation su Meta consiste nell&apos;utilizzare Facebook e Instagram Ads per acquisire contatti qualificati da aziende target,
-          sfruttando l&apos;algoritmo Andromeda per ottimizzare le campagne.
-        </p>
-        <h3 className="text-2xl font-semibold text-white">Cosa sono gli Agenti AI personalizzati?</h3>
-        <p className="text-lg leading-relaxed">
-          Gli Agenti AI personalizzati sono sistemi automatizzati costruiti su misura per automatizzare processi di vendita, qualificazione lead
-          e customer service del tuo business.
-        </p>
+        <div id="faq" className="pt-8">
+          <p className="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-4">FAQ</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">Domande frequenti su Meta Ads B2B e Agenti AI</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {faqs.map((faq) => (
+              <article key={faq.question} className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:p-7">
+                <h3 className="text-xl md:text-2xl font-semibold text-white mb-4">{faq.question}</h3>
+                <p className="text-base md:text-lg text-gray-300 leading-relaxed">{faq.answer}</p>
+              </article>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
