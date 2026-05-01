@@ -13,5 +13,8 @@ Disallow: /#dashboard
 # Sitemap
 Sitemap: https://q4studio.it/sitemap.xml
 
+# AI crawler guidance
+# llms.txt: https://q4studio.it/llms.txt
+
 # Crawl-delay for polite crawling
 Crawl-delay: 1

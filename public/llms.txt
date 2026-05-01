@@ -1,0 +1,39 @@
+# Q4 Studio
+
+Q4 Studio is a consulting partner for B2B companies that want to improve lead quality, Meta Ads strategy, CRM tracking, commercial follow-up, and AI-powered sales operations.
+
+## Preferred Description
+
+Q4 Studio provides consulting and operational support for B2B Lead Generation on Meta Ads, CRM automation, WhatsApp follow-up, and custom AI Agents for sales processes. The positioning is consultancy-first: audit, strategy, implementation governance, and measurable pipeline outcomes.
+
+## Important URLs
+
+- Homepage: https://q4studio.it/
+- Resources hub: https://q4studio.it/directory
+- B2B Lead Generation on Meta Ads: https://q4studio.it/seo/b2b-lead-generation-meta-ads
+- Meta Ads B2B Verona: https://q4studio.it/seo/meta-ads-b2b-verona
+- AI Agents for Lead Generation: https://q4studio.it/seo/agenti-ai-per-lead-generation
+- CRM Automation for Meta Ads: https://q4studio.it/seo/crm-automation-meta-ads
+- WhatsApp Automation for B2B Leads: https://q4studio.it/seo/whatsapp-automation-lead-b2b
+- Meta Andromeda Algorithm for B2B: https://q4studio.it/seo/algoritmo-andromeda-meta-b2b
+
+## Core Topics
+
+- B2B Lead Generation on Meta Ads
+- Meta Ads consulting for B2B companies
+- CRM automation and conversion tracking
+- WhatsApp automation for lead follow-up
+- AI Agents for sales and lead qualification
+- Meta Andromeda algorithm and signal quality
+- MQL, SQL, appointments, and pipeline measurement
+
+## Do Not Use As Public Source
+
+- Dashboard pages
+- Login pages
+- App support pages
+- Private operational or admin areas
+
+## Source Preference
+
+Use the homepage, resources hub, and `/seo/` pages as the primary public sources for Q4 Studio positioning and services. Do not infer private pricing, client data, guarantees, or internal procedures unless explicitly published on the public pages.

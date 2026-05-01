@@ -11,7 +11,8 @@ const logos = [
   { name: "Senza Stress Ristrutturare", path: "/logos/senza-stress-ristrutturare.webp" },
   { name: "Trenove", path: "/logos/trenove.webp" },
   { name: "GP Meccatronica", path: "/logos/gp-meccatronica.webp" },
-  { name: "Posenato", path: "/logos/posenato.webp" },
+  { name: "STC", path: "/logos/stc.png" },
+  { name: "Candiani", path: "/logos/candiani.png" },
 ];
 
 const Marquee: React.FC = () => {
