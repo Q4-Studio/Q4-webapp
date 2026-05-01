@@ -103,7 +103,15 @@ const Footer: React.FC = () => {
 
         <div ref={linksRef} className="w-full grid grid-cols-1 md:grid-cols-4 gap-8 border-t border-white/10 pt-10 text-sm text-gray-400">
             <div className="col-span-1 md:col-span-2 text-center md:text-left">
-                <h3 className="text-white font-bold text-lg mb-4">Q4 STUDIO</h3>
+                <img
+                  src="/logo.webp"
+                  alt="Q4 Studio"
+                  width={130}
+                  height={40}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-8 md:h-10 w-auto mb-4 mx-auto md:mx-0"
+                />
                 <p className="max-w-xs mb-4 mx-auto md:mx-0">
                     Specialisti in B2B Lead Generation e Agenti AI.
                 </p>
@@ -162,7 +170,7 @@ const Footer: React.FC = () => {
                 <ul className="space-y-2">
                     <li>
                         <a href="/directory" className="hover:text-indigo-400 transition-colors">
-                            Directory SEO
+                            Risorse
                         </a>
                     </li>
                     <li

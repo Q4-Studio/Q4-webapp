@@ -1,4 +1,5 @@
 import React from 'react';
+import { ChevronDown } from 'lucide-react';
 
 const faqs = [
   {
@@ -92,18 +93,32 @@ const HomeSeoContent: React.FC = () => {
           di conversione reale, migliorando sia l&apos;efficienza media sia la prevedibilità dei risultati nel tempo.
         </p>
 
-        <div id="faq" className="pt-8">
-          <p className="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-4">FAQ</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">Domande frequenti su Meta Ads B2B e Agenti AI</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <section id="faq" className="pt-10 border-t border-white/10">
+          <div className="mb-8">
+            <p className="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-4">FAQ</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Domande frequenti su Meta Ads B2B e Agenti AI</h2>
+            <p className="text-lg text-gray-400 leading-relaxed max-w-3xl">
+              Abbiamo raccolto in un unico punto le risposte operative sulle campagne Meta B2B, sugli Agenti AI e sul collegamento con CRM e automazioni.
+            </p>
+          </div>
+
+          <div className="space-y-4">
             {faqs.map((faq) => (
-              <article key={faq.question} className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:p-7">
-                <h3 className="text-xl md:text-2xl font-semibold text-white mb-4">{faq.question}</h3>
-                <p className="text-base md:text-lg text-gray-300 leading-relaxed">{faq.answer}</p>
-              </article>
+              <details
+                key={faq.question}
+                className="group rounded-3xl border border-white/10 bg-white/[0.03] px-6 py-5 transition-colors open:border-indigo-400/40 open:bg-indigo-500/[0.06]"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-6">
+                  <h3 className="text-xl md:text-2xl font-semibold text-white">{faq.question}</h3>
+                  <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-indigo-300 transition-transform group-open:rotate-180">
+                    <ChevronDown className="h-5 w-5" />
+                  </span>
+                </summary>
+                <p className="mt-5 max-w-3xl text-base md:text-lg text-gray-300 leading-relaxed">{faq.answer}</p>
+              </details>
             ))}
           </div>
-        </div>
+        </section>
       </div>
     </section>
   );
