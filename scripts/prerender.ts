@@ -1,7 +1,12 @@
 import { seoPages, siteUrl } from '../data/seoPages.ts';
-import { createWriteStream, mkdirSync, existsSync, copyFileSync } from 'fs';
+import { createClient } from '@supabase/supabase-js';
+import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env.local if present
+dotenv.config({ path: join(dirname(fileURLToPath(import.meta.url)), '..', '.env.local') });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -344,7 +349,208 @@ function generateBlogIndexHtml(): string {
   });
 }
 
-function generateSitemap(): string {
+// Supabase client for build-time fetch
+const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || '';
+
+const supabase = supabaseUrl && supabaseAnonKey
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
+
+async function fetchBlogPosts() {
+  if (!supabase) {
+    console.warn('⚠️  Supabase not configured. Skipping blog prerender.');
+    return [];
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('published', true)
+      .order('date', { ascending: false });
+
+    if (error) {
+      console.error('❌ Error fetching blog posts:', error.message);
+      return [];
+    }
+
+    return (data || []).map((dbPost: any) => ({
+      id: dbPost.id,
+      slug: dbPost.slug,
+      title: dbPost.title,
+      excerpt: dbPost.excerpt,
+      content: dbPost.content,
+      coverImage: dbPost.cover_image,
+      category: dbPost.category,
+      date: dbPost.date,
+      readTime: dbPost.read_time,
+      author: {
+        name: dbPost.author_name,
+        image: dbPost.author_image,
+      },
+    }));
+  } catch (err) {
+    console.error('❌ Exception fetching blog posts:', err);
+    return [];
+  }
+}
+
+// Simple markdown renderer matching BlogArticle.tsx logic
+function renderMarkdown(content: string): string {
+  const lines = content.trim().split('\n');
+  const elements: string[] = [];
+  let currentList: string[] = [];
+
+  const flushList = () => {
+    if (currentList.length > 0) {
+      elements.push(`<ol class="list-decimal list-inside space-y-2 mb-6 text-gray-300">${currentList.map((item) => `<li class="leading-relaxed">${item}</li>`).join('')}</ol>`);
+      currentList = [];
+    }
+  };
+
+  lines.forEach((line) => {
+    if (line.startsWith('# ')) {
+      flushList();
+      elements.push(`<h1 class="text-4xl md:text-5xl font-bold mb-6 mt-8">${escapeHtml(line.replace('# ', ''))}</h1>`);
+    } else if (line.startsWith('## ')) {
+      flushList();
+      elements.push(`<h2 class="text-3xl md:text-4xl font-bold mb-4 mt-8 text-indigo-300">${escapeHtml(line.replace('## ', ''))}</h2>`);
+    } else if (line.startsWith('### ')) {
+      flushList();
+      elements.push(`<h3 class="text-2xl font-bold mb-3 mt-6 text-purple-300">${escapeHtml(line.replace('### ', ''))}</h3>`);
+    } else if (/^\d+\.\s/.test(line)) {
+      const text = line.replace(/^\d+\.\s/, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      currentList.push(text);
+    } else if (line.trim() === '') {
+      flushList();
+    } else if (line.trim() !== '') {
+      flushList();
+      const html = line.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
+      elements.push(`<p class="text-lg text-gray-300 leading-relaxed mb-4">${html}</p>`);
+    }
+  });
+
+  flushList();
+  return elements.join('\n');
+}
+
+function generateBlogArticleHtml(post: any): string {
+  const pageUrl = `${siteUrl}/blog/${post.slug}`;
+  const publishedDate = new Date(post.date).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+  const renderedContent = renderMarkdown(post.content);
+
+  const blogSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    image: post.coverImage,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      '@type': 'Person',
+      name: post.author.name,
+      image: post.author.image,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Q4 Studio',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/logo.png`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': pageUrl,
+    },
+    articleSection: post.category,
+    keywords: ['meta advertising', 'lead generation', 'b2b marketing', 'agenti ai', post.category.toLowerCase()],
+    inLanguage: 'it-IT',
+    timeRequired: post.readTime,
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteUrl}/blog` },
+      { '@type': 'ListItem', position: 3, name: post.title, item: pageUrl },
+    ],
+  };
+
+  const bodyContent = `
+    <article class="relative pt-32 pb-20 px-6 bg-[#050505] text-white min-h-screen">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none"></div>
+      <div class="max-w-4xl mx-auto relative z-10">
+        <nav aria-label="Breadcrumb" class="mb-8">
+          <ol class="flex items-center gap-2 text-sm text-gray-400">
+            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
+            <li>/</li>
+            <li><a href="/blog" class="hover:text-indigo-300 transition-colors">Blog</a></li>
+            <li>/</li>
+            <li class="text-gray-300">${escapeHtml(post.title)}</li>
+          </ol>
+        </nav>
+
+        <div>
+          <div class="inline-block px-4 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/30 mb-6">
+            <span class="text-indigo-300 text-sm font-medium">${escapeHtml(post.category)}</span>
+          </div>
+
+          <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">${escapeHtml(post.title)}</h1>
+
+          <div class="flex flex-wrap items-center gap-6 text-gray-400 mb-8 pb-8 border-b border-white/10">
+            <div class="flex items-center gap-3">
+              <img src="${post.author.image}" alt="${escapeHtml(post.author.name)}" loading="lazy" decoding="async" class="w-12 h-12 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=96'" />
+              <div>
+                <p class="text-white font-medium">${escapeHtml(post.author.name)}</p>
+                <div class="flex items-center gap-4 text-sm">
+                  <span>${publishedDate}</span>
+                  <span>${post.readTime} di lettura</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative h-[400px] rounded-3xl overflow-hidden mb-12">
+            <img src="${post.coverImage}" alt="${escapeHtml(post.title)}" loading="eager" fetchpriority="high" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent"></div>
+          </div>
+        </div>
+
+        <div class="prose prose-invert prose-lg max-w-none">
+          ${renderedContent}
+        </div>
+
+        <div class="mt-16 p-8 rounded-3xl bg-gradient-to-br from-indigo-950/30 to-purple-950/30 border border-white/10">
+          <div class="flex flex-col md:flex-row items-center gap-6">
+            <img src="${post.author.image}" alt="${escapeHtml(post.author.name)}" loading="lazy" decoding="async" class="w-20 h-20 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=160'" />
+            <div class="flex-1 text-center md:text-left">
+              <h3 class="text-2xl font-bold mb-2">${escapeHtml(post.author.name)}</h3>
+              <p class="text-gray-400">Vuoi approfondire queste strategie per il tuo business? Contattaci per una consulenza personalizzata.</p>
+            </div>
+            <a href="/" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all duration-300 whitespace-nowrap">Contattaci</a>
+          </div>
+        </div>
+      </div>
+    </article>
+  `;
+
+  return generateBaseHtml({
+    title: `${post.title} | Q4 Studio Blog`,
+    description: post.excerpt,
+    canonical: pageUrl,
+    ogImage: post.coverImage,
+    type: 'article',
+    schema: [blogSchema, breadcrumbSchema],
+    bodyContent,
+  });
+}
+
+function generateSitemap(blogPosts: any[] = []): string {
   const urls = [
     { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly' },
     { loc: `${siteUrl}/directory`, priority: '0.9', changefreq: 'weekly' },
@@ -352,6 +558,11 @@ function generateSitemap(): string {
     ...seoPages.map((page) => ({
       loc: `${siteUrl}/seo/${page.slug}`,
       priority: '0.8',
+      changefreq: 'monthly'
+    })),
+    ...blogPosts.map((post) => ({
+      loc: `${siteUrl}/blog/${post.slug}`,
+      priority: '0.7',
       changefreq: 'monthly'
     }))
   ];
@@ -374,53 +585,70 @@ ${urlEntries}
 }
 
 // Main execution
-console.log('🔧 Starting prerender...');
+(async () => {
+  console.log('🔧 Starting prerender...');
 
-// Ensure dist directory exists
-ensureDir(distDir);
+  // Ensure dist directory exists
+  ensureDir(distDir);
 
-// Generate directory page
-const directoryPath = join(distDir, 'directory');
-ensureDir(directoryPath);
-const directoryHtml = generateDirectoryHtml();
-const directoryStream = createWriteStream(join(directoryPath, 'index.html'));
-directoryStream.write(directoryHtml);
-directoryStream.end();
-console.log('✅ Generated /directory/index.html');
+  // Fetch blog posts from Supabase
+  const blogPosts = await fetchBlogPosts();
+  console.log(`📚 Fetched ${blogPosts.length} blog posts`);
 
-// Generate blog index page
-const blogPath = join(distDir, 'blog');
-ensureDir(blogPath);
-const blogHtml = generateBlogIndexHtml();
-const blogStream = createWriteStream(join(blogPath, 'index.html'));
-blogStream.write(blogHtml);
-blogStream.end();
-console.log('✅ Generated /blog/index.html');
+  // Generate directory page
+  const directoryPath = join(distDir, 'directory');
+  ensureDir(directoryPath);
+  const directoryHtml = generateDirectoryHtml();
+  const directoryStream = createWriteStream(join(directoryPath, 'index.html'));
+  directoryStream.write(directoryHtml);
+  directoryStream.end();
+  console.log('✅ Generated /directory/index.html');
 
-// Generate SEO landing pages
-for (const page of seoPages) {
-  const pageDir = join(distDir, 'seo', page.slug);
-  ensureDir(pageDir);
-  const pageHtml = generateLandingPageHtml(page);
-  const pageStream = createWriteStream(join(pageDir, 'index.html'));
-  pageStream.write(pageHtml);
-  pageStream.end();
-  console.log(`✅ Generated /seo/${page.slug}/index.html`);
-}
+  // Generate blog index page
+  const blogPath = join(distDir, 'blog');
+  ensureDir(blogPath);
+  const blogHtml = generateBlogIndexHtml();
+  const blogStream = createWriteStream(join(blogPath, 'index.html'));
+  blogStream.write(blogHtml);
+  blogStream.end();
+  console.log('✅ Generated /blog/index.html');
 
-// Generate sitemap.xml
-const sitemapPath = join(distDir, 'sitemap.xml');
-const sitemapStream = createWriteStream(sitemapPath);
-sitemapStream.write(generateSitemap());
-sitemapStream.end();
-console.log('✅ Generated /sitemap.xml');
+  // Generate individual blog articles
+  for (const post of blogPosts) {
+    const postDir = join(distDir, 'blog', post.slug);
+    ensureDir(postDir);
+    const postHtml = generateBlogArticleHtml(post);
+    const postStream = createWriteStream(join(postDir, 'index.html'));
+    postStream.write(postHtml);
+    postStream.end();
+    console.log(`✅ Generated /blog/${post.slug}/index.html`);
+  }
 
-// Copy robots.txt to dist if it exists in public
-const publicRobots = join(__dirname, '..', 'public', 'robots.txt');
-const distRobots = join(distDir, 'robots.txt');
-if (existsSync(publicRobots)) {
-  copyFileSync(publicRobots, distRobots);
-  console.log('✅ Copied robots.txt to dist');
-}
+  // Generate SEO landing pages
+  for (const page of seoPages) {
+    const pageDir = join(distDir, 'seo', page.slug);
+    ensureDir(pageDir);
+    const pageHtml = generateLandingPageHtml(page);
+    const pageStream = createWriteStream(join(pageDir, 'index.html'));
+    pageStream.write(pageHtml);
+    pageStream.end();
+    console.log(`✅ Generated /seo/${page.slug}/index.html`);
+  }
 
-console.log('🎉 Prerender complete!');
+  // Generate sitemap.xml with blog posts
+  const sitemapPath = join(distDir, 'sitemap.xml');
+  const sitemapStream = createWriteStream(sitemapPath);
+  sitemapStream.write(generateSitemap(blogPosts));
+  sitemapStream.end();
+  console.log('✅ Generated /sitemap.xml');
+
+  // Copy robots.txt to dist if it exists in public
+  const publicRobots = join(__dirname, '..', 'public', 'robots.txt');
+  const distRobots = join(distDir, 'robots.txt');
+  if (existsSync(publicRobots)) {
+    copyFileSync(publicRobots, distRobots);
+    console.log('✅ Copied robots.txt to dist');
+  }
+
+  console.log('🎉 Prerender complete!');
+})();
