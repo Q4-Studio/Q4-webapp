@@ -60,7 +60,7 @@ const App: React.FC = () => {
     return blogPosts.find(post => post.slug === slug);
   };
 
-  // Route public SEO pages with real paths; keep legacy hash routes for the existing blog/dashboard UI.
+  // Route public pages with real paths; keep hash routes only for legacy dashboard UI.
   useEffect(() => {
     const handleRouteChange = () => {
       const path = window.location.pathname.replace(/\/$/, '') || '/';
@@ -77,8 +77,8 @@ const App: React.FC = () => {
         } else {
           setCurrentPage('404');
         }
-      } else if (hash.startsWith('blog/')) {
-        const slug = hash.replace('blog/', '');
+      } else if (path.startsWith('/blog/')) {
+        const slug = path.replace('/blog/', '');
         const post = getBlogPostBySlug(slug);
         if (post) {
           setCurrentArticleSlug(slug);
@@ -89,7 +89,7 @@ const App: React.FC = () => {
             setCurrentPage('404');
           }
         }
-      } else if (hash === 'blog') {
+      } else if (path === '/blog') {
         setCurrentPage('blog');
       } else if (hash === 'privacy') {
         setCurrentPage('privacy');
@@ -101,10 +101,12 @@ const App: React.FC = () => {
         setCurrentPage('dashboard');
       } else if (hash === '404') {
         setCurrentPage('404');
-      } else if (hash === '' || hash === 'home') {
+      } else if (path === '/' && (hash === '' || hash === 'home')) {
         setCurrentPage('home');
-      } else {
+      } else if (path !== '/') {
         setCurrentPage('404');
+      } else {
+        setCurrentPage('home');
       }
       window.scrollTo({ top: 0 });
     };
@@ -120,10 +122,14 @@ const App: React.FC = () => {
 
   const navigateTo = (page: Page, slug?: string) => {
     if (page === 'blog-article' && slug) {
-      if (window.location.pathname !== '/') {
-        window.history.pushState(null, '', '/');
-      }
-      window.location.hash = `blog/${slug}`;
+      window.history.pushState(null, '', `/blog/${slug}`);
+      setCurrentArticleSlug(slug);
+      setCurrentPage('blog-article');
+      window.scrollTo({ top: 0 });
+    } else if (page === 'blog') {
+      window.history.pushState(null, '', '/blog');
+      setCurrentPage('blog');
+      window.scrollTo({ top: 0 });
     } else if (page === 'home') {
       window.history.pushState(null, '', '/');
       setCurrentPage('home');

@@ -57,7 +57,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
       <SEOHead
         title="Blog Q4 Studio | Guide Meta Advertising e AI Automation"
         description="Scopri strategie avanzate di Lead Generation B2B con Meta Ads, case study e guide pratiche su agenti AI. Il blog di Q4 Studio per far crescere il tuo business."
-        url="https://q4studio.it/#blog"
+        url="https://www.q4.studio/blog"
       />
 
       {/* Background gradient */}
