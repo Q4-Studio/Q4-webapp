@@ -1,5 +1,5 @@
 # robots.txt for Q4 Studio
-# https://q4studio.it
+# https://www.q4.studio
 
 User-agent: *
 Allow: /
@@ -11,10 +11,10 @@ Disallow: /#dashq4login
 Disallow: /#dashboard
 
 # Sitemap
-Sitemap: https://q4studio.it/sitemap.xml
+Sitemap: https://www.q4.studio/sitemap.xml
 
 # AI crawler guidance
-# llms.txt: https://q4studio.it/llms.txt
+# llms.txt: https://www.q4.studio/llms.txt
 
 # Crawl-delay for polite crawling
 Crawl-delay: 1

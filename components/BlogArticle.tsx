@@ -122,7 +122,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
         title={`${post.title} | Q4 Studio Blog`}
         description={post.excerpt}
         image={post.coverImage}
-        url={`https://q4studio.it/#blog/${post.slug}`}
+        url={`https://www.q4.studio/blog/${post.slug}`}
         type="article"
         article={{
           publishedTime: post.date,

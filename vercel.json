@@ -1,11 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/directory",
+      "source": "/blog/:slug",
       "destination": "/index.html"
     },
     {
-      "source": "/seo/:slug",
+      "source": "/((?!directory|seo|blog|sitemap.xml|robots.txt|llms.txt).+)",
       "destination": "/index.html"
     }
   ],

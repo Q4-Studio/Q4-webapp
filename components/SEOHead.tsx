@@ -21,8 +21,8 @@ interface SEOHeadProps {
 const SEOHead: React.FC<SEOHeadProps> = ({
   title = 'Q4 Studio | B2B Lead Generation & Agenti AI',
   description = 'Specialisti in Lead Generation B2B su Meta Ads e Agenti AI personalizzati. Aumenta i contatti qualificati e automatizza i processi con l\'algoritmo Andromeda.',
-  image = 'https://q4studio.it/og-image.jpg',
-  url = 'https://q4studio.it/',
+  image = 'https://www.q4.studio/og-image.jpg',
+  url = 'https://www.q4.studio/',
   type = 'website',
   noIndex = false,
   article

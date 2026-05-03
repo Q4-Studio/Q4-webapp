@@ -251,7 +251,7 @@ const DashboardEditor: React.FC<DashboardEditorProps> = ({ post, onBack, onSave 
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors font-mono text-sm"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  URL: yoursite.com/#blog/{slug || 'slug-articolo'}
+                  URL: www.q4.studio/blog/{slug || 'slug-articolo'}
                 </p>
               </div>
 

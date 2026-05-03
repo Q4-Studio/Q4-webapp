@@ -30,12 +30,12 @@ const BlogSchema: React.FC<BlogSchemaProps> = ({ post }) => {
         "name": "Q4 Studio",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://q4studio.it/logo.png"
+          "url": "https://www.q4.studio/logo.png"
         }
       },
       "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": `https://q4studio.it/#blog/${post.slug}`
+        "@id": `https://www.q4.studio/blog/${post.slug}`
       },
       "articleSection": post.category,
       "keywords": [
