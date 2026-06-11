@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
-import { SeoPage, seoPages, siteUrl } from '../data/seoPages';
+import { resourcesPath, SeoPage, seoPages, siteUrl } from '../data/seoPages';
 import SEOHead from './SEOHead';
 
 interface SeoLandingPageProps {
@@ -8,7 +8,7 @@ interface SeoLandingPageProps {
 }
 
 const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
-  const pageUrl = `${siteUrl}/seo/${page.slug}`;
+  const pageUrl = `${siteUrl}${resourcesPath}/${page.slug}`;
   const relatedPages = seoPages.filter((relatedPage) => relatedPage.slug !== page.slug).slice(0, 3);
   const schema = {
     '@context': 'https://schema.org',
@@ -41,7 +41,7 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Directory', item: `${siteUrl}/directory` },
+      { '@type': 'ListItem', position: 2, name: 'Risorse', item: `${siteUrl}${resourcesPath}` },
       { '@type': 'ListItem', position: 3, name: page.title, item: pageUrl }
     ]
   };
@@ -60,7 +60,7 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
           <ol className="flex items-center gap-2 text-sm text-gray-400">
             <li><a href="/" className="hover:text-indigo-300 transition-colors">Home</a></li>
             <li>/</li>
-            <li><a href="/directory" className="hover:text-indigo-300 transition-colors">Directory</a></li>
+            <li><a href={resourcesPath} className="hover:text-indigo-300 transition-colors">Risorse</a></li>
             <li>/</li>
             <li className="text-gray-300">{page.title}</li>
           </ol>
@@ -175,7 +175,7 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Pagine correlate</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {relatedPages.map((relatedPage) => (
-              <a key={relatedPage.slug} href={`/seo/${relatedPage.slug}`} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors">
+              <a key={relatedPage.slug} href={`${resourcesPath}/${relatedPage.slug}`} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors">
                 {relatedPage.title}
               </a>
             ))}

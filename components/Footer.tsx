@@ -172,7 +172,7 @@ const Footer: React.FC = () => {
                  <h4 className="text-white font-bold mb-4">Legale</h4>
                 <ul className="space-y-2">
                     <li>
-                        <a href="/directory" className="hover:text-indigo-400 transition-colors">
+                        <a href="/risorse" className="hover:text-indigo-400 transition-colors">
                             Risorse
                         </a>
                     </li>

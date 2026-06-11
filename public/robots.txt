@@ -3,8 +3,8 @@
 
 User-agent: *
 Allow: /
-Allow: /directory
-Allow: /seo/
+Allow: /risorse
+Allow: /risorse/
 Disallow: /dashq4login
 Disallow: /dashboard
 Disallow: /#dashq4login
