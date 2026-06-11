@@ -1,6 +1,6 @@
-import { resourcesPath, seoPages, siteUrl } from '../data/seoPages.ts';
+import { seoPages, siteUrl } from '../data/seoPages.ts';
 import { createClient } from '@supabase/supabase-js';
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -12,7 +12,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const distDir = join(__dirname, '..', 'dist');
-const compiledIndexPath = join(distDir, 'index.html');
 
 function ensureDir(dir: string) {
   if (!existsSync(dir)) {
@@ -29,34 +28,6 @@ function escapeHtml(text: string): string {
     .replace(/'/g, '&#039;');
 }
 
-function getCompiledHeadTags(): string {
-  if (!existsSync(compiledIndexPath)) return '';
-  const indexHtml = readFileSync(compiledIndexPath, 'utf8');
-  const headMatch = indexHtml.match(/<head>([\s\S]*?)<\/head>/i);
-  if (!headMatch) return '';
-
-  return headMatch[1]
-    .split('\n')
-    .filter((line) => {
-      const trimmed = line.trim();
-      return trimmed.startsWith('<script type="module"')
-        || trimmed.startsWith('<link rel="modulepreload"')
-        || (trimmed.startsWith('<link rel="stylesheet"') && trimmed.includes('/assets/'));
-    })
-    .join('\n  ');
-}
-
-function getCompiledNoscript(): string {
-  if (!existsSync(compiledIndexPath)) return '';
-  const indexHtml = readFileSync(compiledIndexPath, 'utf8');
-  const match = indexHtml.match(/<noscript>[\s\S]*?<\/noscript>/i);
-  return match ? match[0] : '';
-}
-
-function writeHtmlFile(path: string, html: string) {
-  writeFileSync(path, html, 'utf8');
-}
-
 function generateBaseHtml(options: {
   title: string;
   description: string;
@@ -71,9 +42,6 @@ function generateBaseHtml(options: {
   const schemaScripts = schema
     .map((s) => `<script type="application/ld+json">${JSON.stringify(s)}</script>`)
     .join('\n    ');
-
-  const compiledHeadTags = getCompiledHeadTags();
-  const compiledNoscript = getCompiledNoscript();
 
   return `<!DOCTYPE html>
 <html lang="it" class="bg-[#050505]">
@@ -106,19 +74,18 @@ function generateBaseHtml(options: {
     h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
   </style>
   ${schemaScripts}
-  ${compiledHeadTags}
 </head>
 <body>
-  ${compiledNoscript}
   <div id="root">
     ${bodyContent}
   </div>
+  <script type="module" src="/index.tsx"></script>
 </body>
 </html>`;
 }
 
 function generateLandingPageHtml(page: typeof seoPages[0]): string {
-  const pageUrl = `${siteUrl}${resourcesPath}/${page.slug}`;
+  const pageUrl = `${siteUrl}/seo/${page.slug}`;
   const relatedPages = seoPages.filter((p) => p.slug !== page.slug).slice(0, 3);
 
   const serviceSchema = {
@@ -154,7 +121,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Risorse', item: `${siteUrl}${resourcesPath}` },
+      { '@type': 'ListItem', position: 2, name: 'Directory', item: `${siteUrl}/directory` },
       { '@type': 'ListItem', position: 3, name: page.title, item: pageUrl }
     ]
   };
@@ -194,7 +161,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     .join('\n            ');
 
   const relatedHtml = relatedPages
-    .map((p) => `<a href="${resourcesPath}/${p.slug}" class="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors">${escapeHtml(p.title)}</a>`)
+    .map((p) => `<a href="/seo/${p.slug}" class="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors">${escapeHtml(p.title)}</a>`)
     .join('\n            ');
 
   const bodyContent = `
@@ -205,7 +172,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
           <ol class="flex items-center gap-2 text-sm text-gray-400">
             <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
             <li>/</li>
-            <li><a href="${resourcesPath}" class="hover:text-indigo-300 transition-colors">Risorse</a></li>
+            <li><a href="/directory" class="hover:text-indigo-300 transition-colors">Directory</a></li>
             <li>/</li>
             <li class="text-gray-300">${escapeHtml(page.title)}</li>
           </ol>
@@ -292,27 +259,27 @@ function generateDirectoryHtml(): string {
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'Risorse Q4 Studio',
+    name: 'Directory SEO Q4 Studio',
     itemListElement: seoPages.map((page, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       name: page.title,
-      url: `${siteUrl}${resourcesPath}/${page.slug}`
+      url: `${siteUrl}/seo/${page.slug}`
     }))
   };
 
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Risorse', item: `${siteUrl}${resourcesPath}` }
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Directory', item: `${siteUrl}/directory` }
     ]
   };
 
   const pagesHtml = seoPages
     .map((page) => `
-      <a href="${resourcesPath}/${page.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
+      <a href="/seo/${page.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
         <span class="text-xs font-mono uppercase tracking-widest text-indigo-300">${escapeHtml(page.keyword)}</span>
         <h2 class="text-2xl font-bold mt-4 mb-3 group-hover:text-indigo-200 transition-colors">${escapeHtml(page.title)}</h2>
         <p class="text-gray-400 leading-relaxed mb-6">${escapeHtml(page.description)}</p>
@@ -329,14 +296,14 @@ function generateDirectoryHtml(): string {
           <ol class="flex items-center gap-2 text-sm text-gray-400">
             <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
             <li>/</li>
-            <li class="text-gray-300">Risorse</li>
+            <li class="text-gray-300">Directory</li>
           </ol>
         </nav>
 
-        <p class="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-6">Risorse</p>
+        <p class="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-6">Directory</p>
         <h1 class="text-5xl md:text-7xl font-bold tracking-tight max-w-4xl mb-6">Risorse su Lead Generation B2B, Meta Ads e Agenti AI</h1>
         <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
-          Questo hub raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico con dati, confronti, cluster semantici e FAQ.
+          Questa directory raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico con dati, confronti, cluster semantici e FAQ.
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -347,152 +314,10 @@ function generateDirectoryHtml(): string {
   `;
 
   return generateBaseHtml({
-    title: 'Risorse B2B Lead Generation e AI | Q4 Studio',
-    description: 'Risorse Q4 Studio su Meta Ads B2B, lead generation, automazioni CRM, WhatsApp e Agenti AI.',
-    canonical: `${siteUrl}${resourcesPath}`,
+    title: 'Directory servizi B2B Lead Generation e AI | Q4 Studio',
+    description: 'Directory SEO Q4 Studio: tutte le pagine su Meta Ads B2B, lead generation, automazioni CRM, WhatsApp e Agenti AI.',
+    canonical: `${siteUrl}/directory`,
     schema: [itemListSchema, breadcrumbSchema],
-    bodyContent
-  });
-}
-
-function generateHomeHtml(): string {
-  const organizationSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'Q4 Studio',
-    url: siteUrl,
-    description: 'Studio di consulenza per crescita B2B, Meta Ads e Agenti AI personalizzati per aziende italiane.',
-    address: {
-      '@type': 'PostalAddress',
-      addressCountry: 'IT'
-    },
-    sameAs: [
-      'https://www.facebook.com/q4studio',
-      'https://www.linkedin.com/company/q4studio'
-    ]
-  };
-
-  const serviceSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'ProfessionalService',
-    name: 'Q4 Studio',
-    url: siteUrl,
-    areaServed: ['IT', 'Verona', 'Reggio Emilia'],
-    serviceType: [
-      'B2B lead generation consulting',
-      'Meta Ads consulting',
-      'AI agents consulting',
-      'CRM automation'
-    ]
-  };
-
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: 'In pratica, cos\'è la B2B Lead Generation su Meta?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'È l\'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate su ICP, messaggio, form, CRM e segnali di qualità.'
-        }
-      },
-      {
-        '@type': 'Question',
-        name: 'Cosa sono gli Agenti AI personalizzati?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Sono sistemi costruiti sul processo commerciale dell\'azienda per qualificare lead, rispondere più velocemente, assegnare contatti e automatizzare attività ripetitive.'
-        }
-      }
-    ]
-  };
-
-  const resourceLinks = seoPages
-    .slice(0, 6)
-    .map((page) => `<a href="${resourcesPath}/${page.slug}" class="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors"><span class="text-xs font-mono uppercase tracking-widest text-indigo-300">${escapeHtml(page.keyword)}</span><strong class="block text-xl text-white mt-3 mb-2">${escapeHtml(page.title)}</strong><span class="text-sm text-gray-400">${escapeHtml(page.description)}</span></a>`)
-    .join('\n            ');
-
-  const bodyContent = `
-    <main class="w-full min-h-screen bg-[#050505] text-white">
-      <nav class="absolute top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center">
-        <a href="/" aria-label="Q4 Studio home"><img src="/logo.webp" alt="Q4 Studio" width="130" height="40" loading="eager" class="h-8 md:h-10 w-auto" /></a>
-        <div class="hidden md:flex items-center gap-8 text-sm font-mono">
-          <a href="/agenti-ai" class="hover:text-indigo-300 transition-colors">AGENTI AI</a>
-          <a href="/blog" class="hover:text-indigo-300 transition-colors">BLOG</a>
-          <a href="${resourcesPath}" class="hover:text-indigo-300 transition-colors">RISORSE</a>
-        </div>
-      </nav>
-
-      <section class="relative min-h-screen px-6 pt-40 pb-24 overflow-hidden">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.18),transparent_34%),radial-gradient(circle_at_80%_45%,rgba(168,85,247,0.16),transparent_30%)]"></div>
-        <div class="relative z-10 max-w-7xl mx-auto">
-          <p class="text-indigo-300 font-mono text-sm tracking-[0.35em] uppercase mb-6">Q4 Studio</p>
-          <h1 class="text-5xl md:text-8xl font-bold tracking-tight leading-[0.95] max-w-5xl mb-8">Consulenza B2B, Meta Ads e Agenti AI per sistemi commerciali misurabili.</h1>
-          <p class="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-3xl mb-10">Affianchiamo marketing, sales e operations per trasformare processi, lead e dati in sistemi più leggibili: campagne Meta B2B, CRM automation, follow-up e agenti AI costruiti sul lavoro reale del team.</p>
-          <div class="flex flex-wrap gap-4">
-            <a href="#contatto" class="rounded-full bg-indigo-600 px-7 py-4 font-semibold text-white hover:bg-indigo-500 transition-colors">Parla con Q4 Studio</a>
-            <a href="${resourcesPath}" class="rounded-full border border-white/15 px-7 py-4 font-semibold text-white hover:border-indigo-300 transition-colors">Leggi le risorse</a>
-          </div>
-        </div>
-      </section>
-
-      <section class="px-6 py-24 border-y border-white/10 bg-[#080808]">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-12">
-          <div>
-            <p class="text-indigo-300 font-mono text-sm tracking-[0.35em] uppercase mb-4">Metodo</p>
-            <h2 class="text-4xl md:text-6xl font-bold leading-tight">Prima diagnosi, poi esecuzione.</h2>
-          </div>
-          <div class="space-y-5 text-lg text-gray-300 leading-relaxed">
-            <p>La B2B Lead Generation su Meta funziona quando ICP, messaggio, form, CRM e follow-up vengono progettati insieme. Per questo non guardiamo solo CPL e volume, ma MQL, SQL, appuntamenti, velocità di presa in carico e valore pipeline.</p>
-            <p>Gli Agenti AI vengono disegnati sul processo operativo: regole, dati, strumenti, escalation e controllo umano. L'obiettivo è ridurre attività ripetitive e rendere più costante la qualità del lavoro commerciale.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="px-6 py-24">
-        <div class="max-w-7xl mx-auto">
-          <p class="text-indigo-300 font-mono text-sm tracking-[0.35em] uppercase mb-4">Servizi</p>
-          <h2 class="text-4xl md:text-6xl font-bold mb-10">Due aree core, un sistema unico.</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <article class="rounded-3xl border border-white/10 bg-white/[0.03] p-8">
-              <h3 class="text-3xl font-bold mb-4">B2B Lead Generation</h3>
-              <p class="text-gray-300 leading-relaxed">Meta Ads B2B, offerte, tracking, CRM e follow-up progettati per portare contatti qualificati e opportunità leggibili dal team sales.</p>
-            </article>
-            <article class="rounded-3xl border border-white/10 bg-white/[0.03] p-8">
-              <h3 class="text-3xl font-bold mb-4">Agenti AI</h3>
-              <p class="text-gray-300 leading-relaxed">Agenti AI per qualifica lead, centralino e customer care, preventivi, riattivazione database clienti, documenti e processi interni ripetibili.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="px-6 py-24 bg-[#080808]">
-        <div class="max-w-7xl mx-auto">
-          <p class="text-indigo-300 font-mono text-sm tracking-[0.35em] uppercase mb-4">Risorse</p>
-          <h2 class="text-4xl md:text-6xl font-bold mb-10">Pagine leggibili anche da AI answer engines.</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-            ${resourceLinks}
-          </div>
-        </div>
-      </section>
-
-      <section id="contatto" class="px-6 py-24">
-        <div class="max-w-4xl mx-auto rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8 md:p-12 text-center">
-          <h2 class="text-4xl md:text-6xl font-bold mb-5">Costruiamo il primo sistema utile.</h2>
-          <p class="text-lg text-gray-300 leading-relaxed mb-8">Partiamo da un audit operativo su funnel, dati e processi. Poi scegliamo l'intervento a maggiore impatto: campagne, automazioni CRM, agenti AI o riattivazione database.</p>
-          <a href="mailto:info@q4.studio" class="inline-flex rounded-full bg-white px-7 py-4 font-semibold text-black hover:bg-gray-200 transition-colors">Scrivi a Q4 Studio</a>
-        </div>
-      </section>
-    </main>
-  `;
-
-  return generateBaseHtml({
-    title: 'Q4 Studio | Consulenza B2B, Meta Ads e Agenti AI',
-    description: 'Studio di consulenza per crescita B2B, Meta Ads e Agenti AI. Affianchiamo marketing, sales e operations per trasformare processi, lead e dati in sistemi misurabili.',
-    canonical: `${siteUrl}/`,
-    schema: [organizationSchema, serviceSchema, faqSchema],
     bodyContent
   });
 }
@@ -551,99 +376,113 @@ function generateAIAgentsHtml(): string {
     ]
   };
 
+  const faqs = [
+    ['Quanto costa un agente AI?', "Dipende dal processo e dai sistemi da collegare. Il percorso parte dalla mappatura: prima di investire sai esattamente quanto costa il progetto pilota e quante ore di lavoro può restituirti."],
+    ['In quanto tempo vedo i primi risultati?', 'Il primo agente lavora su un processo reale entro 6–8 settimane dal via. Si parte da un processo solo, misurabile, e si allarga solo quando funziona.'],
+    ["E se l'agente sbaglia?", "Dove conta, l'agente propone e una persona conferma: si definisce insieme cosa può fare in autonomia e cosa deve passare da un controllo umano. Ogni azione resta tracciata."],
+    ['I dati della mia azienda dove finiscono?', 'Restano nei tuoi sistemi: gestionale, CRM ed email rimangono la fonte dei dati. Permessi e accessi vengono definiti prima di partire, in conformità al GDPR.'],
+    ['Il mio team non è tecnico. Ce la facciamo?', "Sì: il team continua a usare WhatsApp, email e gestionale come sempre. È l'agente che si adatta ai vostri strumenti, non il contrario."],
+    ['È un chatbot?', 'No. Un chatbot risponde a domande. Un agente lavora: legge documenti, aggiorna il gestionale, prepara ordini e preventivi, passa la palla a una persona quando serve.']
+  ];
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer }
+    }))
+  };
+
   const useCases = [
-    ['Back office commerciale', 'Ordini e richieste cliente trasformati in attività pronte', "L'agente interpreta email, allegati e messaggi, raccoglie i dati mancanti e prepara una bozza operativa nel sistema corretto.", 'Bozza ordine + controllo umano'],
-    ['Pre-sales', 'Preventivi e documenti preparati da template aziendali', 'Trasforma brief, listini e storico offerte in bozze coerenti, lasciando al consulente revisione, margini e decisione finale.', 'Offerta in bozza'],
-    ['Operations', 'Consuntivi e attività ricondotti alla commessa giusta', 'Legge note operative, fogli ore e avanzamenti, propone abbinamenti e porta in evidenza incongruenze da verificare.', 'Riepilogo validabile'],
-    ['Assistenza', 'Ticket instradati con contesto e risposta suggerita', 'Classifica urgenza, recupera procedure e casi simili, poi suggerisce risposta o reparto di competenza.', 'Priorità + risposta proposta'],
-    ['Sales', 'Lead arricchiti, qualificati e assegnati con criteri chiari', 'Incrocia dati CRM, sorgente, risposte e segnali commerciali per separare priorità vere da contatti da nutrire.', 'Routing al sales'],
-    ['Knowledge management', 'Conoscenza aziendale consultabile senza cercare in dieci posti', "Un assistente interno recupera procedure, documenti e risposte approvate, citando le fonti e indicando quando serve l'umano.", 'Risposta con fonte']
+    ['Ordini', 'Gli ordini arrivano da WhatsApp ed email ed entrano nel gestionale da soli', "L'agente legge messaggi e allegati, riconosce cliente, codici e quantità e crea la bozza d'ordine nel gestionale con i prezzi corretti. Una persona conferma solo quando serve."],
+    ['Preventivi', 'Il preventivo parte in giornata, non quando qualcuno trova il tempo', "Estrae le specifiche dalla richiesta, recupera listini e offerte simili e compila l'offerta sul template aziendale. Una persona revisiona e invia."],
+    ['Lead e vendite', 'Ogni contatto viene qualificato e richiamato mentre è ancora caldo', "Riceve il lead da form e campagne, arricchisce i dati dell'azienda, lo assegna al commerciale giusto nel CRM e prepara il primo messaggio di follow-up."],
+    ['Assistenza clienti', 'Le domande ricorrenti ricevono risposta subito, anche fuori orario', 'Risponde su WhatsApp ed email a stato ordine, tempi e documenti controllando i dati reali nel gestionale, e passa i casi delicati a una persona.'],
+    ['Amministrazione', 'Fatture, DDT e documenti letti, controllati e registrati', 'Legge i documenti appena arrivano, controlla che importi e quantità tornino con gli ordini, prepara le registrazioni e segnala solo le anomalie.'],
+    ['Report e controllo', 'Il lunedì mattina il report è già pronto, con i numeri che contano', 'Raccoglie i dati da gestionale, CRM e fogli condivisi, calcola gli indicatori e evidenzia gli scostamenti che meritano una decisione.']
   ];
 
   const useCasesHtml = useCases
-    .map(([area, title, description, action], index) => `<article class="grid grid-cols-1 lg:grid-cols-[120px_1fr_340px] gap-6 rounded-[1.75rem] border border-white/10 bg-white/[0.035] p-6"><div class="rounded-2xl border border-white/10 bg-[#050505] p-5"><span class="block text-4xl font-bold text-white/20 font-mono">0${index + 1}</span><span class="mt-8 block h-px bg-cyan-300/50"></span></div><div><p class="text-xs font-mono uppercase tracking-[0.25em] text-cyan-300/80 mb-4">${escapeHtml(area)}</p><h2 class="text-3xl md:text-5xl font-bold leading-tight mb-5">${escapeHtml(title)}</h2><p class="text-gray-300 leading-relaxed text-lg">${escapeHtml(description)}</p></div><div class="rounded-2xl border border-cyan-300/20 bg-cyan-300/[0.06] p-5 flex flex-col justify-center"><span class="text-xs font-mono uppercase tracking-[0.25em] text-cyan-200/70 mb-3">Output controllato</span><p class="text-white text-xl font-semibold">${escapeHtml(action)}</p></div></article>`)
+    .map(([area, title, description]) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-xs font-mono uppercase tracking-widest text-emerald-300 mb-4">${escapeHtml(area)}</p><h3 class="text-2xl font-bold leading-snug mb-4">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
     .join('\n          ');
 
-  const adoptionHtml = [
-    'Audit di processo e dati disponibili',
-    'Disegno di regole, strumenti, escalation e metriche',
-    'Integrazione con CRM, email, documenti, dashboard e workflow',
-    'Formazione del team, controllo umano e miglioramento continuo'
+  const methodHtml = [
+    ['Tappa 01 · Mappatura dei processi', 'Entriamo in azienda e parliamo con chi fa il lavoro. Risultato: la lista dei processi automatizzabili, ordinata per impatto, con la stima delle ore recuperabili.'],
+    ['Tappa 02 · Primo agente al lavoro', "Partiamo dal processo con il miglior rapporto tra impatto e semplicità. Risultato: un agente funzionante su un processo reale, testato con i vostri dati veri."],
+    ['Tappa 03 · Messa in produzione', "Integrazione completa, regole chiare su cosa l'agente fa da solo e formazione del team. Risultato: il team usa l'agente in autonomia."],
+    ['Tappa 04 · Crescita e controllo', 'Monitoriamo i risultati ed estendiamo il lavoro ad altri processi. Risultato: un report mensile con ore recuperate, errori evitati e prossimi passi.']
   ]
-    .map((item) => `<li class="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5"><span class="text-indigo-300">✓</span><span>${escapeHtml(item)}</span></li>`)
+    .map(([title, description]) => `<li class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-xl font-bold mb-2">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></li>`)
     .join('\n              ');
+
+  const faqHtml = faqs
+    .map(([question, answer]) => `<div class="rounded-2xl border border-white/10 bg-[#0A0A0A] p-6"><h3 class="text-lg font-semibold mb-3">${escapeHtml(question)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(answer)}</p></div>`)
+    .join('\n          ');
 
   const bodyContent = `
     <article class="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
-      <div class="max-w-[1500px] mx-auto relative z-10">
+      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-emerald-900/10 rounded-full blur-[160px] pointer-events-none"></div>
+      <div class="max-w-7xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
           <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
+            <li><a href="/" class="hover:text-emerald-300 transition-colors">Home</a></li>
             <li>/</li>
             <li class="text-gray-300">Agenti AI</li>
           </ol>
         </nav>
 
         <header class="mb-16">
-          <p class="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-5">Agenti AI</p>
-          <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">Agenti AI per aziende: consulenza, automazione e adozione operativa</h1>
+          <p class="text-emerald-300 font-mono text-sm tracking-[0.3em] uppercase mb-5">Agenti AI · consulenza e sviluppo</p>
+          <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">Agenti AI su misura per togliere al tuo team il lavoro che un software può fare meglio</h1>
           <p class="text-xl text-gray-300 leading-relaxed max-w-3xl">
-            Q4 Studio progetta agenti AI su misura partendo dal modo in cui la tua azienda lavora: persone, dati, software, controlli e obiettivi commerciali.
+            Leggono email e WhatsApp, inseriscono gli ordini nel gestionale, preparano i preventivi, qualificano i lead e rispondono ai clienti. Tu mantieni il controllo: l'agente propone, le persone decidono.
           </p>
         </header>
 
-        <section class="mb-16 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
-          <h2 class="text-3xl font-bold mb-4">Non chatbot generici, ma consulenti digitali integrati nel processo</h2>
-          <p class="text-lg text-gray-200 leading-relaxed">
-            Un agente AI utile legge informazioni, applica regole operative, compie azioni controllate e restituisce al team output verificabili. Il nostro lavoro combina audit, progettazione, sviluppo, integrazione e formazione.
-          </p>
-        </section>
-
-        <section class="mb-24 rounded-[2rem] border border-white/10 bg-[#070707] p-6 md:p-10">
-          <h2 class="text-5xl md:text-7xl font-bold tracking-tight mb-8">Sei playbook operativi, non sei card da catalogo.</h2>
-          <p class="text-xl text-gray-300 leading-relaxed max-w-4xl mb-10">Ogni agente viene disegnato come una procedura: quali dati legge, quale regola applica, quale azione prepara e dove resta il controllo umano.</p>
-          <div class="space-y-6">
+        <section class="mb-24">
+          <h2 class="text-4xl md:text-6xl font-bold tracking-tight mb-6">Cosa fa un agente AI, in concreto</h2>
+          <p class="text-xl text-gray-300 leading-relaxed max-w-3xl mb-10">Ogni agente nasce da un processo vero: come lo gestisci oggi, cosa fa l'agente al posto del team e dove resta il controllo delle persone.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             ${useCasesHtml}
           </div>
         </section>
 
-        <section class="mb-16 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8">
-          <div>
-            <p class="text-indigo-300 font-mono text-sm tracking-[0.35em] uppercase mb-4">AI Adoption</p>
-            <h2 class="text-3xl md:text-4xl font-bold mb-5">La tecnologia funziona solo se entra nel lavoro quotidiano</h2>
-            <p class="text-gray-300 leading-relaxed text-lg">Per questo lavoriamo come studio di consulenza: analizziamo il contesto, costruiamo il primo agente utile, formiamo chi lo userà e definiamo come misurarlo.</p>
-          </div>
-          <ul class="space-y-4 text-gray-300">
-            ${adoptionHtml}
+        <section class="mb-24 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">Si collega agli strumenti che usi già</h2>
+          <p class="text-lg text-gray-200 leading-relaxed mb-6">Nessuna piattaforma nuova da imparare, nessun cambio di gestionale. L'agente entra nei flussi esistenti: WhatsApp, email e PEC, gestionale/ERP, CRM, Excel e Google Sheets, calendario, sito e form, centralino. Se un software ha un'API, un'esportazione o anche solo una casella email, si può collegare.</p>
+        </section>
+
+        <section class="mb-24">
+          <h2 class="text-4xl md:text-5xl font-bold mb-6">Non ti vendiamo un software. Ti affianchiamo finché funziona.</h2>
+          <p class="text-xl text-gray-300 leading-relaxed max-w-3xl mb-10">Q4 Studio è uno studio di consulenza: ogni tappa del percorso ha una durata, un obiettivo e un risultato concreto che ti porti a casa, anche se decidi di fermarti lì.</p>
+          <ul class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              ${methodHtml}
           </ul>
         </section>
 
-        <section class="rounded-[2rem] border border-white/10 bg-[#070b0d] p-8 md:p-12 mb-16">
-          <div class="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-10 items-center">
-            <div>
-              <p class="text-purple-300 font-mono text-sm tracking-[0.35em] uppercase mb-5">Integrazioni</p>
-              <h2 class="text-5xl md:text-7xl font-bold mb-8">Un hub centrale sopra gli strumenti che hai già.</h2>
-              <p class="text-lg text-gray-300 leading-relaxed mb-6">L'agente non sostituisce CRM, gestionale o documenti: si mette in mezzo, legge il contesto, applica regole e prepara azioni verificabili.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              ${['CRM: lead e note sales', 'Email: richieste e allegati', 'Gestionale: ordini e commesse', 'Documenti: procedure e contratti', 'Fogli dati: listini e import', 'Canali chat: form e helpdesk']
-                .map((item) => `<div class="rounded-2xl border border-white/10 bg-white/[0.035] p-5 text-gray-300">${escapeHtml(item)}</div>`)
-                .join('\n              ')}
-              <div class="md:col-span-2 rounded-2xl border border-cyan-300/30 bg-cyan-300/[0.08] p-6 text-center"><strong class="text-2xl text-white">Agente AI Q4</strong><p class="text-gray-300 mt-2">Legge, decide secondo regole, prepara l'azione e chiede conferma quando serve.</p></div>
-            </div>
+        <section class="mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold mb-10">Le domande che ci fanno tutti gli imprenditori</h2>
+          <div class="space-y-4">
+          ${faqHtml}
           </div>
-          <a href="/" class="inline-flex items-center rounded-full bg-indigo-600 px-7 py-4 font-semibold text-white hover:bg-indigo-500 transition-colors">Parla con un consulente</a>
+        </section>
+
+        <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-8 md:p-12 text-center">
+          <h2 class="text-3xl md:text-5xl font-bold mb-6">Porta un processo che ti ruba tempo. Ne usciamo con un piano.</h2>
+          <p class="text-lg text-gray-300 leading-relaxed mb-8 max-w-2xl mx-auto">In 30 minuti analizziamo insieme dove oggi si perde tempo, quali dati avete già e quale agente può generare il primo risultato misurabile.</p>
+          <a href="/" class="inline-flex items-center rounded-full bg-indigo-600 px-7 py-4 font-semibold text-white hover:bg-indigo-500 transition-colors">Prenota la chiamata</a>
         </section>
       </div>
     </article>
   `;
 
   return generateBaseHtml({
-    title: 'Agenti AI per aziende | Consulenza e automazioni Q4 Studio',
-    description: 'Q4 Studio progetta Agenti AI su misura per sales, back office, customer care e processi interni: audit, sviluppo, integrazione e adozione operativa.',
+    title: 'Agenti AI per aziende | Consulenza e sviluppo su misura | Q4 Studio',
+    description: 'Agenti AI che leggono email e WhatsApp, inseriscono ordini nel gestionale, preparano preventivi e qualificano i lead. Q4 Studio ti affianca dalla mappatura dei processi alla messa in produzione.',
     canonical: pageUrl,
-    schema: [serviceSchema, breadcrumbSchema],
+    schema: [serviceSchema, breadcrumbSchema, faqSchema],
     bodyContent
   });
 }
@@ -853,10 +692,10 @@ function generateSitemap(blogPosts: any[] = []): string {
   const urls = [
     { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly' },
     { loc: `${siteUrl}/agenti-ai`, priority: '0.95', changefreq: 'weekly' },
-    { loc: `${siteUrl}${resourcesPath}`, priority: '0.9', changefreq: 'weekly' },
+    { loc: `${siteUrl}/directory`, priority: '0.9', changefreq: 'weekly' },
     { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'weekly' },
     ...seoPages.map((page) => ({
-      loc: `${siteUrl}${resourcesPath}/${page.slug}`,
+      loc: `${siteUrl}/seo/${page.slug}`,
       priority: '0.8',
       changefreq: 'monthly'
     })),
@@ -895,30 +734,31 @@ ${urlEntries}
   const blogPosts = await fetchBlogPosts();
   console.log(`📚 Fetched ${blogPosts.length} blog posts`);
 
-  // Generate home page
-  const homeHtml = generateHomeHtml();
-  writeHtmlFile(join(distDir, 'index.html'), homeHtml);
-  console.log('✅ Generated /index.html');
-
-  // Generate resources hub
-  const directoryPath = join(distDir, resourcesPath.replace(/^\//, ''));
+  // Generate directory page
+  const directoryPath = join(distDir, 'directory');
   ensureDir(directoryPath);
   const directoryHtml = generateDirectoryHtml();
-  writeHtmlFile(join(directoryPath, 'index.html'), directoryHtml);
-  console.log(`✅ Generated ${resourcesPath}/index.html`);
+  const directoryStream = createWriteStream(join(directoryPath, 'index.html'));
+  directoryStream.write(directoryHtml);
+  directoryStream.end();
+  console.log('✅ Generated /directory/index.html');
 
   // Generate blog index page
   const blogPath = join(distDir, 'blog');
   ensureDir(blogPath);
   const blogHtml = generateBlogIndexHtml();
-  writeHtmlFile(join(blogPath, 'index.html'), blogHtml);
+  const blogStream = createWriteStream(join(blogPath, 'index.html'));
+  blogStream.write(blogHtml);
+  blogStream.end();
   console.log('✅ Generated /blog/index.html');
 
   // Generate AI Agents page
   const aiAgentsPath = join(distDir, 'agenti-ai');
   ensureDir(aiAgentsPath);
   const aiAgentsHtml = generateAIAgentsHtml();
-  writeHtmlFile(join(aiAgentsPath, 'index.html'), aiAgentsHtml);
+  const aiAgentsStream = createWriteStream(join(aiAgentsPath, 'index.html'));
+  aiAgentsStream.write(aiAgentsHtml);
+  aiAgentsStream.end();
   console.log('✅ Generated /agenti-ai/index.html');
 
   // Generate individual blog articles
@@ -926,22 +766,28 @@ ${urlEntries}
     const postDir = join(distDir, 'blog', post.slug);
     ensureDir(postDir);
     const postHtml = generateBlogArticleHtml(post);
-    writeHtmlFile(join(postDir, 'index.html'), postHtml);
+    const postStream = createWriteStream(join(postDir, 'index.html'));
+    postStream.write(postHtml);
+    postStream.end();
     console.log(`✅ Generated /blog/${post.slug}/index.html`);
   }
 
-  // Generate resource landing pages
+  // Generate SEO landing pages
   for (const page of seoPages) {
-    const pageDir = join(distDir, resourcesPath.replace(/^\//, ''), page.slug);
+    const pageDir = join(distDir, 'seo', page.slug);
     ensureDir(pageDir);
     const pageHtml = generateLandingPageHtml(page);
-    writeHtmlFile(join(pageDir, 'index.html'), pageHtml);
-    console.log(`✅ Generated ${resourcesPath}/${page.slug}/index.html`);
+    const pageStream = createWriteStream(join(pageDir, 'index.html'));
+    pageStream.write(pageHtml);
+    pageStream.end();
+    console.log(`✅ Generated /seo/${page.slug}/index.html`);
   }
 
   // Generate sitemap.xml with blog posts
   const sitemapPath = join(distDir, 'sitemap.xml');
-  writeHtmlFile(sitemapPath, generateSitemap(blogPosts));
+  const sitemapStream = createWriteStream(sitemapPath);
+  sitemapStream.write(generateSitemap(blogPosts));
+  sitemapStream.end();
   console.log('✅ Generated /sitemap.xml');
 
   // Copy robots.txt to dist if it exists in public

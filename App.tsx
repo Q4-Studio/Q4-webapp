@@ -286,6 +286,8 @@ const App: React.FC = () => {
         {currentPage === 'agenti-ai' && (
           <>
             <AIAgents />
+            <Marquee />
+            <ContactForm />
             <Footer />
           </>
         )}
