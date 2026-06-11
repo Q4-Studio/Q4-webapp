@@ -27,57 +27,57 @@ gsap.registerPlugin(ScrollTrigger);
 const useCases = [
   {
     icon: <MailCheck className="w-7 h-7" />,
-    area: 'Sales Operations',
-    title: 'Inserimento ordini da email e WhatsApp',
-    description: "L'agente legge richieste, allegati e messaggi, estrae i dati utili e prepara l'ordine nel gestionale prima del controllo umano.",
-    inputs: ['Email', 'WhatsApp', 'ERP'],
-    outcome: 'Meno copia-incolla, ordini più ordinati e tempi di presa in carico più bassi.',
-    gradient: 'from-fuchsia-600/80 via-purple-700/80 to-orange-500/70',
+    area: 'Back office commerciale',
+    title: 'Ordini e richieste cliente trasformati in attività pronte',
+    description: "L'agente interpreta email, allegati e messaggi, raccoglie i dati mancanti e prepara una bozza operativa nel sistema corretto.",
+    inputs: ['Messaggi cliente', 'Allegati', 'Regole interne'],
+    action: 'Bozza ordine + controllo umano',
+    outcome: 'Il team non riparte ogni volta da inbox e copia-incolla.',
   },
   {
     icon: <FileText className="w-7 h-7" />,
-    area: 'Back office',
-    title: 'Generazione automatica di preventivi e documenti',
-    description: 'Compila bozze di offerte, render, schede tecniche e documenti partendo da brief, listini, modelli e regole aziendali.',
-    inputs: ['PDF', 'Listini', 'Template'],
-    outcome: 'Documenti più rapidi da produrre, sempre coerenti con le regole interne.',
-    gradient: 'from-pink-600/80 via-purple-950/80 to-zinc-200/55',
+    area: 'Pre-sales',
+    title: 'Preventivi e documenti preparati da template aziendali',
+    description: 'Trasforma brief, listini e storico offerte in bozze coerenti, lasciando al consulente revisione, margini e decisione finale.',
+    inputs: ['Brief', 'Listini', 'Template'],
+    action: 'Offerta in bozza',
+    outcome: 'Meno lavoro ripetitivo nella fase che precede la vendita.',
   },
   {
     icon: <LineChart className="w-7 h-7" />,
     area: 'Operations',
-    title: 'Rendicontazione ore con abbinamento alle commesse',
-    description: 'Raccoglie consuntivi, note e fogli ore, abbina le attività alle commesse corrette e segnala anomalie prima della chiusura.',
-    inputs: ['Timesheet', 'Excel', 'Gestionale'],
-    outcome: 'Rendiconti più affidabili e meno rincorse a fine mese.',
-    gradient: 'from-orange-600/85 via-fuchsia-800/70 to-indigo-700/65',
+    title: 'Consuntivi e attività ricondotti alla commessa giusta',
+    description: 'Legge note operative, fogli ore e avanzamenti, propone abbinamenti e porta in evidenza incongruenze da verificare.',
+    inputs: ['Note attività', 'Fogli ore', 'Commesse'],
+    action: 'Riepilogo validabile',
+    outcome: 'Chiusure più ordinate e meno rincorse a fine periodo.',
   },
   {
     icon: <Headphones className="w-7 h-7" />,
-    area: 'Customer care',
-    title: 'Assistenza tecnica e customer care automatizzati',
-    description: 'Classifica richieste, recupera procedure interne e propone risposte o azioni al reparto giusto, mantenendo escalation controllate.',
-    inputs: ['Inbox', 'Helpdesk', 'Knowledge base'],
-    outcome: 'Risposte più rapide e supporto più uniforme tra operatori diversi.',
-    gradient: 'from-orange-500/80 via-purple-700/75 to-fuchsia-700/80',
+    area: 'Assistenza',
+    title: 'Ticket instradati con contesto e risposta suggerita',
+    description: 'Classifica urgenza, recupera procedure e casi simili, poi suggerisce risposta o reparto di competenza.',
+    inputs: ['Ticket', 'Procedure', 'Storico casi'],
+    action: 'Priorità + risposta proposta',
+    outcome: 'Il supporto resta umano, ma parte già informato.',
   },
   {
     icon: <DatabaseZap className="w-7 h-7" />,
     area: 'Sales',
-    title: 'Ricerca, qualificazione e smistamento lead ai commerciali',
-    description: 'Arricchisce i contatti, legge segnali commerciali, assegna priorità e inoltra il lead al commerciale più adatto.',
-    inputs: ['CRM', 'Meta Ads', 'LinkedIn'],
-    outcome: 'Pipeline più pulita e meno tempo perso su contatti fuori target.',
-    gradient: 'from-fuchsia-600/80 via-pink-900/75 to-zinc-300/50',
+    title: 'Lead arricchiti, qualificati e assegnati con criteri chiari',
+    description: 'Incrocia dati CRM, sorgente, risposte e segnali commerciali per separare priorità vere da contatti da nutrire.',
+    inputs: ['CRM', 'Campagne', 'Criteri ICP'],
+    action: 'Routing al sales',
+    outcome: 'La pipeline diventa più leggibile prima della chiamata.',
   },
   {
     icon: <MessageSquareText className="w-7 h-7" />,
-    area: 'Knowledge',
-    title: 'Assistente chat con conoscenza aziendale',
-    description: "Risponde a domande interne usando documenti, procedure e dati aziendali, citando le fonti e passando all'umano quando serve.",
-    inputs: ['Documenti', 'CRM', 'Drive'],
-    outcome: 'Meno interruzioni al team e conoscenza aziendale più accessibile.',
-    gradient: 'from-violet-700/80 via-zinc-950/80 to-orange-500/80',
+    area: 'Knowledge management',
+    title: 'Conoscenza aziendale consultabile senza cercare in dieci posti',
+    description: "Un assistente interno recupera procedure, documenti e risposte approvate, citando le fonti e indicando quando serve l'umano.",
+    inputs: ['Drive', 'Procedure', 'CRM'],
+    action: 'Risposta con fonte',
+    outcome: 'Meno interruzioni e meno conoscenza dispersa.',
   },
 ];
 
@@ -105,13 +105,12 @@ const adoptionSteps = [
 ];
 
 const integrationSystems = [
-  'ERP / GESTIONALI',
-  'EMAIL',
-  'EXCEL / GOOGLE SHEET',
-  'CRM',
-  'DOCUMENTI',
-  'WHATSAPP',
-  'API AZIENDALI',
+  { name: 'CRM', detail: 'lead, opportunità, note sales', className: 'lg:col-start-1 lg:row-start-1' },
+  { name: 'Email', detail: 'richieste, allegati, follow-up', className: 'lg:col-start-3 lg:row-start-1' },
+  { name: 'Gestionale', detail: 'ordini, commesse, anagrafiche', className: 'lg:col-start-1 lg:row-start-3' },
+  { name: 'Documenti', detail: 'procedure, offerte, contratti', className: 'lg:col-start-3 lg:row-start-3' },
+  { name: 'Fogli dati', detail: 'listini, consuntivi, import', className: 'lg:col-start-2 lg:row-start-1' },
+  { name: 'Canali chat', detail: 'WhatsApp, form, helpdesk', className: 'lg:col-start-2 lg:row-start-3' },
 ];
 
 const AIAgents: React.FC = () => {
@@ -214,67 +213,64 @@ const AIAgents: React.FC = () => {
         </div>
       </section>
 
-      <section id="use-cases" className="relative px-6 py-32 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute left-0 top-20 h-[720px] w-[520px] rounded-full bg-fuchsia-900/20 blur-[150px]" />
-          <div className="absolute right-0 bottom-10 h-[620px] w-[620px] rounded-full bg-orange-700/10 blur-[140px]" />
-        </div>
+      <section id="use-cases" className="relative px-6 py-32 overflow-hidden border-y border-white/10 bg-[#070707]">
+        <div className="absolute inset-0 pointer-events-none opacity-[0.16]" style={{ backgroundImage: 'linear-gradient(90deg, #fff 1px, transparent 1px), linear-gradient(#fff 1px, transparent 1px)', backgroundSize: '96px 96px' }} />
 
-        <div className="relative z-10 max-w-[1500px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16 items-end mb-16">
-            <div>
-              <p className="text-cyan-300 font-mono text-sm tracking-[0.35em] uppercase mb-5">Use case concreti</p>
-              <h2 className="text-5xl md:text-8xl font-bold leading-[0.95] tracking-tighter">
-                Cosa può fare un agente AI, in pratica.
-              </h2>
-            </div>
-            <p className="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-3xl lg:ml-auto">
-              Ogni progetto parte da un lavoro reale: ordini, preventivi, rendiconti, ticket, lead, documenti. Qui non parliamo di AI generica, ma di mansioni operative che oggi consumano tempo al team.
+        <div className="relative z-10 max-w-7xl mx-auto">
+          <div className="max-w-5xl mb-20">
+            <p className="text-cyan-300 font-mono text-sm tracking-[0.35em] uppercase mb-5">Use case concreti</p>
+            <h2 className="text-5xl md:text-8xl font-bold leading-[0.95] tracking-tighter mb-8">
+              Sei playbook operativi, non sei card da catalogo.
+            </h2>
+            <p className="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-4xl">
+              Ogni agente viene disegnato come una procedura: quali dati legge, quale regola applica, quale azione prepara e dove resta il controllo umano.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          <div className="space-y-6">
             {useCases.map((item, index) => (
               <article
                 key={item.title}
                 ref={(el) => { cardRefs.current[index] = el; }}
-                className="group relative min-h-[560px] rounded-[2rem] border border-white/10 bg-[#110910] p-4 md:p-5 overflow-hidden hover:border-white/25 transition-colors"
+                className="group grid grid-cols-1 lg:grid-cols-[140px_1fr_420px] gap-6 lg:gap-10 items-stretch rounded-[1.75rem] border border-white/10 bg-white/[0.035] p-5 md:p-6 hover:border-cyan-300/35 transition-colors"
               >
-                <div className={`relative h-64 md:h-72 rounded-[1.5rem] overflow-hidden bg-gradient-to-br ${item.gradient} border border-white/15 mb-8`}>
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,255,255,0.45),transparent_22%),radial-gradient(circle_at_72%_72%,rgba(255,255,255,0.22),transparent_28%),radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.75),transparent_58%)] blur-sm" />
-                  <div className="absolute inset-0 bg-black/10" />
-                  <div className="relative z-10 h-full flex items-center justify-center">
-                    <div className="h-28 w-28 md:h-32 md:w-32 text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.55)] [&_svg]:h-full [&_svg]:w-full [&_svg]:stroke-[1.8]">
-                      {item.icon}
+                <div className="flex lg:flex-col items-center lg:items-start justify-between gap-5 rounded-[1.25rem] border border-white/10 bg-[#050505] p-5">
+                  <span className="text-4xl md:text-5xl font-bold text-white/20 font-mono">0{index + 1}</span>
+                  <div className="flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-2xl bg-cyan-400/10 border border-cyan-300/20 text-cyan-100">
+                    {React.cloneElement(item.icon, { className: 'w-9 h-9 md:w-11 md:h-11' })}
+                  </div>
+                  <span className="hidden lg:block h-px w-full bg-gradient-to-r from-cyan-300/70 to-transparent" />
+                </div>
+
+                <div className="flex flex-col justify-center">
+                  <span className="text-xs font-mono uppercase tracking-[0.25em] text-cyan-300/80 mb-5">{item.area}</span>
+                  <h3 className="text-3xl md:text-5xl leading-[1.02] font-bold tracking-tight mb-6">{item.title}</h3>
+                  <p className="text-gray-300 leading-relaxed text-lg md:text-xl max-w-3xl">{item.description}</p>
+                  <p className="mt-6 border-l border-cyan-300/40 pl-4 text-base text-gray-400">{item.outcome}</p>
+                </div>
+
+                <div className="rounded-[1.25rem] border border-white/10 bg-[#050505] p-5 flex flex-col justify-center">
+                  <p className="text-xs font-mono uppercase tracking-[0.25em] text-gray-500 mb-5">Flusso agente</p>
+                  <div className="space-y-3">
+                    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                      <span className="block text-xs text-gray-500 uppercase tracking-widest mb-2">Input</span>
+                      <div className="flex flex-wrap gap-2">
+                    {item.inputs.map((input) => (
+                          <span key={input} className="rounded-full bg-white/[0.06] px-3 py-1 text-xs text-gray-300">{input}</span>
+                    ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 text-gray-500 px-4">
+                      <span className="h-px flex-1 bg-white/10" />
+                      <ArrowRight className="h-4 w-4" />
+                      <span className="h-px flex-1 bg-white/10" />
+                    </div>
+                    <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/[0.06] p-4">
+                      <span className="block text-xs text-cyan-200/70 uppercase tracking-widest mb-2">Output</span>
+                      <p className="text-white font-medium">{item.action}</p>
                     </div>
                   </div>
                 </div>
-
-                <div className="px-2 md:px-3 pb-3">
-                  <div className="flex items-center justify-between gap-4 mb-5">
-                    <span className="text-xs font-mono uppercase tracking-[0.22em] text-gray-500">{item.area}</span>
-                    <span className="h-2 w-2 rounded-full bg-indigo-400 shadow-[0_0_18px_rgba(129,140,248,0.9)]" />
-                  </div>
-                  <h3 className="text-3xl md:text-[2.45rem] leading-[1.02] font-bold tracking-tight mb-5">{item.title}</h3>
-                  <p className="text-gray-400 leading-relaxed text-base md:text-lg mb-7">{item.description}</p>
-
-                  <div className="flex flex-wrap gap-2 mb-7">
-                    {item.inputs.map((input) => (
-                      <span key={input} className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-gray-300">{input}</span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="rounded-full border border-white/10 bg-white/[0.08] px-5 py-2 text-sm font-medium text-white shadow-[inset_0_1px_10px_rgba(255,255,255,0.12)]">
-                      Scopri
-                    </span>
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white group-hover:bg-indigo-500 group-hover:border-indigo-400 transition-colors">
-                      <ArrowRight className="h-5 w-5" />
-                    </span>
-                  </div>
-                </div>
-
-                <div className="absolute inset-x-5 bottom-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
               </article>
             ))}
           </div>
@@ -306,53 +302,50 @@ const AIAgents: React.FC = () => {
         </div>
       </section>
 
-      <section className="relative px-6 py-32 min-h-screen overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_28%_58%,rgba(124,58,237,0.24),transparent_34%),radial-gradient(circle_at_90%_10%,rgba(234,88,12,0.18),transparent_30%),linear-gradient(115deg,#080608_0%,#151825_46%,#23091f_100%)]" />
-        <div className="absolute inset-0 pointer-events-none opacity-[0.08]" style={{ backgroundImage: 'linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '72px 72px' }} />
+      <section className="relative px-6 py-32 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(135deg,#050505_0%,#071016_44%,#130813_100%)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
-        <div className="relative z-10 max-w-[1500px] mx-auto">
-          <div className="text-center mb-20">
-            <p className="text-purple-300 font-mono text-sm tracking-[0.35em] uppercase mb-5">Integrazione con sistemi aziendali</p>
-            <h2 className="text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.9] tracking-tighter">
-              Gli agenti lavorano dove il team lavora già.
-            </h2>
-          </div>
+        <div className="relative z-10 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-16 items-center">
+            <div>
+              <p className="text-purple-300 font-mono text-sm tracking-[0.35em] uppercase mb-5">Integrazioni</p>
+              <h2 className="text-5xl md:text-7xl font-bold leading-[0.95] tracking-tighter mb-8">
+                Un hub centrale sopra gli strumenti che hai già.
+              </h2>
+              <p className="text-xl text-gray-300 leading-relaxed mb-8">
+                L'agente non sostituisce CRM, gestionale o documenti: si mette in mezzo, legge il contesto, applica regole e prepara azioni verificabili.
+              </p>
+              <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6">
+                <p className="text-sm font-mono uppercase tracking-[0.25em] text-gray-500 mb-4">Ruolo Q4 Studio</p>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                  Disegniamo connessioni, permessi, fallback e punti di controllo umano prima di automatizzare. Così l'AI entra nel processo senza renderlo più fragile.
+                </p>
+              </div>
+            </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-12 lg:gap-20 items-center">
-            <div className="space-y-7">
+            <div className="relative">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-3 gap-4">
               {integrationSystems.map((system) => {
-                const active = system === 'EXCEL / GOOGLE SHEET';
                 return (
                   <div
-                    key={system}
-                    className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-[0.04em] leading-none transition-colors ${active ? 'text-white' : 'text-white/28'}`}
+                    key={system.name}
+                    className={`${system.className} min-h-[150px] rounded-3xl border border-white/10 bg-white/[0.035] p-5 flex flex-col justify-between`}
                   >
-                    {system}
+                    <span className="text-sm font-mono uppercase tracking-[0.18em] text-cyan-300/70">{system.name}</span>
+                    <p className="text-gray-300 leading-relaxed">{system.detail}</p>
                   </div>
                 );
               })}
-            </div>
 
-            <div className="relative space-y-6 md:space-y-0 md:min-h-[720px]">
-              <div className="absolute left-1/2 top-8 bottom-8 w-px bg-gradient-to-b from-transparent via-white/50 to-transparent hidden md:block" />
-              <div className="absolute left-1/2 top-8 hidden h-3 w-3 -translate-x-1/2 rounded-full bg-white/70 md:block" />
-              <div className="absolute left-1/2 bottom-8 hidden h-3 w-3 -translate-x-1/2 rounded-full bg-white/70 md:block" />
-
-              <div className="relative md:absolute md:right-0 md:top-0 w-full md:w-[58%] rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
-                <div className="h-56 rounded-[1.5rem] bg-gradient-to-br from-orange-500/80 via-fuchsia-700/70 to-cyan-400/70 border border-white/15 flex items-center justify-center">
-                  <FileText className="h-24 w-24 text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.5)]" />
+                <div className="md:col-span-2 lg:col-start-2 lg:row-start-2 min-h-[190px] rounded-3xl border border-cyan-300/30 bg-cyan-300/[0.08] p-6 flex flex-col items-center justify-center text-center shadow-[0_0_60px_-30px_rgba(103,232,249,0.8)]">
+                  <Bot className="h-12 w-12 text-cyan-100 mb-4" />
+                  <h3 className="text-3xl font-bold mb-2">Agente AI Q4</h3>
+                  <p className="text-gray-300 leading-relaxed max-w-sm">Legge, decide secondo regole, prepara l'azione e chiede conferma quando serve.</p>
                 </div>
-                <h3 className="text-3xl font-bold mt-6 mb-3">Dati in ingresso</h3>
-                <p className="text-gray-300 leading-relaxed">L'agente legge documenti, email, fogli, CRM e sistemi gestionali senza chiedere al team di cambiare abitudini.</p>
               </div>
 
-              <div className="relative md:absolute md:left-0 md:bottom-0 w-full md:w-[58%] rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
-                <div className="h-56 rounded-[1.5rem] bg-gradient-to-br from-fuchsia-600/80 via-purple-900/75 to-orange-500/70 border border-white/15 flex items-center justify-center">
-                  <DatabaseZap className="h-24 w-24 text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.5)]" />
-                </div>
-                <h3 className="text-3xl font-bold mt-6 mb-3">Azioni controllate</h3>
-                <p className="text-gray-300 leading-relaxed">Compila campi, prepara notifiche, aggiorna record, genera bozze e porta all'operatore solo ciò che richiede giudizio.</p>
-              </div>
+              <div className="absolute left-1/2 top-1/2 hidden h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 lg:block pointer-events-none" />
             </div>
           </div>
         </div>
