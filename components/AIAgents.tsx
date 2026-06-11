@@ -8,16 +8,22 @@ import {
   Calendar,
   CheckCircle2,
   ChevronDown,
-  ClipboardList,
+  Clock,
   Database,
+  Euro,
+  FileCheck,
   FileSpreadsheet,
   FileText,
   Globe,
+  GraduationCap,
   Headphones,
+  Inbox,
+  Lock,
   Mail,
   MessageCircle,
   Package,
   Phone,
+  PhoneMissed,
   PlugZap,
   Receipt,
   Rocket,
@@ -26,6 +32,7 @@ import {
   Target,
   TrendingUp,
   Users,
+  UserX,
 } from 'lucide-react';
 import SEOHead from './SEOHead';
 import MagneticButton from './MagneticButton';
@@ -49,7 +56,7 @@ const feedScenarios = [
       "Prepara la bozza d'ordine con i prezzi da listino",
       'Invia il riepilogo al commerciale per conferma',
     ],
-    result: 'Ordine pronto in 40 secondi, senza copia-incolla',
+    result: "Bozza d'ordine pronta in 40 secondi",
   },
   {
     source: 'Email · info@',
@@ -61,7 +68,7 @@ const feedScenarios = [
       "Compila l'offerta sul template aziendale",
       'La lascia in bozza, pronta da revisionare',
     ],
-    result: 'Bozza di preventivo in 2 minuti invece che in 3 giorni',
+    result: 'Bozza di preventivo pronta in 2 minuti',
   },
   {
     source: 'Sito · Form contatti',
@@ -73,7 +80,7 @@ const feedScenarios = [
       'Lo assegna al commerciale giusto nel CRM',
       "Prepara l'email di primo contatto",
     ],
-    result: 'Follow-up partito in 5 minuti, non in 2 giorni',
+    result: 'Primo contatto inviato dopo 5 minuti',
   },
 ];
 
@@ -99,7 +106,7 @@ const useCases = [
     id: 'preventivi',
     tab: 'Preventivi',
     icon: <FileText className="w-5 h-5" />,
-    title: 'Il preventivo parte in giornata, non quando qualcuno trova il tempo.',
+    title: 'Il preventivo parte in giornata, mentre il cliente è ancora interessato.',
     today:
       'Oggi la richiesta resta in inbox finché il titolare o il tecnico non ha mezzora libera. Intanto il cliente chiede anche ai concorrenti.',
     withAgent: [
@@ -109,7 +116,7 @@ const useCases = [
       'Una persona revisiona e invia: il lavoro noioso è già fatto',
     ],
     tools: ['Email', 'Listini / Excel', 'Storico offerte'],
-    impact: 'Risposta al cliente in ore, non in giorni',
+    impact: 'Risposta al cliente in giornata',
   },
   {
     id: 'lead',
@@ -133,7 +140,7 @@ const useCases = [
     icon: <Headphones className="w-5 h-5" />,
     title: '«Dov\'è il mio ordine?» riceve risposta subito, anche alle 21.',
     today:
-      'Oggi le stesse dieci domande — stato ordine, tempi, documenti, resi — interrompono il team decine di volte al giorno.',
+      'Oggi le stesse dieci domande (stato ordine, tempi, documenti, resi) interrompono il team decine di volte al giorno.',
     withAgent: [
       'Risponde su WhatsApp ed email alle domande ricorrenti',
       'Controlla lo stato reale di ordini e spedizioni nel gestionale',
@@ -173,7 +180,7 @@ const useCases = [
       'Evidenzia gli scostamenti che meritano una decisione',
     ],
     tools: ['Gestionale / ERP', 'CRM', 'Excel / Sheets'],
-    impact: 'Decisioni sui numeri veri, non sulle sensazioni',
+    impact: 'Decisioni prese su numeri aggiornati',
   },
 ];
 
@@ -197,7 +204,7 @@ const methodSteps = [
     duration: '1–2 settimane',
     title: 'Mappatura dei processi',
     description:
-      'Entriamo in azienda e parliamo con chi fa il lavoro, non solo con la direzione. Mappiamo dove si perde tempo e quali dati avete già.',
+      'Entriamo in azienda e parliamo sia con la direzione sia con chi fa il lavoro ogni giorno. Mappiamo dove si perde tempo e quali dati avete già.',
     deliverable:
       'La lista dei processi automatizzabili, ordinata per impatto, con la stima delle ore recuperabili.',
   },
@@ -235,42 +242,63 @@ const methodSteps = [
 
 // Frasi in cui l'imprenditore può riconoscersi
 const signals = [
-  '«Faccio prima a farlo io che a spiegarlo a qualcuno.»',
-  '«Il preventivo è partito dopo quattro giorni. Il cliente aveva già firmato con altri.»',
-  '«Metà giornata se ne va tra email, gestionale e fogli Excel.»',
-  '«Se manca lei, nessuno sa dove trovare le informazioni.»',
-  '«I lead arrivano, ma li richiamiamo quando abbiamo tempo.»',
-  '«Ogni fine mese è una caccia ai dati per capire come stiamo andando.»',
+  { icon: <Clock className="w-5 h-5" />, quote: '«Faccio prima a farlo io che a spiegarlo a qualcuno»' },
+  { icon: <FileText className="w-5 h-5" />, quote: '«Il preventivo è partito dopo quattro giorni. Il cliente aveva già firmato con altri»' },
+  { icon: <Inbox className="w-5 h-5" />, quote: '«Metà giornata se ne va tra email, gestionale e fogli Excel»' },
+  { icon: <UserX className="w-5 h-5" />, quote: '«Se manca lei, nessuno sa dove trovare le informazioni»' },
+  { icon: <PhoneMissed className="w-5 h-5" />, quote: '«I lead arrivano, ma li richiamiamo quando abbiamo tempo»' },
+  { icon: <BarChart3 className="w-5 h-5" />, quote: '«Ogni fine mese è una caccia ai dati per capire come stiamo andando»' },
 ];
+
+// Icone per gli strumenti collegati nei casi d'uso
+const toolIcons: Record<string, React.ReactNode> = {
+  'WhatsApp': <MessageCircle className="w-3.5 h-3.5" />,
+  'Email': <Mail className="w-3.5 h-3.5" />,
+  'Email / PEC': <Mail className="w-3.5 h-3.5" />,
+  'Gestionale / ERP': <Database className="w-3.5 h-3.5" />,
+  'CRM': <Users className="w-3.5 h-3.5" />,
+  'Listini / Excel': <FileSpreadsheet className="w-3.5 h-3.5" />,
+  'Fogli di calcolo': <FileSpreadsheet className="w-3.5 h-3.5" />,
+  'Excel / Sheets': <FileSpreadsheet className="w-3.5 h-3.5" />,
+  'Storico offerte': <FileText className="w-3.5 h-3.5" />,
+  'Form sito': <Globe className="w-3.5 h-3.5" />,
+  'Meta / LinkedIn': <Target className="w-3.5 h-3.5" />,
+};
 
 // FAQ in linguaggio da imprenditore
 const faqs = [
   {
+    icon: <Euro className="w-4 h-4" />,
     question: 'Quanto costa un agente AI?',
     answer:
       "Dipende dal processo e dai sistemi da collegare. Per questo il percorso parte dalla mappatura: prima di investire sai esattamente quanto costa il progetto pilota e quante ore di lavoro può restituirti. Niente canoni a sorpresa, niente preventivi al buio.",
   },
   {
+    icon: <Clock className="w-4 h-4" />,
     question: 'In quanto tempo vedo i primi risultati?',
     answer:
       'Il primo agente lavora su un processo reale entro 6–8 settimane dal via. Non partiamo mai da un progetto enorme: partiamo da un processo solo, misurabile, e allarghiamo solo quando funziona.',
   },
   {
+    icon: <ShieldCheck className="w-4 h-4" />,
     question: "E se l'agente sbaglia?",
     answer:
       "Dove conta, l'agente propone e una persona conferma: definiamo insieme cosa può fare in autonomia e cosa deve passare da un controllo umano. Ogni azione resta tracciata, quindi puoi sempre verificare cosa ha fatto e perché.",
   },
   {
+    icon: <Lock className="w-4 h-4" />,
     question: 'I dati della mia azienda dove finiscono?',
     answer:
       'Restano nei tuoi sistemi: gestionale, CRM ed email rimangono la fonte dei dati. Definiamo permessi e accessi prima di partire e lavoriamo in conformità al GDPR. Nessun dato viene usato per addestrare modelli pubblici.',
   },
   {
+    icon: <GraduationCap className="w-4 h-4" />,
     question: 'Il mio team non è tecnico. Ce la facciamo?',
     answer:
-      'Sì, ed è il punto: il team continua a usare WhatsApp, email e gestionale come sempre. È l\'agente che si adatta ai vostri strumenti, non il contrario. La formazione la facciamo noi, sul vostro caso concreto.',
+      'Sì, ed è il punto: il team continua a usare WhatsApp, email e gestionale come sempre, perché è l\'agente che si adatta ai vostri strumenti. La formazione la facciamo noi, sul vostro caso concreto.',
   },
   {
+    icon: <Bot className="w-4 h-4" />,
     question: 'È un chatbot?',
     answer:
       "No. Un chatbot risponde a domande. Un agente lavora: legge documenti, aggiorna il gestionale, prepara ordini e preventivi, passa la palla a una persona quando serve. La chat è solo uno dei canali da cui riceve il lavoro.",
@@ -306,15 +334,15 @@ const LiveAgentPanel: React.FC<{ reducedMotion: boolean }> = ({ reducedMotion })
   }, [progress, totalSteps, reducedMotion]);
 
   return (
-    <div className="relative rounded-[1.75rem] border border-white/10 bg-[#0A0A0A]/90 backdrop-blur overflow-hidden shadow-[0_40px_120px_-40px_rgba(16,185,129,0.25)]">
+    <div className="relative rounded-[1.75rem] border border-white/10 bg-[#0A0A0A]/90 backdrop-blur overflow-hidden shadow-[0_40px_120px_-40px_rgba(168,85,247,0.25)]">
       {/* Barra superiore */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
         <div className="flex items-center gap-3">
           <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+            <span className="absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75 animate-ping" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-violet-400" />
           </span>
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-emerald-300">Agente al lavoro</span>
+          <span className="text-xs font-mono uppercase tracking-[0.25em] text-violet-300">Agente al lavoro</span>
         </div>
         <span className="text-xs font-mono text-gray-600">q4 · operations</span>
       </div>
@@ -339,7 +367,7 @@ const LiveAgentPanel: React.FC<{ reducedMotion: boolean }> = ({ reducedMotion })
                 className="flex items-start gap-3 transition-all duration-500"
                 style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(8px)' }}
               >
-                <CheckCircle2 className="w-4 h-4 mt-1 flex-shrink-0 text-emerald-400" />
+                <CheckCircle2 className="w-4 h-4 mt-1 flex-shrink-0 text-violet-400" />
                 <p className="text-sm text-gray-300 leading-relaxed">{step}</p>
               </div>
             );
@@ -348,22 +376,25 @@ const LiveAgentPanel: React.FC<{ reducedMotion: boolean }> = ({ reducedMotion })
           {/* Indicatore "sta lavorando" */}
           {!reducedMotion && progress < totalSteps && (
             <div className="flex items-center gap-2 pl-7 pt-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70 animate-bounce [animation-delay:0ms]" />
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70 animate-bounce [animation-delay:150ms]" />
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70 animate-bounce [animation-delay:300ms]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-violet-400/70 animate-bounce [animation-delay:0ms]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-violet-400/70 animate-bounce [animation-delay:150ms]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-violet-400/70 animate-bounce [animation-delay:300ms]" />
             </div>
           )}
         </div>
 
         {/* Esito */}
         <div
-          className="mt-5 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.07] p-4 transition-all duration-500"
+          className="mt-5 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 transition-all duration-500"
           style={{
             opacity: progress >= totalSteps ? 1 : 0,
             transform: progress >= totalSteps ? 'translateY(0)' : 'translateY(8px)',
           }}
         >
-          <p className="text-emerald-200 font-medium text-sm">✓ {scenario.result}</p>
+          <p className="text-violet-200 font-medium text-sm flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+            {scenario.result}
+          </p>
         </div>
 
         {/* Indicatori scenario */}
@@ -372,7 +403,7 @@ const LiveAgentPanel: React.FC<{ reducedMotion: boolean }> = ({ reducedMotion })
             <span
               key={i}
               className={`h-1 rounded-full transition-all duration-500 ${
-                i === scenarioIndex ? 'w-8 bg-emerald-400' : 'w-3 bg-white/15'
+                i === scenarioIndex ? 'w-8 bg-violet-400' : 'w-3 bg-white/15'
               }`}
             />
           ))}
@@ -477,14 +508,14 @@ const AIAgents: React.FC = () => {
       {/* ============================== HERO ============================== */}
       <section className="relative px-6 pt-36 pb-24 lg:min-h-screen flex items-center">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute right-[-10%] top-[10%] h-[640px] w-[640px] rounded-full bg-emerald-500/[0.07] blur-[140px]" />
+          <div className="absolute right-[-10%] top-[10%] h-[640px] w-[640px] rounded-full bg-violet-500/[0.07] blur-[140px]" />
           <div className="absolute left-[-15%] bottom-[-10%] h-[520px] w-[520px] rounded-full bg-indigo-600/10 blur-[140px]" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-14 items-center">
           <div>
-            <div className="flex items-center gap-2 text-emerald-300 font-mono text-sm tracking-[0.3em] uppercase mb-7">
-              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+            <div className="flex items-center gap-2 text-violet-300 font-mono text-sm tracking-[0.3em] uppercase mb-7">
+              <span className="w-2 h-2 bg-violet-400 rounded-full animate-pulse" />
               Agenti AI · consulenza e sviluppo
             </div>
 
@@ -498,17 +529,38 @@ const AIAgents: React.FC = () => {
               <span className="text-white">l'agente propone, le persone decidono.</span>
             </p>
 
+            <div className="mt-8 flex flex-wrap items-center gap-2">
+              <span className="text-xs font-mono uppercase tracking-widest text-gray-600 mr-1">
+                Lavora dentro:
+              </span>
+              {[
+                { icon: <MessageCircle className="w-4 h-4" />, label: 'WhatsApp' },
+                { icon: <Mail className="w-4 h-4" />, label: 'Email' },
+                { icon: <Database className="w-4 h-4" />, label: 'Gestionale' },
+                { icon: <Users className="w-4 h-4" />, label: 'CRM' },
+                { icon: <FileSpreadsheet className="w-4 h-4" />, label: 'Excel' },
+              ].map((item) => (
+                <span
+                  key={item.label}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-gray-300"
+                >
+                  <span className="text-violet-300">{item.icon}</span>
+                  {item.label}
+                </span>
+              ))}
+            </div>
+
             <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-5">
               <MagneticButton
                 onClick={scrollToContact}
                 className="text-base md:text-lg px-8 py-4 font-semibold"
               >
-                <span>Parliamone — 30 minuti, senza impegno</span>
+                <span>Parliamone: 30 minuti senza impegno</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </MagneticButton>
               <a
                 href="#cosa-fa"
-                className="text-sm font-mono text-gray-500 hover:text-emerald-300 transition-colors uppercase tracking-widest"
+                className="text-sm font-mono text-gray-500 hover:text-violet-300 transition-colors uppercase tracking-widest"
               >
                 Vedi cosa fa, in concreto ↓
               </a>
@@ -523,12 +575,12 @@ const AIAgents: React.FC = () => {
       <section id="cosa-fa" className="relative px-6 py-28 border-t border-white/5 bg-[#070707]">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mb-16" data-reveal>
-            <span className="text-emerald-300 font-mono tracking-widest text-sm uppercase mb-5 block">
+            <span className="text-violet-300 font-mono tracking-widest text-sm uppercase mb-5 block">
               Cosa fa, in concreto
             </span>
             <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
               Scegli un processo.{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-cyan-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-purple-400">
                 Guarda cosa cambia.
               </span>
             </h2>
@@ -550,13 +602,13 @@ const AIAgents: React.FC = () => {
                   onClick={() => setActiveCase(index)}
                   className={`flex items-center gap-3 px-5 py-4 rounded-2xl border text-left whitespace-nowrap lg:whitespace-normal transition-all duration-300 cursor-pointer flex-shrink-0 lg:flex-shrink ${
                     activeCase === index
-                      ? 'border-emerald-400/40 bg-emerald-400/[0.08] text-white'
+                      ? 'border-violet-400/40 bg-violet-400/[0.08] text-white'
                       : 'border-white/10 bg-white/[0.02] text-gray-400 hover:border-white/25 hover:text-gray-200'
                   }`}
                 >
                   <span
                     className={`flex h-9 w-9 items-center justify-center rounded-xl flex-shrink-0 transition-colors ${
-                      activeCase === index ? 'bg-emerald-400/15 text-emerald-300' : 'bg-white/[0.05] text-gray-500'
+                      activeCase === index ? 'bg-violet-400/15 text-violet-300' : 'bg-white/[0.05] text-gray-500'
                     }`}
                   >
                     {useCase.icon}
@@ -571,7 +623,7 @@ const AIAgents: React.FC = () => {
               ref={casePanelRef}
               className="rounded-[1.75rem] border border-white/10 bg-[#0A0A0A] p-7 md:p-10 overflow-hidden relative"
             >
-              <div className="absolute top-0 right-0 w-72 h-72 bg-emerald-400/[0.04] rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+              <div className="absolute top-0 right-0 w-72 h-72 bg-violet-400/[0.04] rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
 
               <h3 className="text-2xl md:text-4xl font-bold leading-snug mb-8 relative z-10">
                 {currentCase.title}
@@ -579,20 +631,22 @@ const AIAgents: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
                 <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                  <span className="text-xs font-mono uppercase tracking-[0.25em] text-gray-500 mb-4 block">
+                  <span className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-gray-500 mb-4">
+                    <Clock className="w-4 h-4" />
                     Oggi, senza agente
                   </span>
                   <p className="text-gray-400 leading-relaxed">{currentCase.today}</p>
                 </div>
 
-                <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] p-6">
-                  <span className="text-xs font-mono uppercase tracking-[0.25em] text-emerald-300/80 mb-4 block">
+                <div className="rounded-2xl border border-violet-400/20 bg-violet-400/[0.04] p-6">
+                  <span className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-violet-300/80 mb-4">
+                    <Bot className="w-4 h-4" />
                     Con l'agente
                   </span>
                   <ul className="space-y-3">
                     {currentCase.withAgent.map((step) => (
                       <li key={step} className="flex items-start gap-3">
-                        <CheckCircle2 className="w-4 h-4 mt-1 flex-shrink-0 text-emerald-400" />
+                        <CheckCircle2 className="w-4 h-4 mt-1 flex-shrink-0 text-violet-400" />
                         <span className="text-sm text-gray-300 leading-relaxed">{step}</span>
                       </li>
                     ))}
@@ -608,13 +662,14 @@ const AIAgents: React.FC = () => {
                   {currentCase.tools.map((tool) => (
                     <span
                       key={tool}
-                      className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-gray-300"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-gray-300"
                     >
+                      <span className="text-violet-300">{toolIcons[tool]}</span>
                       {tool}
                     </span>
                   ))}
                 </div>
-                <p className="md:ml-auto text-sm font-medium text-emerald-300 flex items-center gap-2">
+                <p className="md:ml-auto text-sm font-medium text-violet-300 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4" />
                   {currentCase.impact}
                 </p>
@@ -679,8 +734,8 @@ const AIAgents: React.FC = () => {
 
             {/* Nodo centrale */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-              <div className="rounded-3xl border border-emerald-400/30 bg-[#0A0A0A] px-7 py-6 text-center shadow-[0_0_80px_-20px_rgba(16,185,129,0.45)]">
-                <Bot className="w-9 h-9 text-emerald-300 mx-auto mb-2" />
+              <div className="rounded-3xl border border-violet-400/30 bg-[#0A0A0A] px-7 py-6 text-center shadow-[0_0_80px_-20px_rgba(168,85,247,0.45)]">
+                <Bot className="w-9 h-9 text-violet-300 mx-auto mb-2" />
                 <p className="font-bold text-lg leading-none mb-1.5">Agente Q4</p>
                 <p className="text-[11px] font-mono uppercase tracking-widest text-gray-500">
                   legge · decide · agisce
@@ -739,7 +794,7 @@ const AIAgents: React.FC = () => {
             <p className="text-xl text-gray-400 leading-relaxed mb-8">
               Siamo uno studio di consulenza: prima capiamo come lavora la tua azienda, poi
               costruiamo. Ogni tappa ha una durata, un obiettivo e un risultato concreto che ti porti
-              a casa — anche se decidi di fermarti lì.
+              a casa, anche se decidi di fermarti lì.
             </p>
             <div className="flex items-center gap-3 text-gray-500">
               <ShieldCheck className="w-5 h-5 text-indigo-400 flex-shrink-0" />
@@ -755,7 +810,7 @@ const AIAgents: React.FC = () => {
             <div className="absolute left-[15px] top-2 bottom-2 w-px bg-white/10">
               <div
                 ref={timelineLineRef}
-                className="absolute inset-0 bg-gradient-to-b from-indigo-400 via-purple-400 to-emerald-400"
+                className="absolute inset-0 bg-gradient-to-b from-indigo-400 via-purple-400 to-violet-400"
               />
             </div>
 
@@ -785,7 +840,8 @@ const AIAgents: React.FC = () => {
                     <p className="text-gray-400 leading-relaxed mb-5">{step.description}</p>
 
                     <div className="rounded-2xl border border-indigo-400/15 bg-indigo-500/[0.06] p-4">
-                      <span className="text-xs font-mono uppercase tracking-widest text-indigo-300/80 mb-1.5 block">
+                      <span className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-indigo-300/80 mb-1.5">
+                        <FileCheck className="w-4 h-4" />
                         Cosa ti porti a casa
                       </span>
                       <p className="text-sm text-gray-300 leading-relaxed">{step.deliverable}</p>
@@ -802,7 +858,7 @@ const AIAgents: React.FC = () => {
       <section className="relative px-6 py-28 border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mb-14" data-reveal>
-            <span className="text-emerald-300 font-mono tracking-widest text-sm uppercase mb-5 block">
+            <span className="text-violet-300 font-mono tracking-widest text-sm uppercase mb-5 block">
               Ti suona familiare?
             </span>
             <h2 className="text-4xl md:text-6xl font-bold leading-tight">
@@ -811,13 +867,15 @@ const AIAgents: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" data-reveal-group>
-            {signals.map((quote) => (
+            {signals.map((signal) => (
               <div
-                key={quote}
-                className="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7 hover:border-emerald-400/30 transition-colors duration-500"
+                key={signal.quote}
+                className="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7 hover:border-violet-400/30 transition-colors duration-500"
               >
-                <ClipboardList className="w-5 h-5 text-emerald-400/60 mb-4" />
-                <p className="text-lg text-gray-300 leading-relaxed font-medium">{quote}</p>
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-400/10 border border-violet-400/20 text-violet-300 mb-4">
+                  {signal.icon}
+                </span>
+                <p className="text-lg text-gray-300 leading-relaxed font-medium">{signal.quote}</p>
               </div>
             ))}
           </div>
@@ -826,7 +884,7 @@ const AIAgents: React.FC = () => {
             Se ti sei riconosciuto in almeno una frase, c'è un processo che vale la pena mappare.{' '}
             <button
               onClick={scrollToContact}
-              className="text-emerald-300 hover:text-emerald-200 transition-colors underline underline-offset-4 cursor-pointer"
+              className="text-violet-300 hover:text-violet-200 transition-colors underline underline-offset-4 cursor-pointer"
             >
               Raccontacelo
             </button>
@@ -862,7 +920,18 @@ const AIAgents: React.FC = () => {
                     className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left cursor-pointer"
                     aria-expanded={isOpen}
                   >
-                    <span className="font-semibold text-lg">{faq.question}</span>
+                    <span className="flex items-center gap-3 font-semibold text-lg">
+                      <span
+                        className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border transition-colors ${
+                          isOpen
+                            ? 'bg-indigo-500/15 border-indigo-400/30 text-indigo-300'
+                            : 'bg-white/[0.04] border-white/10 text-gray-500'
+                        }`}
+                      >
+                        {faq.icon}
+                      </span>
+                      {faq.question}
+                    </span>
                     <ChevronDown
                       className={`w-5 h-5 text-gray-500 flex-shrink-0 transition-transform duration-300 ${
                         isOpen ? 'rotate-180 text-indigo-300' : ''
@@ -891,12 +960,12 @@ const AIAgents: React.FC = () => {
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto text-center" data-reveal>
-          <span className="text-emerald-300 font-mono tracking-widest text-sm uppercase mb-6 block">
+          <span className="text-violet-300 font-mono tracking-widest text-sm uppercase mb-6 block">
             Il primo passo
           </span>
           <h2 className="text-4xl md:text-7xl font-bold leading-tight mb-8">
             Porta un processo che ti ruba tempo.{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-400 to-indigo-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-400 to-indigo-400">
               Ne usciamo con un piano.
             </span>
           </h2>
