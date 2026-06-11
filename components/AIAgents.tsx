@@ -16,7 +16,6 @@ import {
   MailCheck,
   MessageSquareText,
   ShieldCheck,
-  Sparkles,
   Workflow,
 } from 'lucide-react';
 import SEOHead from './SEOHead';
@@ -29,50 +28,56 @@ const useCases = [
   {
     icon: <MailCheck className="w-7 h-7" />,
     area: 'Sales Operations',
-    title: 'Qualifica e priorità dei lead',
-    description: "L'agente legge form, email e note CRM, assegna un punteggio commerciale e prepara il prossimo step per il team sales.",
-    inputs: ['Meta lead form', 'CRM', 'WhatsApp'],
-    outcome: 'Meno lead freddi in pipeline, risposta più rapida sui contatti ad alta intenzione.',
+    title: 'Inserimento ordini da email e WhatsApp',
+    description: "L'agente legge richieste, allegati e messaggi, estrae i dati utili e prepara l'ordine nel gestionale prima del controllo umano.",
+    inputs: ['Email', 'WhatsApp', 'ERP'],
+    outcome: 'Meno copia-incolla, ordini più ordinati e tempi di presa in carico più bassi.',
+    gradient: 'from-fuchsia-600/80 via-purple-700/80 to-orange-500/70',
   },
   {
     icon: <FileText className="w-7 h-7" />,
     area: 'Back office',
-    title: 'Documenti, preventivi e data entry',
-    description: 'Estrae dati da allegati, messaggi e fogli di lavoro, compila schede operative e genera bozze di documenti controllabili dal team.',
-    inputs: ['Email', 'PDF', 'Google Sheet'],
-    outcome: 'Ore manuali recuperate ogni settimana e meno errori di trascrizione.',
+    title: 'Generazione automatica di preventivi e documenti',
+    description: 'Compila bozze di offerte, render, schede tecniche e documenti partendo da brief, listini, modelli e regole aziendali.',
+    inputs: ['PDF', 'Listini', 'Template'],
+    outcome: 'Documenti più rapidi da produrre, sempre coerenti con le regole interne.',
+    gradient: 'from-pink-600/80 via-purple-950/80 to-zinc-200/55',
+  },
+  {
+    icon: <LineChart className="w-7 h-7" />,
+    area: 'Operations',
+    title: 'Rendicontazione ore con abbinamento alle commesse',
+    description: 'Raccoglie consuntivi, note e fogli ore, abbina le attività alle commesse corrette e segnala anomalie prima della chiusura.',
+    inputs: ['Timesheet', 'Excel', 'Gestionale'],
+    outcome: 'Rendiconti più affidabili e meno rincorse a fine mese.',
+    gradient: 'from-orange-600/85 via-fuchsia-800/70 to-indigo-700/65',
   },
   {
     icon: <Headphones className="w-7 h-7" />,
     area: 'Customer care',
-    title: 'Smistamento richieste e knowledge base',
-    description: 'Classifica ticket, propone risposte coerenti con procedure interne e passa al reparto corretto solo quando serve intervento umano.',
-    inputs: ['Inbox', 'Helpdesk', 'Documentazione'],
-    outcome: 'Tempi di prima risposta più bassi e supporto più uniforme.',
-  },
-  {
-    icon: <LineChart className="w-7 h-7" />,
-    area: 'Direzione',
-    title: 'Report operativi e alert',
-    description: 'Raccoglie dati da CRM, campagne e gestionali, segnala anomalie e prepara sintesi leggibili per marketing, sales e operations.',
-    inputs: ['CRM', 'Meta Ads', 'ERP'],
-    outcome: 'Decisioni più veloci, basate su dati già ordinati.',
-  },
-  {
-    icon: <MessageSquareText className="w-7 h-7" />,
-    area: 'Marketing',
-    title: 'Assistente contenuti e follow-up',
-    description: 'Trasforma brief, call e domande frequenti in bozze di contenuti, sequenze email e messaggi di follow-up coerenti con il brand.',
-    inputs: ['Call notes', 'CRM', 'Brand voice'],
-    outcome: 'Produzione più costante senza perdere controllo sul tono.',
+    title: 'Assistenza tecnica e customer care automatizzati',
+    description: 'Classifica richieste, recupera procedure interne e propone risposte o azioni al reparto giusto, mantenendo escalation controllate.',
+    inputs: ['Inbox', 'Helpdesk', 'Knowledge base'],
+    outcome: 'Risposte più rapide e supporto più uniforme tra operatori diversi.',
+    gradient: 'from-orange-500/80 via-purple-700/75 to-fuchsia-700/80',
   },
   {
     icon: <DatabaseZap className="w-7 h-7" />,
-    area: 'Processi interni',
-    title: 'Connessione tra software separati',
-    description: 'Fa dialogare strumenti che oggi vivono separati, orchestrando passaggi, notifiche, controlli e aggiornamenti automatici.',
-    inputs: ['API', 'n8n', 'Make'],
-    outcome: 'Processi meno fragili e meno dipendenti da copia-incolla.',
+    area: 'Sales',
+    title: 'Ricerca, qualificazione e smistamento lead ai commerciali',
+    description: 'Arricchisce i contatti, legge segnali commerciali, assegna priorità e inoltra il lead al commerciale più adatto.',
+    inputs: ['CRM', 'Meta Ads', 'LinkedIn'],
+    outcome: 'Pipeline più pulita e meno tempo perso su contatti fuori target.',
+    gradient: 'from-fuchsia-600/80 via-pink-900/75 to-zinc-300/50',
+  },
+  {
+    icon: <MessageSquareText className="w-7 h-7" />,
+    area: 'Knowledge',
+    title: 'Assistente chat con conoscenza aziendale',
+    description: "Risponde a domande interne usando documenti, procedure e dati aziendali, citando le fonti e passando all'umano quando serve.",
+    inputs: ['Documenti', 'CRM', 'Drive'],
+    outcome: 'Meno interruzioni al team e conoscenza aziendale più accessibile.',
+    gradient: 'from-violet-700/80 via-zinc-950/80 to-orange-500/80',
   },
 ];
 
@@ -84,7 +89,7 @@ const adoptionSteps = [
   },
   {
     icon: <BrainCircuit className="w-6 h-6" />,
-    title: 'Disegno dell agente',
+    title: "Disegno dell'agente",
     description: 'Definiamo regole, prompt, strumenti, escalation e metriche prima di sviluppare.',
   },
   {
@@ -95,11 +100,19 @@ const adoptionSteps = [
   {
     icon: <ShieldCheck className="w-6 h-6" />,
     title: 'Adozione e controllo',
-    description: 'Formiamo il team, monitoriamo output e miglioriamo l agente con dati reali.',
+    description: "Formiamo il team, monitoriamo output e miglioriamo l'agente con dati reali.",
   },
 ];
 
-const systems = ['CRM', 'Email', 'WhatsApp', 'Google Workspace', 'Excel', 'ERP', 'Meta Ads', 'API', 'n8n', 'Make'];
+const integrationSystems = [
+  'ERP / GESTIONALI',
+  'EMAIL',
+  'EXCEL / GOOGLE SHEET',
+  'CRM',
+  'DOCUMENTI',
+  'WHATSAPP',
+  'API AZIENDALI',
+];
 
 const AIAgents: React.FC = () => {
   const pageRef = useRef<HTMLDivElement>(null);
@@ -201,37 +214,67 @@ const AIAgents: React.FC = () => {
         </div>
       </section>
 
-      <section id="use-cases" className="px-6 py-28">
-        <div className="max-w-7xl mx-auto">
-          <div className="max-w-3xl mb-16">
-            <p className="text-cyan-300 font-mono text-sm tracking-[0.35em] uppercase mb-5">Use case concreti</p>
-            <h2 className="text-5xl md:text-7xl font-bold leading-tight mb-6">Dove un agente AI produce valore subito.</h2>
-            <p className="text-xl text-gray-400 leading-relaxed">
-              Partiamo da casi d'uso pratici, misurabili e vicini al lavoro quotidiano. Ogni agente nasce per ridurre un attrito preciso, non per aggiungere un altro tool da gestire.
+      <section id="use-cases" className="relative px-6 py-32 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute left-0 top-20 h-[720px] w-[520px] rounded-full bg-fuchsia-900/20 blur-[150px]" />
+          <div className="absolute right-0 bottom-10 h-[620px] w-[620px] rounded-full bg-orange-700/10 blur-[140px]" />
+        </div>
+
+        <div className="relative z-10 max-w-[1500px] mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16 items-end mb-16">
+            <div>
+              <p className="text-cyan-300 font-mono text-sm tracking-[0.35em] uppercase mb-5">Use case concreti</p>
+              <h2 className="text-5xl md:text-8xl font-bold leading-[0.95] tracking-tighter">
+                Cosa può fare un agente AI, in pratica.
+              </h2>
+            </div>
+            <p className="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-3xl lg:ml-auto">
+              Ogni progetto parte da un lavoro reale: ordini, preventivi, rendiconti, ticket, lead, documenti. Qui non parliamo di AI generica, ma di mansioni operative che oggi consumano tempo al team.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {useCases.map((item, index) => (
               <article
                 key={item.title}
                 ref={(el) => { cardRefs.current[index] = el; }}
-                className="group rounded-3xl border border-white/10 bg-[#080808] p-6 hover:border-indigo-400/40 transition-colors"
+                className="group relative min-h-[560px] rounded-[2rem] border border-white/10 bg-[#110910] p-4 md:p-5 overflow-hidden hover:border-white/25 transition-colors"
               >
-                <div className="flex items-start justify-between gap-4 mb-8">
-                  <div className="h-14 w-14 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-indigo-200 group-hover:text-cyan-200 transition-colors">
-                    {item.icon}
+                <div className={`relative h-64 md:h-72 rounded-[1.5rem] overflow-hidden bg-gradient-to-br ${item.gradient} border border-white/15 mb-8`}>
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,255,255,0.45),transparent_22%),radial-gradient(circle_at_72%_72%,rgba(255,255,255,0.22),transparent_28%),radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.75),transparent_58%)] blur-sm" />
+                  <div className="absolute inset-0 bg-black/10" />
+                  <div className="relative z-10 h-full flex items-center justify-center">
+                    <div className="h-28 w-28 md:h-32 md:w-32 text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.55)] [&_svg]:h-full [&_svg]:w-full [&_svg]:stroke-[1.8]">
+                      {item.icon}
+                    </div>
                   </div>
-                  <span className="text-xs font-mono uppercase tracking-[0.2em] text-gray-500">{item.area}</span>
                 </div>
-                <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
-                <p className="text-gray-400 leading-relaxed mb-6">{item.description}</p>
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {item.inputs.map((input) => (
-                    <span key={input} className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-gray-300">{input}</span>
-                  ))}
+
+                <div className="px-2 md:px-3 pb-3">
+                  <div className="flex items-center justify-between gap-4 mb-5">
+                    <span className="text-xs font-mono uppercase tracking-[0.22em] text-gray-500">{item.area}</span>
+                    <span className="h-2 w-2 rounded-full bg-indigo-400 shadow-[0_0_18px_rgba(129,140,248,0.9)]" />
+                  </div>
+                  <h3 className="text-3xl md:text-[2.45rem] leading-[1.02] font-bold tracking-tight mb-5">{item.title}</h3>
+                  <p className="text-gray-400 leading-relaxed text-base md:text-lg mb-7">{item.description}</p>
+
+                  <div className="flex flex-wrap gap-2 mb-7">
+                    {item.inputs.map((input) => (
+                      <span key={input} className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-gray-300">{input}</span>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="rounded-full border border-white/10 bg-white/[0.08] px-5 py-2 text-sm font-medium text-white shadow-[inset_0_1px_10px_rgba(255,255,255,0.12)]">
+                      Scopri
+                    </span>
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white group-hover:bg-indigo-500 group-hover:border-indigo-400 transition-colors">
+                      <ArrowRight className="h-5 w-5" />
+                    </span>
+                  </div>
                 </div>
-                <p className="border-l border-indigo-400/40 pl-4 text-sm leading-relaxed text-gray-300">{item.outcome}</p>
+
+                <div className="absolute inset-x-5 bottom-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
               </article>
             ))}
           </div>
@@ -263,39 +306,80 @@ const AIAgents: React.FC = () => {
         </div>
       </section>
 
-      <section className="px-6 py-28">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_0.9fr] gap-12 items-start">
-          <div>
-            <p className="text-purple-300 font-mono text-sm tracking-[0.35em] uppercase mb-5">Integrazioni</p>
-            <h2 className="text-5xl md:text-6xl font-bold leading-tight mb-6">Gli agenti lavorano dove il team lavora già.</h2>
-            <p className="text-xl text-gray-400 leading-relaxed mb-8">
-              Colleghiamo gli strumenti esistenti senza stravolgere l'operatività. L'agente diventa un livello intelligente sopra dati, notifiche, documenti e workflow.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              {systems.map((system) => (
-                <span key={system} className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-gray-300">{system}</span>
-              ))}
-            </div>
+      <section className="relative px-6 py-32 min-h-screen overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_28%_58%,rgba(124,58,237,0.24),transparent_34%),radial-gradient(circle_at_90%_10%,rgba(234,88,12,0.18),transparent_30%),linear-gradient(115deg,#080608_0%,#151825_46%,#23091f_100%)]" />
+        <div className="absolute inset-0 pointer-events-none opacity-[0.08]" style={{ backgroundImage: 'linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '72px 72px' }} />
+
+        <div className="relative z-10 max-w-[1500px] mx-auto">
+          <div className="text-center mb-20">
+            <p className="text-purple-300 font-mono text-sm tracking-[0.35em] uppercase mb-5">Integrazione con sistemi aziendali</p>
+            <h2 className="text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.9] tracking-tighter">
+              Gli agenti lavorano dove il team lavora già.
+            </h2>
           </div>
 
-          <div className="rounded-[2rem] border border-indigo-400/30 bg-indigo-500/[0.06] p-6 md:p-8">
-            <div className="flex items-center gap-3 mb-6 text-indigo-100">
-              <Sparkles className="w-6 h-6" />
-              <h3 className="text-2xl font-bold">Quando ha senso iniziare</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-12 lg:gap-20 items-center">
+            <div className="space-y-7">
+              {integrationSystems.map((system) => {
+                const active = system === 'EXCEL / GOOGLE SHEET';
+                return (
+                  <div
+                    key={system}
+                    className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-[0.04em] leading-none transition-colors ${active ? 'text-white' : 'text-white/28'}`}
+                  >
+                    {system}
+                  </div>
+                );
+              })}
             </div>
-            <ul className="space-y-4 text-gray-300">
-              {[
-                'Il team perde tempo in copia-incolla, classificazioni o aggiornamenti manuali.',
-                'Le informazioni sono distribuite tra CRM, email, fogli e documenti.',
-                'Le risposte ai lead o ai clienti dipendono troppo dalla disponibilita delle persone.',
-                'Ci sono procedure ripetibili, ma nessuno ha tempo di seguirle sempre allo stesso modo.',
-              ].map((item) => (
-                <li key={item} className="flex gap-3">
-                  <CheckCircle2 className="mt-1 h-5 w-5 flex-shrink-0 text-cyan-300" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
+
+            <div className="relative space-y-6 md:space-y-0 md:min-h-[720px]">
+              <div className="absolute left-1/2 top-8 bottom-8 w-px bg-gradient-to-b from-transparent via-white/50 to-transparent hidden md:block" />
+              <div className="absolute left-1/2 top-8 hidden h-3 w-3 -translate-x-1/2 rounded-full bg-white/70 md:block" />
+              <div className="absolute left-1/2 bottom-8 hidden h-3 w-3 -translate-x-1/2 rounded-full bg-white/70 md:block" />
+
+              <div className="relative md:absolute md:right-0 md:top-0 w-full md:w-[58%] rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
+                <div className="h-56 rounded-[1.5rem] bg-gradient-to-br from-orange-500/80 via-fuchsia-700/70 to-cyan-400/70 border border-white/15 flex items-center justify-center">
+                  <FileText className="h-24 w-24 text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.5)]" />
+                </div>
+                <h3 className="text-3xl font-bold mt-6 mb-3">Dati in ingresso</h3>
+                <p className="text-gray-300 leading-relaxed">L'agente legge documenti, email, fogli, CRM e sistemi gestionali senza chiedere al team di cambiare abitudini.</p>
+              </div>
+
+              <div className="relative md:absolute md:left-0 md:bottom-0 w-full md:w-[58%] rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
+                <div className="h-56 rounded-[1.5rem] bg-gradient-to-br from-fuchsia-600/80 via-purple-900/75 to-orange-500/70 border border-white/15 flex items-center justify-center">
+                  <DatabaseZap className="h-24 w-24 text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.5)]" />
+                </div>
+                <h3 className="text-3xl font-bold mt-6 mb-3">Azioni controllate</h3>
+                <p className="text-gray-300 leading-relaxed">Compila campi, prepara notifiche, aggiorna record, genera bozze e porta all'operatore solo ciò che richiede giudizio.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 py-28 border-t border-white/10 bg-[#070707]">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-12 items-start">
+          <div>
+            <p className="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-5">Quando partire</p>
+            <h2 className="text-5xl md:text-6xl font-bold leading-tight mb-6">Se il processo è ripetibile, l'agente può aiutare.</h2>
+            <p className="text-xl text-gray-400 leading-relaxed">
+              Il primo progetto deve essere abbastanza concreto da misurare tempo recuperato, errori evitati o velocità di risposta.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {[
+              'Il team perde tempo in copia-incolla, classificazioni o aggiornamenti manuali.',
+              'Le informazioni sono distribuite tra CRM, email, fogli e documenti.',
+              'Le risposte ai lead o ai clienti dipendono troppo dalla disponibilità delle persone.',
+              'Ci sono procedure ripetibili, ma nessuno riesce a seguirle sempre allo stesso modo.',
+            ].map((item) => (
+              <div key={item} className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 flex gap-4">
+                <CheckCircle2 className="mt-1 h-6 w-6 flex-shrink-0 text-cyan-300" />
+                <p className="text-lg text-gray-300 leading-relaxed">{item}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

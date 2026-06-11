@@ -377,16 +377,16 @@ function generateAIAgentsHtml(): string {
   };
 
   const useCases = [
-    ['Qualifica lead', "L'agente legge form, CRM e messaggi, assegna priorità commerciale e prepara il prossimo step per il team sales."],
-    ['Documenti e data entry', 'Estrae dati da email, PDF e fogli di lavoro, riducendo attività manuali ripetitive e errori di trascrizione.'],
-    ['Customer care', 'Classifica ticket, propone risposte coerenti con procedure interne e passa al reparto corretto quando serve.'],
-    ['Report e alert', 'Raccoglie dati da CRM, campagne e gestionali, segnala anomalie e prepara sintesi operative.'],
-    ['Follow-up marketing', 'Trasforma brief, call e domande frequenti in bozze di contenuti, email e messaggi commerciali.'],
-    ['Integrazioni software', 'Fa dialogare CRM, email, WhatsApp, fogli, API e automazioni per eliminare passaggi manuali.']
+    ['✉️', 'Inserimento ordini da email e WhatsApp', "L'agente legge richieste, allegati e messaggi, estrae i dati utili e prepara l'ordine nel gestionale prima del controllo umano."],
+    ['📄', 'Generazione automatica di preventivi e documenti', 'Compila bozze di offerte, render, schede tecniche e documenti partendo da brief, listini, modelli e regole aziendali.'],
+    ['⏱️', 'Rendicontazione ore con abbinamento alle commesse', 'Raccoglie consuntivi, note e fogli ore, abbina le attività alle commesse corrette e segnala anomalie prima della chiusura.'],
+    ['👥', 'Assistenza tecnica e customer care automatizzati', 'Classifica richieste, recupera procedure interne e propone risposte o azioni al reparto giusto.'],
+    ['🗄️', 'Ricerca, qualificazione e smistamento lead ai commerciali', 'Arricchisce i contatti, legge segnali commerciali, assegna priorità e inoltra il lead al commerciale più adatto.'],
+    ['💬', 'Assistente chat con conoscenza aziendale', "Risponde a domande interne usando documenti, procedure e dati aziendali, citando le fonti e passando all'umano quando serve."]
   ];
 
   const useCasesHtml = useCases
-    .map(([title, description]) => `<article class="rounded-3xl border border-white/10 bg-white/[0.03] p-6"><h2 class="text-2xl font-bold mb-3">${escapeHtml(title)}</h2><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
+    .map(([icon, title, description]) => `<article class="rounded-[2rem] border border-white/10 bg-[#110910] p-5"><div class="h-64 rounded-[1.5rem] bg-gradient-to-br from-fuchsia-600/80 via-purple-900/80 to-orange-500/70 border border-white/15 flex items-center justify-center mb-8"><span class="text-7xl">${escapeHtml(icon)}</span></div><h2 class="text-3xl font-bold leading-tight mb-4">${escapeHtml(title)}</h2><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
     .join('\n          ');
 
   const adoptionHtml = [
@@ -401,7 +401,7 @@ function generateAIAgentsHtml(): string {
   const bodyContent = `
     <article class="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen">
       <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
-      <div class="max-w-6xl mx-auto relative z-10">
+      <div class="max-w-[1500px] mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
           <ol class="flex items-center gap-2 text-sm text-gray-400">
             <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
@@ -425,9 +425,10 @@ function generateAIAgentsHtml(): string {
           </p>
         </section>
 
-        <section class="mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold mb-6">Use case concreti</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <section class="mb-24">
+          <h2 class="text-5xl md:text-7xl font-bold tracking-tight mb-8">Cosa può fare un agente AI, in pratica.</h2>
+          <p class="text-xl text-gray-300 leading-relaxed max-w-4xl mb-10">Ordini, preventivi, rendiconti, ticket, lead, documenti: partiamo da mansioni operative che oggi consumano tempo al team.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             ${useCasesHtml}
           </div>
         </section>
@@ -443,9 +444,18 @@ function generateAIAgentsHtml(): string {
           </ul>
         </section>
 
-        <section>
-          <h2 class="text-3xl md:text-4xl font-bold mb-5">Strumenti che possiamo integrare</h2>
-          <p class="text-lg text-gray-300 leading-relaxed mb-6">CRM, email, WhatsApp, Google Workspace, Excel, ERP, Meta Ads, API, n8n e Make.</p>
+        <section class="rounded-[2rem] border border-white/10 bg-gradient-to-br from-purple-950/40 via-white/[0.03] to-orange-950/30 p-8 md:p-12 mb-16">
+          <h2 class="text-5xl md:text-7xl font-bold mb-8">Integrazione con sistemi aziendali</h2>
+          <div class="space-y-4 text-3xl md:text-5xl font-bold tracking-wide text-white/35 mb-8">
+            <p>ERP / GESTIONALI</p>
+            <p>EMAIL</p>
+            <p class="text-white">EXCEL / GOOGLE SHEET</p>
+            <p>CRM</p>
+            <p>DOCUMENTI</p>
+            <p>WHATSAPP</p>
+            <p>API AZIENDALI</p>
+          </div>
+          <p class="text-lg text-gray-300 leading-relaxed mb-6">L'agente legge dati dagli strumenti che il team usa già e restituisce azioni controllate: campi compilati, notifiche, record aggiornati, bozze e alert.</p>
           <a href="/" class="inline-flex items-center rounded-full bg-indigo-600 px-7 py-4 font-semibold text-white hover:bg-indigo-500 transition-colors">Parla con un consulente</a>
         </section>
       </div>
