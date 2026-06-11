@@ -2,49 +2,109 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.q4.studio/</loc>
-    <lastmod>2026-04-30</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.q4.studio/directory</loc>
-    <lastmod>2026-04-30</lastmod>
+    <loc>https://www.q4.studio/agenti-ai</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.q4.studio/risorse</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.q4.studio/seo/b2b-lead-generation-meta-ads</loc>
-    <lastmod>2026-04-30</lastmod>
+    <loc>https://www.q4.studio/blog</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.q4.studio/risorse/b2b-lead-generation-meta-ads</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.q4.studio/seo/meta-ads-b2b-verona</loc>
-    <lastmod>2026-04-30</lastmod>
+    <loc>https://www.q4.studio/risorse/meta-ads-b2b-verona</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.q4.studio/seo/agenti-ai-per-lead-generation</loc>
-    <lastmod>2026-04-30</lastmod>
+    <loc>https://www.q4.studio/risorse/agenti-ai-per-lead-generation</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.q4.studio/seo/crm-automation-meta-ads</loc>
-    <lastmod>2026-04-30</lastmod>
+    <loc>https://www.q4.studio/risorse/meta-ads-b2b-reggio-emilia</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.q4.studio/seo/whatsapp-automation-lead-b2b</loc>
-    <lastmod>2026-04-30</lastmod>
+    <loc>https://www.q4.studio/risorse/meta-ads-b2b-modena</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.q4.studio/seo/algoritmo-andromeda-meta-b2b</loc>
-    <lastmod>2026-04-30</lastmod>
+    <loc>https://www.q4.studio/risorse/meta-ads-b2b-parma</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.q4.studio/risorse/meta-ads-b2b-mantova</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.q4.studio/risorse/agente-vocale-ai-aziende</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.q4.studio/risorse/centralino-ai</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.q4.studio/risorse/riattivazione-database-clienti-ai</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.q4.studio/risorse/chatbot-cliniche-studi-medici</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.q4.studio/risorse/crm-automation-meta-ads</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.q4.studio/risorse/whatsapp-automation-lead-b2b</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.q4.studio/risorse/algoritmo-andromeda-meta-b2b</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
