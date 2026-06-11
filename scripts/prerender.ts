@@ -381,7 +381,7 @@ function generateAIAgentsHtml(): string {
     ['In quanto tempo vedo i primi risultati?', 'Il primo agente lavora su un processo reale entro 6–8 settimane dal via. Si parte da un processo solo, misurabile, e si allarga solo quando funziona.'],
     ["E se l'agente sbaglia?", "Dove conta, l'agente propone e una persona conferma: si definisce insieme cosa può fare in autonomia e cosa deve passare da un controllo umano. Ogni azione resta tracciata."],
     ['I dati della mia azienda dove finiscono?', 'Restano nei tuoi sistemi: gestionale, CRM ed email rimangono la fonte dei dati. Permessi e accessi vengono definiti prima di partire, in conformità al GDPR.'],
-    ['Il mio team non è tecnico. Ce la facciamo?', "Sì: il team continua a usare WhatsApp, email e gestionale come sempre. È l'agente che si adatta ai vostri strumenti, non il contrario."],
+    ['Il mio team non è tecnico. Ce la facciamo?', "Sì: il team continua a usare WhatsApp, email e gestionale come sempre, perché è l'agente che si adatta ai vostri strumenti."],
     ['È un chatbot?', 'No. Un chatbot risponde a domande. Un agente lavora: legge documenti, aggiorna il gestionale, prepara ordini e preventivi, passa la palla a una persona quando serve.']
   ];
 
@@ -397,7 +397,7 @@ function generateAIAgentsHtml(): string {
 
   const useCases = [
     ['Ordini', 'Gli ordini arrivano da WhatsApp ed email ed entrano nel gestionale da soli', "L'agente legge messaggi e allegati, riconosce cliente, codici e quantità e crea la bozza d'ordine nel gestionale con i prezzi corretti. Una persona conferma solo quando serve."],
-    ['Preventivi', 'Il preventivo parte in giornata, non quando qualcuno trova il tempo', "Estrae le specifiche dalla richiesta, recupera listini e offerte simili e compila l'offerta sul template aziendale. Una persona revisiona e invia."],
+    ['Preventivi', 'Il preventivo parte in giornata, mentre il cliente è ancora interessato', "Estrae le specifiche dalla richiesta, recupera listini e offerte simili e compila l'offerta sul template aziendale. Una persona revisiona e invia."],
     ['Lead e vendite', 'Ogni contatto viene qualificato e richiamato mentre è ancora caldo', "Riceve il lead da form e campagne, arricchisce i dati dell'azienda, lo assegna al commerciale giusto nel CRM e prepara il primo messaggio di follow-up."],
     ['Assistenza clienti', 'Le domande ricorrenti ricevono risposta subito, anche fuori orario', 'Risponde su WhatsApp ed email a stato ordine, tempi e documenti controllando i dati reali nel gestionale, e passa i casi delicati a una persona.'],
     ['Amministrazione', 'Fatture, DDT e documenti letti, controllati e registrati', 'Legge i documenti appena arrivano, controlla che importi e quantità tornino con gli ordini, prepara le registrazioni e segnala solo le anomalie.'],
@@ -405,7 +405,7 @@ function generateAIAgentsHtml(): string {
   ];
 
   const useCasesHtml = useCases
-    .map(([area, title, description]) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-xs font-mono uppercase tracking-widest text-emerald-300 mb-4">${escapeHtml(area)}</p><h3 class="text-2xl font-bold leading-snug mb-4">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
+    .map(([area, title, description]) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-xs font-mono uppercase tracking-widest text-violet-300 mb-4">${escapeHtml(area)}</p><h3 class="text-2xl font-bold leading-snug mb-4">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
     .join('\n          ');
 
   const methodHtml = [
@@ -423,18 +423,18 @@ function generateAIAgentsHtml(): string {
 
   const bodyContent = `
     <article class="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-emerald-900/10 rounded-full blur-[160px] pointer-events-none"></div>
+      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-violet-900/10 rounded-full blur-[160px] pointer-events-none"></div>
       <div class="max-w-7xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
           <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-emerald-300 transition-colors">Home</a></li>
+            <li><a href="/" class="hover:text-violet-300 transition-colors">Home</a></li>
             <li>/</li>
             <li class="text-gray-300">Agenti AI</li>
           </ol>
         </nav>
 
         <header class="mb-16">
-          <p class="text-emerald-300 font-mono text-sm tracking-[0.3em] uppercase mb-5">Agenti AI · consulenza e sviluppo</p>
+          <p class="text-violet-300 font-mono text-sm tracking-[0.3em] uppercase mb-5">Agenti AI · consulenza e sviluppo</p>
           <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">Agenti AI su misura per togliere al tuo team il lavoro che un software può fare meglio</h1>
           <p class="text-xl text-gray-300 leading-relaxed max-w-3xl">
             Leggono email e WhatsApp, inseriscono gli ordini nel gestionale, preparano i preventivi, qualificano i lead e rispondono ai clienti. Tu mantieni il controllo: l'agente propone, le persone decidono.
