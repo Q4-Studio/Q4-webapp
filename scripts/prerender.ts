@@ -376,97 +376,113 @@ function generateAIAgentsHtml(): string {
     ]
   };
 
+  const faqs = [
+    ['Quanto costa un agente AI?', "Dipende dal processo e dai sistemi da collegare. Il percorso parte dalla mappatura: prima di investire sai esattamente quanto costa il progetto pilota e quante ore di lavoro può restituirti."],
+    ['In quanto tempo vedo i primi risultati?', 'Il primo agente lavora su un processo reale entro 6–8 settimane dal via. Si parte da un processo solo, misurabile, e si allarga solo quando funziona.'],
+    ["E se l'agente sbaglia?", "Dove conta, l'agente propone e una persona conferma: si definisce insieme cosa può fare in autonomia e cosa deve passare da un controllo umano. Ogni azione resta tracciata."],
+    ['I dati della mia azienda dove finiscono?', 'Restano nei tuoi sistemi: gestionale, CRM ed email rimangono la fonte dei dati. Permessi e accessi vengono definiti prima di partire, in conformità al GDPR.'],
+    ['Il mio team non è tecnico. Ce la facciamo?', "Sì: il team continua a usare WhatsApp, email e gestionale come sempre. È l'agente che si adatta ai vostri strumenti, non il contrario."],
+    ['È un chatbot?', 'No. Un chatbot risponde a domande. Un agente lavora: legge documenti, aggiorna il gestionale, prepara ordini e preventivi, passa la palla a una persona quando serve.']
+  ];
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer }
+    }))
+  };
+
   const useCases = [
-    ['✉️', 'Inserimento ordini da email e WhatsApp', "L'agente legge richieste, allegati e messaggi, estrae i dati utili e prepara l'ordine nel gestionale prima del controllo umano."],
-    ['📄', 'Generazione automatica di preventivi e documenti', 'Compila bozze di offerte, render, schede tecniche e documenti partendo da brief, listini, modelli e regole aziendali.'],
-    ['⏱️', 'Rendicontazione ore con abbinamento alle commesse', 'Raccoglie consuntivi, note e fogli ore, abbina le attività alle commesse corrette e segnala anomalie prima della chiusura.'],
-    ['👥', 'Assistenza tecnica e customer care automatizzati', 'Classifica richieste, recupera procedure interne e propone risposte o azioni al reparto giusto.'],
-    ['🗄️', 'Ricerca, qualificazione e smistamento lead ai commerciali', 'Arricchisce i contatti, legge segnali commerciali, assegna priorità e inoltra il lead al commerciale più adatto.'],
-    ['💬', 'Assistente chat con conoscenza aziendale', "Risponde a domande interne usando documenti, procedure e dati aziendali, citando le fonti e passando all'umano quando serve."]
+    ['Ordini', 'Gli ordini arrivano da WhatsApp ed email ed entrano nel gestionale da soli', "L'agente legge messaggi e allegati, riconosce cliente, codici e quantità e crea la bozza d'ordine nel gestionale con i prezzi corretti. Una persona conferma solo quando serve."],
+    ['Preventivi', 'Il preventivo parte in giornata, non quando qualcuno trova il tempo', "Estrae le specifiche dalla richiesta, recupera listini e offerte simili e compila l'offerta sul template aziendale. Una persona revisiona e invia."],
+    ['Lead e vendite', 'Ogni contatto viene qualificato e richiamato mentre è ancora caldo', "Riceve il lead da form e campagne, arricchisce i dati dell'azienda, lo assegna al commerciale giusto nel CRM e prepara il primo messaggio di follow-up."],
+    ['Assistenza clienti', 'Le domande ricorrenti ricevono risposta subito, anche fuori orario', 'Risponde su WhatsApp ed email a stato ordine, tempi e documenti controllando i dati reali nel gestionale, e passa i casi delicati a una persona.'],
+    ['Amministrazione', 'Fatture, DDT e documenti letti, controllati e registrati', 'Legge i documenti appena arrivano, controlla che importi e quantità tornino con gli ordini, prepara le registrazioni e segnala solo le anomalie.'],
+    ['Report e controllo', 'Il lunedì mattina il report è già pronto, con i numeri che contano', 'Raccoglie i dati da gestionale, CRM e fogli condivisi, calcola gli indicatori e evidenzia gli scostamenti che meritano una decisione.']
   ];
 
   const useCasesHtml = useCases
-    .map(([icon, title, description]) => `<article class="rounded-[2rem] border border-white/10 bg-[#110910] p-5"><div class="h-64 rounded-[1.5rem] bg-gradient-to-br from-fuchsia-600/80 via-purple-900/80 to-orange-500/70 border border-white/15 flex items-center justify-center mb-8"><span class="text-7xl">${escapeHtml(icon)}</span></div><h2 class="text-3xl font-bold leading-tight mb-4">${escapeHtml(title)}</h2><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
+    .map(([area, title, description]) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-xs font-mono uppercase tracking-widest text-emerald-300 mb-4">${escapeHtml(area)}</p><h3 class="text-2xl font-bold leading-snug mb-4">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
     .join('\n          ');
 
-  const adoptionHtml = [
-    'Audit di processo e dati disponibili',
-    'Disegno di regole, strumenti, escalation e metriche',
-    'Integrazione con CRM, email, documenti, dashboard e workflow',
-    'Formazione del team, controllo umano e miglioramento continuo'
+  const methodHtml = [
+    ['Tappa 01 · Mappatura dei processi', 'Entriamo in azienda e parliamo con chi fa il lavoro. Risultato: la lista dei processi automatizzabili, ordinata per impatto, con la stima delle ore recuperabili.'],
+    ['Tappa 02 · Primo agente al lavoro', "Partiamo dal processo con il miglior rapporto tra impatto e semplicità. Risultato: un agente funzionante su un processo reale, testato con i vostri dati veri."],
+    ['Tappa 03 · Messa in produzione', "Integrazione completa, regole chiare su cosa l'agente fa da solo e formazione del team. Risultato: il team usa l'agente in autonomia."],
+    ['Tappa 04 · Crescita e controllo', 'Monitoriamo i risultati ed estendiamo il lavoro ad altri processi. Risultato: un report mensile con ore recuperate, errori evitati e prossimi passi.']
   ]
-    .map((item) => `<li class="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5"><span class="text-indigo-300">✓</span><span>${escapeHtml(item)}</span></li>`)
+    .map(([title, description]) => `<li class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-xl font-bold mb-2">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></li>`)
     .join('\n              ');
+
+  const faqHtml = faqs
+    .map(([question, answer]) => `<div class="rounded-2xl border border-white/10 bg-[#0A0A0A] p-6"><h3 class="text-lg font-semibold mb-3">${escapeHtml(question)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(answer)}</p></div>`)
+    .join('\n          ');
 
   const bodyContent = `
     <article class="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
-      <div class="max-w-[1500px] mx-auto relative z-10">
+      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-emerald-900/10 rounded-full blur-[160px] pointer-events-none"></div>
+      <div class="max-w-7xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
           <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
+            <li><a href="/" class="hover:text-emerald-300 transition-colors">Home</a></li>
             <li>/</li>
             <li class="text-gray-300">Agenti AI</li>
           </ol>
         </nav>
 
         <header class="mb-16">
-          <p class="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-5">Agenti AI</p>
-          <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">Agenti AI per aziende: consulenza, automazione e adozione operativa</h1>
+          <p class="text-emerald-300 font-mono text-sm tracking-[0.3em] uppercase mb-5">Agenti AI · consulenza e sviluppo</p>
+          <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">Agenti AI su misura per togliere al tuo team il lavoro che un software può fare meglio</h1>
           <p class="text-xl text-gray-300 leading-relaxed max-w-3xl">
-            Q4 Studio progetta agenti AI su misura partendo dal modo in cui la tua azienda lavora: persone, dati, software, controlli e obiettivi commerciali.
+            Leggono email e WhatsApp, inseriscono gli ordini nel gestionale, preparano i preventivi, qualificano i lead e rispondono ai clienti. Tu mantieni il controllo: l'agente propone, le persone decidono.
           </p>
         </header>
 
-        <section class="mb-16 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
-          <h2 class="text-3xl font-bold mb-4">Non chatbot generici, ma consulenti digitali integrati nel processo</h2>
-          <p class="text-lg text-gray-200 leading-relaxed">
-            Un agente AI utile legge informazioni, applica regole operative, compie azioni controllate e restituisce al team output verificabili. Il nostro lavoro combina audit, progettazione, sviluppo, integrazione e formazione.
-          </p>
-        </section>
-
         <section class="mb-24">
-          <h2 class="text-5xl md:text-7xl font-bold tracking-tight mb-8">Cosa può fare un agente AI, in pratica.</h2>
-          <p class="text-xl text-gray-300 leading-relaxed max-w-4xl mb-10">Ordini, preventivi, rendiconti, ticket, lead, documenti: partiamo da mansioni operative che oggi consumano tempo al team.</p>
-          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          <h2 class="text-4xl md:text-6xl font-bold tracking-tight mb-6">Cosa fa un agente AI, in concreto</h2>
+          <p class="text-xl text-gray-300 leading-relaxed max-w-3xl mb-10">Ogni agente nasce da un processo vero: come lo gestisci oggi, cosa fa l'agente al posto del team e dove resta il controllo delle persone.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             ${useCasesHtml}
           </div>
         </section>
 
-        <section class="mb-16 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8">
-          <div>
-            <p class="text-indigo-300 font-mono text-sm tracking-[0.35em] uppercase mb-4">AI Adoption</p>
-            <h2 class="text-3xl md:text-4xl font-bold mb-5">La tecnologia funziona solo se entra nel lavoro quotidiano</h2>
-            <p class="text-gray-300 leading-relaxed text-lg">Per questo lavoriamo come studio di consulenza: analizziamo il contesto, costruiamo il primo agente utile, formiamo chi lo userà e definiamo come misurarlo.</p>
-          </div>
-          <ul class="space-y-4 text-gray-300">
-            ${adoptionHtml}
+        <section class="mb-24 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">Si collega agli strumenti che usi già</h2>
+          <p class="text-lg text-gray-200 leading-relaxed mb-6">Nessuna piattaforma nuova da imparare, nessun cambio di gestionale. L'agente entra nei flussi esistenti: WhatsApp, email e PEC, gestionale/ERP, CRM, Excel e Google Sheets, calendario, sito e form, centralino. Se un software ha un'API, un'esportazione o anche solo una casella email, si può collegare.</p>
+        </section>
+
+        <section class="mb-24">
+          <h2 class="text-4xl md:text-5xl font-bold mb-6">Non ti vendiamo un software. Ti affianchiamo finché funziona.</h2>
+          <p class="text-xl text-gray-300 leading-relaxed max-w-3xl mb-10">Q4 Studio è uno studio di consulenza: ogni tappa del percorso ha una durata, un obiettivo e un risultato concreto che ti porti a casa, anche se decidi di fermarti lì.</p>
+          <ul class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              ${methodHtml}
           </ul>
         </section>
 
-        <section class="rounded-[2rem] border border-white/10 bg-gradient-to-br from-purple-950/40 via-white/[0.03] to-orange-950/30 p-8 md:p-12 mb-16">
-          <h2 class="text-5xl md:text-7xl font-bold mb-8">Integrazione con sistemi aziendali</h2>
-          <div class="space-y-4 text-3xl md:text-5xl font-bold tracking-wide text-white/35 mb-8">
-            <p>ERP / GESTIONALI</p>
-            <p>EMAIL</p>
-            <p class="text-white">EXCEL / GOOGLE SHEET</p>
-            <p>CRM</p>
-            <p>DOCUMENTI</p>
-            <p>WHATSAPP</p>
-            <p>API AZIENDALI</p>
+        <section class="mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold mb-10">Le domande che ci fanno tutti gli imprenditori</h2>
+          <div class="space-y-4">
+          ${faqHtml}
           </div>
-          <p class="text-lg text-gray-300 leading-relaxed mb-6">L'agente legge dati dagli strumenti che il team usa già e restituisce azioni controllate: campi compilati, notifiche, record aggiornati, bozze e alert.</p>
-          <a href="/" class="inline-flex items-center rounded-full bg-indigo-600 px-7 py-4 font-semibold text-white hover:bg-indigo-500 transition-colors">Parla con un consulente</a>
+        </section>
+
+        <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-8 md:p-12 text-center">
+          <h2 class="text-3xl md:text-5xl font-bold mb-6">Porta un processo che ti ruba tempo. Ne usciamo con un piano.</h2>
+          <p class="text-lg text-gray-300 leading-relaxed mb-8 max-w-2xl mx-auto">In 30 minuti analizziamo insieme dove oggi si perde tempo, quali dati avete già e quale agente può generare il primo risultato misurabile.</p>
+          <a href="/" class="inline-flex items-center rounded-full bg-indigo-600 px-7 py-4 font-semibold text-white hover:bg-indigo-500 transition-colors">Prenota la chiamata</a>
         </section>
       </div>
     </article>
   `;
 
   return generateBaseHtml({
-    title: 'Agenti AI per aziende | Consulenza e automazioni Q4 Studio',
-    description: 'Q4 Studio progetta Agenti AI su misura per sales, back office, customer care e processi interni: audit, sviluppo, integrazione e adozione operativa.',
+    title: 'Agenti AI per aziende | Consulenza e sviluppo su misura | Q4 Studio',
+    description: 'Agenti AI che leggono email e WhatsApp, inseriscono ordini nel gestionale, preparano preventivi e qualificano i lead. Q4 Studio ti affianca dalla mappatura dei processi alla messa in produzione.',
     canonical: pageUrl,
-    schema: [serviceSchema, breadcrumbSchema],
+    schema: [serviceSchema, breadcrumbSchema, faqSchema],
     bodyContent
   });
 }
