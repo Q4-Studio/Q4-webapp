@@ -14,7 +14,7 @@ import SEOHead from './components/SEOHead';
 import HomeSeoContent from './components/HomeSeoContent';
 import { BlogPost } from './types/blog';
 import { getBlogPosts } from './lib/supabase';
-import { getSeoPageBySlug, siteUrl } from './data/seoPages';
+import { getSeoPageBySlug, resourcesPath, siteUrl } from './data/seoPages';
 
 const Blog = lazy(() => import('./components/Blog'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
@@ -73,8 +73,13 @@ const App: React.FC = () => {
       } else if (path === '/directory') {
         setCurrentPage('directory');
         setCurrentSeoSlug('');
-      } else if (path.startsWith('/seo/')) {
-        const slug = path.replace('/seo/', '');
+      } else if (path === resourcesPath) {
+        setCurrentPage('directory');
+        setCurrentSeoSlug('');
+      } else if (path.startsWith(`${resourcesPath}/`) || path.startsWith('/seo/')) {
+        const slug = path.startsWith(`${resourcesPath}/`)
+          ? path.replace(`${resourcesPath}/`, '')
+          : path.replace('/seo/', '');
         if (getSeoPageBySlug(slug)) {
           setCurrentSeoSlug(slug);
           setCurrentPage('seo-page');
