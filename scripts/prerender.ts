@@ -13,6 +13,24 @@ const __dirname = dirname(__filename);
 
 const distDir = join(__dirname, '..', 'dist');
 
+// Extract the importmap and the hashed module script from the Vite-built index.html,
+// so prerendered pages load the real production bundle (not the raw /index.tsx source).
+function getAppScripts(): string {
+  const builtIndexPath = join(distDir, 'index.html');
+  if (existsSync(builtIndexPath)) {
+    const builtHtml = readFileSync(builtIndexPath, 'utf-8');
+    const importmapMatch = builtHtml.match(/<script type="importmap">[\s\S]*?<\/script>/);
+    const moduleMatch = builtHtml.match(/<script type="module"[^>]*src="[^"]+"[^>]*><\/script>/);
+    if (moduleMatch) {
+      return `${importmapMatch ? importmapMatch[0] : ''}\n  ${moduleMatch[0]}`;
+    }
+  }
+  console.warn('⚠️  dist/index.html not found or has no module script, falling back to /index.tsx');
+  return '<script type="module" src="/index.tsx"></script>';
+}
+
+const appScripts = getAppScripts();
+
 function ensureDir(dir: string) {
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true });
@@ -79,7 +97,7 @@ function generateBaseHtml(options: {
   <div id="root">
     ${bodyContent}
   </div>
-  <script type="module" src="/index.tsx"></script>
+  ${appScripts}
 </body>
 </html>`;
 }
