@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Bot, Users } from 'lucide-react';
+import { ArrowRight, Bot, Users } from 'lucide-react';
 import { ServiceItem } from '../types';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -10,14 +10,14 @@ const services: ServiceItem[] = [
   {
     id: 1,
     title: "B2B Lead Generation",
-    description: "La nostra forza è Meta Advertising (Facebook e Instagram), dove abbiamo generato i risultati più significativi per i nostri clienti. Costruiamo campagne multicanale integrando anche cold email e LinkedIn. Ogni lead viene tracciato in tempo reale: ricevi notifiche istantanee su WhatsApp e i nostri setter sono pronti a chiamare immediatamente per non perdere opportunità mentre il contatto è caldo.",
+    description: "Affianchiamo marketing e sales nella costruzione di un sistema di acquisizione B2B: posizionamento, offerta, Meta Advertising, tracking, CRM e follow-up. Non guardiamo solo il costo per lead, ma la qualità commerciale e l'avanzamento in pipeline.",
     icon: <Users className="w-12 h-12 text-cyan-400" />,
     span: "md:col-span-1"
   },
   {
     id: 2,
     title: "Agenti AI",
-    description: "Realizziamo agenti AI completamente personalizzati senza i costi proibitivi del mercato tradizionale. Il nostro modello snello no-code ci permette di costruire e deployare workflow intelligenti in pochi giorni, non mesi. Automatizziamo invio ordini, processi aziendali interni, attività ripetitive, data entry e collegamento tra software diversi. Il tuo team si libera dalle operazioni manuali e si concentra sul valore.",
+    description: "Progettiamo agenti AI su misura per sales, back office, customer care e processi interni. Partiamo dall'audit operativo, definiamo regole e responsabilità, integriamo gli strumenti già in uso e accompagniamo il team nell'adozione.",
     icon: <Bot className="w-12 h-12 text-purple-400" />,
     span: "md:col-span-1"
   }
@@ -73,7 +73,7 @@ const Services: React.FC = () => {
             Le nostre <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Soluzioni</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl leading-relaxed">
-            Due servizi core e indipendenti. Da un lato, generiamo lead qualificati su Meta con targeting chirurgico. Dall'altro, costruiamo agenti AI su misura per eliminare task ripetitivi e scalare operazioni. Entrambi progettati per massimizzare il ROI.
+            Due aree core, un unico approccio consulenziale. Studiamo il processo, definiamo le priorità e costruiamo sistemi misurabili: acquisizione B2B da un lato, automazione intelligente dall'altro.
           </p>
         </div>
 
@@ -93,6 +93,18 @@ const Services: React.FC = () => {
                 <div className="mb-6">{service.icon}</div>
                 <h3 className="text-2xl font-bold mb-3">{service.title}</h3>
                 <p className="text-gray-400 leading-relaxed text-sm md:text-base">{service.description}</p>
+                {service.title === "Agenti AI" && (
+                  <button
+                    onClick={() => {
+                      window.history.pushState(null, '', '/agenti-ai');
+                      window.dispatchEvent(new Event('popstate'));
+                    }}
+                    className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-indigo-300 hover:text-white transition-colors cursor-pointer bg-transparent border-0 p-0"
+                  >
+                    Approfondisci gli agenti AI
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </div>
           ))}

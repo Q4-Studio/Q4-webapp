@@ -8,20 +8,20 @@ const steps = [
   {
     number: "01",
     emoji: "🔍",
-    title: "Analizziamo",
-    description: "Fotografia del tuo business, competitor, canali. Capiamo dove stai perdendo clienti e dove c'è margine."
+    title: "Diagnosi",
+    description: "Mappiamo business, funnel, processi e dati. Capiamo dove si perde valore e quale leva ha più impatto: acquisizione, automazione o metodo."
   },
   {
     number: "02",
     emoji: "⚡",
-    title: "Costruiamo",
-    description: "Sito, campagne, funnel. Ogni pezzo progettato per portare il visitatore a prenotare un appuntamento con te."
+    title: "Progettiamo",
+    description: "Definiamo architettura, metriche e responsabilità. Campagne, CRM, agenti AI e follow-up vengono pensati come un unico sistema."
   },
   {
     number: "03",
     emoji: "🤖",
-    title: "Automatizziamo",
-    description: "AI, CRM, WhatsApp, chatbot. Il sistema cattura lead, li qualifica e li porta al tuo commerciale — anche di notte."
+    title: "Implementiamo",
+    description: "Mettiamo online, formiamo il team e miglioriamo sui dati reali. L'obiettivo è rendere il sistema utile, misurabile e adottato."
   }
 ];
 
@@ -78,7 +78,7 @@ const HowItWorks: React.FC = () => {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Risultati concreti.</span>
           </h2>
           <p ref={subtitleRef} className="text-xl text-gray-400 max-w-2xl leading-relaxed">
-            Un processo chiaro, senza burocrazia. Dal giorno uno, lavoriamo per farti portare a casa risultati misurabili.
+            Un processo chiaro, senza consulenza da slide. Dal primo audit lavoriamo per trasformare decisioni, canali e operatività in risultati misurabili.
           </p>
         </div>
 

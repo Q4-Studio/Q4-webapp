@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
                   className="h-8 md:h-10 w-auto mb-4 mx-auto md:mx-0"
                 />
                 <p className="max-w-xs mb-4 mx-auto md:mx-0">
-                    Specialisti in B2B Lead Generation e Agenti AI.
+                    Studio di consulenza per crescita B2B, Meta Ads e Agenti AI.
                 </p>
                 <div className="flex flex-col gap-2 mt-4 mb-4">
                   {phone && (
@@ -159,7 +159,10 @@ const Footer: React.FC = () => {
                     </li>
                     <li
                         className="hover:text-indigo-400 cursor-pointer transition-colors"
-                        onClick={() => scrollHomeSection('services')}
+                        onClick={() => {
+                            window.history.pushState(null, '', '/agenti-ai');
+                            window.dispatchEvent(new Event('popstate'));
+                        }}
                     >
                         Agenti AI
                     </li>

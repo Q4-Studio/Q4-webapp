@@ -25,8 +25,9 @@ const Privacy = lazy(() => import('./components/Privacy'));
 const AppSupport = lazy(() => import('./components/AppSupport'));
 const SeoDirectory = lazy(() => import('./components/SeoDirectory'));
 const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
+const AIAgents = lazy(() => import('./components/AIAgents'));
 
-type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | '404';
+type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -66,7 +67,10 @@ const App: React.FC = () => {
       const path = window.location.pathname.replace(/\/$/, '') || '/';
       const hash = window.location.hash.slice(1); // Remove #
 
-      if (path === '/directory') {
+      if (path === '/agenti-ai') {
+        setCurrentPage('agenti-ai');
+        setCurrentSeoSlug('');
+      } else if (path === '/directory') {
         setCurrentPage('directory');
         setCurrentSeoSlug('');
       } else if (path.startsWith('/seo/')) {
@@ -134,6 +138,10 @@ const App: React.FC = () => {
       window.history.pushState(null, '', '/');
       setCurrentPage('home');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (page === 'agenti-ai') {
+      window.history.pushState(null, '', '/agenti-ai');
+      setCurrentPage('agenti-ai');
+      window.scrollTo({ top: 0 });
     } else {
       if (window.location.pathname !== '/') {
         window.history.pushState(null, '', '/');
@@ -169,6 +177,12 @@ const App: React.FC = () => {
         />
         <div className="hidden md:flex items-center gap-8">
           <button
+            onClick={() => navigateTo('agenti-ai')}
+            className="text-sm font-mono hover:text-indigo-400 transition-colors cursor-pointer bg-transparent border-0"
+          >
+            AGENTI AI
+          </button>
+          <button
             onClick={() => navigateTo('blog')}
             className="text-sm font-mono hover:text-indigo-400 transition-colors cursor-pointer bg-transparent border-0"
           >
@@ -202,11 +216,11 @@ const App: React.FC = () => {
         <>
           <SEOHead
             title="Q4 Studio | B2B Lead Generation & Agenti AI"
-            description="Specialisti in Lead Generation B2B su Meta Ads e Agenti AI personalizzati. Aumenta i contatti qualificati e automatizza i processi con l'algoritmo Andromeda."
+            description="Studio di consulenza per crescita B2B, Meta Ads e Agenti AI. Affianchiamo marketing, sales e operations per trasformare processi, lead e dati in sistemi misurabili."
             url={`${siteUrl}/`}
           />
           <section className="sr-only">
-            <h1>Agenzia di B2B Lead Generation su Meta Ads e Agenti AI Personalizzati</h1>
+            <h1>Studio di consulenza per B2B Lead Generation su Meta Ads e Agenti AI personalizzati</h1>
           </section>
           <Hero />
           <ValueProposition />
@@ -260,6 +274,13 @@ const App: React.FC = () => {
         {currentPage === 'directory' && (
           <>
             <SeoDirectory />
+            <Footer />
+          </>
+        )}
+
+        {currentPage === 'agenti-ai' && (
+          <>
+            <AIAgents />
             <Footer />
           </>
         )}

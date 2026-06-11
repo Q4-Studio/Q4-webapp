@@ -8,23 +8,23 @@ gsap.registerPlugin(ScrollTrigger);
 const features = [
   {
     icon: <Target className="w-8 h-8 text-blue-400" />,
-    title: "Specialisti, non generalisti",
-    desc: "Il nostro core è Meta Advertising (Facebook e Instagram), dove abbiamo generato i risultati più significativi. Integriamo cold email e LinkedIn quando serve, ma Meta è dove eccelliamo davvero. Focus significa risultati superiori."
+    title: "Consulenza prima dell'execution",
+    desc: "Prima di lanciare campagne o automazioni analizziamo ICP, processo commerciale, dati disponibili e colli di bottiglia. La soluzione nasce dalla diagnosi, non da un pacchetto standard."
   },
   {
     icon: <Zap className="w-8 h-8 text-cyan-400" />,
-    title: "Sistema di risposta istantanea",
-    desc: "Ogni lead genera una notifica WhatsApp in tempo reale al tuo team commerciale. Il nostro approccio garantisce che nessun contatto venga perso o raffreddato. Velocità di risposta = tasso di conversione più alto."
+    title: "Persone e processi insieme",
+    desc: "Un sistema funziona quando il team sa usarlo. Progettiamo funnel, CRM, follow-up e agenti AI tenendo insieme operatività quotidiana, responsabilità e metriche condivise."
   },
   {
     icon: <Database className="w-8 h-8 text-purple-400" />,
-    title: "Tecnologia no-code, costi reali",
-    desc: "Gli agenti AI personalizzati non devono costare una fortuna. Il nostro stack no-code ci permette di costruire soluzioni enterprise-grade mantenendo prezzi accessibili. Qualità senza sprechi."
+    title: "AI pragmatica, non demo",
+    desc: "Gli agenti AI vengono disegnati su processi reali: lead routing, documenti, report, customer care, data entry e collegamenti tra software. Ogni automazione deve liberare tempo misurabile."
   },
   {
     icon: <TrendingUp className="w-8 h-8 text-pink-400" />,
-    title: "Da concept a deploy in giorni",
-    desc: "Mentre altri ci mettono mesi, noi deployamo sistemi funzionanti in giorni. L'agilità del nostro processo significa che inizi a vedere risultati quando i competitor stanno ancora pianificando."
+    title: "Misuriamo ciò che conta",
+    desc: "Guardiamo CPL, ma anche qualifica, appuntamenti, pipeline, tempi di risposta e ore recuperate. Il marketing e l'automazione devono essere leggibili dal business."
   }
 ];
 
@@ -92,8 +92,8 @@ const ValueProposition: React.FC = () => {
             </span>
           </h2>
           <p ref={descRef} className="text-xl text-gray-400 leading-relaxed max-w-2xl">
-            Non vendiamo consulenze teoriche. Costruiamo infrastrutture tecniche che lavorano h24.
-            Da un lato campagne Meta che portano contatti qualificati, dall'altro sistemi AI che automatizzano processi.
+            Siamo uno studio di consulenza operativo: entriamo nei processi, facciamo emergere le priorità e costruiamo sistemi che il team può usare davvero.
+            Lead generation e Agenti AI sono leve diverse dello stesso lavoro: rendere crescita e operations più misurabili.
           </p>
         </div>
 

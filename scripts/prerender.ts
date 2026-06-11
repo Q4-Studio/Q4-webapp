@@ -349,6 +349,118 @@ function generateBlogIndexHtml(): string {
   });
 }
 
+function generateAIAgentsHtml(): string {
+  const pageUrl = `${siteUrl}/agenti-ai`;
+
+  const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Agenti AI per aziende',
+    description: 'Consulenza, progettazione e integrazione di agenti AI su misura per sales, back office, customer care e processi interni.',
+    provider: {
+      '@type': 'Organization',
+      name: 'Q4 Studio',
+      url: siteUrl
+    },
+    areaServed: 'IT',
+    url: pageUrl,
+    serviceType: 'AI agents consulting and automation'
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Agenti AI', item: pageUrl }
+    ]
+  };
+
+  const useCases = [
+    ['Qualifica lead', "L'agente legge form, CRM e messaggi, assegna priorità commerciale e prepara il prossimo step per il team sales."],
+    ['Documenti e data entry', 'Estrae dati da email, PDF e fogli di lavoro, riducendo attività manuali ripetitive e errori di trascrizione.'],
+    ['Customer care', 'Classifica ticket, propone risposte coerenti con procedure interne e passa al reparto corretto quando serve.'],
+    ['Report e alert', 'Raccoglie dati da CRM, campagne e gestionali, segnala anomalie e prepara sintesi operative.'],
+    ['Follow-up marketing', 'Trasforma brief, call e domande frequenti in bozze di contenuti, email e messaggi commerciali.'],
+    ['Integrazioni software', 'Fa dialogare CRM, email, WhatsApp, fogli, API e automazioni per eliminare passaggi manuali.']
+  ];
+
+  const useCasesHtml = useCases
+    .map(([title, description]) => `<article class="rounded-3xl border border-white/10 bg-white/[0.03] p-6"><h2 class="text-2xl font-bold mb-3">${escapeHtml(title)}</h2><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
+    .join('\n          ');
+
+  const adoptionHtml = [
+    'Audit di processo e dati disponibili',
+    'Disegno di regole, strumenti, escalation e metriche',
+    'Integrazione con CRM, email, documenti, dashboard e workflow',
+    'Formazione del team, controllo umano e miglioramento continuo'
+  ]
+    .map((item) => `<li class="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5"><span class="text-indigo-300">✓</span><span>${escapeHtml(item)}</span></li>`)
+    .join('\n              ');
+
+  const bodyContent = `
+    <article class="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen">
+      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
+      <div class="max-w-6xl mx-auto relative z-10">
+        <nav aria-label="Breadcrumb" class="mb-10">
+          <ol class="flex items-center gap-2 text-sm text-gray-400">
+            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
+            <li>/</li>
+            <li class="text-gray-300">Agenti AI</li>
+          </ol>
+        </nav>
+
+        <header class="mb-16">
+          <p class="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-5">Agenti AI</p>
+          <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">Agenti AI per aziende: consulenza, automazione e adozione operativa</h1>
+          <p class="text-xl text-gray-300 leading-relaxed max-w-3xl">
+            Q4 Studio progetta agenti AI su misura partendo dal modo in cui la tua azienda lavora: persone, dati, software, controlli e obiettivi commerciali.
+          </p>
+        </header>
+
+        <section class="mb-16 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
+          <h2 class="text-3xl font-bold mb-4">Non chatbot generici, ma consulenti digitali integrati nel processo</h2>
+          <p class="text-lg text-gray-200 leading-relaxed">
+            Un agente AI utile legge informazioni, applica regole operative, compie azioni controllate e restituisce al team output verificabili. Il nostro lavoro combina audit, progettazione, sviluppo, integrazione e formazione.
+          </p>
+        </section>
+
+        <section class="mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold mb-6">Use case concreti</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            ${useCasesHtml}
+          </div>
+        </section>
+
+        <section class="mb-16 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8">
+          <div>
+            <p class="text-indigo-300 font-mono text-sm tracking-[0.35em] uppercase mb-4">AI Adoption</p>
+            <h2 class="text-3xl md:text-4xl font-bold mb-5">La tecnologia funziona solo se entra nel lavoro quotidiano</h2>
+            <p class="text-gray-300 leading-relaxed text-lg">Per questo lavoriamo come studio di consulenza: analizziamo il contesto, costruiamo il primo agente utile, formiamo chi lo userà e definiamo come misurarlo.</p>
+          </div>
+          <ul class="space-y-4 text-gray-300">
+            ${adoptionHtml}
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-3xl md:text-4xl font-bold mb-5">Strumenti che possiamo integrare</h2>
+          <p class="text-lg text-gray-300 leading-relaxed mb-6">CRM, email, WhatsApp, Google Workspace, Excel, ERP, Meta Ads, API, n8n e Make.</p>
+          <a href="/" class="inline-flex items-center rounded-full bg-indigo-600 px-7 py-4 font-semibold text-white hover:bg-indigo-500 transition-colors">Parla con un consulente</a>
+        </section>
+      </div>
+    </article>
+  `;
+
+  return generateBaseHtml({
+    title: 'Agenti AI per aziende | Consulenza e automazioni Q4 Studio',
+    description: 'Q4 Studio progetta Agenti AI su misura per sales, back office, customer care e processi interni: audit, sviluppo, integrazione e adozione operativa.',
+    canonical: pageUrl,
+    schema: [serviceSchema, breadcrumbSchema],
+    bodyContent
+  });
+}
+
 // Supabase client for build-time fetch
 const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || '';
@@ -553,6 +665,7 @@ function generateBlogArticleHtml(post: any): string {
 function generateSitemap(blogPosts: any[] = []): string {
   const urls = [
     { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly' },
+    { loc: `${siteUrl}/agenti-ai`, priority: '0.95', changefreq: 'weekly' },
     { loc: `${siteUrl}/directory`, priority: '0.9', changefreq: 'weekly' },
     { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'weekly' },
     ...seoPages.map((page) => ({
@@ -612,6 +725,15 @@ ${urlEntries}
   blogStream.write(blogHtml);
   blogStream.end();
   console.log('✅ Generated /blog/index.html');
+
+  // Generate AI Agents page
+  const aiAgentsPath = join(distDir, 'agenti-ai');
+  ensureDir(aiAgentsPath);
+  const aiAgentsHtml = generateAIAgentsHtml();
+  const aiAgentsStream = createWriteStream(join(aiAgentsPath, 'index.html'));
+  aiAgentsStream.write(aiAgentsHtml);
+  aiAgentsStream.end();
+  console.log('✅ Generated /agenti-ai/index.html');
 
   // Generate individual blog articles
   for (const post of blogPosts) {
