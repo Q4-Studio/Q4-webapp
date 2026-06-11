@@ -1,11 +1,23 @@
 {
+  "redirects": [
+    {
+      "source": "/seo/:slug",
+      "destination": "/risorse/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/directory",
+      "destination": "/risorse",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/blog/:slug",
       "destination": "/index.html"
     },
     {
-      "source": "/((?!directory|seo|blog|sitemap.xml|robots.txt|llms.txt).+)",
+      "source": "/((?!risorse|blog|sitemap.xml|robots.txt|llms.txt).+)",
       "destination": "/index.html"
     }
   ],

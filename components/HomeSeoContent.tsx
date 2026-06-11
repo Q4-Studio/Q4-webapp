@@ -98,7 +98,7 @@ const HomeSeoContent: React.FC = () => {
                   Ogni attività viene valutata su metriche operative e metriche di business. Oltre ai KPI pubblicitari, tracciamo tempo di presa in carico, tasso di appuntamento, opportunità generate e valore pipeline attribuibile. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.
                 </p>
                 <p>
-                  In un campione interno di progetti B2B gestiti negli ultimi 12 mesi, abbiamo osservato una crescita media del 31% nel tasso di qualificazione MQL→SQL entro il secondo trimestre di collaborazione. Nei contesti con integrazione completa CRM + automazioni, il miglioramento può arrivare al 48% grazie alla riduzione dei tempi morti tra marketing e sales.
+                  Nei progetti B2B monitoriamo la progressione MQL→SQL nel tempo e confrontiamo i dati prima e dopo integrazione CRM, routing e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.
                 </p>
               </div>
             </div>

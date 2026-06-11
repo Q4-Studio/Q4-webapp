@@ -28,6 +28,7 @@ export interface SeoPage {
 }
 
 export const siteUrl = 'https://www.q4.studio';
+export const resourcesPath = '/risorse';
 
 export const seoPages: SeoPage[] = [
   {
@@ -39,7 +40,7 @@ export const seoPages: SeoPage[] = [
     audience: 'aziende B2B con cicli commerciali complessi, ticket medio alto e bisogno di qualificare meglio la domanda',
     pain: 'molte campagne producono lead economici ma poco lavorabili, con CRM incompleti, follow-up lenti e segnali di conversione deboli',
     solution: 'costruiamo audience, messaggi, form e tracking intorno al profilo cliente ideale, poi ottimizziamo sugli eventi che anticipano MQL, SQL e pipeline reale',
-    proof: 'nei progetti con integrazione CRM corretta misuriamo in media un +40% di lead qualificati nei primi 90 giorni',
+    proof: 'nei progetti con integrazione CRM corretta monitoriamo la crescita dei lead qualificati nei primi cicli di ottimizzazione',
     directAnswer: 'La B2B Lead Generation su Meta Ads funziona quando si allinea il profilo cliente ideale (ICP) con domande qualificanti, tracking CRM e ottimizzazione su eventi commerciali reali come MQL e SQL, non solo sul costo per lead.',
     clusters: [
       {
@@ -74,10 +75,10 @@ export const seoPages: SeoPage[] = [
       ]
     },
     dataPoints: [
-      'Crescita media del 40% di lead qualificati in 90 giorni con integrazione CRM',
-      'Riduzione del 35% dei tempi di prima risposta con automazioni attive',
+      'Crescita dei lead qualificati misurata su MQL, SQL e appuntamenti, non solo sul CPL',
+      'Riduzione dei tempi di prima risposta quando automazioni e routing sono attivi',
       'CPL medio B2B su Meta Ads: 15-45 € a seconda del settore',
-      'Tasso medio di qualificazione MQL→SQL: +31% dopo il secondo trimestre'
+      'Tasso MQL→SQL monitorato dopo il secondo trimestre per valutare qualità reale del funnel'
     ],
     services: ['Audit account Meta', 'Architettura campagne full funnel', 'Creatività e offerte B2B', 'Tracking CRM e conversion API'],
     faqs: [
@@ -145,7 +146,7 @@ export const seoPages: SeoPage[] = [
     dataPoints: [
       'Presenza operativa a Verona e Reggio Emilia',
       'Focus su PMI industriali e società di servizi del Veneto',
-      'Campioni locali riducono il costo per contatto del 20-30% rispetto a targeting nazionale non segmentato',
+      'Targeting locale e messaggi verticali riducono dispersione rispetto a campagne nazionali non segmentate',
       'Setup medio da contratto a campagna live: 7-10 giorni lavorativi'
     ],
     services: ['Strategia Meta locale', 'Lead form qualificanti', 'Follow-up WhatsApp/email', 'Dashboard KPI commerciali'],
@@ -177,7 +178,7 @@ export const seoPages: SeoPage[] = [
     audience: 'aziende che ricevono lead ma perdono opportunità per tempi di risposta lenti, processi manuali o qualificazione incoerente',
     pain: 'un lead caldo perde valore se non viene qualificato, assegnato e contattato rapidamente con il messaggio corretto',
     solution: 'disegniamo agenti AI collegati a CRM, email e canali di messaggistica per verificare requisiti, prioritizzare contatti e attivare follow-up contestuali',
-    proof: 'nei funnel maturi l\'automazione può ridurre fino al 35% i tempi medi di prima risposta',
+    proof: 'nei funnel maturi l\'automazione riduce i tempi medi di prima risposta e rende più costante la qualifica',
     directAnswer: 'Gli Agenti AI per lead generation sono sistemi automatizzati che qualificano contatti, rispondono istantaneamente, raccolgono informazioni e passano al commerciale solo i lead pronti, riducendo i tempi morti e aumentando il tasso di conversione.',
     clusters: [
       {
@@ -212,8 +213,8 @@ export const seoPages: SeoPage[] = [
       ]
     },
     dataPoints: [
-      'Riduzione fino al 35% dei tempi medi di prima risposta',
-      'Tasso di qualificazione MQL→SQL migliorato del 28% nei progetti con agente AI attivo',
+      'Riduzione dei tempi medi di prima risposta quando l\'agente gestisce routing e primo contatto',
+      'Qualifica MQL→SQL più ordinata nei progetti con agente AI collegato al CRM',
       'Risposta 24/7 senza costi aggiuntivi di personale',
       'Setup tipico: 2-4 settimane di lavoro congiunto con il team commerciale'
     ],
@@ -235,6 +236,327 @@ export const seoPages: SeoPage[] = [
         question: 'Su quali canali può operare?',
         answer: 'In genere WhatsApp, email, sito web e integrazioni CRM. Valutiamo altri canali in base alle esigenze del cliente.'
       }
+    ]
+  },
+  {
+    slug: 'meta-ads-b2b-reggio-emilia',
+    title: 'Meta Ads B2B a Reggio Emilia',
+    metaTitle: 'Meta Ads B2B Reggio Emilia | Q4 Studio',
+    description: 'Consulenza Meta Ads B2B per aziende di Reggio Emilia che vogliono generare lead qualificati e pipeline commerciale misurabile.',
+    keyword: 'meta ads b2b reggio emilia',
+    audience: 'PMI industriali, aziende di servizi e realtà B2B di Reggio Emilia con vendita consulenziale o trattativa commerciale',
+    pain: 'campagne generiche e form poco qualificanti portano contatti fuori target o difficili da gestire per il team sales',
+    solution: 'costruiamo campagne, landing angle, domande qualificanti e follow-up collegati al CRM per misurare qualità e avanzamento commerciale',
+    proof: 'Q4 Studio lavora tra Verona e Reggio Emilia con focus su acquisizione B2B, CRM automation e agenti AI',
+    directAnswer: 'Q4 Studio affianca aziende B2B di Reggio Emilia nella gestione di Meta Ads, lead generation e automazioni CRM, con un approccio orientato a lead qualificati, follow-up rapido e misurazione della pipeline.',
+    clusters: [
+      {
+        keyword: 'agenzia meta ads reggio emilia',
+        heading: 'Agenzia Meta Ads a Reggio Emilia',
+        content: 'Una gestione Meta Ads efficace per aziende di Reggio Emilia deve considerare settore, territorio, processo commerciale e capacità di follow-up. Il valore non sta nel generare tanti contatti, ma nel costruire un sistema che filtra la domanda e consegna al team sales lead più leggibili.'
+      },
+      {
+        keyword: 'lead generation reggio emilia b2b',
+        heading: 'Lead Generation B2B a Reggio Emilia',
+        content: 'Nel B2B locale, le campagne funzionano meglio quando parlano a un segmento preciso: industria, servizi tecnici, consulenza, forniture o tecnologia. Le domande nel form, il routing e la velocità di contatto sono parte della strategia quanto creatività e targeting.'
+      },
+      {
+        keyword: 'facebook ads aziende reggio emilia',
+        heading: 'Facebook e Instagram Ads per aziende',
+        content: 'Facebook e Instagram possono generare opportunità B2B anche in province industriali quando vengono usati per intercettare imprenditori, responsabili acquisti e referenti tecnici con messaggi concreti, casi d\'uso e follow-up strutturati.'
+      },
+      {
+        keyword: 'consulente meta ads emilia romagna',
+        heading: 'Consulenza Meta Ads in Emilia-Romagna',
+        content: 'La consulenza è utile quando l\'azienda ha già provato advertising ma non riesce a collegare dati pubblicitari, CRM e risultati commerciali. Il lavoro parte da audit, tracciamento e definizione di KPI condivisi tra marketing e sales.'
+      }
+    ],
+    comparisonTable: {
+      title: 'Canali per acquisizione B2B locale',
+      headers: ['Canale', 'Punto forte', 'Limite', 'Quando usarlo'],
+      rows: [
+        ['Meta Ads', 'Volume e retargeting', 'Serve qualifica', 'Domanda latente e offerte consulenziali'],
+        ['Google Ads', 'Intento esplicito', 'Costo e concorrenza', 'Query già mature'],
+        ['LinkedIn Ads', 'Target professionale', 'Scala e CPL', 'Account based e target stretti'],
+        ['Eventi e fiere', 'Relazione diretta', 'Difficile attribuzione', 'Settori industriali specifici']
+      ]
+    },
+    dataPoints: [
+      'Presenza operativa tra Verona e Reggio Emilia',
+      'Monitoraggio di MQL, SQL, appuntamenti e pipeline, non solo CPL',
+      'Routing e follow-up progettati insieme alle campagne',
+      'Integrazione CRM valutata in base agli strumenti già usati dal team'
+    ],
+    services: ['Audit funnel B2B', 'Campagne Meta locali', 'Lead form qualificanti', 'CRM e follow-up automation'],
+    faqs: [
+      {
+        question: 'Lavorate con aziende di Reggio Emilia?',
+        answer: 'Si. Q4 Studio lavora con aziende B2B di Reggio Emilia e dell\'Emilia-Romagna, anche con incontri operativi quando utili.'
+      },
+      {
+        question: 'Meta Ads funziona per industrie e servizi tecnici?',
+        answer: 'Si, se il messaggio è specifico e il processo qualifica il contatto. Nel B2B non basta ottimizzare sul costo per lead.'
+      },
+      {
+        question: 'Potete partire da campagne già attive?',
+        answer: 'Si. In genere iniziamo da audit account, tracciamento, form e gestione lead prima di aumentare budget.'
+      },
+      {
+        question: 'Serve una landing dedicata?',
+        answer: 'Dipende dal funnel. Per offerte complesse spesso una landing o una pagina verticale aiuta a spiegare meglio il valore prima del contatto.'
+      }
+    ]
+  },
+  {
+    slug: 'meta-ads-b2b-modena',
+    title: 'Meta Ads B2B a Modena',
+    metaTitle: 'Meta Ads B2B Modena | Q4 Studio',
+    description: 'Gestione e consulenza Meta Ads B2B per aziende di Modena: lead qualificati, CRM automation e follow-up commerciale.',
+    keyword: 'meta ads b2b modena',
+    audience: 'aziende B2B modenesi nei settori industria, tecnologia, servizi professionali e consulenza',
+    pain: 'lead non qualificati e dati commerciali scollegati rendono difficile capire quali campagne producono opportunità reali',
+    solution: 'progettiamo campagne Meta, domande di qualifica e integrazioni CRM per collegare advertising e avanzamento commerciale',
+    proof: 'lavoriamo su bacini industriali del Nord Italia con approccio consulenziale e operativo',
+    directAnswer: 'Per aziende B2B di Modena, Q4 Studio gestisce Meta Ads con focus su lead qualificati, tracciamento CRM e follow-up rapido, evitando campagne basate solo su volume e costo per contatto.',
+    clusters: [
+      { keyword: 'agenzia meta ads modena', heading: 'Agenzia Meta Ads a Modena', content: 'Un progetto Meta Ads B2B a Modena deve partire dal cliente ideale, dal ciclo di vendita e dal modo in cui il commerciale gestisce i lead. Le campagne vengono poi costruite per generare conversazioni utili, non semplici compilazioni form.' },
+      { keyword: 'lead generation aziende modena', heading: 'Lead generation per aziende di Modena', content: 'Il tessuto modenese include industria, manifattura, tecnologia e servizi. Per queste realtà servono messaggi specifici, filtri di qualifica e un sistema di follow-up che riduca dispersione dopo la richiesta.' },
+      { keyword: 'facebook ads b2b modena', heading: 'Facebook Ads B2B a Modena', content: 'Facebook Ads può supportare la domanda latente B2B quando le creatività mostrano problemi concreti, casi d\'uso e risultati misurabili. Il ruolo del CRM è distinguere contatti curiosi da opportunità commerciali.' },
+      { keyword: 'consulenza meta ads modena', heading: 'Consulenza Meta Ads a Modena', content: 'La consulenza aiuta a mettere ordine tra account pubblicitario, tracking, landing, CRM e reporting. L\'obiettivo è rendere le decisioni su budget e creatività basate su segnali commerciali.' }
+    ],
+    comparisonTable: {
+      title: 'Setup possibili per Meta Ads B2B',
+      headers: ['Setup', 'Obiettivo', 'Rischio', 'Output'],
+      rows: [
+        ['Lead form semplice', 'Volume', 'Bassa qualifica', 'Contatti da filtrare'],
+        ['Lead form qualificante', 'Domanda più pulita', 'Volume minore', 'Lead più leggibili'],
+        ['Landing + CRM', 'Contesto e tracciamento', 'Setup più ampio', 'Pipeline misurabile'],
+        ['CRM + automazioni', 'Follow-up rapido', 'Richiede regole', 'Processo scalabile']
+      ]
+    },
+    dataPoints: ['Audit iniziale su account, tracking e gestione lead', 'KPI condivisi tra marketing e sales', 'Form e messaggi costruiti sul profilo cliente ideale', 'Report orientato a MQL, SQL e appuntamenti'],
+    services: ['Audit Meta Ads', 'Strategia campagne B2B', 'CRM automation', 'Dashboard pipeline'],
+    faqs: [
+      { question: 'Gestite campagne per aziende di Modena?', answer: 'Si, lavoriamo con aziende B2B di Modena e del Nord Italia, anche da remoto con momenti di review strutturati.' },
+      { question: 'Meglio Meta Ads o Google Ads?', answer: 'Dipende dall\'intento. Google intercetta domanda espressa; Meta può creare domanda e fare retargeting su segmenti B2B specifici.' },
+      { question: 'Quanto conta il CRM?', answer: 'Molto. Senza CRM o almeno un sistema di gestione lead, è difficile capire quali campagne portano opportunità vere.' },
+      { question: 'Potete integrare automazioni WhatsApp?', answer: 'Si, quando consenso, tono e processo commerciale rendono WhatsApp un canale utile per qualifica e reminder.' }
+    ]
+  },
+  {
+    slug: 'meta-ads-b2b-parma',
+    title: 'Meta Ads B2B a Parma',
+    metaTitle: 'Meta Ads B2B Parma | Q4 Studio',
+    description: 'Consulenza Meta Ads B2B per aziende di Parma che vogliono migliorare qualità lead, follow-up e misurazione commerciale.',
+    keyword: 'meta ads b2b parma',
+    audience: 'aziende B2B di Parma con vendita tecnica, consulenziale o ad alto valore',
+    pain: 'campagne e processi sales scollegati generano lead che non diventano conversazioni commerciali',
+    solution: 'allineiamo campagne Meta, tracking, CRM e follow-up per dare al sales contatti più ordinati e priorità più chiare',
+    proof: 'Q4 Studio lavora su progetti B2B in cui advertising, dati e automazioni vengono gestiti come un unico sistema',
+    directAnswer: 'Q4 Studio aiuta aziende B2B di Parma a usare Meta Ads per generare lead qualificati, collegando campagne, CRM e follow-up in un sistema misurabile.',
+    clusters: [
+      { keyword: 'agenzia meta ads parma', heading: 'Agenzia Meta Ads a Parma', content: 'Per aziende B2B di Parma, Meta Ads richiede più attenzione alla qualità che al volume. Una buona campagna deve filtrare richieste non pertinenti e facilitare il lavoro del commerciale.' },
+      { keyword: 'lead generation b2b parma', heading: 'Lead Generation B2B a Parma', content: 'La lead generation B2B funziona quando il messaggio chiarisce per chi è l\'offerta, quali problemi risolve e quali requisiti deve avere il prospect. Il form deve raccogliere dati utili senza creare attrito eccessivo.' },
+      { keyword: 'crm automation parma', heading: 'CRM automation per aziende di Parma', content: 'Automazioni CRM e notifiche immediate riducono il rischio che un lead resti fermo. Ogni cambio stato può diventare un segnale utile per leggere meglio la qualità delle campagne.' },
+      { keyword: 'consulente facebook ads parma', heading: 'Consulente Facebook Ads a Parma', content: 'Un consulente Facebook Ads B2B lavora su account, creatività, tracking, funnel e dati commerciali. La gestione non si limita alla piattaforma pubblicitaria.' }
+    ],
+    comparisonTable: {
+      title: 'Metriche da guardare oltre il CPL',
+      headers: ['Metrica', 'Perché conta', 'Dove si misura'],
+      rows: [
+        ['MQL rate', 'Qualità della domanda', 'CRM o foglio lead'],
+        ['SQL rate', 'Interesse commerciale reale', 'CRM'],
+        ['Tempo di contatto', 'Velocità del sales', 'CRM / automazioni'],
+        ['Appuntamenti', 'Output concreto', 'Calendario / CRM']
+      ]
+    },
+    dataPoints: ['Misurazione su funnel e non solo su piattaforma pubblicitaria', 'Qualifica lead costruita con il team sales', 'Automazioni per assegnazione e follow-up', 'Report leggibile per marketing, sales e direzione'],
+    services: ['Meta Ads B2B', 'Lead qualification', 'Follow-up automation', 'Reporting commerciale'],
+    faqs: [
+      { question: 'Lavorate con aziende di Parma?', answer: 'Si, seguiamo aziende B2B di Parma e province vicine con un modello consulenziale e operativo.' },
+      { question: 'Serve tanto budget?', answer: 'Prima del budget serve una struttura chiara. Con segnali deboli, aumentare budget spesso amplifica dispersione.' },
+      { question: 'Fate anche creatività?', answer: 'Si, lavoriamo su concept, messaggi e angoli creativi coerenti con ICP e offerta.' },
+      { question: 'Quanto tempo serve per partire?', answer: 'Dipende da tracking e materiali disponibili. In genere iniziamo con audit e priorità operative prima della messa online.' }
+    ]
+  },
+  {
+    slug: 'meta-ads-b2b-mantova',
+    title: 'Meta Ads B2B a Mantova',
+    metaTitle: 'Meta Ads B2B Mantova | Q4 Studio',
+    description: 'Meta Ads B2B per aziende di Mantova: campagne, lead qualificati, CRM e automazioni per follow-up commerciale.',
+    keyword: 'meta ads b2b mantova',
+    audience: 'PMI, industrie e aziende di servizi di Mantova che vogliono acquisire opportunità commerciali più qualificate',
+    pain: 'lead poco contestualizzati e follow-up manuale rendono difficile trasformare richieste in appuntamenti',
+    solution: 'creiamo campagne Meta Ads con form qualificanti, routing, CRM e automazioni per ridurre tempi morti e dispersione',
+    proof: 'lavoriamo su territori B2B del Nord Italia con focus su processi commerciali misurabili',
+    directAnswer: 'Per aziende B2B di Mantova, Q4 Studio progetta campagne Meta Ads e sistemi di follow-up collegati al CRM per generare lead più qualificati e misurare l\'avanzamento in pipeline.',
+    clusters: [
+      { keyword: 'agenzia meta ads mantova', heading: 'Agenzia Meta Ads a Mantova', content: 'Una campagna Meta Ads B2B per Mantova deve essere costruita sul mercato locale, sul profilo cliente e sui criteri di qualifica. Il lavoro include anche routing e gestione del lead dopo la compilazione.' },
+      { keyword: 'lead generation mantova aziende', heading: 'Lead Generation per aziende di Mantova', content: 'Per PMI e aziende industriali, la lead generation deve distinguere interesse generico e reale potenziale commerciale. Le domande qualificanti e il CRM aiutano a fare questa distinzione.' },
+      { keyword: 'facebook ads mantova b2b', heading: 'Facebook Ads B2B a Mantova', content: 'Facebook Ads può sostenere awareness, retargeting e acquisizione lead per aziende B2B quando il messaggio è specifico e il processo commerciale è pronto a rispondere velocemente.' },
+      { keyword: 'automazioni crm mantova', heading: 'Automazioni CRM e follow-up', content: 'Le automazioni permettono di notificare il commerciale, assegnare priorità, inviare conferme e aggiornare lo stato del lead. Questo rende più affidabile la lettura delle campagne.' }
+    ],
+    comparisonTable: {
+      title: 'Dal lead alla pipeline',
+      headers: ['Fase', 'Rischio', 'Intervento Q4'],
+      rows: [
+        ['Click', 'Traffico non qualificato', 'Messaggi e targeting ICP'],
+        ['Form', 'Domande troppo generiche', 'Campi qualificanti'],
+        ['Contatto', 'Risposta lenta', 'Routing e notifiche'],
+        ['Pipeline', 'Dati incompleti', 'CRM e stati commerciali']
+      ]
+    },
+    dataPoints: ['Campagne progettate su ICP e ciclo commerciale', 'Follow-up collegato a CRM o strumenti esistenti', 'Priorità ai segnali di qualità rispetto al volume', 'Possibilità di automazioni email, WhatsApp e notifiche interne'],
+    services: ['Strategia Meta Ads', 'Lead form B2B', 'CRM routing', 'Follow-up automation'],
+    faqs: [
+      { question: 'Seguite aziende di Mantova?', answer: 'Si, lavoriamo con aziende B2B di Mantova e territori vicini.' },
+      { question: 'Meta Ads è adatto se vendiamo a poche nicchie?', answer: 'Si, ma serve una strategia accurata su segmenti, creatività e qualifica. In alcuni casi Meta lavora bene insieme a Google o LinkedIn.' },
+      { question: 'Potete collegarvi al nostro CRM?', answer: 'Valutiamo API, webhook o automazioni disponibili. L\'obiettivo è non duplicare lavoro manuale.' },
+      { question: 'Gestite anche il follow-up?', answer: 'Progettiamo flussi e automazioni; il contatto commerciale resta al team, salvo accordi specifici.' }
+    ]
+  },
+  {
+    slug: 'agente-vocale-ai-aziende',
+    title: 'Agente Vocale AI per Aziende',
+    metaTitle: 'Agente Vocale AI per aziende | Q4 Studio',
+    description: 'Agenti vocali AI per qualificare richieste, rispondere al telefono, fissare appuntamenti e supportare team commerciali e customer care.',
+    keyword: 'agente vocale ai aziende',
+    audience: 'aziende che ricevono molte chiamate, richieste ripetitive o lead da qualificare prima del passaggio al team umano',
+    pain: 'telefonate perse, tempi di risposta variabili e informazioni raccolte in modo incoerente riducono qualità del servizio e pipeline',
+    solution: 'progettiamo agenti vocali collegati a script, knowledge base, CRM e calendari, con escalation umana e controllo delle conversazioni',
+    proof: 'un agente vocale è utile quando gestisce task ripetibili, raccoglie dati strutturati e passa al team solo i casi che richiedono giudizio',
+    directAnswer: 'Un agente vocale AI per aziende risponde o effettua chiamate seguendo regole operative, raccoglie informazioni, qualifica richieste, aggiorna il CRM e passa a un operatore umano quando la conversazione supera i limiti previsti.',
+    clusters: [
+      { keyword: 'voice ai lead qualification', heading: 'Voice AI per qualifica lead', content: 'La voice AI può contattare lead appena acquisiti, verificare interesse, zona, disponibilità e requisiti minimi. Il valore sta nel trasformare una telefonata ripetitiva in dati ordinati nel CRM.' },
+      { keyword: 'agente vocale crm', heading: 'Agente vocale collegato al CRM', content: 'Il collegamento al CRM permette di leggere schede cliente, aggiornare stati, creare note e assegnare attività. Senza integrazione, l\'agente resta un front-end conversazionale poco utile.' },
+      { keyword: 'ai voice appointment setting', heading: 'Fissare appuntamenti con AI vocale', content: 'Quando il flusso è chiaro, l\'agente può proporre slot disponibili, confermare appuntamenti e inviare promemoria. Le regole di escalation evitano conversazioni fuori perimetro.' },
+      { keyword: 'agente vocale italiano', heading: 'Agente vocale AI in italiano', content: 'Per il mercato italiano sono fondamentali tono, chiarezza, gestione delle pause e trasparenza. L\'agente deve dichiarare il proprio ruolo e rispettare consenso, privacy e finalità del contatto.' }
+    ],
+    comparisonTable: {
+      title: 'Agente vocale AI vs operatore umano',
+      headers: ['Aspetto', 'Agente vocale AI', 'Operatore umano'],
+      rows: [
+        ['Task ripetitivi', 'Molto adatto', 'Costoso su grandi volumi'],
+        ['Empatia complessa', 'Limitata', 'Forte'],
+        ['Aggiornamento CRM', 'Automatico se integrato', 'Manuale o semi-manuale'],
+        ['Escalation', 'Regole definite', 'Giudizio diretto']
+      ]
+    },
+    dataPoints: ['Ideale per richieste ripetitive e qualifica iniziale', 'Richiede script, knowledge base e regole di escalation', 'Funziona meglio se collegato a CRM e calendario', 'Va monitorato con review conversazioni e soglie di qualità'],
+    services: ['Disegno flussi vocali', 'Knowledge base e script', 'Integrazione CRM/calendario', 'Monitoraggio e handoff umano'],
+    faqs: [
+      { question: 'Un agente vocale AI può chiamare i lead?', answer: 'Si, se il contesto, il consenso e le regole operative sono corretti. Il flusso va progettato per essere trasparente e utile.' },
+      { question: 'Può sostituire il centralino?', answer: 'Può gestire una parte delle richieste ripetitive, ma conviene mantenere escalation umana per casi complessi o sensibili.' },
+      { question: 'Si integra con il CRM?', answer: 'Si, quando il CRM espone API, webhook o automazioni. L\'integrazione è una parte centrale del progetto.' },
+      { question: 'Serve una voce personalizzata?', answer: 'Dipende dal brand e dal caso d\'uso. Prima definiamo obiettivo, tono e limiti, poi scegliamo la soluzione vocale.' }
+    ]
+  },
+  {
+    slug: 'centralino-ai',
+    title: 'Centralino AI per Aziende',
+    metaTitle: 'Centralino AI per aziende | Q4 Studio',
+    description: 'Centralino AI per rispondere, classificare chiamate, raccogliere dati e smistare richieste verso team commerciali, customer care o back office.',
+    keyword: 'centralino ai',
+    audience: 'aziende con molte chiamate in ingresso, richieste ripetitive o necessità di smistamento più ordinato',
+    pain: 'chiamate perse, trasferimenti manuali e note incomplete creano ritardi e peggiorano la qualità del servizio',
+    solution: 'configuriamo un centralino AI con flussi conversazionali, regole di routing, integrazione CRM e passaggio a operatore umano',
+    proof: 'un centralino AI funziona quando riduce attrito operativo senza nascondere i limiti dell\'automazione',
+    directAnswer: 'Un centralino AI risponde alle chiamate, identifica motivo del contatto, raccoglie dati essenziali, aggiorna sistemi interni e smista la richiesta al reparto corretto, mantenendo escalation umana per casi complessi.',
+    clusters: [
+      { keyword: 'centralino virtuale ai', heading: 'Centralino virtuale AI', content: 'Un centralino virtuale AI non è solo una voce automatica: deve riconoscere intenzioni, applicare regole e scrivere dati nei sistemi aziendali. Il valore dipende dall\'integrazione con processi reali.' },
+      { keyword: 'ai receptionist aziende', heading: 'AI receptionist per aziende', content: 'Un AI receptionist può gestire richieste semplici, raccogliere informazioni e prenotare callback. È utile per ridurre chiamate perse e rendere più ordinato il primo contatto.' },
+      { keyword: 'smistamento chiamate ai', heading: 'Smistamento chiamate con AI', content: 'Lo smistamento automatico funziona quando i reparti, le priorità e le eccezioni sono chiari. Ogni chiamata può generare una nota o attività nel CRM.' },
+      { keyword: 'centralino ai crm', heading: 'Centralino AI e CRM', content: 'Collegare il centralino al CRM consente di riconoscere clienti, creare ticket, aggiornare stati e mantenere storico delle richieste.' }
+    ],
+    comparisonTable: {
+      title: 'Quando usare un centralino AI',
+      headers: ['Scenario', 'Adatto?', 'Nota'],
+      rows: [
+        ['Richieste ripetitive', 'Si', 'Informazioni, orari, stato richieste'],
+        ['Qualifica commerciale', 'Si', 'Serve script e CRM'],
+        ['Assistenza delicata', 'Con cautela', 'Escalation umana rapida'],
+        ['Vendita complessa', 'Supporto', 'Meglio passaggio al sales']
+      ]
+    },
+    dataPoints: ['Riduce chiamate perse se configurato come primo livello', 'Richiede regole chiare di routing ed escalation', 'Può generare note e attività nel CRM', 'Va testato su casi reali prima di scalare'],
+    services: ['Analisi chiamate', 'Progettazione flussi', 'Routing reparti', 'Integrazione CRM e ticket'],
+    faqs: [
+      { question: 'Il centralino AI risponde 24/7?', answer: 'Può farlo, ma bisogna definire quali richieste gestisce fuori orario e quando promette una richiamata.' },
+      { question: 'Può passare la chiamata a un umano?', answer: 'Si, l\'escalation è una parte fondamentale del progetto.' },
+      { question: 'Registra le chiamate?', answer: 'Dipende dalla configurazione e dagli obblighi privacy. Valutiamo informativa, consenso e conservazione dati.' },
+      { question: 'È adatto a piccole aziende?', answer: 'Si, se il volume o la ripetitività delle chiamate giustifica il setup.' }
+    ]
+  },
+  {
+    slug: 'riattivazione-database-clienti-ai',
+    title: 'Riattivazione Database Clienti con AI',
+    metaTitle: 'Riattivazione database clienti con AI | Q4 Studio',
+    description: 'Campagne e automazioni AI per riattivare database clienti, lead dormienti e contatti storici con messaggi segmentati e follow-up misurabile.',
+    keyword: 'riattivazione database clienti ai',
+    audience: 'aziende con CRM, liste clienti o lead storici non lavorati in modo sistematico',
+    pain: 'contatti dormienti, dati incompleti e follow-up sporadico fanno perdere opportunità già acquisite',
+    solution: 'segmentiamo il database, costruiamo messaggi e flussi di follow-up, usiamo AI per personalizzare priorità e prossime azioni',
+    proof: 'la riattivazione è efficace quando parte da consenso, qualità dati e offerte coerenti con lo storico del contatto',
+    directAnswer: 'La riattivazione database clienti con AI usa segmentazione, automazioni e messaggi personalizzati per recuperare contatti storici, aggiornare informazioni, capire nuovo interesse e passare al commerciale solo le opportunità attive.',
+    clusters: [
+      { keyword: 'reactivation campaign crm', heading: 'Campagne di riattivazione CRM', content: 'Una campagna di riattivazione CRM parte da segmenti: clienti inattivi, lead mai contattati, preventivi non chiusi, opportunità perse. Ogni segmento richiede messaggio e follow-up diversi.' },
+      { keyword: 'lead dormienti ai', heading: 'Lead dormienti e AI', content: 'L\'AI può aiutare a classificare note, storico e segnali disponibili per suggerire priorità e messaggi. Non sostituisce la strategia: rende più scalabile la lavorazione del database.' },
+      { keyword: 'email whatsapp riattivazione clienti', heading: 'Email e WhatsApp per riattivazione', content: 'Email e WhatsApp possono lavorare insieme: email per contenuto e contesto, WhatsApp per reminder o coordinamento quando il consenso lo permette.' },
+      { keyword: 'pulizia database clienti', heading: 'Pulizia database clienti', content: 'Prima di riattivare serve pulire dati, duplicati, consensi e stati. Un database disordinato produce automazioni fragili e report poco affidabili.' }
+    ],
+    comparisonTable: {
+      title: 'Segmenti tipici di riattivazione',
+      headers: ['Segmento', 'Obiettivo', 'Output'],
+      rows: [
+        ['Clienti inattivi', 'Recuperare relazione', 'Call o proposta'],
+        ['Lead dormienti', 'Capire interesse', 'Qualifica aggiornata'],
+        ['Preventivi aperti', 'Sbloccare decisione', 'Follow-up commerciale'],
+        ['Opportunità perse', 'Capire timing', 'Nuova priorità CRM']
+      ]
+    },
+    dataPoints: ['Prima fase: pulizia e segmentazione del database', 'Messaggi diversi per storico, interesse e consenso', 'AI utile per classificare priorità e generare bozze controllate', 'Report su risposte, appuntamenti e opportunità riaperte'],
+    services: ['Audit database', 'Segmentazione CRM', 'Sequenze email/WhatsApp', 'AI scoring e follow-up'],
+    faqs: [
+      { question: 'Si può riattivare un vecchio database?', answer: 'Si, ma bisogna verificare consensi, qualità dati e pertinenza del messaggio prima di inviare comunicazioni.' },
+      { question: 'Usate AI per scrivere messaggi?', answer: 'Si, come supporto per varianti e personalizzazione, sempre con controllo umano e regole di brand.' },
+      { question: 'Funziona anche con clienti già acquisiti?', answer: 'Si, spesso i clienti inattivi sono un segmento ad alto valore se l\'offerta è pertinente.' },
+      { question: 'Quali canali usate?', answer: 'Email, WhatsApp, telefono e CRM task, scegliendo i canali in base a consenso e contesto commerciale.' }
+    ]
+  },
+  {
+    slug: 'chatbot-cliniche-studi-medici',
+    title: 'Chatbot AI per Cliniche e Studi Medici',
+    metaTitle: 'Chatbot AI per cliniche e studi medici | Q4 Studio',
+    description: 'Chatbot AI per cliniche e studi medici: risposte informative, triage amministrativo, prenotazioni e gestione richieste con escalation umana.',
+    keyword: 'chatbot cliniche studi medici',
+    audience: 'cliniche, poliambulatori e studi medici che ricevono molte richieste ripetitive da sito, WhatsApp o telefono',
+    pain: 'segreterie sovraccariche, richieste incomplete e tempi di risposta variabili peggiorano esperienza paziente e organizzazione interna',
+    solution: 'progettiamo chatbot con knowledge base verificata, limiti chiari, raccolta dati amministrativi, prenotazioni e passaggio alla segreteria',
+    proof: 'nel sanitario l\'AI deve restare entro confini informativi e amministrativi, con controllo umano e attenzione a privacy e responsabilità',
+    directAnswer: 'Un chatbot AI per cliniche e studi medici risponde a domande amministrative, raccoglie dati per prenotazioni, orienta verso il reparto corretto e passa alla segreteria quando la richiesta è clinica, urgente o fuori perimetro.',
+    clusters: [
+      { keyword: 'chatbot prenotazioni studio medico', heading: 'Chatbot per prenotazioni', content: 'Il chatbot può raccogliere preferenze, dati di contatto, prestazione richiesta e disponibilità, poi creare una richiesta ordinata per la segreteria o collegarsi a un calendario.' },
+      { keyword: 'ai receptionist clinica', heading: 'AI receptionist per cliniche', content: 'Un AI receptionist aiuta a gestire richieste ripetitive come orari, servizi, documenti da portare e preparazione amministrativa. Le domande cliniche devono andare a personale qualificato.' },
+      { keyword: 'chatbot sanitario privacy', heading: 'Privacy e limiti nel sanitario', content: 'Nel contesto sanitario servono informativa, minimizzazione dati, limiti chiari e procedure di escalation. Il chatbot non deve fare diagnosi o sostituire personale medico.' },
+      { keyword: 'whatsapp chatbot studio medico', heading: 'Chatbot WhatsApp per studio medico', content: 'WhatsApp può essere utile per promemoria e richieste amministrative, ma va gestito con attenzione a consenso, contenuto dei messaggi e dati personali.' }
+    ],
+    comparisonTable: {
+      title: 'Cosa può e non può fare',
+      headers: ['Richiesta', 'Gestione chatbot', 'Escalation'],
+      rows: [
+        ['Orari e servizi', 'Si', 'Solo se dubbia'],
+        ['Prenotazione', 'Si, raccolta dati', 'Segreteria o calendario'],
+        ['Sintomi o urgenze', 'No diagnosi', 'Indicazioni di contatto umano'],
+        ['Referti e dati sensibili', 'Con cautela', 'Procedure dedicate']
+      ]
+    },
+    dataPoints: ['Knowledge base verificata con la struttura', 'Confini chiari tra informazione amministrativa e contenuto clinico', 'Escalation alla segreteria per richieste sensibili o complesse', 'Integrazione possibile con form, calendario, CRM o gestionale'],
+    services: ['Audit richieste pazienti', 'Knowledge base sanitaria', 'Chatbot sito/WhatsApp', 'Escalation e integrazioni'],
+    faqs: [
+      { question: 'Il chatbot può dare consigli medici?', answer: 'No. Deve restare su informazioni amministrative e orientamento generale, passando al personale qualificato quando serve.' },
+      { question: 'Può aiutare la segreteria?', answer: 'Si, raccoglie richieste ordinate, risponde a domande ripetitive e riduce messaggi incompleti.' },
+      { question: 'È compatibile con la privacy?', answer: 'Va progettato con attenzione a informativa, consenso, minimizzazione dati e conservazione. La configurazione dipende dal caso specifico.' },
+      { question: 'Si può integrare con WhatsApp?', answer: 'Si, quando il canale è gestito con consenso e regole precise sui dati trattati.' }
     ]
   },
   {
@@ -281,8 +603,8 @@ export const seoPages: SeoPage[] = [
       ]
     },
     dataPoints: [
-      'Progetti con CAPI + CRM mostrano un miglioramento del 25-40% nella qualità del lead rispetto al solo pixel',
-      'Il tempo medio di presa in carico si riduce dal 70% quando il routing è automatizzato',
+      'Progetti con CAPI + CRM rendono più leggibile la qualità del lead rispetto al solo pixel',
+      'Il tempo medio di presa in carico si riduce quando il routing è automatizzato',
       'Meta ottimizza meglio quando riceve 3+ eventi di qualità al giorno per campagna',
       'Il 68% dei lead B2B esprime interesse massimo nelle prime 2 ore dalla richiesta'
     ],
@@ -352,8 +674,8 @@ export const seoPages: SeoPage[] = [
     dataPoints: [
       'Tasso di apertura WhatsApp nel B2B: oltre il 90%',
       'Tempo medio di risposta su WhatsApp: 3-5 minuti vs 6-8 ore per email',
-      'Aumento del 25-35% nel tasso di appuntamento con follow-up WhatsApp automatico',
-      'Il 78% dei professionisti B2B preferisce WhatsApp per coordinare call e appuntamenti'
+      'Il follow-up WhatsApp automatico aiuta a recuperare più risposte nei primi momenti dopo la richiesta',
+      'WhatsApp è utile per coordinare call e appuntamenti quando consenso e tono restano professionali'
     ],
     services: ['Sequenze WhatsApp', 'Qualifica automatica', 'Reminder appuntamenti', 'Handoff al sales'],
     faqs: [
@@ -419,10 +741,10 @@ export const seoPages: SeoPage[] = [
       ]
     },
     dataPoints: [
-      'Campagne ottimizzate su eventi CRM mostrano un miglioramento del 30-50% nel tasso di qualificazione',
+      'Campagne ottimizzate su eventi CRM rendono più leggibile il tasso di qualificazione rispetto al solo lead form',
       'Meta raccomanda almeno 50 conversioni settimanali per evento target per una stabilizzazione ottimale',
-      'Il 70% della performance di una campagna B2B dipende dalla qualità dei segnali e non dal budget',
-      'Creative testing strutturato riduce il costo per acquisizione qualificata del 20-40% in 60 giorni'
+      'La qualità dei segnali influenza in modo rilevante la performance di una campagna B2B',
+      'Creative testing strutturato aiuta a ridurre il costo per acquisizione qualificata nel tempo'
     ],
     services: ['Audit segnali di conversione', 'Creative testing', 'Event taxonomy', 'Ottimizzazione su qualità lead'],
     faqs: [
