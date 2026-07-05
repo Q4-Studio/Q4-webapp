@@ -26,8 +26,10 @@ const AppSupport = lazy(() => import('./components/AppSupport'));
 const SeoDirectory = lazy(() => import('./components/SeoDirectory'));
 const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
 const AIAgents = lazy(() => import('./components/AIAgents'));
+// Restyling homepage in anteprima: raggiungibile solo via URL diretto /home-2 (noindex, nessun link interno)
+const HomeV2 = lazy(() => import('./components/home2/HomeV2'));
 
-type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | '404';
+type Page = 'home' | 'home-2' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -69,6 +71,9 @@ const App: React.FC = () => {
 
       if (path === '/agenti-ai') {
         setCurrentPage('agenti-ai');
+        setCurrentSeoSlug('');
+      } else if (path === '/home-2') {
+        setCurrentPage('home-2');
         setCurrentSeoSlug('');
       } else if (path === '/directory') {
         setCurrentPage('directory');
@@ -240,6 +245,8 @@ const App: React.FC = () => {
       )}
 
       <Suspense fallback={null}>
+        {currentPage === 'home-2' && <HomeV2 />}
+
         {currentPage === 'blog' && (
           <>
             <Blog
