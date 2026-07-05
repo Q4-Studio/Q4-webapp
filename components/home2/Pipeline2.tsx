@@ -35,7 +35,7 @@ const steps: Step[] = [
     id: 'meta',
     label: 'META ADS',
     title: 'Il lead entra dal feed.',
-    desc: 'Campagne Meta progettate su ICP e offerta. Il form qualifica già in partenza: chi compila è in target, non curioso.',
+    desc: 'Campagne Meta progettate su ICP e offerta. Il form qualifica già in partenza: chi compila è davvero in target.',
     time: 'T+0 s',
     icon: <Megaphone className="w-5 h-5" />,
     accent: { text: 'text-blue-400', border: 'border-blue-400/50', bg: 'bg-blue-500', shadow: 'shadow-[0_0_30px_rgba(59,130,246,0.35)]' },
@@ -70,8 +70,8 @@ const steps: Step[] = [
   {
     id: 'followup',
     label: 'FOLLOW-UP',
-    title: 'Nessun lead viene dimenticato.',
-    desc: 'Sequenze automatiche su più canali finché il lead non risponde o viene squalificato. Il sistema insiste, il team vende.',
+    title: 'Ogni lead viene seguito. Sempre.',
+    desc: 'Sequenze automatiche su più canali finché il lead risponde. Il sistema insiste, il team vende.',
     time: 'GIORNI 1–7',
     icon: <BellRing className="w-5 h-5" />,
     accent: { text: 'text-cyan-400', border: 'border-cyan-400/50', bg: 'bg-cyan-500', shadow: 'shadow-[0_0_30px_rgba(34,211,238,0.35)]' },
@@ -190,7 +190,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
               { icon: <Phone className="w-3.5 h-3.5" />, when: '+10 min', what: 'Chiamata del commerciale' },
               { icon: <Mail className="w-3.5 h-3.5" />, when: '+1 giorno', what: 'Email con caso studio' },
               { icon: <MessageCircle className="w-3.5 h-3.5" />, when: '+3 giorni', what: 'Promemoria WhatsApp' },
-              { icon: <BellRing className="w-3.5 h-3.5" />, when: 'sempre', what: 'Nessun lead dimenticato' },
+              { icon: <BellRing className="w-3.5 h-3.5" />, when: 'sempre', what: 'Ogni lead resta presidiato' },
             ].map((row) => (
               <div key={row.what} className="pipe-stagger flex items-center gap-3 text-xs">
                 <span className="w-7 h-7 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 flex items-center justify-center flex-shrink-0">
@@ -212,9 +212,6 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
 
 const PipelineHeader: React.FC = () => (
   <div className="mb-12 md:mb-10">
-    <span className="text-indigo-500 font-mono tracking-[0.3em] mb-5 block text-xs md:text-sm uppercase">
-      02 — Lead Gen Autopilot
-    </span>
     <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-5">
       Dal click al cliente.
       <br />
@@ -222,7 +219,7 @@ const PipelineHeader: React.FC = () => (
     </h2>
     <p className="text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed">
       Il nostro sistema di lead generation collega Meta, CRM e WhatsApp: ogni lead viene arricchito, contattato e
-      seguito. Senza che nessuno debba ricordarselo.
+      seguito, dal primo click alla firma.
     </p>
   </div>
 );

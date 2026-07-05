@@ -6,7 +6,12 @@ import { OBFUSCATED, decode } from '../utils/obfuscate';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ContactForm: React.FC = () => {
+interface ContactFormProps {
+  /** Mostra l'intestazione "Iniziamo a Crescere" sopra il form (default true). */
+  showHeader?: boolean;
+}
+
+const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({
@@ -98,17 +103,19 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <section ref={sectionRef} className="py-32 px-6 bg-[#050505] text-white">
+    <section ref={sectionRef} className={`${showHeader ? 'py-32' : 'pt-4 pb-32'} px-6 bg-[#050505] text-white`}>
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16">
-          <span className="text-indigo-500 font-mono tracking-widest mb-4 block">CONTATTACI</span>
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            Iniziamo a <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Crescere</span>
-          </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Raccontaci la tua sfida. Ti mostreremo come automatizzare la crescita del tuo business B2B.
-          </p>
-        </div>
+        {showHeader && (
+          <div className="text-center mb-16">
+            <span className="text-indigo-500 font-mono tracking-widest mb-4 block">CONTATTACI</span>
+            <h2 className="text-4xl md:text-6xl font-bold mb-6">
+              Iniziamo a <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Crescere</span>
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Raccontaci la tua sfida. Ti mostreremo come automatizzare la crescita del tuo business B2B.
+            </p>
+          </div>
+        )}
 
         <form ref={formRef} onSubmit={handleSubmit} className="relative bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 md:p-12">
           {/* Background glow */}

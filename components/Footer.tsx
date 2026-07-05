@@ -7,7 +7,12 @@ import { OBFUSCATED, decode } from '../utils/obfuscate';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  /** Mostra il blocco CTA "Pronto a crescere?" in testa al footer (default true). */
+  showCta?: boolean;
+}
+
+const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
   const footerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const buttonWrapperRef = useRef<HTMLDivElement>(null);
@@ -46,20 +51,24 @@ const Footer: React.FC = () => {
         }
       });
 
-      tl.from(titleRef.current, {
-        y: 100,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power3.out"
-      })
-      .from(buttonWrapperRef.current, {
-        scale: 0.8,
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        ease: "elastic.out(1, 0.7)"
-      }, "-=0.8")
-      .from(linksRef.current?.children || [], {
+      if (titleRef.current) {
+        tl.from(titleRef.current, {
+          y: 100,
+          opacity: 0,
+          duration: 1.2,
+          ease: "power3.out"
+        });
+      }
+      if (buttonWrapperRef.current) {
+        tl.from(buttonWrapperRef.current, {
+          scale: 0.8,
+          y: 50,
+          opacity: 0,
+          duration: 1,
+          ease: "elastic.out(1, 0.7)"
+        }, "-=0.8");
+      }
+      tl.from(linksRef.current?.children || [], {
         y: 30,
         opacity: 0,
         duration: 0.8,
@@ -79,27 +88,31 @@ const Footer: React.FC = () => {
   }, []);
 
   return (
-    <footer ref={footerRef} className="relative bg-[#050505] text-white pt-40 pb-10 px-6 overflow-hidden">
+    <footer ref={footerRef} className={`relative bg-[#050505] text-white ${showCta ? 'pt-40' : 'pt-20'} pb-10 px-6 overflow-hidden`}>
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10 flex flex-col items-center text-center">
-        <h2 ref={titleRef} className="text-5xl md:text-8xl font-bold tracking-tighter mb-12">
-          Pronto a crescere?
-        </h2>
-        
-        <div ref={buttonWrapperRef} className="mb-24">
-            <MagneticButton
-              className="group text-lg md:text-xl px-8 py-4 md:px-10 md:py-5 font-semibold hover:shadow-[0_0_60px_-15px_rgba(99,102,241,0.6)] transition-shadow duration-500 border border-white/10 hover:border-white/30"
-              onClick={() => {
-                const contactForm = document.querySelector('section:has(form)');
-                contactForm?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }}
-            >
-                <span className="mr-3">Parla con un esperto</span>
-                <ArrowUpRight className="inline-block w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:translate-x-2 group-hover:-translate-y-2" />
-            </MagneticButton>
-        </div>
+        {showCta && (
+          <>
+            <h2 ref={titleRef} className="text-5xl md:text-8xl font-bold tracking-tighter mb-12">
+              Pronto a crescere?
+            </h2>
+
+            <div ref={buttonWrapperRef} className="mb-24">
+                <MagneticButton
+                  className="group text-lg md:text-xl px-8 py-4 md:px-10 md:py-5 font-semibold hover:shadow-[0_0_60px_-15px_rgba(99,102,241,0.6)] transition-shadow duration-500 border border-white/10 hover:border-white/30"
+                  onClick={() => {
+                    const contactForm = document.querySelector('section:has(form)');
+                    contactForm?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }}
+                >
+                    <span className="mr-3">Parla con un esperto</span>
+                    <ArrowUpRight className="inline-block w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:translate-x-2 group-hover:-translate-y-2" />
+                </MagneticButton>
+            </div>
+          </>
+        )}
 
         <div ref={linksRef} className="w-full grid grid-cols-1 md:grid-cols-4 gap-8 border-t border-white/10 pt-10 text-sm text-gray-400">
             <div className="col-span-1 md:col-span-2 text-center md:text-left">

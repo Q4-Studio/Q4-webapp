@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowUpRight } from 'lucide-react';
 import SEOHead from '../SEOHead';
 import Marquee from '../Marquee';
 import ContactForm from '../ContactForm';
 import Footer from '../Footer';
-import MagneticButton from '../MagneticButton';
 import Hero2 from './Hero2';
 import Manifesto2 from './Manifesto2';
 import Pipeline2 from './Pipeline2';
@@ -53,7 +51,7 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
 };
 
 /* ------------------------------------------------------------------ */
-/* CTA finale prima del form                                           */
+/* CTA unica: apre la sezione contatti, il form segue subito sotto     */
 /* ------------------------------------------------------------------ */
 
 const FinalCTA: React.FC = () => {
@@ -79,12 +77,8 @@ const FinalCTA: React.FC = () => {
     return () => ctx.revert();
   }, []);
 
-  const scrollToForm = () => {
-    document.querySelector('section:has(form)')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  };
-
   return (
-    <section ref={sectionRef} className="relative py-36 md:py-48 px-6 bg-[#050505] text-white border-t border-white/5 overflow-hidden">
+    <section ref={sectionRef} className="relative pt-36 md:pt-48 pb-16 px-6 bg-[#050505] text-white border-t border-white/5 overflow-hidden">
       <div
         aria-hidden="true"
         className="cta-ghost absolute top-1/2 -translate-y-1/2 left-0 whitespace-nowrap select-none pointer-events-none font-bold"
@@ -99,22 +93,16 @@ const FinalCTA: React.FC = () => {
       </div>
 
       <div className="max-w-5xl mx-auto text-center relative z-10">
-        <span className="cta-reveal text-indigo-500 font-mono tracking-[0.3em] mb-8 block text-xs md:text-sm uppercase">
-          06 — Contatti
-        </span>
-        <h2 className="cta-reveal text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.02] tracking-tight mb-10">
+        <h2 className="cta-reveal text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.02] tracking-tight mb-8">
           Costruiamo il tuo
           <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400">
             vantaggio.
           </span>
         </h2>
-        <div className="cta-reveal flex justify-center">
-          <MagneticButton onClick={scrollToForm} className="text-white text-lg">
-            Parliamone
-            <ArrowUpRight className="w-5 h-5" />
-          </MagneticButton>
-        </div>
+        <p className="cta-reveal text-lg md:text-xl text-gray-400 max-w-xl mx-auto leading-relaxed">
+          Raccontaci la tua sfida: ti mostriamo come trasformarla in un sistema che cresce.
+        </p>
       </div>
     </section>
   );
@@ -183,8 +171,8 @@ const HomeV2: React.FC = () => {
       <Marquee />
       <Team2 />
       <FinalCTA />
-      <ContactForm />
-      <Footer />
+      <ContactForm showHeader={false} />
+      <Footer showCta={false} />
     </div>
   );
 };

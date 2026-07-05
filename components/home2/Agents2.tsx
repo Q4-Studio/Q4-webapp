@@ -14,6 +14,7 @@ import {
   Bot,
 } from 'lucide-react';
 import MagneticButton from '../MagneticButton';
+import ScrollRevealText from './ScrollRevealText';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -207,9 +208,6 @@ const Agents2: React.FC = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center relative z-10">
         {/* Testo */}
         <div>
-          <span className="agents-reveal text-indigo-500 font-mono tracking-[0.3em] mb-6 block text-xs md:text-sm uppercase">
-            03 — Agenti AI
-          </span>
           <h2 className="agents-reveal text-4xl md:text-6xl font-bold leading-tight mb-6">
             Colleghi digitali,
             <br />
@@ -217,10 +215,10 @@ const Agents2: React.FC = () => {
               progettati sul tuo processo.
             </span>
           </h2>
-          <p className="agents-reveal text-lg md:text-xl text-gray-400 leading-relaxed mb-8 max-w-xl">
-            Non chatbot generici: agenti costruiti sui processi reali dell&apos;azienda. Leggono email e messaggi,
-            interrogano il gestionale, preparano preventivi e ordini, e passano la palla a una persona quando serve.
-          </p>
+          <ScrollRevealText
+            text="Agenti costruiti sui processi reali dell'azienda: leggono email e messaggi, interrogano il gestionale, preparano preventivi e ordini, e coinvolgono una persona quando serve una decisione."
+            className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8 max-w-xl"
+          />
 
           <div className="agents-reveal flex flex-wrap gap-2.5 mb-10">
             {integrations.map((item) => (

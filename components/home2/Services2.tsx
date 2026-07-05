@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, Bot, Check, Target } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Bot, Check, Server, Target } from 'lucide-react';
+import ScrollRevealText from './ScrollRevealText';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,14 +16,21 @@ type Service = {
   desc: string;
   points: string[];
   linkLabel?: string;
+  partner?: { label: string; href: string };
 };
 
 const services: Service[] = [
   {
     icon: <Target className="w-10 h-10 text-cyan-400" />,
     title: 'B2B Lead Generation',
-    desc: 'Un sistema di acquisizione completo: posizionamento, offerta, Meta Advertising, tracking, CRM e follow-up. Non guardiamo solo il costo per lead, ma la qualità commerciale e la pipeline.',
-    points: ['Meta Ads su ICP e offerta', 'Tracking e analytics avanzato', 'CRM, qualifica e follow-up', 'Ottimizzazione su MQL e SQL'],
+    desc: "Un sistema di acquisizione completo: posizionamento, offerta, Meta Advertising, CRM e follow-up. Il tracking è il nostro punto forte: dati di conversione precisi e conformi, che l'algoritmo può davvero usare per ottimizzare.",
+    points: [
+      'Meta Ads su ICP e offerta',
+      'Server-Side Tracking e Consent Mode',
+      'Segnali di qualità dal CRM alle campagne',
+      'Qualifica lead e follow-up multicanale',
+    ],
+    partner: { label: 'Stape Partner — Server-Side Tagging', href: 'https://stape.io' },
   },
   {
     icon: <Bot className="w-10 h-10 text-purple-400" />,
@@ -75,6 +83,18 @@ const SpotlightCard: React.FC<{ service: Service }> = ({ service }) => {
             </li>
           ))}
         </ul>
+        {service.partner && (
+          <a
+            href={service.partner.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-9 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-cyan-500/5 border border-cyan-400/20 text-xs font-mono tracking-wider text-cyan-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-colors"
+          >
+            <Server className="w-3.5 h-3.5" />
+            {service.partner.label}
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </a>
+        )}
         {service.linkLabel && (
           <button
             onClick={goToAgents}
@@ -163,18 +183,15 @@ const Services2: React.FC = () => {
     <section ref={sectionRef} className="relative py-32 md:py-44 px-6 bg-[#050505] text-white border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16 md:mb-20">
-          <span className="services-reveal text-indigo-500 font-mono tracking-[0.3em] mb-6 block text-xs md:text-sm uppercase">
-            04 — Servizi
-          </span>
           <h2 className="services-reveal text-4xl md:text-6xl font-bold leading-tight mb-6">
             Due leve.
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Un unico sistema.</span>
           </h2>
-          <p className="services-reveal text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed">
-            Acquisizione B2B da un lato, automazione intelligente dall&apos;altro. Studiamo il processo, definiamo le
-            priorità e costruiamo sistemi misurabili.
-          </p>
+          <ScrollRevealText
+            text="Acquisizione B2B da un lato, automazione intelligente dall'altro. Studiamo il processo, definiamo le priorità e costruiamo sistemi misurabili."
+            className="text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed"
+          />
         </div>
 
         <div className="services-grid grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">

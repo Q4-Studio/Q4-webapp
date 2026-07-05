@@ -268,7 +268,6 @@ const Hero2: React.FC = () => {
   const line1Ref = useRef<HTMLSpanElement>(null);
   const line2Ref = useRef<HTMLSpanElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
-  const eyebrowRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -301,14 +300,13 @@ const Hero2: React.FC = () => {
 
       const chars1 = splitChars(line1Ref.current);
 
-      const tl = gsap.timeline({ delay: 0.1 });
+      const tl = gsap.timeline({ delay: 0.15 });
       tl.to(containerRef.current, { opacity: 1, duration: 0.4 })
-        .fromTo(eyebrowRef.current, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' })
         .fromTo(
           chars1,
           { y: 110, opacity: 0, rotateX: -90 },
           { y: 0, opacity: 1, rotateX: 0, stagger: 0.022, duration: 0.9, ease: 'back.out(1.6)' },
-          '-=0.4'
+          '-=0.2'
         )
         // La riga con gradiente non viene splittata in caratteri: figli con
         // opacity/transform rompono background-clip:text. Reveal come blocco.
@@ -380,14 +378,6 @@ const Hero2: React.FC = () => {
       <div className="absolute inset-0 z-[1] pointer-events-none bg-gradient-to-r from-[#050505] via-transparent to-transparent md:via-[#050505]/30" />
 
       <div ref={contentRef} className="relative z-10 h-full max-w-7xl mx-auto px-6 flex flex-col justify-center">
-        <div ref={eyebrowRef} className="flex items-center gap-3 text-indigo-400 font-mono text-xs md:text-sm tracking-[0.3em] uppercase mb-8">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500" />
-          </span>
-          Studio di consulenza — Reggio Emilia · Verona
-        </div>
-
         <h1
           className="font-bold tracking-tighter leading-[0.95] text-white"
           style={{ fontSize: 'clamp(44px, 9vw, 132px)', perspective: '800px' }}
@@ -402,7 +392,7 @@ const Hero2: React.FC = () => {
         </h1>
 
         <p ref={subRef} className="mt-8 text-lg md:text-2xl text-gray-400 max-w-2xl leading-relaxed">
-          Applichiamo l&apos;intelligenza artificiale al marketing: campagne che convertono, automazioni che
+          Lo studio di consulenza che applica l&apos;AI al marketing: campagne che convertono, automazioni che
           inseguono ogni lead e agenti AI che alleggeriscono i processi del tuo team.
         </p>
 
@@ -419,14 +409,6 @@ const Hero2: React.FC = () => {
             <ArrowDownRight className="w-4 h-4 -rotate-90 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
-      </div>
-
-      {/* HUD angoli */}
-      <div className="absolute top-24 left-6 z-[5] hidden md:block font-mono text-[10px] tracking-[0.3em] text-gray-600 select-none" aria-hidden="true">
-        [ SYS.ONLINE ]
-      </div>
-      <div className="absolute top-24 right-6 z-[5] hidden md:block font-mono text-[10px] tracking-[0.3em] text-gray-600 select-none" aria-hidden="true">
-        44.69°N — 10.63°E
       </div>
 
       <HeroTicker />

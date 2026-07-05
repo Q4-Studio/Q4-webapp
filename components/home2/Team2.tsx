@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Linkedin } from 'lucide-react';
+import ScrollRevealText from './ScrollRevealText';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -87,18 +88,15 @@ const Team2: React.FC = () => {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-16 md:mb-20">
-          <span className="team-reveal text-indigo-500 font-mono tracking-[0.3em] mb-6 block text-xs md:text-sm uppercase">
-            05 — Team
-          </span>
           <h2 className="team-reveal text-4xl md:text-6xl font-bold leading-tight mb-6">
-            Tre teste.
+            La fuga di cervelli
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Un metodo.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">non fa per noi</span>
           </h2>
-          <p className="team-reveal text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed">
-            Giovani, tecnici e radicati sul territorio. Applichiamo le tecnologie più innovative per far scalare le
-            aziende italiane, dimostrando che non serve andarsene per avere impatto.
-          </p>
+          <ScrollRevealText
+            text="Giovani, tecnici e radicati sul territorio. Applichiamo le tecnologie più innovative per far scalare le aziende italiane, dimostrando che non serve andarsene per avere impatto."
+            className="text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed"
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
