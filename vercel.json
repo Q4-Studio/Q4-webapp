@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/home-2",
+      "destination": "/",
+      "permanent": true
+    },
+    {
       "source": "/seo/:slug",
       "destination": "/risorse/:slug",
       "permanent": true

@@ -180,7 +180,7 @@ const Services2: React.FC = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative py-32 md:py-44 px-6 bg-[#050505] text-white border-t border-white/5">
+    <section id="services" ref={sectionRef} className="relative py-32 md:py-44 px-6 bg-[#050505] text-white border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16 md:mb-20">
           <h2 className="services-reveal text-4xl md:text-6xl font-bold leading-tight mb-6">

@@ -5,11 +5,13 @@ import SEOHead from '../SEOHead';
 import Marquee from '../Marquee';
 import ContactForm from '../ContactForm';
 import Footer from '../Footer';
+import HomeSeoContent from '../HomeSeoContent';
 import Hero2 from './Hero2';
 import Manifesto2 from './Manifesto2';
 import Pipeline2 from './Pipeline2';
 import Agents2 from './Agents2';
 import Services2 from './Services2';
+import { siteUrl } from '../../data/seoPages';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -137,7 +139,7 @@ const HomeV2: React.FC = () => {
       <SEOHead
         title="Q4 Studio | AI Marketing Partner"
         description="Studio di consulenza per crescita B2B: AI applicata al marketing, lead generation automatizzata e agenti AI che alleggeriscono i processi aziendali."
-        noIndex={true}
+        url={`${siteUrl}/`}
       />
 
       {loading && <Preloader onDone={() => setLoading(false)} />}
@@ -168,6 +170,7 @@ const HomeV2: React.FC = () => {
       <Agents2 />
       <Services2 />
       <Marquee />
+      <HomeSeoContent />
       <FinalCTA />
       <ContactForm showHeader={false} />
       <Footer showCta={false} />

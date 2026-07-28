@@ -46,10 +46,8 @@
 ```
 D:\-- MAIN\- Progetti\Q4\Web Q4\
 ├── components/              # Componenti React
-│   ├── Hero.tsx            # Sezione hero homepage
-│   ├── ValueProposition.tsx # Value prop con animazioni
-│   ├── Services.tsx        # Griglia servizi
-│   ├── Team.tsx            # Team members
+│   ├── home2/              # Homepage ufficiale (Hero2, Manifesto2, Pipeline2, Agents2, Services2)
+│   ├── HomeSeoContent.tsx  # Contenuto SEO/FAQ della home
 │   ├── Marquee.tsx         # Marquee animato
 │   ├── ContactForm.tsx     # Form contatti (GoHighLevel webhook)
 │   ├── Footer.tsx          # Footer con social links
@@ -99,21 +97,15 @@ D:\-- MAIN\- Progetti\Q4\Web Q4\
 - Navigation handler per cambio pagina
 
 **Pages**:
-- `home`: Homepage completa (Hero, Services, Team, Contact)
+- `home`: Homepage (HomeV2 — `components/home2/HomeV2.tsx`)
 - `blog`: Lista articoli
 - `blog-article`: Singolo articolo
 - `dashq4login`: Login dashboard (mascherato per sicurezza)
 - `dashboard`: Gestione articoli blog (richiede autenticazione)
 - `404`: Not found
 
-### 2. Hero.tsx
-**Responsabilità**: Hero section con animazioni orbitali
-
-**Features**:
-- Animazioni GSAP per reveal
-- Orbital system 3D con SVG
-- CTA button magnetico
-- Responsive design
+### 2. components/home2/HomeV2.tsx
+**Responsabilità**: Homepage ufficiale (compone Hero2, Manifesto2, Pipeline2, Agents2, Services2, Marquee, HomeSeoContent, ContactForm, Footer)
 
 ### 3. Blog.tsx
 **Responsabilità**: Lista articoli blog con card grid

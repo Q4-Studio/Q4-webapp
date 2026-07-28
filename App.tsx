@@ -1,20 +1,15 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import Hero from './components/Hero';
-import ValueProposition from './components/ValueProposition';
-import Services from './components/Services';
-import HowItWorks from './components/HowItWorks';
-import Team from './components/Team';
 import Marquee from './components/Marquee';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import CookieBanner from './components/CookieBanner';
 import SEOHead from './components/SEOHead';
-import HomeSeoContent from './components/HomeSeoContent';
+import HomeV2 from './components/home2/HomeV2';
 import { BlogPost } from './types/blog';
 import { getBlogPosts } from './lib/supabase';
-import { getSeoPageBySlug, resourcesPath, siteUrl } from './data/seoPages';
+import { getSeoPageBySlug, resourcesPath } from './data/seoPages';
 
 const Blog = lazy(() => import('./components/Blog'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
@@ -26,10 +21,8 @@ const AppSupport = lazy(() => import('./components/AppSupport'));
 const SeoDirectory = lazy(() => import('./components/SeoDirectory'));
 const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
 const AIAgents = lazy(() => import('./components/AIAgents'));
-// Restyling homepage in anteprima: raggiungibile solo via URL diretto /home-2 (noindex, nessun link interno)
-const HomeV2 = lazy(() => import('./components/home2/HomeV2'));
 
-type Page = 'home' | 'home-2' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | '404';
+type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -71,9 +64,6 @@ const App: React.FC = () => {
 
       if (path === '/agenti-ai') {
         setCurrentPage('agenti-ai');
-        setCurrentSeoSlug('');
-      } else if (path === '/home-2') {
-        setCurrentPage('home-2');
         setCurrentSeoSlug('');
       } else if (path === '/directory') {
         setCurrentPage('directory');
@@ -156,7 +146,7 @@ const App: React.FC = () => {
       if (window.location.pathname !== '/') {
         window.history.pushState(null, '', '/');
       }
-      window.location.hash = page === 'home' ? '' : page;
+      window.location.hash = page;
     }
   };
 
@@ -222,31 +212,9 @@ const App: React.FC = () => {
       <CookieBanner />
 
       {/* Page Routing */}
-      {currentPage === 'home' && (
-        <>
-          <SEOHead
-            title="Q4 Studio | B2B Lead Generation & Agenti AI"
-            description="Studio di consulenza per crescita B2B, Meta Ads e Agenti AI. Affianchiamo marketing, sales e operations per trasformare processi, lead e dati in sistemi misurabili."
-            url={`${siteUrl}/`}
-          />
-          <section className="sr-only">
-            <h1>Studio di consulenza per B2B Lead Generation su Meta Ads e Agenti AI personalizzati</h1>
-          </section>
-          <Hero />
-          <ValueProposition />
-          <Services />
-          <HowItWorks />
-          <Team />
-          <Marquee />
-          <HomeSeoContent />
-          <ContactForm />
-          <Footer />
-        </>
-      )}
+      {currentPage === 'home' && <HomeV2 />}
 
       <Suspense fallback={null}>
-        {currentPage === 'home-2' && <HomeV2 />}
-
         {currentPage === 'blog' && (
           <>
             <Blog
