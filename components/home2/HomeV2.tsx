@@ -10,7 +10,6 @@ import Manifesto2 from './Manifesto2';
 import Pipeline2 from './Pipeline2';
 import Agents2 from './Agents2';
 import Services2 from './Services2';
-import Team2 from './Team2';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -169,7 +168,6 @@ const HomeV2: React.FC = () => {
       <Agents2 />
       <Services2 />
       <Marquee />
-      <Team2 />
       <FinalCTA />
       <ContactForm showHeader={false} />
       <Footer showCta={false} />
