@@ -1,6 +1,6 @@
-import { seoPages, siteUrl } from '../data/seoPages.ts';
+import { seoPages, siteUrl, resourcesPath } from '../data/seoPages.ts';
 import { createClient } from '@supabase/supabase-js';
-import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync } from 'fs';
+import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -51,15 +51,33 @@ function generateBaseHtml(options: {
   description: string;
   canonical: string;
   ogImage?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  ogImageAlt?: string;
   type?: 'website' | 'article';
   schema?: object[];
   bodyContent: string;
 }) {
-  const { title, description, canonical, ogImage = `${siteUrl}/og-image.jpg`, type = 'website', schema = [], bodyContent } = options;
+  const {
+    title,
+    description,
+    canonical,
+    ogImage = `${siteUrl}/og-image.jpg`,
+    ogImageWidth = 1200,
+    ogImageHeight = 630,
+    ogImageAlt = 'Q4 Studio',
+    type = 'website',
+    schema = [],
+    bodyContent
+  } = options;
 
   const schemaScripts = schema
     .map((s) => `<script type="application/ld+json">${JSON.stringify(s)}</script>`)
     .join('\n    ');
+
+  const imageDimensionsMeta = ogImageWidth && ogImageHeight
+    ? `\n  <meta property="og:image:width" content="${ogImageWidth}" />\n  <meta property="og:image:height" content="${ogImageHeight}" />`
+    : '';
 
   return `<!DOCTYPE html>
 <html lang="it" class="bg-[#050505]">
@@ -76,6 +94,7 @@ function generateBaseHtml(options: {
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:description" content="${escapeHtml(description)}" />
   <meta property="og:image" content="${ogImage}" />
+  <meta property="og:image:alt" content="${escapeHtml(ogImageAlt)}" />${imageDimensionsMeta}
   <meta property="og:locale" content="it_IT" />
   <meta property="og:site_name" content="Q4 Studio" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -83,12 +102,16 @@ function generateBaseHtml(options: {
   <meta name="twitter:title" content="${escapeHtml(title)}" />
   <meta name="twitter:description" content="${escapeHtml(description)}" />
   <meta name="twitter:image" content="${ogImage}" />
+  <meta name="twitter:image:alt" content="${escapeHtml(ogImageAlt)}" />
+  <meta name="theme-color" content="#050505" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://esm.sh">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com" defer></script>
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; overflow-x: hidden; }
+    html, body { max-width: 100%; overflow-x: hidden; overscroll-behavior-x: none; }
+    body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
     h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
   </style>
   ${schemaScripts}
@@ -103,7 +126,7 @@ function generateBaseHtml(options: {
 }
 
 function generateLandingPageHtml(page: typeof seoPages[0]): string {
-  const pageUrl = `${siteUrl}/seo/${page.slug}`;
+  const pageUrl = `${siteUrl}${resourcesPath}/${page.slug}`;
   const relatedPages = seoPages.filter((p) => p.slug !== page.slug).slice(0, 3);
 
   const serviceSchema = {
@@ -139,7 +162,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Directory', item: `${siteUrl}/directory` },
+      { '@type': 'ListItem', position: 2, name: 'Risorse', item: `${siteUrl}${resourcesPath}` },
       { '@type': 'ListItem', position: 3, name: page.title, item: pageUrl }
     ]
   };
@@ -179,7 +202,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     .join('\n            ');
 
   const relatedHtml = relatedPages
-    .map((p) => `<a href="/seo/${p.slug}" class="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors">${escapeHtml(p.title)}</a>`)
+    .map((p) => `<a href="${resourcesPath}/${p.slug}" class="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors">${escapeHtml(p.title)}</a>`)
     .join('\n            ');
 
   const bodyContent = `
@@ -190,7 +213,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
           <ol class="flex items-center gap-2 text-sm text-gray-400">
             <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
             <li>/</li>
-            <li><a href="/directory" class="hover:text-indigo-300 transition-colors">Directory</a></li>
+            <li><a href="${resourcesPath}" class="hover:text-indigo-300 transition-colors">Risorse</a></li>
             <li>/</li>
             <li class="text-gray-300">${escapeHtml(page.title)}</li>
           </ol>
@@ -273,16 +296,16 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
   });
 }
 
-function generateDirectoryHtml(): string {
+function generateResourcesHtml(): string {
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'Directory SEO Q4 Studio',
+    name: 'Risorse Q4 Studio',
     itemListElement: seoPages.map((page, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       name: page.title,
-      url: `${siteUrl}/seo/${page.slug}`
+      url: `${siteUrl}${resourcesPath}/${page.slug}`
     }))
   };
 
@@ -291,13 +314,13 @@ function generateDirectoryHtml(): string {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Directory', item: `${siteUrl}/directory` }
+      { '@type': 'ListItem', position: 2, name: 'Risorse', item: `${siteUrl}${resourcesPath}` }
     ]
   };
 
   const pagesHtml = seoPages
     .map((page) => `
-      <a href="/seo/${page.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
+      <a href="${resourcesPath}/${page.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
         <span class="text-xs font-mono uppercase tracking-widest text-indigo-300">${escapeHtml(page.keyword)}</span>
         <h2 class="text-2xl font-bold mt-4 mb-3 group-hover:text-indigo-200 transition-colors">${escapeHtml(page.title)}</h2>
         <p class="text-gray-400 leading-relaxed mb-6">${escapeHtml(page.description)}</p>
@@ -314,14 +337,14 @@ function generateDirectoryHtml(): string {
           <ol class="flex items-center gap-2 text-sm text-gray-400">
             <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
             <li>/</li>
-            <li class="text-gray-300">Directory</li>
+            <li class="text-gray-300">Risorse</li>
           </ol>
         </nav>
 
-        <p class="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-6">Directory</p>
+        <p class="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-6">Risorse</p>
         <h1 class="text-5xl md:text-7xl font-bold tracking-tight max-w-4xl mb-6">Risorse su Lead Generation B2B, Meta Ads e Agenti AI</h1>
         <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
-          Questa directory raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico con dati, confronti, cluster semantici e FAQ.
+          Questa directory raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico e collega servizi, problemi, soluzioni e FAQ.
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -332,9 +355,9 @@ function generateDirectoryHtml(): string {
   `;
 
   return generateBaseHtml({
-    title: 'Directory servizi B2B Lead Generation e AI | Q4 Studio',
-    description: 'Directory SEO Q4 Studio: tutte le pagine su Meta Ads B2B, lead generation, automazioni CRM, WhatsApp e Agenti AI.',
-    canonical: `${siteUrl}/directory`,
+    title: 'Risorse B2B Lead Generation e AI | Q4 Studio',
+    description: 'Risorse Q4 Studio su Meta Ads B2B, lead generation, automazioni CRM, WhatsApp e Agenti AI.',
+    canonical: `${siteUrl}${resourcesPath}`,
     schema: [itemListSchema, breadcrumbSchema],
     bodyContent
   });
@@ -394,13 +417,15 @@ function generateAIAgentsHtml(): string {
     ]
   };
 
+  // Testo identico a components/AIAgents.tsx (array `faqs`) per evitare mismatch
+  // tra il markup prerenderato e il contenuto renderizzato da React (cloaking).
   const faqs = [
-    ['Quanto costa un agente AI?', "Dipende dal processo e dai sistemi da collegare. Il percorso parte dalla mappatura: prima di investire sai esattamente quanto costa il progetto pilota e quante ore di lavoro può restituirti."],
-    ['In quanto tempo vedo i primi risultati?', 'Il primo agente lavora su un processo reale entro 6–8 settimane dal via. Si parte da un processo solo, misurabile, e si allarga solo quando funziona.'],
-    ["E se l'agente sbaglia?", "Dove conta, l'agente propone e una persona conferma: si definisce insieme cosa può fare in autonomia e cosa deve passare da un controllo umano. Ogni azione resta tracciata."],
-    ['I dati della mia azienda dove finiscono?', 'Restano nei tuoi sistemi: gestionale, CRM ed email rimangono la fonte dei dati. Permessi e accessi vengono definiti prima di partire, in conformità al GDPR.'],
-    ['Il mio team non è tecnico. Ce la facciamo?', "Sì: il team continua a usare WhatsApp, email e gestionale come sempre, perché è l'agente che si adatta ai vostri strumenti."],
-    ['È un chatbot?', 'No. Un chatbot risponde a domande. Un agente lavora: legge documenti, aggiorna il gestionale, prepara ordini e preventivi, passa la palla a una persona quando serve.']
+    ['Quanto costa un agente AI?', "Dipende dal processo e dai sistemi da collegare. Per questo il percorso parte dalla mappatura: prima di investire sai esattamente quanto costa il progetto pilota e quante ore di lavoro può restituirti. Niente canoni a sorpresa, niente preventivi al buio."],
+    ['In quanto tempo vedo i primi risultati?', 'Il primo agente lavora su un processo reale entro 6–8 settimane dal via. Non partiamo mai da un progetto enorme: partiamo da un processo solo, misurabile, e allarghiamo solo quando funziona.'],
+    ["E se l'agente sbaglia?", "Dove conta, l'agente propone e una persona conferma: definiamo insieme cosa può fare in autonomia e cosa deve passare da un controllo umano. Ogni azione resta tracciata, quindi puoi sempre verificare cosa ha fatto e perché."],
+    ['I dati della mia azienda dove finiscono?', 'Restano nei tuoi sistemi: gestionale, CRM ed email rimangono la fonte dei dati. Definiamo permessi e accessi prima di partire e lavoriamo in conformità al GDPR. Nessun dato viene usato per addestrare modelli pubblici.'],
+    ['Il mio team non è tecnico. Ce la facciamo?', "Sì, ed è il punto: il team continua a usare WhatsApp, email e gestionale come sempre, perché è l'agente che si adatta ai vostri strumenti. La formazione la facciamo noi, sul vostro caso concreto."],
+    ['È un chatbot?', "No. Un chatbot risponde a domande. Un agente lavora: legge documenti, aggiorna il gestionale, prepara ordini e preventivi, passa la palla a una persona quando serve. La chat è solo uno dei canali da cui riceve il lavoro."]
   ];
 
   const faqSchema = {
@@ -503,6 +528,194 @@ function generateAIAgentsHtml(): string {
     schema: [serviceSchema, breadcrumbSchema, faqSchema],
     bodyContent
   });
+}
+
+// Static content of the homepage (mirrors components/home2/* and HomeSeoContent.tsx)
+// so non-JS crawlers see the same text React renders after hydration. Visual/animation
+// chrome (GSAP, canvas, terminal typing effect) is intentionally simplified to plain
+// markup: only the actual copy needs to match 1:1 to avoid cloaking.
+function generateHomeBodyContent(): string {
+  const tickerItems = ['LEAD GENERATION B2B', 'AGENTI AI', 'META ADS', 'CRM AUTOMATION', 'WHATSAPP FOLLOW-UP', 'DIGITAL ANALYTICS'];
+
+  const pipelineSteps = [
+    { label: 'META ADS', time: 'T+0 s', title: 'Il lead entra dal feed.', desc: 'Campagne Meta progettate su ICP e offerta. Il form qualifica già in partenza: chi compila è davvero in target.' },
+    { label: 'CRM', time: 'T+2 s', title: 'Nel CRM prima che tu lo veda.', desc: 'Il contatto viene creato in pipeline con fonte, campagna e priorità. Assegnato al commerciale giusto, con il contesto già pronto.' },
+    { label: 'WHATSAPP', time: 'T+60 s', title: 'Primo contatto in 60 secondi.', desc: 'Un messaggio personalizzato parte mentre il lead è ancora sul telefono. La velocità di risposta è la prima leva di conversione.' },
+    { label: 'ENRICHMENT', time: 'T+90 s', title: 'Il lead diventa un dossier.', desc: 'Dati aziendali arricchiti da fonti pubbliche: dimensione, settore, segnali di priorità. Il commerciale sa con chi parla prima di chiamare.' },
+    { label: 'FOLLOW-UP', time: 'GIORNI 1–7', title: 'Ogni lead viene seguito. Sempre.', desc: 'Sequenze automatiche su più canali finché il lead risponde. Il sistema insiste, il team vende.' }
+  ];
+
+  const agentsIntegrations = ['WhatsApp', 'Email / PEC', 'Gestionale / ERP', 'CRM', 'Excel / Sheets', 'Calendario'];
+
+  const services = [
+    {
+      title: 'B2B Lead Generation',
+      desc: "Un sistema di acquisizione completo: posizionamento, offerta, Meta Advertising, CRM e follow-up. Il tracking è il nostro punto forte: dati di conversione precisi e conformi, che l'algoritmo può davvero usare per ottimizzare.",
+      points: ['Meta Ads su ICP e offerta', 'Server-Side Tracking e Consent Mode', 'Segnali di qualità dal CRM alle campagne', 'Qualifica lead e follow-up multicanale']
+    },
+    {
+      title: 'Agenti AI & Automazioni',
+      desc: "Agenti su misura per sales, back office, customer care e processi interni. Partiamo dall'audit operativo, integriamo gli strumenti già in uso e accompagniamo il team nell'adozione.",
+      points: ['Audit e mappatura dei processi', 'Agenti costruiti sul caso reale', 'Integrazione con gestionale e CRM', 'Formazione e adozione del team']
+    }
+  ];
+
+  const stats = [
+    { value: '≤ 60 s', label: 'primo contatto al lead' },
+    { value: '40 s', label: 'per processare un ordine' },
+    { value: '24/7', label: 'follow-up sempre attivo' },
+    { value: '100%', label: 'lead tracciati nel CRM' }
+  ];
+
+  const methodSteps = [
+    { n: '01', title: 'Diagnosi', desc: 'Mappiamo business, funnel, processi e dati. Capiamo dove si perde valore e quale leva ha più impatto.' },
+    { n: '02', title: 'Progetto', desc: 'Definiamo architettura, metriche e responsabilità. Campagne, CRM e agenti pensati come un unico sistema.' },
+    { n: '03', title: 'Implementazione', desc: 'Mettiamo online, formiamo il team e miglioriamo sui dati reali. Utile, misurabile, adottato.' }
+  ];
+
+  const homeFaqs = [
+    { q: "In pratica, cos'è la B2B Lead Generation su Meta?", a: "È l'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate su ICP, messaggio, form, CRM e segnali di qualità." },
+    { q: 'Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?', a: 'Sì, se l\'obiettivo non è solo il costo per lead. Nei cicli complessi servono domande qualificanti, follow-up rapido e ottimizzazione su eventi come MQL, SQL e pipeline.' },
+    { q: 'Cosa sono gli Agenti AI personalizzati?', a: "Sono sistemi costruiti sul processo commerciale dell'azienda per qualificare lead, rispondere più velocemente, assegnare contatti e automatizzare attività ripetitive." },
+    { q: 'Perché collegare Meta Ads, CRM e automazioni?', a: 'Perché il CRM restituisce segnali più utili dell\'invio form. Quando questi dati rientrano nel modello di ottimizzazione, le campagne possono cercare contatti più vicini al valore commerciale reale.' }
+  ];
+
+  const tickerHtml = tickerItems.map((t) => `<span class="ticker-item">${escapeHtml(t)}</span>`).join('\n            ');
+
+  const pipelineHtml = pipelineSteps
+    .map((s, i) => `<article class="pipeline-step">
+              <p class="pipeline-step-meta">0${i + 1}/05 · ${escapeHtml(s.label)} · ${escapeHtml(s.time)}</p>
+              <h3>${escapeHtml(s.title)}</h3>
+              <p>${escapeHtml(s.desc)}</p>
+            </article>`)
+    .join('\n            ');
+
+  const integrationsHtml = agentsIntegrations.map((i) => `<span class="integration-pill">${escapeHtml(i)}</span>`).join('\n              ');
+
+  const servicesHtml = services
+    .map(
+      (s) => `<article class="service-card">
+              <h3>${escapeHtml(s.title)}</h3>
+              <p>${escapeHtml(s.desc)}</p>
+              <ul>
+                ${s.points.map((p) => `<li>${escapeHtml(p)}</li>`).join('\n                ')}
+              </ul>
+            </article>`
+    )
+    .join('\n            ');
+
+  const statsHtml = stats
+    .map((s) => `<div class="stat-tile"><p class="stat-value">${escapeHtml(s.value)}</p><p class="stat-label">${escapeHtml(s.label)}</p></div>`)
+    .join('\n            ');
+
+  const methodHtml = methodSteps
+    .map((s) => `<div class="method-step"><span>${escapeHtml(s.n)}</span><h3>${escapeHtml(s.title)}</h3><p>${escapeHtml(s.desc)}</p></div>`)
+    .join('\n            ');
+
+  const faqHtml = homeFaqs
+    .map((f) => `<details class="faq-item"><summary>${escapeHtml(f.q)}</summary><p>${escapeHtml(f.a)}</p></details>`)
+    .join('\n            ');
+
+  return `
+    <div class="home-static">
+      <nav aria-label="Principale" class="home-nav">
+        <a href="/"><img src="/logo.webp" alt="Q4 Studio" width="130" height="40" /></a>
+        <div class="home-nav-links">
+          <a href="/agenti-ai">Agenti AI</a>
+          <a href="/blog">Blog</a>
+          <a href="${resourcesPath}">Risorse</a>
+        </div>
+      </nav>
+
+      <header class="hero">
+        <h1>Il tuo AI<br />Marketing Partner.</h1>
+        <p class="hero-sub">Lo studio di consulenza che applica l'AI al marketing: campagne che convertono, automazioni che inseguono ogni lead e agenti AI che alleggeriscono i processi del tuo team.</p>
+        <div class="hero-cta">
+          <a href="#contatti" class="btn-primary">Inizia il percorso</a>
+          <a href="/agenti-ai" class="btn-secondary">Scopri gli Agenti AI</a>
+        </div>
+        <div class="hero-ticker">
+          ${tickerHtml}
+        </div>
+      </header>
+
+      <section class="manifesto">
+        <p>Q4 Studio è uno studio di consulenza. Entriamo nei processi, applichiamo l'AI al marketing e costruiamo agenti che lavorano al fianco del tuo team. Meno attività ripetitive, più pipeline.</p>
+      </section>
+
+      <section class="pipeline">
+        <h2>Dal click al cliente.<br />In automatico.</h2>
+        <p>Il nostro sistema di lead generation collega Meta, CRM e WhatsApp: ogni lead viene arricchito, contattato e seguito, dal primo click alla firma.</p>
+        <div class="pipeline-steps">
+          ${pipelineHtml}
+        </div>
+      </section>
+
+      <section class="agents">
+        <h2>Colleghi digitali,<br />progettati sul tuo processo.</h2>
+        <p>Agenti costruiti sui processi reali dell'azienda: leggono email e messaggi, interrogano il gestionale, preparano preventivi e ordini, e coinvolgono una persona quando serve una decisione.</p>
+        <div class="integrations">
+          ${integrationsHtml}
+        </div>
+        <a href="/agenti-ai" class="btn-secondary">Esplora gli Agenti AI</a>
+      </section>
+
+      <section class="services">
+        <h2>Due leve.<br />Un unico sistema.</h2>
+        <p>Acquisizione B2B da un lato, automazione intelligente dall'altro. Studiamo il processo, definiamo le priorità e costruiamo sistemi misurabili.</p>
+        <div class="services-grid">
+          ${servicesHtml}
+        </div>
+        <div class="stats">
+          ${statsHtml}
+        </div>
+        <div class="method">
+          ${methodHtml}
+        </div>
+      </section>
+
+      ${generateHomeSeoContentHtml(faqHtml)}
+
+      <section class="final-cta">
+        <h2>Costruiamo il tuo<br />vantaggio.</h2>
+        <p>Raccontaci la tua sfida: ti mostriamo come trasformarla in un sistema che cresce.</p>
+      </section>
+
+      <section id="contatti" class="contact-anchor" aria-label="Contatti">
+        <h2>Parla con un esperto</h2>
+        <p>Raccontaci il tuo processo: ti proponiamo il primo passo misurabile.</p>
+      </section>
+    </div>
+  `;
+}
+
+// Sezione "Metodo + FAQ" della home, testo identico a components/HomeSeoContent.tsx
+function generateHomeSeoContentHtml(faqHtml: string): string {
+  return `
+      <section class="home-seo-content">
+        <h2>Consulenza B2B Lead Generation su Meta</h2>
+        <p>La B2B Lead Generation su Meta è un sistema di acquisizione contatti pensato per trasformare Facebook e Instagram in canali di crescita misurabile anche per aziende con cicli di vendita complessi. Il nostro ruolo non è comportarci da agenzia che esegue campagne a volume, ma da consulenti che affiancano marketing e sales nella costruzione di un funnel più leggibile, tracciabile e sostenibile.</p>
+        <p>Partiamo dall'analisi del processo commerciale: ICP, proposta di valore, segmentazione, creatività, domande qualificanti, routing al CRM e SLA di contatto. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del lead e probabilità di avanzamento commerciale, non solo per costo per contatto.</p>
+
+        <h2>Meta Ads orientate alla qualità</h2>
+        <p>Lavoriamo come consulenti operativi sulle campagne Meta B2B: audit account, architettura delle campagne, piano test creativo, tracking server-side e lettura dei dati commerciali. L'obiettivo è aiutare il team a capire cosa sta generando opportunità reali e cosa sta solo gonfiando il volume dei lead.</p>
+        <p>L'algoritmo Andromeda dà valore ai segnali di conversione ad alta intenzione. Per questo allineiamo campagne e CRM su eventi come completamento di domande qualificanti, risposta del prospect e progressione nello stage commerciale.</p>
+
+        <h2>Agenti AI sul processo sales</h2>
+        <p>Gli Agenti AI non sono chatbot generici. Li disegniamo insieme al team, partendo da regole operative, tono di voce, CRM e punti di frizione nel processo commerciale. Il risultato è un supporto che qualifica, prioritizza e prepara il lavoro umano invece di sostituirlo.</p>
+        <p>Nei progetti più maturi, l'integrazione Meta Ads + Agenti AI riduce i tempi di prima risposta, aumenta la precisione nel routing e rende il funnel meno dipendente da interventi manuali ripetitivi.</p>
+
+        <h2>Risultati misurabili, leggibili dal team</h2>
+        <p>Ogni attività viene valutata su metriche operative e metriche di business. Oltre ai KPI pubblicitari, tracciamo tempo di presa in carico, tasso di appuntamento, opportunità generate e valore pipeline attribuibile. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.</p>
+        <p>Nei progetti B2B monitoriamo la progressione MQL→SQL nel tempo e confrontiamo i dati prima e dopo integrazione CRM, routing e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.</p>
+
+        <h2>Domande frequenti su Meta Ads B2B e Agenti AI</h2>
+        <p>Abbiamo raccolto in un unico punto le risposte operative sulle campagne Meta B2B, sugli Agenti AI e sul collegamento con CRM e automazioni.</p>
+        <div class="faq-list">
+          ${faqHtml}
+        </div>
+      </section>
+  `;
 }
 
 // Supabase client for build-time fetch
@@ -707,20 +920,26 @@ function generateBlogArticleHtml(post: any): string {
 }
 
 function generateSitemap(blogPosts: any[] = []): string {
+  const buildDate = new Date().toISOString().split('T')[0];
+
   const urls = [
-    { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly' },
-    { loc: `${siteUrl}/agenti-ai`, priority: '0.95', changefreq: 'weekly' },
-    { loc: `${siteUrl}/directory`, priority: '0.9', changefreq: 'weekly' },
-    { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'weekly' },
+    { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly', lastmod: buildDate },
+    { loc: `${siteUrl}/agenti-ai`, priority: '0.95', changefreq: 'weekly', lastmod: buildDate },
+    { loc: `${siteUrl}${resourcesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: buildDate },
+    { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'weekly', lastmod: buildDate },
     ...seoPages.map((page) => ({
-      loc: `${siteUrl}/seo/${page.slug}`,
+      loc: `${siteUrl}${resourcesPath}/${page.slug}`,
       priority: '0.8',
-      changefreq: 'monthly'
+      changefreq: 'monthly',
+      lastmod: buildDate
     })),
     ...blogPosts.map((post) => ({
       loc: `${siteUrl}/blog/${post.slug}`,
       priority: '0.7',
-      changefreq: 'monthly'
+      changefreq: 'monthly',
+      // Usa la data reale dell'articolo (da Supabase) invece della data di build,
+      // così il lastmod riflette davvero l'ultima modifica del contenuto.
+      lastmod: post.date ? new Date(post.date).toISOString().split('T')[0] : buildDate
     }))
   ];
 
@@ -728,7 +947,7 @@ function generateSitemap(blogPosts: any[] = []): string {
     .map(
       (url) => `  <url>
     <loc>${url.loc}</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>${url.lastmod}</lastmod>
     <changefreq>${url.changefreq}</changefreq>
     <priority>${url.priority}</priority>
   </url>`
@@ -748,18 +967,41 @@ ${urlEntries}
   // Ensure dist directory exists
   ensureDir(distDir);
 
+  // Inject static home content into the Vite-built dist/index.html so non-JS
+  // crawlers see the real H1/paragraphs/sections instead of an empty <div id="root">.
+  const rootIndexPath = join(distDir, 'index.html');
+  if (existsSync(rootIndexPath)) {
+    const builtIndexHtml = readFileSync(rootIndexPath, 'utf-8');
+    if (builtIndexHtml.includes('<div id="root"></div>')) {
+      const withHomeContent = builtIndexHtml.replace(
+        '<div id="root"></div>',
+        `<div id="root">${generateHomeBodyContent()}</div>`
+      );
+      writeFileSync(rootIndexPath, withHomeContent, 'utf-8');
+      console.log('✅ Injected static home content into dist/index.html');
+    } else {
+      console.warn('⚠️  dist/index.html root mount point not in the expected empty state, skipping home content injection.');
+    }
+  } else {
+    console.warn('⚠️  dist/index.html not found, skipping home content injection.');
+  }
+
   // Fetch blog posts from Supabase
   const blogPosts = await fetchBlogPosts();
   console.log(`📚 Fetched ${blogPosts.length} blog posts`);
 
-  // Generate directory page
-  const directoryPath = join(distDir, 'directory');
-  ensureDir(directoryPath);
-  const directoryHtml = generateDirectoryHtml();
-  const directoryStream = createWriteStream(join(directoryPath, 'index.html'));
-  directoryStream.write(directoryHtml);
-  directoryStream.end();
-  console.log('✅ Generated /directory/index.html');
+  // Generate resources hub page (/risorse) — canonical path used by App.tsx and data/seoPages.ts.
+  // NOTE: le vecchie rotte /directory e /seo/<slug> restano solo come redirect 308 in vercel.json
+  // verso /risorse e /risorse/<slug>: qui generiamo direttamente la destinazione finale, altrimenti
+  // Vercel non trova alcun file statico su /risorse* (il rewrite SPA catch-all esclude "risorse")
+  // e la pagina risulta 404 in produzione.
+  const resourcesDir = join(distDir, resourcesPath.replace(/^\//, ''));
+  ensureDir(resourcesDir);
+  const resourcesHtml = generateResourcesHtml();
+  const resourcesStream = createWriteStream(join(resourcesDir, 'index.html'));
+  resourcesStream.write(resourcesHtml);
+  resourcesStream.end();
+  console.log(`✅ Generated ${resourcesPath}/index.html`);
 
   // Generate blog index page
   const blogPath = join(distDir, 'blog');
@@ -790,15 +1032,15 @@ ${urlEntries}
     console.log(`✅ Generated /blog/${post.slug}/index.html`);
   }
 
-  // Generate SEO landing pages
+  // Generate SEO landing pages under /risorse/<slug>
   for (const page of seoPages) {
-    const pageDir = join(distDir, 'seo', page.slug);
+    const pageDir = join(distDir, resourcesPath.replace(/^\//, ''), page.slug);
     ensureDir(pageDir);
     const pageHtml = generateLandingPageHtml(page);
     const pageStream = createWriteStream(join(pageDir, 'index.html'));
     pageStream.write(pageHtml);
     pageStream.end();
-    console.log(`✅ Generated /seo/${page.slug}/index.html`);
+    console.log(`✅ Generated ${resourcesPath}/${page.slug}/index.html`);
   }
 
   // Generate sitemap.xml with blog posts

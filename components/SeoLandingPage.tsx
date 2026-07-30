@@ -47,13 +47,13 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
   };
 
   return (
-    <article className="relative pt-36 pb-28 px-6 bg-[#050505] text-white min-h-screen">
+    <article className="relative pt-36 pb-28 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       <SEOHead title={page.metaTitle} description={page.description} url={pageUrl} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-purple-900/10 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[min(900px,180vw)] h-[min(900px,180vw)] bg-purple-900/10 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-5xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" className="mb-10">

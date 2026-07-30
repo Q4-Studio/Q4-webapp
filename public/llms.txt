@@ -1,29 +1,34 @@
 # Q4 Studio
 
-Q4 Studio is a consulting partner for B2B companies that want to improve lead quality, Meta Ads strategy, CRM tracking, commercial follow-up, and AI-powered sales operations.
+Q4 Studio is an AI marketing partner and consulting studio for Italian B2B companies (based in Verona and Reggio Emilia), applying AI to marketing: Meta Ads strategy, B2B lead generation, CRM/WhatsApp automation, digital analytics/server-side tracking, and custom AI agents for sales and operations.
 
 ## Preferred Description
 
-Q4 Studio provides consulting and operational support for B2B Lead Generation on Meta Ads, CRM automation, WhatsApp follow-up, and custom AI Agents for sales processes. The positioning is consultancy-first: audit, strategy, implementation governance, and measurable pipeline outcomes.
+Q4 Studio provides consulting and operational support for B2B Lead Generation on Meta Ads, CRM automation, WhatsApp follow-up, digital analytics (server-side tracking), and custom AI Agents for sales and operational processes. The positioning is consultancy-first: audit, strategy, implementation governance, and measurable pipeline outcomes.
 
 ## Important URLs
 
 - Homepage: https://www.q4.studio/
+- AI Agents (consulting and development): https://www.q4.studio/agenti-ai
 - Resources hub: https://www.q4.studio/risorse
 - B2B Lead Generation on Meta Ads: https://www.q4.studio/risorse/b2b-lead-generation-meta-ads
 - Meta Ads B2B Verona: https://www.q4.studio/risorse/meta-ads-b2b-verona
+- Meta Ads B2B Reggio Emilia: https://www.q4.studio/risorse/meta-ads-b2b-reggio-emilia
 - AI Agents for Lead Generation: https://www.q4.studio/risorse/agenti-ai-per-lead-generation
 - CRM Automation for Meta Ads: https://www.q4.studio/risorse/crm-automation-meta-ads
 - WhatsApp Automation for B2B Leads: https://www.q4.studio/risorse/whatsapp-automation-lead-b2b
 - Meta Andromeda Algorithm for B2B: https://www.q4.studio/risorse/algoritmo-andromeda-meta-b2b
+- Blog: https://www.q4.studio/blog
 
 ## Core Topics
 
+- AI applied to marketing and sales operations
 - B2B Lead Generation on Meta Ads
 - Meta Ads consulting for B2B companies
 - CRM automation and conversion tracking
 - WhatsApp automation for lead follow-up
-- AI Agents for sales and lead qualification
+- Digital analytics and server-side tracking
+- AI Agents for sales, back office and customer care
 - Meta Andromeda algorithm and signal quality
 - MQL, SQL, appointments, and pipeline measurement
 

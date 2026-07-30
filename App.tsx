@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import Marquee from './components/Marquee';
 import ContactForm from './components/ContactForm';
@@ -7,6 +8,7 @@ import CustomCursor from './components/CustomCursor';
 import CookieBanner from './components/CookieBanner';
 import SEOHead from './components/SEOHead';
 import HomeV2 from './components/home2/HomeV2';
+import MobileMenu, { MOBILE_MENU_PANEL_ID } from './components/MobileMenu';
 import { BlogPost } from './types/blog';
 import { getBlogPosts } from './lib/supabase';
 import { getSeoPageBySlug, resourcesPath } from './data/seoPages';
@@ -31,6 +33,21 @@ const App: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoadingBlog, setIsLoadingBlog] = useState(true);
   const [blogError, setBlogError] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Chiude il menu mobile quando cambia pagina o quando il viewport supera md
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [currentPage]);
+
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 768px)');
+    const onChange = () => {
+      if (query.matches) setMobileMenuOpen(false);
+    };
+    query.addEventListener('change', onChange);
+    return () => query.removeEventListener('change', onChange);
+  }, []);
 
   // Fetch blog posts from Supabase on mount
   useEffect(() => {
@@ -150,6 +167,28 @@ const App: React.FC = () => {
     }
   };
 
+  // Scrolla alla sezione del form contatti. Se non siamo in home, naviga prima
+  // lì e poi attende (con qualche retry) che la sezione sia nel DOM prima di
+  // scrollare: un singolo setTimeout(100ms) può scattare prima che HomeV2
+  // abbia finito di montarsi, perdendo lo scroll.
+  const scrollToContact = () => {
+    const trySmoothScroll = (attemptsLeft: number) => {
+      const contactForm = document.querySelector('section:has(form)');
+      if (contactForm) {
+        contactForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (attemptsLeft > 0) {
+        setTimeout(() => trySmoothScroll(attemptsLeft - 1), 100);
+      }
+    };
+
+    if (currentPage !== 'home') {
+      navigateTo('home');
+      setTimeout(() => trySmoothScroll(20), 100);
+    } else {
+      trySmoothScroll(20);
+    }
+  };
+
   const currentArticle = currentArticleSlug ? getBlogPostBySlug(currentArticleSlug) : null;
   const currentSeoPage = currentSeoSlug ? getSeoPageBySlug(currentSeoSlug) : null;
 
@@ -163,8 +202,10 @@ const App: React.FC = () => {
           noIndex={true}
         />
       )}
-      {/* Navbar overlay - simplified for immersive feel */}
-      <nav className="absolute md:fixed top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference">
+      {/* Navbar overlay - simplified for immersive feel. Sempre "fixed": su
+          mobile prima non lo era (si perdeva scrollando), ma ora che esiste
+          un menu da raggiungere da ovunque deve restare ancorata come su desktop. */}
+      <nav className="fixed top-0 left-0 w-full z-[70] px-6 py-6 flex justify-between items-center mix-blend-difference">
         <img
           src="/logo.webp"
           alt="Q4 Studio"
@@ -188,25 +229,44 @@ const App: React.FC = () => {
           >
             BLOG
           </button>
+          {/* Link reale all'hub risorse: vale anche come link interno per i crawler */}
+          <a
+            href={resourcesPath}
+            className="text-sm font-mono hover:text-indigo-400 transition-colors cursor-pointer"
+          >
+            RISORSE
+          </a>
           <button
-            onClick={() => {
-              if (currentPage !== 'home') {
-                navigateTo('home');
-                setTimeout(() => {
-                  const contactForm = document.querySelector('section:has(form)');
-                  contactForm?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 100);
-              } else {
-                const contactForm = document.querySelector('section:has(form)');
-                contactForm?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }
-            }}
+            onClick={scrollToContact}
             className="text-sm font-mono hover:text-indigo-400 transition-colors cursor-pointer bg-transparent border-0"
           >
             CONTATTACI
           </button>
         </div>
+
+        {/* Hamburger mobile: stessa area del logo, area di tap >= 44x44px */}
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+          aria-label={mobileMenuOpen ? 'Chiudi menu' : 'Apri menu'}
+          aria-expanded={mobileMenuOpen}
+          aria-controls={MOBILE_MENU_PANEL_ID}
+          className="md:hidden flex h-11 w-11 items-center justify-center cursor-pointer bg-transparent border-0"
+        >
+          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
       </nav>
+
+      {/* Pannello del menu mobile: reso FUORI dalla <nav> per non ereditare
+          mix-blend-difference (altrimenti il pannello scuro a piena pagina
+          risulterebbe illeggibile in blend-difference). */}
+      <MobileMenu
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        onNavigateAgents={() => navigateTo('agenti-ai')}
+        onNavigateBlog={() => navigateTo('blog')}
+        onContact={scrollToContact}
+      />
 
       <CustomCursor />
       <CookieBanner />

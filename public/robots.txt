@@ -15,6 +15,3 @@ Sitemap: https://www.q4.studio/sitemap.xml
 
 # AI crawler guidance
 # llms.txt: https://www.q4.studio/llms.txt
-
-# Crawl-delay for polite crawling
-Crawl-delay: 1

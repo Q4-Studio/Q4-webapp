@@ -11,6 +11,7 @@ import Manifesto2 from './Manifesto2';
 import Pipeline2 from './Pipeline2';
 import Agents2 from './Agents2';
 import Services2 from './Services2';
+import ScrollRevealText from './ScrollRevealText';
 import { siteUrl } from '../../data/seoPages';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -24,6 +25,12 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
   const counterRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
+    // Con reduced-motion il sipario non ha senso: si va dritti al contenuto.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      onDone();
+      return;
+    }
+
     const obj = { v: 0 };
     const tl = gsap.timeline({ onComplete: onDone });
     tl.to(obj, {
@@ -34,7 +41,13 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
         if (counterRef.current) counterRef.current.innerText = String(Math.round(obj.v)).padStart(3, '0');
       },
     }).to(overlayRef.current, { yPercent: -100, duration: 0.7, ease: 'power4.inOut' }, '+=0.15');
+
+    // Rete di sicurezza: il preloader copre tutta la pagina, quindi non deve mai
+    // poter restare bloccato (rAF sospeso, GSAP che non parte, tab in background).
+    const failSafe = window.setTimeout(onDone, 3500);
+
     return () => {
+      window.clearTimeout(failSafe);
       tl.kill();
     };
   }, [onDone]);
@@ -101,9 +114,11 @@ const FinalCTA: React.FC = () => {
             vantaggio.
           </span>
         </h2>
-        <p className="cta-reveal text-lg md:text-xl text-gray-400 max-w-xl mx-auto leading-relaxed">
-          Raccontaci la tua sfida: ti mostriamo come trasformarla in un sistema che cresce.
-        </p>
+        <ScrollRevealText
+          as="p"
+          text="Raccontaci la tua sfida: ti mostriamo come trasformarla in un sistema che cresce."
+          className="text-lg md:text-xl text-gray-400 max-w-xl mx-auto leading-relaxed"
+        />
       </div>
     </section>
   );
@@ -137,7 +152,7 @@ const HomeV2: React.FC = () => {
   return (
     <div className="relative w-full bg-[#050505] text-white">
       <SEOHead
-        title="Q4 Studio | AI Marketing Partner"
+        title="Q4 Studio | AI Marketing Partner per PMI B2B"
         description="Studio di consulenza per crescita B2B: AI applicata al marketing, lead generation automatizzata e agenti AI che alleggeriscono i processi aziendali."
         url={`${siteUrl}/`}
       />

@@ -32,6 +32,14 @@ const ScrollRevealText: React.FC<ScrollRevealTextProps> = ({
     const el = ref.current;
     if (!el) return;
 
+    // Con prefers-reduced-motion il testo resta leggibile fin da subito:
+    // niente split in parole, niente opacity 0.14 agganciata allo scroll.
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      el.style.opacity = '1';
+      return;
+    }
+
     const ctx = gsap.context(() => {
       el.innerHTML = '';
       const words: HTMLElement[] = [];

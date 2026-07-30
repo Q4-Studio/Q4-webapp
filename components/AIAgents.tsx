@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import SEOHead from './SEOHead';
 import MagneticButton from './MagneticButton';
+import ScrollRevealText from './home2/ScrollRevealText';
 import { siteUrl } from '../data/seoPages';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -584,10 +585,11 @@ const AIAgents: React.FC = () => {
                 Guarda cosa cambia.
               </span>
             </h2>
-            <p className="text-xl text-gray-400 leading-relaxed">
-              Ogni agente nasce da un processo vero: come lo gestisci oggi, cosa fa l'agente al posto
-              del team e dove resta il controllo delle persone.
-            </p>
+            <ScrollRevealText
+              as="p"
+              text="Ogni agente nasce da un processo vero: come lo gestisci oggi, cosa fa l'agente al posto del team e dove resta il controllo delle persone."
+              className="text-xl text-gray-400 leading-relaxed"
+            />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 items-start">

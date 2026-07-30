@@ -113,7 +113,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
   };
 
   return (
-    <article ref={articleRef} className="relative pt-32 pb-20 px-6 bg-[#050505] text-white min-h-screen">
+    <article ref={articleRef} className="relative pt-32 pb-20 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       {/* SEO: Schema.org BlogPosting structured data */}
       <BlogSchema post={post} />
 
@@ -132,7 +132,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
       />
 
       {/* Background gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Back Button */}

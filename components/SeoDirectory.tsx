@@ -17,7 +17,7 @@ const SeoDirectory: React.FC = () => {
   };
 
   return (
-    <section className="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen">
+    <section className="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       <SEOHead
         title="Risorse B2B Lead Generation e AI | Q4 Studio"
         description="Risorse Q4 Studio su Meta Ads B2B, lead generation, automazioni CRM, WhatsApp e Agenti AI."
@@ -25,7 +25,7 @@ const SeoDirectory: React.FC = () => {
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
 
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[min(900px,180vw)] h-[min(900px,180vw)] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
         <p className="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-6">Risorse</p>

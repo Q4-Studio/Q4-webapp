@@ -20,48 +20,50 @@ const Marquee: React.FC = () => {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 1. Entrance Animation
-    gsap.fromTo(containerRef.current,
-      {
-        y: 50,
-        opacity: 0
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 85%",
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
-
-    // 2. Infinite Scroll Animation
-    if (trackRef.current) {
-      const track = trackRef.current;
-
-      // Calculate the width of one set of logos (we rendered 3 sets)
-      const singleSetWidth = track.scrollWidth / 3;
-
-      // Animate seamlessly
-      gsap.fromTo(track,
-        { x: 0 },
+    const ctx = gsap.context(() => {
+      // 1. Entrance Animation
+      gsap.fromTo(containerRef.current,
         {
-          x: -singleSetWidth,
-          duration: 30,
-          ease: "none",
-          repeat: -1
+          y: 50,
+          opacity: 0
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
+          }
         }
       );
-    }
 
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      gsap.killTweensOf(trackRef.current);
-    };
+      // 2. Infinite Scroll Animation
+      if (trackRef.current) {
+        const track = trackRef.current;
+
+        // Calculate the width of one set of logos (we rendered 3 sets)
+        const singleSetWidth = track.scrollWidth / 3;
+
+        // Animate seamlessly
+        gsap.fromTo(track,
+          { x: 0 },
+          {
+            x: -singleSetWidth,
+            duration: 30,
+            ease: "none",
+            repeat: -1
+          }
+        );
+      }
+    }, containerRef);
+
+    // Il cleanup del context uccide solo i tween/ScrollTrigger creati qui sopra,
+    // non quelli di altre sezioni dell'app (bug precedente: killava TUTTI gli
+    // ScrollTrigger globali con ScrollTrigger.getAll().forEach(kill)).
+    return () => ctx.revert();
   }, []);
 
   return (

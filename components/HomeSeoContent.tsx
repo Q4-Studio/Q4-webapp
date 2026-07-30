@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarChart3, ChevronDown, GitBranch, Target } from 'lucide-react';
+import ScrollRevealText from './home2/ScrollRevealText';
 
 const faqs = [
   {
@@ -22,8 +23,8 @@ const faqs = [
 
 const HomeSeoContent: React.FC = () => {
   return (
-    <section className="relative z-10 max-w-6xl mx-auto px-6 py-24 text-gray-200">
-      <div className="absolute left-1/2 top-24 -z-10 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-indigo-900/10 blur-[140px]" />
+    <section className="relative z-10 max-w-6xl mx-auto px-6 py-24 text-gray-200 overflow-hidden">
+      <div className="absolute left-1/2 top-24 -z-10 h-[min(600px,140vw)] w-[min(600px,140vw)] -translate-x-1/2 rounded-full bg-indigo-900/10 blur-[140px]" />
       <div className="space-y-8">
         <section className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 md:p-10">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-12">
@@ -32,9 +33,10 @@ const HomeSeoContent: React.FC = () => {
               <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">Consulenza B2B Lead Generation su Meta</h2>
             </div>
             <div className="space-y-5 text-lg leading-relaxed text-gray-300">
-              <p>
-                La B2B Lead Generation su Meta è un sistema di acquisizione contatti pensato per trasformare Facebook e Instagram in canali di crescita misurabile anche per aziende con cicli di vendita complessi. Il nostro ruolo non è comportarci da agenzia che esegue campagne a volume, ma da consulenti che affiancano marketing e sales nella costruzione di un funnel più leggibile, tracciabile e sostenibile.
-              </p>
+              <ScrollRevealText
+                as="p"
+                text="La B2B Lead Generation su Meta è un sistema di acquisizione contatti pensato per trasformare Facebook e Instagram in canali di crescita misurabile anche per aziende con cicli di vendita complessi. Il nostro ruolo non è comportarci da agenzia che esegue campagne a volume, ma da consulenti che affiancano marketing e sales nella costruzione di un funnel più leggibile, tracciabile e sostenibile."
+              />
               <p>
                 Partiamo dall&apos;analisi del processo commerciale: ICP, proposta di valore, segmentazione, creatività, domande qualificanti, routing al CRM e SLA di contatto. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del lead e probabilità di avanzamento commerciale, non solo per costo per contatto.
               </p>

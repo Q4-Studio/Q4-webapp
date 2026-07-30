@@ -13,6 +13,7 @@ import {
   Sparkles,
   Clock,
 } from 'lucide-react';
+import ScrollRevealText from './ScrollRevealText';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -217,10 +218,11 @@ const PipelineHeader: React.FC = () => (
       <br />
       <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">In automatico.</span>
     </h2>
-    <p className="text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed">
-      Il nostro sistema di lead generation collega Meta, CRM e WhatsApp: ogni lead viene arricchito, contattato e
-      seguito, dal primo click alla firma.
-    </p>
+    <ScrollRevealText
+      as="p"
+      text="Il nostro sistema di lead generation collega Meta, CRM e WhatsApp: ogni lead viene arricchito, contattato e seguito, dal primo click alla firma."
+      className="text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed"
+    />
   </div>
 );
 
