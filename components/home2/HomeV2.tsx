@@ -17,13 +17,13 @@ import { siteUrl } from '../../data/seoPages';
 gsap.registerPlugin(ScrollTrigger);
 
 /* ------------------------------------------------------------------ */
-/* Preloader editoriale: tre parole in serif corsivo che si alternano   */
+/* Preloader editoriale: due parole in serif corsivo che si alternano    */
 /* al centro, contatore in basso a destra, riga di avanzamento e poi    */
 /* sipario verso l'alto.                                               */
 /* ------------------------------------------------------------------ */
 
-/** I tre tempi del lavoro di Q4. Basta cambiare queste stringhe. */
-const PRELOADER_WORDS = ['Dati', 'Agenti', 'Pipeline'];
+/** I due tempi del lavoro di Q4. Basta cambiare queste stringhe. */
+const PRELOADER_WORDS = ['Web', 'Agenti'];
 
 const SERIF_ITALIC = "'Times New Roman', Georgia, 'Playfair Display', serif";
 
@@ -42,7 +42,9 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
 
     const words = wordsRef.current.filter(Boolean) as HTMLSpanElement[];
     const counter = { v: 0 };
-    const total = 2.4; // durata del conteggio, le parole si distribuiscono qui dentro
+    // Tempo totale volutamente breve: il preloader sta davanti al contenuto,
+    // quindi ogni decimo in piu` pesa su rimbalzo e LCP.
+    const total = 1.3; // durata del conteggio, le parole si distribuiscono qui dentro
     const slot = total / PRELOADER_WORDS.length;
 
     const tl = gsap.timeline({ onComplete: onDone });
@@ -64,20 +66,20 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
       tl.fromTo(
         word,
         { yPercent: 110, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 0.55, ease: 'power3.out' },
+        { yPercent: 0, opacity: 1, duration: 0.38, ease: 'power3.out' },
         at
       );
       // L'ultima parola resta finché non parte il sipario
       if (i < words.length - 1) {
-        tl.to(word, { yPercent: -110, opacity: 0, duration: 0.45, ease: 'power3.in' }, at + slot - 0.45);
+        tl.to(word, { yPercent: -110, opacity: 0, duration: 0.3, ease: 'power3.in' }, at + slot - 0.3);
       }
     });
 
-    tl.to(overlayRef.current, { yPercent: -100, duration: 0.75, ease: 'power4.inOut' }, total + 0.15);
+    tl.to(overlayRef.current, { yPercent: -100, duration: 0.6, ease: 'power4.inOut' }, total + 0.05);
 
     // Rete di sicurezza: il preloader copre tutta la pagina, quindi non deve mai
     // poter restare bloccato (rAF sospeso, GSAP che non parte, tab in background).
-    const failSafe = window.setTimeout(onDone, 4500);
+    const failSafe = window.setTimeout(onDone, 3000);
 
     return () => {
       window.clearTimeout(failSafe);
@@ -87,10 +89,16 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
 
   return (
     <div ref={overlayRef} className="fixed inset-0 z-[9999] bg-[#050505] overflow-hidden">
-      {/* Etichetta in alto a sinistra */}
-      <span className="absolute top-7 left-6 font-mono text-[11px] tracking-[0.4em] text-gray-500 uppercase">
-        Q4 Studio
-      </span>
+      {/* Logo in alto a sinistra */}
+      <img
+        src="/logo.webp"
+        alt="Q4 Studio"
+        width={130}
+        height={40}
+        loading="eager"
+        fetchPriority="high"
+        className="absolute top-6 left-6 h-7 w-auto"
+      />
 
       {/* Parole al centro: un solo slot, le parole si sovrappongono */}
       <div className="absolute inset-0 flex items-center justify-center px-6">
