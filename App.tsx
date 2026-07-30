@@ -204,8 +204,11 @@ const App: React.FC = () => {
       )}
       {/* Navbar overlay - simplified for immersive feel. Sempre "fixed": su
           mobile prima non lo era (si perdeva scrollando), ma ora che esiste
-          un menu da raggiungere da ovunque deve restare ancorata come su desktop. */}
-      <nav className="fixed top-0 left-0 w-full z-[70] px-6 py-6 flex justify-between items-center mix-blend-difference">
+          un menu da raggiungere da ovunque deve restare ancorata come su desktop.
+          Niente più mix-blend-difference: logo/voci hanno ora sfondi propri
+          (pillola) e su blend-difference risulterebbero con colori sbagliati.
+          Tutte le pagine sono a fondo scuro, quindi restano leggibili anche senza. */}
+      <nav className="fixed top-0 left-0 w-full z-[70] p-4 sm:p-5 flex justify-between items-center">
         <img
           src="/logo.webp"
           alt="Q4 Studio"
@@ -213,53 +216,65 @@ const App: React.FC = () => {
           height={40}
           loading="eager"
           fetchPriority="high"
-          className="h-8 md:h-10 w-auto cursor-pointer"
+          className="h-9 md:h-12 w-auto cursor-pointer"
           onClick={() => navigateTo('home')}
         />
-        <div className="hidden md:flex items-center gap-8">
+
+        {/* Pillola centrale flottante con le voci di menu (solo desktop), centrata
+            in assoluto sulla nav indipendentemente dalla larghezza di logo/CTA */}
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 rounded-full border border-white/30 bg-white/20 backdrop-blur-md px-2 py-2">
           <button
             onClick={() => navigateTo('agenti-ai')}
-            className="text-sm font-mono hover:text-indigo-400 transition-colors cursor-pointer bg-transparent border-0"
+            className={`text-sm font-medium px-4 py-1.5 rounded-full transition-colors cursor-pointer border-0 ${
+              currentPage === 'agenti-ai' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
+            }`}
           >
             AGENTI AI
           </button>
           <button
             onClick={() => navigateTo('blog')}
-            className="text-sm font-mono hover:text-indigo-400 transition-colors cursor-pointer bg-transparent border-0"
+            className={`text-sm font-medium px-4 py-1.5 rounded-full transition-colors cursor-pointer border-0 ${
+              currentPage === 'blog' || currentPage === 'blog-article' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
+            }`}
           >
             BLOG
           </button>
           {/* Link reale all'hub risorse: vale anche come link interno per i crawler */}
           <a
             href={resourcesPath}
-            className="text-sm font-mono hover:text-indigo-400 transition-colors cursor-pointer"
+            className={`text-sm font-medium px-4 py-1.5 rounded-full transition-colors cursor-pointer ${
+              currentPage === 'directory' || currentPage === 'seo-page' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
+            }`}
           >
             RISORSE
           </a>
-          <button
-            onClick={scrollToContact}
-            className="text-sm font-mono hover:text-indigo-400 transition-colors cursor-pointer bg-transparent border-0"
-          >
-            CONTATTACI
-          </button>
         </div>
 
-        {/* Hamburger mobile: stessa area del logo, area di tap >= 44x44px */}
-        <button
-          type="button"
-          onClick={() => setMobileMenuOpen((open) => !open)}
-          aria-label={mobileMenuOpen ? 'Chiudi menu' : 'Apri menu'}
-          aria-expanded={mobileMenuOpen}
-          aria-controls={MOBILE_MENU_PANEL_ID}
-          className="md:hidden flex h-11 w-11 items-center justify-center cursor-pointer bg-transparent border-0"
-        >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex items-center gap-3">
+          {/* CTA "Scrivici": pillola bianca piena, visibile da md in su */}
+          <button
+            onClick={scrollToContact}
+            className="hidden md:inline-flex text-sm font-semibold px-6 py-2.5 rounded-full bg-white text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer border-0"
+          >
+            Scrivici
+          </button>
+
+          {/* Hamburger mobile: stessa area del logo, area di tap >= 44x44px */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            aria-label={mobileMenuOpen ? 'Chiudi menu' : 'Apri menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls={MOBILE_MENU_PANEL_ID}
+            className="md:hidden flex h-11 w-11 items-center justify-center cursor-pointer bg-transparent border-0"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </nav>
 
-      {/* Pannello del menu mobile: reso FUORI dalla <nav> per non ereditare
-          mix-blend-difference (altrimenti il pannello scuro a piena pagina
-          risulterebbe illeggibile in blend-difference). */}
+      {/* Pannello del menu mobile: reso FUORI dalla <nav> (che ora non usa più
+          mix-blend-difference, ma manteniamo comunque la separazione strutturale). */}
       <MobileMenu
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
