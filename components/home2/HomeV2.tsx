@@ -17,12 +17,21 @@ import { siteUrl } from '../../data/seoPages';
 gsap.registerPlugin(ScrollTrigger);
 
 /* ------------------------------------------------------------------ */
-/* Preloader: contatore rapido, poi sipario verso l'alto               */
+/* Preloader editoriale: tre parole in serif corsivo che si alternano   */
+/* al centro, contatore in basso a destra, riga di avanzamento e poi    */
+/* sipario verso l'alto.                                               */
 /* ------------------------------------------------------------------ */
+
+/** I tre tempi del lavoro di Q4. Basta cambiare queste stringhe. */
+const PRELOADER_WORDS = ['Dati', 'Agenti', 'Pipeline'];
+
+const SERIF_ITALIC = "'Times New Roman', Georgia, 'Playfair Display', serif";
 
 const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const wordsRef = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
     // Con reduced-motion il sipario non ha senso: si va dritti al contenuto.
@@ -31,20 +40,44 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
       return;
     }
 
-    const obj = { v: 0 };
+    const words = wordsRef.current.filter(Boolean) as HTMLSpanElement[];
+    const counter = { v: 0 };
+    const total = 2.4; // durata del conteggio, le parole si distribuiscono qui dentro
+    const slot = total / PRELOADER_WORDS.length;
+
     const tl = gsap.timeline({ onComplete: onDone });
-    tl.to(obj, {
+
+    // Contatore 000 → 100 e riga di avanzamento, in parallelo
+    tl.to(counter, {
       v: 100,
-      duration: 1.1,
-      ease: 'power3.inOut',
+      duration: total,
+      ease: 'power1.inOut',
       onUpdate: () => {
-        if (counterRef.current) counterRef.current.innerText = String(Math.round(obj.v)).padStart(3, '0');
+        if (counterRef.current) counterRef.current.innerText = String(Math.round(counter.v)).padStart(3, '0');
       },
-    }).to(overlayRef.current, { yPercent: -100, duration: 0.7, ease: 'power4.inOut' }, '+=0.15');
+    }, 0);
+    tl.fromTo(barRef.current, { scaleX: 0 }, { scaleX: 1, duration: total, ease: 'power1.inOut' }, 0);
+
+    // Ogni parola entra dal basso, resta, ed esce verso l'alto
+    words.forEach((word, i) => {
+      const at = i * slot;
+      tl.fromTo(
+        word,
+        { yPercent: 110, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.55, ease: 'power3.out' },
+        at
+      );
+      // L'ultima parola resta finché non parte il sipario
+      if (i < words.length - 1) {
+        tl.to(word, { yPercent: -110, opacity: 0, duration: 0.45, ease: 'power3.in' }, at + slot - 0.45);
+      }
+    });
+
+    tl.to(overlayRef.current, { yPercent: -100, duration: 0.75, ease: 'power4.inOut' }, total + 0.15);
 
     // Rete di sicurezza: il preloader copre tutta la pagina, quindi non deve mai
     // poter restare bloccato (rAF sospeso, GSAP che non parte, tab in background).
-    const failSafe = window.setTimeout(onDone, 3500);
+    const failSafe = window.setTimeout(onDone, 4500);
 
     return () => {
       window.clearTimeout(failSafe);
@@ -53,13 +86,45 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
   }, [onDone]);
 
   return (
-    <div ref={overlayRef} className="fixed inset-0 z-[9999] bg-[#050505] flex flex-col items-center justify-center">
-      <img src="/logo.webp" alt="Q4 Studio" className="h-10 w-auto mb-8" />
-      <div className="flex items-center gap-4 font-mono text-sm text-gray-500 tracking-[0.3em]">
-        <span className="w-8 h-px bg-indigo-500/50" />
-        <span ref={counterRef} className="text-indigo-300 tabular-nums">000</span>
-        <span className="w-8 h-px bg-indigo-500/50" />
+    <div ref={overlayRef} className="fixed inset-0 z-[9999] bg-[#050505] overflow-hidden">
+      {/* Etichetta in alto a sinistra */}
+      <span className="absolute top-7 left-6 font-mono text-[11px] tracking-[0.4em] text-gray-500 uppercase">
+        Q4 Studio
+      </span>
+
+      {/* Parole al centro: un solo slot, le parole si sovrappongono */}
+      <div className="absolute inset-0 flex items-center justify-center px-6">
+        {/* Larghezza piena e parole tutte in absolute: così la parola più lunga
+            non viene tagliata dall'overflow-hidden usato per lo scorrimento. */}
+        <div className="relative w-full h-[1.3em] overflow-hidden" style={{ fontSize: 'clamp(38px, 8vw, 88px)' }}>
+          {PRELOADER_WORDS.map((word, i) => (
+            <span
+              key={word}
+              ref={(el) => { wordsRef.current[i] = el; }}
+              className="absolute inset-0 flex items-center justify-center whitespace-nowrap text-gray-300"
+              style={{ fontFamily: SERIF_ITALIC, fontStyle: 'italic', opacity: 0 }}
+            >
+              {word}
+            </span>
+          ))}
+        </div>
       </div>
+
+      {/* Contatore in basso a destra */}
+      <span
+        ref={counterRef}
+        className="absolute bottom-8 right-6 text-white tabular-nums leading-none"
+        style={{ fontFamily: SERIF_ITALIC, fontSize: 'clamp(56px, 13vw, 132px)' }}
+      >
+        000
+      </span>
+
+      {/* Riga di avanzamento in fondo */}
+      <div
+        ref={barRef}
+        className="absolute bottom-0 left-0 h-px w-full origin-left bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400"
+        style={{ transform: 'scaleX(0)' }}
+      />
     </div>
   );
 };

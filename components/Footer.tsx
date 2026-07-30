@@ -205,8 +205,8 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
         </div>
         
         <div ref={bottomRef} className="w-full flex flex-col md:flex-row justify-between items-center gap-2 mt-20 text-xs text-gray-600 font-mono">
-            <span>© {new Date().getFullYear()} Q4 Studio. Tutti i diritti riservati. • P.I. 05018960236</span>
-            <span>Verona / Reggio Emilia</span>
+            <span>© {new Date().getFullYear()} Q4 Studio. Tutti i diritti riservati. • P.I. 03033250352</span>
+            <span>Reggio Emilia</span>
         </div>
       </div>
     </footer>

@@ -128,7 +128,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateAgen
         </nav>
 
         <p className="mt-10 text-xs font-mono uppercase tracking-[0.3em] text-gray-600">
-          Q4 Studio · Verona / Reggio Emilia
+          Q4 Studio · Reggio Emilia
         </p>
       </div>
     </div>

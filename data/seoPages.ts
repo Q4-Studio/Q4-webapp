@@ -109,13 +109,13 @@ export const seoPages: SeoPage[] = [
     audience: 'PMI e aziende industriali di Verona che vendono servizi, consulenza o prodotti con trattativa commerciale',
     pain: 'il traffico generico consuma budget e lascia al team sales contatti freddi o fuori target',
     solution: 'progettiamo campagne localizzate, landing angle e automazioni di follow-up per trasformare l\'interesse in conversazioni commerciali',
-    proof: 'Q4 Studio lavora da Verona e Reggio Emilia con focus verticale su acquisizione B2B e automazioni AI',
-    directAnswer: 'Q4 Studio è un\'agenzia con sede a Verona che gestisce campagne Meta Ads B2B per aziende locali e nazionali, con focus su lead qualificati, automazioni CRM e misurazione della pipeline commerciale.',
+    proof: 'Q4 Studio opera da Reggio Emilia con focus verticale su acquisizione B2B per aziende di Verona e del Veneto, tra Meta Ads e automazioni AI',
+    directAnswer: 'Q4 Studio è un\'agenzia Meta Ads B2B che segue aziende di Verona operando da Reggio Emilia, con focus su lead qualificati, automazioni CRM e misurazione della pipeline commerciale.',
     clusters: [
       {
         keyword: 'agenzia meta ads verona',
         heading: 'Agenzia Meta Ads a Verona',
-        content: 'Scegliere un\'agenzia Meta Ads con presenza locale a Verona offre vantaggi operativi: conoscenza del tessuto industriale del Veneto, possibilità di incontri in presenza per allineare strategia e sales, e maggiore reattività nelle fasi di setup e ottimizzazione. Q4 Studio ha sede a Verona e lavora con aziende del settore industriale, tecnologico e dei servizi professionali.'
+        content: 'Scegliere un\'agenzia Meta Ads specializzata nel B2B offre vantaggi concreti: conoscenza del tessuto industriale del Veneto, processi di setup e ottimizzazione rapidi, e un metodo collaudato su aziende con trattativa commerciale complessa. Q4 Studio opera da Reggio Emilia e segue aziende di Verona del settore industriale, tecnologico e dei servizi professionali, con kickoff e review da remoto e piena trasparenza sui dati.'
       },
       {
         keyword: 'lead generation aziende verona',
@@ -144,7 +144,7 @@ export const seoPages: SeoPage[] = [
       ]
     },
     dataPoints: [
-      'Presenza operativa a Verona e Reggio Emilia',
+      'Aziende di Verona e del Veneto seguite da remoto dal team di Reggio Emilia',
       'Focus su PMI industriali e società di servizi del Veneto',
       'Targeting locale e messaggi verticali riducono dispersione rispetto a campagne nazionali non segmentate',
       'Setup medio da contratto a campagna live: 7-10 giorni lavorativi'
@@ -153,7 +153,7 @@ export const seoPages: SeoPage[] = [
     faqs: [
       {
         question: 'Lavorate solo con aziende di Verona?',
-        answer: 'No, lavoriamo in tutta Italia, ma la presenza locale aiuta nei progetti dove serve maggiore vicinanza operativa.'
+        answer: 'No, lavoriamo in tutta Italia. Operiamo da Reggio Emilia e seguiamo le aziende di Verona con lo stesso metodo che usiamo per gli altri mercati B2B.'
       },
       {
         question: 'Potete integrare il CRM esistente?',
@@ -165,7 +165,7 @@ export const seoPages: SeoPage[] = [
       },
       {
         question: 'Fate incontri in presenza?',
-        answer: 'Si, per i clienti di Verona e dintorni organizziamo kickoff e review in presenza. Per i clienti fuori zona usiamo videocall con documentazione condivisa.'
+        answer: 'Operiamo da Reggio Emilia, quindi kickoff e review si svolgono in videocall con documentazione condivisa: è il metodo che usiamo con tutti i clienti, incluse le aziende di Verona.'
       }
     ]
   },
@@ -247,7 +247,7 @@ export const seoPages: SeoPage[] = [
     audience: 'PMI industriali, aziende di servizi e realtà B2B di Reggio Emilia con vendita consulenziale o trattativa commerciale',
     pain: 'campagne generiche e form poco qualificanti portano contatti fuori target o difficili da gestire per il team sales',
     solution: 'costruiamo campagne, landing angle, domande qualificanti e follow-up collegati al CRM per misurare qualità e avanzamento commerciale',
-    proof: 'Q4 Studio lavora tra Verona e Reggio Emilia con focus su acquisizione B2B, CRM automation e agenti AI',
+    proof: 'Q4 Studio opera da Reggio Emilia con focus su acquisizione B2B, CRM automation e agenti AI',
     directAnswer: 'Q4 Studio affianca aziende B2B di Reggio Emilia nella gestione di Meta Ads, lead generation e automazioni CRM, con un approccio orientato a lead qualificati, follow-up rapido e misurazione della pipeline.',
     clusters: [
       {
@@ -282,7 +282,7 @@ export const seoPages: SeoPage[] = [
       ]
     },
     dataPoints: [
-      'Presenza operativa tra Verona e Reggio Emilia',
+      'Sede operativa a Reggio Emilia, con team dedicato ad acquisizione B2B',
       'Monitoraggio di MQL, SQL, appuntamenti e pipeline, non solo CPL',
       'Routing e follow-up progettati insieme alle campagne',
       'Integrazione CRM valutata in base agli strumenti già usati dal team'

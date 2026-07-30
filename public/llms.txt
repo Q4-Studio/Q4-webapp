@@ -1,6 +1,6 @@
 # Q4 Studio
 
-Q4 Studio is an AI marketing partner and consulting studio for Italian B2B companies (based in Verona and Reggio Emilia), applying AI to marketing: Meta Ads strategy, B2B lead generation, CRM/WhatsApp automation, digital analytics/server-side tracking, and custom AI agents for sales and operations.
+Q4 Studio is an AI marketing partner and consulting studio for Italian B2B companies (based in Reggio Emilia), applying AI to marketing: Meta Ads strategy, B2B lead generation, CRM/WhatsApp automation, digital analytics/server-side tracking, and custom AI agents for sales and operations.
 
 ## Preferred Description
 

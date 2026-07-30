@@ -37,9 +37,12 @@ const HomeSeoContent: React.FC = () => {
                 as="p"
                 text="La B2B Lead Generation su Meta è un sistema di acquisizione contatti pensato per trasformare Facebook e Instagram in canali di crescita misurabile anche per aziende con cicli di vendita complessi. Il nostro ruolo non è comportarci da agenzia che esegue campagne a volume, ma da consulenti che affiancano marketing e sales nella costruzione di un funnel più leggibile, tracciabile e sostenibile."
               />
-              <p>
-                Partiamo dall&apos;analisi del processo commerciale: ICP, proposta di valore, segmentazione, creatività, domande qualificanti, routing al CRM e SLA di contatto. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del lead e probabilità di avanzamento commerciale, non solo per costo per contatto.
-              </p>
+              {/* Anche il secondo paragrafo usa il reveal: con uno solo dei due
+                  animato il blocco sembrava un testo renderizzato a metà. */}
+              <ScrollRevealText
+                as="p"
+                text="Partiamo dall'analisi del processo commerciale: ICP, proposta di valore, segmentazione, creatività, domande qualificanti, routing al CRM e SLA di contatto. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del lead e probabilità di avanzamento commerciale, non solo per costo per contatto."
+              />
             </div>
           </div>
 

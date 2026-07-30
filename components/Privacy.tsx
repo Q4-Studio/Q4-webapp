@@ -70,7 +70,7 @@ const Privacy: React.FC = () => {
               <div>
                 <h3 className="text-xl font-semibold text-white mb-3">1. Titolare del Trattamento</h3>
                 <p>
-                  Q4 Studio - P.IVA 05018960236<br />
+                  Q4 Studio - P.IVA 03033250352<br />
                   Email: {email && <a href={`mailto:${email}`} className="text-indigo-400 hover:underline">{email}</a>}
                 </p>
               </div>

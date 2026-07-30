@@ -22,8 +22,11 @@ const ScrollRevealText: React.FC<ScrollRevealTextProps> = ({
   text,
   className,
   style,
-  start = 'top 82%',
-  end = 'bottom 55%',
+  // Il reveal parte appena il testo entra dal basso e si completa quando il
+  // blocco è ancora in zona di lettura: prima l'ultima parte del paragrafo
+  // restava spenta troppo a lungo e sembrava un testo mezzo rotto.
+  start = 'top 92%',
+  end = 'bottom 65%',
   as = 'p',
 }) => {
   const ref = useRef<HTMLElement>(null);
