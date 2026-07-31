@@ -342,7 +342,7 @@ function generateResourcesHtml(): string {
         </nav>
 
         <p class="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-6">Risorse</p>
-        <h1 class="text-5xl md:text-7xl font-bold tracking-tight max-w-4xl mb-6">Risorse su Lead Generation B2B, Meta Ads e Agenti AI</h1>
+        <h1 class="text-5xl md:text-7xl font-bold tracking-tight max-w-4xl mb-6">Risorse su Agenti AI, Automazioni e Tecnologia per Aziende B2B</h1>
         <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
           Questa directory raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico e collega servizi, problemi, soluzioni e FAQ.
         </p>
@@ -355,8 +355,8 @@ function generateResourcesHtml(): string {
   `;
 
   return generateBaseHtml({
-    title: 'Risorse B2B Lead Generation e AI | Q4 Studio',
-    description: 'Risorse Q4 Studio su Meta Ads B2B, lead generation, automazioni CRM, WhatsApp e Agenti AI.',
+    title: 'Risorse su AI, Automazioni e Tecnologia per PMI B2B | Q4 Studio',
+    description: 'Risorse Q4 Studio su agenti AI, automazioni WhatsApp e CRM, centralino e chatbot intelligenti per le aziende B2B.',
     canonical: `${siteUrl}${resourcesPath}`,
     schema: [itemListSchema, breadcrumbSchema],
     bodyContent
@@ -574,8 +574,8 @@ function generateHomeBodyContent(): string {
   ];
 
   const homeFaqs = [
-    { q: "In pratica, cos'è la B2B Lead Generation su Meta?", a: "È l'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate su ICP, messaggio, form, CRM e segnali di qualità." },
-    { q: 'Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?', a: 'Sì, se l\'obiettivo non è solo il costo per lead. Nei cicli complessi servono domande qualificanti, follow-up rapido e ottimizzazione su eventi come MQL, SQL e pipeline.' },
+    { q: "In pratica, cos'è la B2B Lead Generation su Meta?", a: "È l'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate sul profilo del cliente giusto, messaggio, form, CRM e segnali di qualità." },
+    { q: 'Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?', a: 'Sì, se l\'obiettivo non è solo il costo per lead.' },
     { q: 'Cosa sono gli Agenti AI personalizzati?', a: "Sono sistemi costruiti sul processo commerciale dell'azienda per qualificare lead, rispondere più velocemente, assegnare contatti e automatizzare attività ripetitive." },
     { q: 'Perché collegare Meta Ads, CRM e automazioni?', a: 'Perché il CRM restituisce segnali più utili dell\'invio form. Quando questi dati rientrano nel modello di ottimizzazione, le campagne possono cercare contatti più vicini al valore commerciale reale.' }
   ];
@@ -640,7 +640,7 @@ function generateHomeBodyContent(): string {
       </header>
 
       <section class="manifesto">
-        <p>Q4 Studio è uno studio di consulenza. Entriamo nei processi, applichiamo l'AI al marketing e costruiamo agenti che lavorano al fianco del tuo team. Meno attività ripetitive, più pipeline.</p>
+        <p>Q4 Studio è uno studio di consulenza. Entriamo nei processi, applichiamo l'AI al marketing e costruiamo agenti che lavorano al fianco del tuo team.</p>
       </section>
 
       <section class="pipeline">
@@ -695,7 +695,7 @@ function generateHomeSeoContentHtml(faqHtml: string): string {
       <section class="home-seo-content">
         <h2>Consulenza B2B Lead Generation su Meta</h2>
         <p>La B2B Lead Generation su Meta è un sistema di acquisizione contatti pensato per trasformare Facebook e Instagram in canali di crescita misurabile anche per aziende con cicli di vendita complessi. Il nostro ruolo non è comportarci da agenzia che esegue campagne a volume, ma da consulenti che affiancano marketing e sales nella costruzione di un funnel più leggibile, tracciabile e sostenibile.</p>
-        <p>Partiamo dall'analisi del processo commerciale: ICP, proposta di valore, segmentazione, creatività, domande qualificanti, routing al CRM e SLA di contatto. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del lead e probabilità di avanzamento commerciale, non solo per costo per contatto.</p>
+        <p>Partiamo dall'analisi del processo commerciale: chi è il cliente giusto, proposta di valore, segmentazione, creatività, domande qualificanti, instradamento al CRM e tempi di risposta ai contatti. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del contatto e probabilità di diventare cliente, non solo per costo per contatto.</p>
 
         <h2>Meta Ads orientate alla qualità</h2>
         <p>Lavoriamo come consulenti operativi sulle campagne Meta B2B: audit account, architettura delle campagne, piano test creativo, tracking server-side e lettura dei dati commerciali. L'obiettivo è aiutare il team a capire cosa sta generando opportunità reali e cosa sta solo gonfiando il volume dei lead.</p>
@@ -706,8 +706,8 @@ function generateHomeSeoContentHtml(faqHtml: string): string {
         <p>Nei progetti più maturi, l'integrazione Meta Ads + Agenti AI riduce i tempi di prima risposta, aumenta la precisione nel routing e rende il funnel meno dipendente da interventi manuali ripetitivi.</p>
 
         <h2>Risultati misurabili, leggibili dal team</h2>
-        <p>Ogni attività viene valutata su metriche operative e metriche di business. Oltre ai KPI pubblicitari, tracciamo tempo di presa in carico, tasso di appuntamento, opportunità generate e valore pipeline attribuibile. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.</p>
-        <p>Nei progetti B2B monitoriamo la progressione MQL→SQL nel tempo e confrontiamo i dati prima e dopo integrazione CRM, routing e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.</p>
+        <p>Ogni attività viene valutata su metriche operative e metriche di business. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.</p>
+        <p>Nei progetti B2B monitoriamo nel tempo quanti contatti diventano davvero clienti e confrontiamo i dati prima e dopo integrazione CRM, instradamento e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.</p>
 
         <h2>Domande frequenti su Meta Ads B2B e Agenti AI</h2>
         <p>Abbiamo raccolto in un unico punto le risposte operative sulle campagne Meta B2B, sugli Agenti AI e sul collegamento con CRM e automazioni.</p>

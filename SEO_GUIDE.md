@@ -52,12 +52,15 @@ Ogni pagina include:
 
 Pagine attuali:
 
-- `/seo/b2b-lead-generation-meta-ads`
-- `/seo/meta-ads-b2b-verona`
-- `/seo/agenti-ai-per-lead-generation`
-- `/seo/crm-automation-meta-ads`
-- `/seo/whatsapp-automation-lead-b2b`
-- `/seo/algoritmo-andromeda-meta-b2b`
+- `/risorse/agenti-ai-per-lead-generation`
+- `/risorse/agente-vocale-ai-aziende`
+- `/risorse/centralino-ai`
+- `/risorse/riattivazione-database-clienti-ai`
+- `/risorse/chatbot-cliniche-studi-medici`
+- `/risorse/crm-automation-meta-ads`
+- `/risorse/whatsapp-automation-lead-b2b`
+
+**Nota**: le 7 pagine precedenti su Meta Ads B2B locali (Verona, Reggio Emilia, Modena, Parma, Mantova), lead generation generica e l'algoritmo Andromeda sono state ritirate nell'ambito del rebrand verso il posizionamento tech/AI e redirect 301 a `/risorse` (vedi `vercel.json`).
 
 ## Blog
 
@@ -134,10 +137,9 @@ Prima di aggiungere una pagina, verifica:
 
 ## Prossime Espansioni Raccomandate
 
-- `/seo/lead-generation-b2b-industriale`
-- `/seo/meta-ads-per-consulenza-b2b`
-- `/seo/automazioni-ai-per-sales-team`
-- `/seo/conversion-api-meta-ads-b2b`
-- `/seo/agenzia-lead-generation-verona`
+- `/risorse/agenti-ai-per-il-back-office`
+- `/risorse/automazione-preventivi-e-ordini`
+- `/risorse/digital-analytics-per-pmi`
+- `/risorse/siti-web-ai-per-pmi-b2b`
 
-Prima di aggiungerle, definisci intento di ricerca, angolo pagina e proof point unici per ciascuna.
+Prima di aggiungerle, definisci intento di ricerca, angolo pagina e proof point unici per ciascuna, mantenendo l'angolo tech/AI del nuovo posizionamento invece di quello sulla lead generation.

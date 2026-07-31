@@ -5,11 +5,11 @@ import ScrollRevealText from './home2/ScrollRevealText';
 const faqs = [
   {
     question: 'In pratica, cos\'è la B2B Lead Generation su Meta?',
-    answer: 'È l\'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate su ICP, messaggio, form, CRM e segnali di qualità.'
+    answer: 'È l\'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate sul profilo del cliente giusto, messaggio, form, CRM e segnali di qualità.'
   },
   {
     question: 'Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?',
-    answer: 'Sì, se l\'obiettivo non è solo il costo per lead. Nei cicli complessi servono domande qualificanti, follow-up rapido e ottimizzazione su eventi come MQL, SQL e pipeline.'
+    answer: 'Sì, se l\'obiettivo non è solo il costo per lead.'
   },
   {
     question: 'Cosa sono gli Agenti AI personalizzati?',
@@ -41,7 +41,7 @@ const HomeSeoContent: React.FC = () => {
                   animato il blocco sembrava un testo renderizzato a metà. */}
               <ScrollRevealText
                 as="p"
-                text="Partiamo dall'analisi del processo commerciale: ICP, proposta di valore, segmentazione, creatività, domande qualificanti, routing al CRM e SLA di contatto. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del lead e probabilità di avanzamento commerciale, non solo per costo per contatto."
+                text="Partiamo dall'analisi del processo commerciale: chi è il cliente giusto, proposta di valore, segmentazione, creatività, domande qualificanti, instradamento al CRM e tempi di risposta ai contatti. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del contatto e probabilità di diventare cliente, non solo per costo per contatto."
               />
             </div>
           </div>
@@ -60,7 +60,7 @@ const HomeSeoContent: React.FC = () => {
             <div className="rounded-3xl border border-white/10 bg-[#080808] p-6">
               <BarChart3 className="w-7 h-7 text-cyan-300 mb-5" />
               <h3 className="text-xl font-semibold text-white mb-3">Governance dei KPI</h3>
-              <p className="text-gray-400 leading-relaxed">Misuriamo MQL, SQL, appuntamenti e pipeline, non solo CPL e performance apparente.</p>
+              <p className="text-gray-400 leading-relaxed">Misuriamo contatti che diventano davvero clienti, appuntamenti e opportunità generate, non solo il costo per contatto e numeri di facciata.</p>
             </div>
           </div>
         </section>
@@ -100,10 +100,10 @@ const HomeSeoContent: React.FC = () => {
               <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Risultati misurabili, leggibili dal team</h2>
               <div className="space-y-5 text-lg text-gray-300 leading-relaxed">
                 <p>
-                  Ogni attività viene valutata su metriche operative e metriche di business. Oltre ai KPI pubblicitari, tracciamo tempo di presa in carico, tasso di appuntamento, opportunità generate e valore pipeline attribuibile. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.
+                  Ogni attività viene valutata su metriche operative e metriche di business. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.
                 </p>
                 <p>
-                  Nei progetti B2B monitoriamo la progressione MQL→SQL nel tempo e confrontiamo i dati prima e dopo integrazione CRM, routing e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.
+                  Nei progetti B2B monitoriamo nel tempo quanti contatti diventano davvero clienti e confrontiamo i dati prima e dopo integrazione CRM, instradamento e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.
                 </p>
               </div>
             </div>
@@ -113,7 +113,6 @@ const HomeSeoContent: React.FC = () => {
                 <li>Audit e priorità operative prima dell&apos;execution.</li>
                 <li>Affiancamento a marketing e sales nella lettura dei dati.</li>
                 <li>Documentazione di naming, eventi e criteri di qualificazione.</li>
-                <li>Decisioni basate su pipeline, non vanity metrics.</li>
               </ul>
             </div>
           </div>
