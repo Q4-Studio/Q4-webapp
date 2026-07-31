@@ -103,7 +103,7 @@ const HeroTicker: React.FC = () => {
 
   return (
     <div className="absolute bottom-0 left-0 w-full border-t border-white/5 py-4 overflow-hidden bg-[#050505]/60 backdrop-blur-sm">
-      <div ref={trackRef} className="flex whitespace-nowrap items-center gap-10 text-[11px] tracking-[0.25em] text-gray-500">
+      <div ref={trackRef} className="flex whitespace-nowrap items-center gap-10 text-[11px] tracking-[0.08em] text-gray-500">
         {[...tickerItems, ...tickerItems, ...tickerItems].map((item, i) => (
           <span key={i} className="flex items-center gap-3 flex-shrink-0">
             <span className="text-indigo-500/70">{item.icon}</span>
@@ -252,7 +252,7 @@ const Hero2: React.FC = () => {
       >
         <p
           ref={kickerRef}
-          className="mb-4 md:mb-5 uppercase tracking-[0.3em] text-[11px] text-indigo-300/70"
+          className="mb-4 md:mb-5 uppercase tracking-[0.08em] text-[11px] text-indigo-300/70"
         >
           Bring AI&Tech to Marketing
         </p>
@@ -292,7 +292,7 @@ const Hero2: React.FC = () => {
           </MagneticButton>
           <button
             onClick={goToAgents}
-            className="group flex items-center gap-2 text-sm tracking-widest text-gray-400 hover:text-indigo-300 transition-colors cursor-pointer bg-transparent border-0 uppercase"
+            className="group flex items-center gap-2 text-sm tracking-[0.08em] text-gray-400 hover:text-indigo-300 transition-colors cursor-pointer bg-transparent border-0 uppercase"
           >
             Scopri gli Agenti AI
             <ArrowDownRight className="w-4 h-4 -rotate-90 group-hover:translate-x-1 transition-transform" />

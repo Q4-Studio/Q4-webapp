@@ -121,7 +121,7 @@ const AgentTerminal: React.FC = () => {
           <span className="w-3 h-3 rounded-full bg-emerald-500/60" />
         </div>
         <span className="text-[11px] tracking-[0.2em] text-gray-500">{scenarios[scenarioIdx].name}</span>
-        <span className="flex items-center gap-1.5 text-[11px] tracking-widest text-emerald-400">
+        <span className="flex items-center gap-1.5 text-[11px] tracking-[0.08em] text-emerald-400">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           LIVE
         </span>
@@ -222,7 +222,7 @@ const Agents2: React.FC = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center relative z-10">
         {/* Testo */}
         <div>
-          <h2 className="agents-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-tight mb-6">
+          <h2 className="agents-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">
             Colleghi digitali,
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">

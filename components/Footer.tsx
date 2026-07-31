@@ -108,7 +108,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
       <div className="max-w-7xl mx-auto relative z-10 flex flex-col items-center text-center">
         {showCta && (
           <>
-            <h2 ref={titleRef} className="text-[clamp(28px,4.5vw,48px)] font-bold tracking-tighter mb-12">
+            <h2 ref={titleRef} className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-12">
               Pronto a crescere?
             </h2>
 

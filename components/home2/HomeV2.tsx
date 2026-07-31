@@ -194,7 +194,7 @@ const FinalCTA: React.FC = () => {
       </div>
 
       <div className="max-w-5xl mx-auto text-center relative z-10">
-        <h2 className="cta-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.02] tracking-tight mb-8">
+        <h2 className="cta-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-8">
           Costruiamo il tuo
           <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400">

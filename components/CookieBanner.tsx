@@ -109,7 +109,7 @@ const CookieBanner: React.FC = () => {
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                  <h3 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] text-white mb-2">
                     Questo sito utilizza cookie
                   </h3>
                   <p className="text-gray-400 text-base mb-6 leading-relaxed">
@@ -158,7 +158,7 @@ const CookieBanner: React.FC = () => {
             // Settings Panel
             <div className="p-6 md:p-8">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl md:text-3xl font-bold text-white">
+                <h3 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] text-white">
                   Preferenze Cookie
                 </h3>
                 <button

@@ -70,7 +70,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
       if (line.startsWith('# ')) {
         flushList();
         elements.push(
-          <h1 key={`h1-${key++}`} className="text-[clamp(28px,4.5vw,48px)] font-bold mb-6 mt-8">
+          <h1 key={`h1-${key++}`} className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6 mt-8">
             {line.replace('# ', '')}
           </h1>
         );
@@ -79,7 +79,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
       else if (line.startsWith('## ')) {
         flushList();
         elements.push(
-          <h2 key={`h2-${key++}`} className="text-2xl md:text-3xl font-bold mb-4 mt-8 text-indigo-300">
+          <h2 key={`h2-${key++}`} className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4 mt-8 text-indigo-300">
             {line.replace('## ', '')}
           </h2>
         );
@@ -88,7 +88,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
       else if (line.startsWith('### ')) {
         flushList();
         elements.push(
-          <h3 key={`h3-${key++}`} className="text-lg md:text-xl font-bold mb-3 mt-6 text-purple-300">
+          <h3 key={`h3-${key++}`} className="text-lg md:text-xl font-bold leading-[1.5] mb-3 mt-6 text-purple-300">
             {line.replace('### ', '')}
           </h3>
         );
@@ -157,7 +157,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
           </div>
 
           {/* Title */}
-          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-tight">
+          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">
             {post.title}
           </h1>
 
@@ -222,7 +222,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
               }}
             />
             <div className="flex-1 text-center md:text-left">
-              <h3 className="text-2xl font-bold mb-2">{post.author.name}</h3>
+              <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-2">{post.author.name}</h3>
               <p className="text-gray-400">
                 Vuoi approfondire queste strategie per il tuo business? Contattaci per una consulenza personalizzata.
               </p>

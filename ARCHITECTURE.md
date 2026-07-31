@@ -41,6 +41,48 @@ tra gradini adiacenti, più aperto sui due gradini "display". Regola: nessun par
 
 ---
 
+## Interlinea e Letter-Spacing
+
+Regola esplicita per gradino, applicata a tutti i componenti e ai template statici di
+`scripts/prerender.ts` (che devono restare identici ai componenti React). Il `font-size`
+non cambia: qui si interviene solo su `line-height` (`leading-*`) e `letter-spacing`
+(`tracking-*`).
+
+| Gradino | line-height | letter-spacing | Motivazione |
+|---|---|---|---|
+| Display (h1 pagina) | `leading-[1.1]` | `tracking-[-0.03em]` | Titolo compatto, i caratteri grandi hanno bisogno di meno spazio. |
+| H2 sezione (+ claim Manifesto2) | `leading-[1.15]` | `tracking-[-0.02em]` | Compatto ma leggermente più aperto del display. |
+| H3 (sottotitoli, card, h3 markdown blog) | `leading-[1.25]` | `tracking-[-0.01em]` | Via di mezzo: ancora un titolo, ma più vicino al corpo testo. |
+| Body Large (18-20px) | `leading-relaxed`/`leading-[1.5]` (1.5-1.65) | neutro (nessuna classe) | Testo di lettura: deve restare comodo, non compatto. |
+| Body (16px) | `leading-relaxed` (1.5-1.65) | neutro | Idem. |
+| Small/kicker uppercase (14px e 11px) | invariata (di norma una riga) | **`tracking-[0.08em]`** (valore unico) | Prima 4 valori diversi (`0.25/0.3/0.35em`, `tracking-widest`, `tracking-wider`); un solo valore, scelto perché regge anche le etichette più strette a 375px. |
+| Small/kicker non uppercase (meta info, timestamp, testo normale) | `leading-relaxed`/default | neutro | Non è un'etichetta maiuscola: nessun tracking positivo. |
+
+**Eccezione al tracking unico** — badge "Stape Partner — Server-Side Tagging"
+(`components/home2/Services2.tsx`): a 375px anche a `tracking-[0]` il testo natural
+è più largo della pillola disponibile (~253px vs ~277px). Per riportarlo su una riga
+usa `tracking-[-0.08em]`, l'unico modo entro il perimetro "solo tracking" per farlo
+rientrare. Documentato qui perché rompe la regola generale (tracking negativo su
+un'etichetta maiuscola), ma è l'unica soluzione possibile senza toccare padding o
+dimensione.
+
+**Elementi esclusi dall'unificazione del tracking** (lasciati con i loro valori
+originali, non sono etichette maiuscole ma letture numeriche/tecniche in stile
+"console" — `tabular-nums`, orari, contatori step):
+- `components/home2/Pipeline2.tsx`: il contatore `0{active+1}/05` (`tracking-widest tabular-nums`) e il badge dell'orario `step.time` / `s.time` (es. "T+0 s", `tracking-[0.2em]`).
+- `components/home2/Agents2.tsx`: il nome dello scenario nel terminale mock (es. "q4-agent · preventivi", `tracking-[0.2em]`, minuscolo per estetica da riga di comando).
+
+**Elementi con `leading-none` lasciati invariati** (etichette/numeri brevi e
+compatti in badge, non testo di lettura): "Agente Q4" in `AIAgents.tsx`, il
+contatore del preloader e il ghost text in `home2/HomeV2.tsx`/`home2/Hero2.tsx`,
+il "404" di `NotFound.tsx`.
+
+**`h1` dell'hero** (`components/home2/Hero2.tsx`): resta con la sua variante
+verificata (`leading-[0.95]`, `tracking-tighter`), fuori da questa unificazione —
+vedi nota sulla scala tipografica.
+
+---
+
 ## Stack Tecnologico
 
 ### Frontend

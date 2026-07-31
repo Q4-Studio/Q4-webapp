@@ -176,12 +176,12 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     .join('\n              ');
 
   const clustersHtml = page.clusters
-    .map((cluster) => `<section class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-semibold mb-3 text-indigo-200">${escapeHtml(cluster.heading)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(cluster.content)}</p></section>`)
+    .map((cluster) => `<section class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3 text-indigo-200">${escapeHtml(cluster.heading)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(cluster.content)}</p></section>`)
     .join('\n            ');
 
   const comparisonTableHtml = page.comparisonTable ? `
     <section class="mb-16">
-      <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold mb-6">${escapeHtml(page.comparisonTable.title)}</h2>
+      <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(page.comparisonTable.title)}</h2>
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
@@ -198,7 +198,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
   ` : '';
 
   const faqsHtml = page.faqs
-    .map((faq) => `<div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-semibold mb-3">${escapeHtml(faq.question)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(faq.answer)}</p></div>`)
+    .map((faq) => `<div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3">${escapeHtml(faq.question)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(faq.answer)}</p></div>`)
     .join('\n            ');
 
   const relatedHtml = relatedPages
@@ -220,40 +220,40 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
         </nav>
 
         <header class="mb-14">
-          <p class="text-indigo-400 text-sm tracking-[0.35em] uppercase mb-5">${escapeHtml(page.keyword)}</p>
-          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold tracking-tight mb-6">${escapeHtml(page.title)}</h1>
+          <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">${escapeHtml(page.keyword)}</p>
+          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">${escapeHtml(page.title)}</h1>
           <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">${escapeHtml(page.description)}</p>
         </header>
 
         <section class="mb-16 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
-          <h2 class="text-2xl md:text-3xl font-bold mb-4">Risposta diretta</h2>
+          <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Risposta diretta</h2>
           <p class="text-lg md:text-xl text-gray-200 leading-relaxed">${escapeHtml(page.directAnswer)}</p>
         </section>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-16">
           <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 class="text-2xl font-bold mb-3">Per chi</h2>
+            <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Per chi</h2>
             <p class="text-gray-400 leading-relaxed">${escapeHtml(page.audience)}.</p>
           </section>
           <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 class="text-2xl font-bold mb-3">Problema</h2>
+            <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Problema</h2>
             <p class="text-gray-400 leading-relaxed">${escapeHtml(page.pain)}.</p>
           </section>
           <section class="rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-6">
-            <h2 class="text-2xl font-bold mb-3">Risultato</h2>
+            <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Risultato</h2>
             <p class="text-gray-300 leading-relaxed">${escapeHtml(page.proof)}.</p>
           </section>
         </div>
 
         <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold mb-6">Dati e risultati</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Dati e risultati</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             ${dataPointsHtml}
           </div>
         </section>
 
         <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold mb-6">Argomenti correlati</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Argomenti correlati</h2>
           <div class="space-y-6">
             ${clustersHtml}
           </div>
@@ -262,7 +262,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
         ${comparisonTableHtml}
 
         <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold mb-5">Come interveniamo</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-5">Come interveniamo</h2>
           <p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">${escapeHtml(page.solution)}.</p>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             ${servicesHtml}
@@ -270,14 +270,14 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
         </section>
 
         <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold mb-6">FAQ</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">FAQ</h2>
           <div class="space-y-4">
             ${faqsHtml}
           </div>
         </section>
 
         <section>
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold mb-6">Pagine correlate</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Pagine correlate</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             ${relatedHtml}
           </div>
@@ -321,8 +321,8 @@ function generateResourcesHtml(): string {
   const pagesHtml = seoPages
     .map((page) => `
       <a href="${resourcesPath}/${page.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
-        <span class="text-[11px] uppercase tracking-widest text-indigo-300">${escapeHtml(page.keyword)}</span>
-        <h2 class="text-2xl md:text-3xl font-bold mt-4 mb-3 group-hover:text-indigo-200 transition-colors">${escapeHtml(page.title)}</h2>
+        <span class="text-[11px] uppercase tracking-[0.08em] text-indigo-300">${escapeHtml(page.keyword)}</span>
+        <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mt-4 mb-3 group-hover:text-indigo-200 transition-colors">${escapeHtml(page.title)}</h2>
         <p class="text-gray-400 leading-relaxed mb-6">${escapeHtml(page.description)}</p>
         <span class="inline-flex items-center gap-2 text-indigo-300 font-medium">Apri pagina <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
       </a>
@@ -341,8 +341,8 @@ function generateResourcesHtml(): string {
           </ol>
         </nav>
 
-        <p class="text-indigo-400 text-sm tracking-[0.35em] uppercase mb-6">Risorse</p>
-        <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold tracking-tight max-w-4xl mb-6">Risorse su Agenti AI, Automazioni e Tecnologia per Aziende B2B</h1>
+        <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-6">Risorse</p>
+        <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] max-w-4xl mb-6">Risorse su Agenti AI, Automazioni e Tecnologia per Aziende B2B</h1>
         <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
           Questa directory raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico e collega servizi, problemi, soluzioni e FAQ.
         </p>
@@ -369,8 +369,8 @@ function generateBlogIndexHtml(): string {
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none"></div>
       <div class="max-w-7xl mx-auto relative z-10">
         <div class="text-center mb-20">
-          <span class="text-indigo-500 tracking-widest mb-6 block text-sm uppercase">Insights & Strategie</span>
-          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-tight">Il nostro <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span></h1>
+          <span class="text-indigo-500 tracking-[0.08em] mb-6 block text-sm uppercase">Insights & Strategie</span>
+          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">Il nostro <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span></h1>
           <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Agenti AI.
           </p>
@@ -448,7 +448,7 @@ function generateAIAgentsHtml(): string {
   ];
 
   const useCasesHtml = useCases
-    .map(([area, title, description]) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-[11px] uppercase tracking-widest text-violet-300 mb-4">${escapeHtml(area)}</p><h3 class="text-2xl md:text-3xl font-bold leading-snug mb-4">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
+    .map(([area, title, description]) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-[11px] uppercase tracking-[0.08em] text-violet-300 mb-4">${escapeHtml(area)}</p><h3 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
     .join('\n          ');
 
   const methodHtml = [
@@ -457,7 +457,7 @@ function generateAIAgentsHtml(): string {
     ['Tappa 03 · Messa in produzione', "Integrazione completa, regole chiare su cosa l'agente fa da solo e formazione del team. Risultato: il team usa l'agente in autonomia."],
     ['Tappa 04 · Crescita e controllo', 'Monitoriamo i risultati ed estendiamo il lavoro ad altri processi. Risultato: un report mensile con ore recuperate, errori evitati e prossimi passi.']
   ]
-    .map(([title, description]) => `<li class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-bold mb-2">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></li>`)
+    .map(([title, description]) => `<li class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-2">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></li>`)
     .join('\n              ');
 
   const faqHtml = faqs
@@ -477,15 +477,15 @@ function generateAIAgentsHtml(): string {
         </nav>
 
         <header class="mb-16">
-          <p class="text-violet-300 text-sm tracking-[0.3em] uppercase mb-5">Agenti AI · consulenza e sviluppo</p>
-          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold tracking-tight mb-6">Agenti AI su misura per togliere al tuo team il lavoro che un software può fare meglio</h1>
+          <p class="text-violet-300 text-sm tracking-[0.08em] uppercase mb-5">Agenti AI · consulenza e sviluppo</p>
+          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">Agenti AI su misura per togliere al tuo team il lavoro che un software può fare meglio</h1>
           <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">
             Leggono email e WhatsApp, inseriscono gli ordini nel gestionale, preparano i preventivi, qualificano i lead e rispondono ai clienti. Tu mantieni il controllo: l'agente propone, le persone decidono.
           </p>
         </header>
 
         <section class="mb-24">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold tracking-tight mb-6">Cosa fa un agente AI, in concreto</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Cosa fa un agente AI, in concreto</h2>
           <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-10">Ogni agente nasce da un processo vero: come lo gestisci oggi, cosa fa l'agente al posto del team e dove resta il controllo delle persone.</p>
           <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             ${useCasesHtml}
@@ -493,12 +493,12 @@ function generateAIAgentsHtml(): string {
         </section>
 
         <section class="mb-24 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold mb-4">Si collega agli strumenti che usi già</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-4">Si collega agli strumenti che usi già</h2>
           <p class="text-lg text-gray-200 leading-relaxed mb-6">Nessuna piattaforma nuova da imparare, nessun cambio di gestionale. L'agente entra nei flussi esistenti: WhatsApp, email e PEC, gestionale/ERP, CRM, Excel e Google Sheets, calendario, sito e form, centralino. Se un software ha un'API, un'esportazione o anche solo una casella email, si può collegare.</p>
         </section>
 
         <section class="mb-24">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold mb-6">Non ti vendiamo un software. Ti affianchiamo finché funziona.</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Non ti vendiamo un software. Ti affianchiamo finché funziona.</h2>
           <p class="text-xl text-gray-300 leading-relaxed max-w-3xl mb-10">Q4 Studio è uno studio di consulenza: ogni tappa del percorso ha una durata, un obiettivo e un risultato concreto che ti porti a casa, anche se decidi di fermarti lì.</p>
           <ul class="grid grid-cols-1 md:grid-cols-2 gap-5">
               ${methodHtml}
@@ -506,14 +506,14 @@ function generateAIAgentsHtml(): string {
         </section>
 
         <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold mb-10">Le domande che ci fanno tutti gli imprenditori</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-10">Le domande che ci fanno tutti gli imprenditori</h2>
           <div class="space-y-4">
           ${faqHtml}
           </div>
         </section>
 
         <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-8 md:p-12 text-center">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold mb-6">Porta un processo che ti ruba tempo. Ne usciamo con un piano.</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Porta un processo che ti ruba tempo. Ne usciamo con un piano.</h2>
           <p class="text-lg text-gray-300 leading-relaxed mb-8 max-w-2xl mx-auto">In 30 minuti analizziamo insieme dove oggi si perde tempo, quali dati avete già e quale agente può generare il primo risultato misurabile.</p>
           <a href="/" class="inline-flex items-center rounded-full bg-indigo-600 px-7 py-4 font-semibold text-white hover:bg-indigo-500 transition-colors">Prenota la chiamata</a>
         </section>
@@ -781,13 +781,13 @@ function renderMarkdown(content: string): string {
   lines.forEach((line) => {
     if (line.startsWith('# ')) {
       flushList();
-      elements.push(`<h1 class="text-[clamp(28px,4.5vw,48px)] font-bold mb-6 mt-8">${escapeHtml(line.replace('# ', ''))}</h1>`);
+      elements.push(`<h1 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6 mt-8">${escapeHtml(line.replace('# ', ''))}</h1>`);
     } else if (line.startsWith('## ')) {
       flushList();
-      elements.push(`<h2 class="text-2xl md:text-3xl font-bold mb-4 mt-8 text-indigo-300">${escapeHtml(line.replace('## ', ''))}</h2>`);
+      elements.push(`<h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4 mt-8 text-indigo-300">${escapeHtml(line.replace('## ', ''))}</h2>`);
     } else if (line.startsWith('### ')) {
       flushList();
-      elements.push(`<h3 class="text-lg md:text-xl font-bold mb-3 mt-6 text-purple-300">${escapeHtml(line.replace('### ', ''))}</h3>`);
+      elements.push(`<h3 class="text-lg md:text-xl font-bold leading-[1.5] mb-3 mt-6 text-purple-300">${escapeHtml(line.replace('### ', ''))}</h3>`);
     } else if (/^\d+\.\s/.test(line)) {
       const text = line.replace(/^\d+\.\s/, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       currentList.push(text);
@@ -869,7 +869,7 @@ function generateBlogArticleHtml(post: any): string {
             <span class="text-indigo-300 text-sm font-medium">${escapeHtml(post.category)}</span>
           </div>
 
-          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-tight">${escapeHtml(post.title)}</h1>
+          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">${escapeHtml(post.title)}</h1>
 
           <div class="flex flex-wrap items-center gap-6 text-gray-400 mb-8 pb-8 border-b border-white/10">
             <div class="flex items-center gap-3">
@@ -898,7 +898,7 @@ function generateBlogArticleHtml(post: any): string {
           <div class="flex flex-col md:flex-row items-center gap-6">
             <img src="${post.author.image}" alt="${escapeHtml(post.author.name)}" loading="lazy" decoding="async" class="w-20 h-20 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=160'" />
             <div class="flex-1 text-center md:text-left">
-              <h3 class="text-2xl font-bold mb-2">${escapeHtml(post.author.name)}</h3>
+              <h3 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-2">${escapeHtml(post.author.name)}</h3>
               <p class="text-gray-400">Vuoi approfondire queste strategie per il tuo business? Contattaci per una consulenza personalizzata.</p>
             </div>
             <a href="/" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all duration-300 whitespace-nowrap">Contattaci</a>

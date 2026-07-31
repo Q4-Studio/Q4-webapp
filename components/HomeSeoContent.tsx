@@ -29,8 +29,8 @@ const HomeSeoContent: React.FC = () => {
         <section className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 md:p-10">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-12">
             <div>
-              <p className="text-indigo-400 text-sm tracking-[0.35em] uppercase mb-4">Metodo</p>
-              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold text-white leading-tight">Consulenza B2B Lead Generation su Meta</h2>
+              <p className="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-4">Metodo</p>
+              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold text-white leading-[1.15] tracking-[-0.02em]">Consulenza B2B Lead Generation su Meta</h2>
             </div>
             <div className="space-y-5 text-lg md:text-xl leading-relaxed text-gray-300">
               <ScrollRevealText
@@ -49,17 +49,17 @@ const HomeSeoContent: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10">
             <div className="rounded-3xl border border-white/10 bg-[#080808] p-6">
               <Target className="w-7 h-7 text-indigo-300 mb-5" />
-              <h3 className="text-2xl font-semibold text-white mb-3">Diagnosi prima delle campagne</h3>
+              <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">Diagnosi prima delle campagne</h3>
               <p className="text-gray-400 leading-relaxed">Audit di funnel, audience, offerta e gestione lead prima di aumentare budget o test creativi.</p>
             </div>
             <div className="rounded-3xl border border-white/10 bg-[#080808] p-6">
               <GitBranch className="w-7 h-7 text-purple-300 mb-5" />
-              <h3 className="text-2xl font-semibold text-white mb-3">Sistema, non singola ads</h3>
+              <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">Sistema, non singola ads</h3>
               <p className="text-gray-400 leading-relaxed">Campagne, CRM e follow-up vengono progettati insieme per ridurre dispersione e tempi morti.</p>
             </div>
             <div className="rounded-3xl border border-white/10 bg-[#080808] p-6">
               <BarChart3 className="w-7 h-7 text-cyan-300 mb-5" />
-              <h3 className="text-2xl font-semibold text-white mb-3">Governance dei KPI</h3>
+              <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">Governance dei KPI</h3>
               <p className="text-gray-400 leading-relaxed">Misuriamo contatti che diventano davvero clienti, appuntamenti e opportunità generate, non solo il costo per contatto e numeri di facciata.</p>
             </div>
           </div>
@@ -67,8 +67,8 @@ const HomeSeoContent: React.FC = () => {
 
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <article className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-indigo-950/30 to-white/[0.03] p-6 md:p-8">
-            <p className="text-indigo-300 text-sm tracking-[0.3em] uppercase mb-4">Meta Ads Advisory</p>
-            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold text-white mb-5">Meta Ads orientate alla qualità</h2>
+            <p className="text-indigo-300 text-sm tracking-[0.08em] uppercase mb-4">Meta Ads Advisory</p>
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-white mb-5">Meta Ads orientate alla qualità</h2>
             <div className="space-y-4 text-lg md:text-xl text-gray-300 leading-relaxed">
               <p>
                 Lavoriamo come consulenti operativi sulle campagne Meta B2B: audit account, architettura delle campagne, piano test creativo, tracking server-side e lettura dei dati commerciali. L&apos;obiettivo è aiutare il team a capire cosa sta generando opportunità reali e cosa sta solo gonfiando il volume dei lead.
@@ -80,8 +80,8 @@ const HomeSeoContent: React.FC = () => {
           </article>
 
           <article className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-purple-950/30 to-white/[0.03] p-6 md:p-8">
-            <p className="text-purple-300 text-sm tracking-[0.3em] uppercase mb-4">AI Process Consulting</p>
-            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold text-white mb-5">Agenti AI sul processo sales</h2>
+            <p className="text-purple-300 text-sm tracking-[0.08em] uppercase mb-4">AI Process Consulting</p>
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-white mb-5">Agenti AI sul processo sales</h2>
             <div className="space-y-4 text-lg md:text-xl text-gray-300 leading-relaxed">
               <p>
                 Gli Agenti AI non sono chatbot generici. Li disegniamo insieme al team, partendo da regole operative, tono di voce, CRM e punti di frizione nel processo commerciale. Il risultato è un supporto che qualifica, prioritizza e prepara il lavoro umano invece di sostituirlo.
@@ -96,8 +96,8 @@ const HomeSeoContent: React.FC = () => {
         <section className="rounded-[2rem] border border-white/10 bg-[#080808] p-6 md:p-10">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.8fr] gap-8 lg:gap-12 items-start">
             <div>
-              <p className="text-cyan-300 text-sm tracking-[0.35em] uppercase mb-4">Misurazione</p>
-              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold text-white mb-6">Risultati misurabili, leggibili dal team</h2>
+              <p className="text-cyan-300 text-sm tracking-[0.08em] uppercase mb-4">Misurazione</p>
+              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-white mb-6">Risultati misurabili, leggibili dal team</h2>
               <div className="space-y-5 text-lg md:text-xl text-gray-300 leading-relaxed">
                 <p>
                   Ogni attività viene valutata su metriche operative e metriche di business. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.
@@ -108,7 +108,7 @@ const HomeSeoContent: React.FC = () => {
               </div>
             </div>
             <div className="rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-6">
-              <p className="text-sm uppercase tracking-[0.25em] text-indigo-200 mb-5">Focus consulenziale</p>
+              <p className="text-sm uppercase tracking-[0.08em] text-indigo-200 mb-5">Focus consulenziale</p>
               <ul className="space-y-4 text-gray-300">
                 <li>Audit e priorità operative prima dell&apos;execution.</li>
                 <li>Affiancamento a marketing e sales nella lettura dei dati.</li>
@@ -120,8 +120,8 @@ const HomeSeoContent: React.FC = () => {
 
         <section id="faq" className="pt-10 border-t border-white/10">
           <div className="mb-8">
-            <p className="text-indigo-400 text-sm tracking-[0.35em] uppercase mb-4">FAQ</p>
-            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold text-white mb-4">Domande frequenti su Meta Ads B2B e Agenti AI</h2>
+            <p className="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-4">FAQ</p>
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-white mb-4">Domande frequenti su Meta Ads B2B e Agenti AI</h2>
             <p className="text-lg md:text-xl text-gray-400 leading-relaxed max-w-3xl">
               Abbiamo raccolto in un unico punto le risposte operative sulle campagne Meta B2B, sugli Agenti AI e sul collegamento con CRM e automazioni.
             </p>
@@ -134,7 +134,7 @@ const HomeSeoContent: React.FC = () => {
                 className="group rounded-3xl border border-white/10 bg-white/[0.03] px-6 py-5 transition-colors open:border-indigo-400/40 open:bg-indigo-500/[0.06]"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-6">
-                  <h3 className="text-2xl md:text-3xl font-semibold text-white">{faq.question}</h3>
+                  <h3 className="text-2xl md:text-3xl font-semibold leading-[1.25] tracking-[-0.01em] text-white">{faq.question}</h3>
                   <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-indigo-300 transition-transform group-open:rotate-180">
                     <ChevronDown className="h-5 w-5" />
                   </span>

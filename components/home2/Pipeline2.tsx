@@ -86,7 +86,7 @@ const steps: Step[] = [
 const VisualShell: React.FC<{ label: string; accent: Step['accent']; children: React.ReactNode }> = ({ label, accent, children }) => (
   <div className="rounded-2xl bg-black/50 border border-white/10 overflow-hidden">
     <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/5">
-      <span className={`text-[11px] tracking-[0.25em] ${accent.text}`}>{label}</span>
+      <span className={`text-[11px] tracking-[0.08em] ${accent.text}`}>{label}</span>
       <div className="flex gap-1.5">
         <span className="w-2 h-2 rounded-full bg-white/10" />
         <span className="w-2 h-2 rounded-full bg-white/10" />
@@ -172,7 +172,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
               ['Sito e LinkedIn', 'Verificati'],
             ].map(([k, v]) => (
               <div key={k} className="pipe-stagger rounded-xl bg-white/5 border border-white/10 px-3 py-2.5">
-                <p className="text-gray-500 text-[11px] uppercase tracking-wider mb-1">{k}</p>
+                <p className="text-gray-500 text-[11px] uppercase tracking-[0.08em] mb-1">{k}</p>
                 <p className="text-white font-medium">{v}</p>
               </div>
             ))}
@@ -213,7 +213,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
 
 const PipelineHeader: React.FC = () => (
   <div className="mb-12 md:mb-10">
-    <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-tight mb-5">
+    <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-5">
       Dal click al cliente.
       <br />
       <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">In automatico.</span>
@@ -303,7 +303,7 @@ const PipelineDesktop: React.FC = () => {
                     {step.time}
                   </span>
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold mb-4">{step.title}</h3>
+                <h3 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">{step.title}</h3>
                 <p className="text-gray-400 text-lg md:text-xl leading-relaxed mb-8 max-w-xl">{step.desc}</p>
                 <div className="max-w-md">
                   <StepVisual step={step} />
@@ -345,7 +345,7 @@ const PipelineDesktop: React.FC = () => {
                         </div>
                       </div>
                       <span
-                        className={`absolute left-[calc(50%+3rem)] text-[11px] tracking-[0.25em] transition-colors duration-500 whitespace-nowrap ${
+                        className={`absolute left-[calc(50%+3rem)] text-[11px] tracking-[0.08em] transition-colors duration-500 whitespace-nowrap ${
                           reached ? s.accent.text : 'text-gray-700'
                         }`}
                       >
@@ -413,7 +413,7 @@ const PipelineMobile: React.FC = () => {
                   <span className="text-sm text-gray-600">0{i + 1}/05</span>
                   <span className={`text-[11px] tracking-[0.2em] ${s.accent.text}`}>{s.time}</span>
                 </div>
-                <h3 className="text-2xl font-bold mb-2">{s.title}</h3>
+                <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-2">{s.title}</h3>
                 <p className="text-gray-400 text-lg leading-relaxed mb-4">{s.desc}</p>
                 <StepVisual step={s} />
               </div>

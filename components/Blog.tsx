@@ -85,10 +85,10 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div ref={titleRef} className="text-center mb-20">
-          <span className="text-indigo-500 tracking-widest mb-6 block text-sm uppercase">
+          <span className="text-indigo-500 tracking-[0.08em] mb-6 block text-sm uppercase">
             Insights & Strategie
           </span>
-          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-tight">
+          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">
             Il nostro <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
@@ -159,7 +159,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
                 </div>
 
                 {/* Title */}
-                <h3 className="text-2xl font-bold mb-3 group-hover:text-indigo-300 transition-colors duration-300 line-clamp-2">
+                <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3 group-hover:text-indigo-300 transition-colors duration-300 line-clamp-2">
                   {post.title}
                 </h3>
 

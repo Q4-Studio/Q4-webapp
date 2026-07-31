@@ -88,7 +88,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateAgen
         <nav className="flex flex-col" aria-label="Navigazione principale">
           {items.map((item, i) => {
             const commonClasses =
-              'group flex items-center justify-between border-b border-white/10 py-6 text-left text-[28px] uppercase tracking-[0.12em] text-gray-200 transition-colors hover:text-indigo-300 focus-visible:text-indigo-300 focus-visible:outline-none bg-transparent';
+              'group flex items-center justify-between border-b border-white/10 py-6 text-left text-[28px] uppercase leading-[1.15] tracking-[-0.02em] text-gray-200 transition-colors hover:text-indigo-300 focus-visible:text-indigo-300 focus-visible:outline-none bg-transparent';
             const arrow = (
               <ArrowUpRight className="w-6 h-6 flex-shrink-0 text-gray-600 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-indigo-400" />
             );
@@ -133,12 +133,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateAgen
             onContact();
             onClose();
           }}
-          className="mt-8 w-full rounded-full bg-white px-6 py-4 text-center text-base uppercase tracking-[0.12em] text-[#050505] transition-colors hover:bg-gray-200 cursor-pointer border-0"
+          className="mt-8 w-full rounded-full bg-white px-6 py-4 text-center text-base uppercase tracking-normal text-[#050505] transition-colors hover:bg-gray-200 cursor-pointer border-0"
         >
           Scrivici
         </button>
 
-        <p className="mt-10 text-[11px] uppercase tracking-[0.3em] text-gray-600">
+        <p className="mt-10 text-[11px] uppercase tracking-[0.08em] text-gray-600">
           Q4 Studio · Reggio Emilia
         </p>
       </div>

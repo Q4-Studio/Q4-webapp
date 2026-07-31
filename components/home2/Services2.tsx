@@ -71,7 +71,7 @@ const SpotlightCard: React.FC<{ service: Service }> = ({ service }) => {
       />
       <div className="relative z-10">
         <div className="mb-7">{service.icon}</div>
-        <h3 className="text-2xl md:text-3xl font-bold mb-4">{service.title}</h3>
+        <h3 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">{service.title}</h3>
         <p className="text-gray-400 leading-relaxed mb-8">{service.desc}</p>
         <ul className="space-y-3">
           {service.points.map((point) => (
@@ -88,7 +88,7 @@ const SpotlightCard: React.FC<{ service: Service }> = ({ service }) => {
             href={service.partner.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-9 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-cyan-500/5 border border-cyan-400/20 text-[11px] tracking-wider text-cyan-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-colors"
+            className="mt-9 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-cyan-500/5 border border-cyan-400/20 text-[11px] tracking-[-0.08em] text-cyan-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-colors"
           >
             <Server className="w-3.5 h-3.5" />
             {service.partner.label}
@@ -210,7 +210,7 @@ const Services2: React.FC = () => {
     <section id="services" ref={sectionRef} className="relative py-32 md:py-44 px-6 bg-[#050505] text-white border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16 md:mb-20">
-          <h2 className="services-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-tight mb-6">
+          <h2 className="services-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">
             Due leve.
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Un unico sistema.</span>
@@ -240,7 +240,7 @@ const Services2: React.FC = () => {
               >
                 {stat.prefix}0{stat.suffix}
               </p>
-              <p className="text-sm tracking-wider text-gray-500 uppercase">{stat.label}</p>
+              <p className="text-sm tracking-[0.08em] text-gray-500 uppercase">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -250,8 +250,8 @@ const Services2: React.FC = () => {
           {methodSteps.map((step) => (
             <div key={step.n} className="method-step relative pt-8 border-t border-white/10">
               <span className="absolute -top-px left-0 w-12 h-px bg-gradient-to-r from-indigo-400 to-purple-400" />
-              <span className="text-sm text-indigo-400 tracking-widest">{step.n}</span>
-              <h3 className="text-2xl font-bold mt-3 mb-3">{step.title}</h3>
+              <span className="text-sm text-indigo-400 tracking-[0.08em]">{step.n}</span>
+              <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mt-3 mb-3">{step.title}</h3>
               <p className="text-gray-400 text-base leading-relaxed">{step.desc}</p>
             </div>
           ))}
