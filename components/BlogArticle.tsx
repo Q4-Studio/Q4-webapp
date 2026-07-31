@@ -118,7 +118,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
   };
 
   return (
-    <article ref={articleRef} className="relative pt-32 pb-20 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
+    <article ref={articleRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       {/* SEO: Schema.org BlogPosting structured data */}
       <BlogSchema post={post} />
 

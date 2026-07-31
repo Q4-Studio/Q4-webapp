@@ -534,7 +534,7 @@ const AIAgents: React.FC = () => {
       `}</style>
 
       {/* ============================== HERO ============================== */}
-      <section className="relative px-6 pt-36 pb-24 lg:min-h-screen flex items-center">
+      <section className="relative px-6 pt-36 md:pt-44 pb-24 md:pb-32 lg:min-h-screen flex items-center">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute right-[-10%] top-[10%] h-[640px] w-[640px] rounded-full bg-violet-500/[0.07] blur-[140px]" />
           <div className="absolute left-[-15%] bottom-[-10%] h-[520px] w-[520px] rounded-full bg-indigo-600/10 blur-[140px]" />
@@ -542,12 +542,12 @@ const AIAgents: React.FC = () => {
 
         <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-14 items-center">
           <div>
-            <div className="flex items-center gap-2 text-violet-300 text-sm tracking-[0.08em] uppercase mb-7">
+            <div className="flex items-center gap-2 text-violet-300 text-sm tracking-[0.08em] uppercase mb-5">
               <span className="w-2 h-2 bg-violet-400 rounded-full animate-pulse" />
               Agenti AI · consulenza e sviluppo
             </div>
 
-            <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-8">
+            <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">
               Agenti AI su misura per togliere al tuo team il lavoro che un software può fare meglio.
             </h1>
 
@@ -600,7 +600,7 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* ====================== COSA FA, IN CONCRETO ====================== */}
-      <section id="cosa-fa" className="relative px-6 py-28 border-t border-white/5 bg-[#070707]">
+      <section id="cosa-fa" className="relative px-6 py-32 md:py-44 border-t border-white/5 bg-[#070707]">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mb-16" data-reveal>
             <span className="text-violet-300 tracking-[0.08em] text-sm uppercase mb-5 block">
@@ -709,7 +709,7 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* ========================== INTEGRAZIONI ========================== */}
-      <section className="relative px-6 py-28 border-t border-white/5">
+      <section className="relative px-6 py-32 md:py-44 border-t border-white/5">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
           <div data-reveal>
             <span className="text-indigo-400 tracking-[0.08em] text-sm uppercase mb-5 block">
@@ -808,7 +808,7 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* ========================= METODO / PERCORSO ========================= */}
-      <section className="relative px-6 py-28 border-t border-white/5 bg-[#070707]">
+      <section className="relative px-6 py-32 md:py-44 border-t border-white/5 bg-[#070707]">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-14">
           <div className="lg:sticky lg:top-32 self-start" data-reveal>
             <span className="text-indigo-400 tracking-[0.08em] text-sm uppercase mb-5 block">
@@ -865,7 +865,7 @@ const AIAgents: React.FC = () => {
                       </div>
                     </div>
 
-                    <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">{step.title}</h3>
+                    <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">{step.title}</h3>
                     <p className="text-gray-400 leading-relaxed mb-5">{step.description}</p>
 
                     <div className="rounded-2xl border border-indigo-400/15 bg-indigo-500/[0.06] p-4">
@@ -884,7 +884,7 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* ========================= TI RICONOSCI? ========================= */}
-      <section className="relative px-6 py-28 border-t border-white/5">
+      <section className="relative px-6 py-32 md:py-44 border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mb-14" data-reveal>
             <span className="text-violet-300 tracking-[0.08em] text-sm uppercase mb-5 block">
@@ -923,7 +923,7 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* =============================== FAQ =============================== */}
-      <section className="relative px-6 py-28 border-t border-white/5 bg-[#070707]">
+      <section className="relative px-6 py-32 md:py-44 border-t border-white/5 bg-[#070707]">
         <div className="max-w-4xl mx-auto">
           <div className="mb-14 text-center" data-reveal>
             <span className="text-indigo-400 tracking-[0.08em] text-sm uppercase mb-5 block">
@@ -983,13 +983,13 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* ============================ CTA FINALE ============================ */}
-      <section className="relative px-6 py-32 border-t border-white/5 overflow-hidden">
+      <section className="relative px-6 py-32 md:py-44 border-t border-white/5 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[480px] w-[760px] rounded-full bg-indigo-600/10 blur-[140px]" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto text-center" data-reveal>
-          <span className="text-violet-300 tracking-[0.08em] text-sm uppercase mb-6 block">
+          <span className="text-violet-300 tracking-[0.08em] text-sm uppercase mb-5 block">
             Il primo passo
           </span>
           <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-8">

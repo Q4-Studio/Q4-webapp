@@ -213,7 +213,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
 
 const PipelineHeader: React.FC = () => (
   <div className="mb-12 md:mb-10">
-    <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-5">
+    <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">
       Dal click al cliente.
       <br />
       <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">In automatico.</span>

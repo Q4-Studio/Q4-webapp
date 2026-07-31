@@ -17,7 +17,7 @@ const SeoDirectory: React.FC = () => {
   };
 
   return (
-    <section className="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
+    <section className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       <SEOHead
         title="Risorse su AI, Automazioni e Tecnologia per PMI B2B | Q4 Studio"
         description="Risorse Q4 Studio su agenti AI, automazioni WhatsApp e CRM, centralino e chatbot intelligenti per le aziende B2B."
@@ -28,7 +28,7 @@ const SeoDirectory: React.FC = () => {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[min(900px,180vw)] h-[min(900px,180vw)] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <p className="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-6">Risorse</p>
+        <p className="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">Risorse</p>
         <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] max-w-4xl mb-6">
           Risorse su Agenti AI, Automazioni e Tecnologia per Aziende B2B
         </h1>

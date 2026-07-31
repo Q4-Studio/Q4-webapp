@@ -47,7 +47,7 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
   };
 
   return (
-    <article className="relative pt-36 pb-28 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
+    <article className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       <SEOHead title={page.metaTitle} description={page.description} url={pageUrl} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
@@ -80,15 +80,15 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-16">
           <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Per chi</h2>
+            <h2 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Per chi</h2>
             <p className="text-gray-400 leading-relaxed">{page.audience}.</p>
           </section>
           <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Problema</h2>
+            <h2 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Problema</h2>
             <p className="text-gray-400 leading-relaxed">{page.pain}.</p>
           </section>
           <section className="rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-6">
-            <h2 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Risultato</h2>
+            <h2 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Risultato</h2>
             <p className="text-gray-300 leading-relaxed">{page.proof}.</p>
           </section>
         </div>
@@ -112,7 +112,7 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
           <div className="space-y-6">
             {page.clusters.map((cluster) => (
               <section key={cluster.keyword} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3 text-indigo-200">{cluster.heading}</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-4 text-indigo-200">{cluster.heading}</h3>
                 <p className="text-gray-400 leading-relaxed">{cluster.content}</p>
               </section>
             ))}
@@ -147,7 +147,7 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
         )}
 
         <section className="mb-16">
-          <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-5">Come interveniamo</h2>
+          <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Come interveniamo</h2>
           <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">{page.solution}.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {page.services.map((service) => (

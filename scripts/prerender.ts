@@ -206,7 +206,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     .join('\n            ');
 
   const bodyContent = `
-    <article class="relative pt-36 pb-28 px-6 bg-[#050505] text-white min-h-screen">
+    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
       <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-purple-900/10 rounded-full blur-[160px] pointer-events-none"></div>
       <div class="max-w-5xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
@@ -330,7 +330,7 @@ function generateResourcesHtml(): string {
     .join('\n          ');
 
   const bodyContent = `
-    <section class="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen">
+    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
       <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
       <div class="max-w-6xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
@@ -341,7 +341,7 @@ function generateResourcesHtml(): string {
           </ol>
         </nav>
 
-        <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-6">Risorse</p>
+        <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">Risorse</p>
         <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] max-w-4xl mb-6">Risorse su Agenti AI, Automazioni e Tecnologia per Aziende B2B</h1>
         <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
           Questa directory raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico e collega servizi, problemi, soluzioni e FAQ.
@@ -365,11 +365,11 @@ function generateResourcesHtml(): string {
 
 function generateBlogIndexHtml(): string {
   const bodyContent = `
-    <section class="relative pt-40 pb-32 px-6 bg-[#050505] text-white min-h-screen">
+    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none"></div>
       <div class="max-w-7xl mx-auto relative z-10">
         <div class="text-center mb-20">
-          <span class="text-indigo-500 tracking-[0.08em] mb-6 block text-sm uppercase">Insights & Strategie</span>
+          <span class="text-indigo-500 tracking-[0.08em] mb-5 block text-sm uppercase">Insights & Strategie</span>
           <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">Il nostro <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span></h1>
           <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Agenti AI.
@@ -465,7 +465,7 @@ function generateAIAgentsHtml(): string {
     .join('\n          ');
 
   const bodyContent = `
-    <article class="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen">
+    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
       <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-violet-900/10 rounded-full blur-[160px] pointer-events-none"></div>
       <div class="max-w-7xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
@@ -851,7 +851,7 @@ function generateBlogArticleHtml(post: any): string {
   };
 
   const bodyContent = `
-    <article class="relative pt-32 pb-20 px-6 bg-[#050505] text-white min-h-screen">
+    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none"></div>
       <div class="max-w-4xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-8">

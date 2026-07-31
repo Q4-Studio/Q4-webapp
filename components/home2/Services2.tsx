@@ -88,7 +88,7 @@ const SpotlightCard: React.FC<{ service: Service }> = ({ service }) => {
             href={service.partner.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-9 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-cyan-500/5 border border-cyan-400/20 text-[11px] tracking-[-0.08em] text-cyan-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-colors"
+            className="mt-9 inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-cyan-500/5 border border-cyan-400/20 text-[11px] tracking-[-0.08em] text-cyan-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-colors"
           >
             <Server className="w-3.5 h-3.5" />
             {service.partner.label}
@@ -230,7 +230,7 @@ const Services2: React.FC = () => {
         {/* Metriche */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/5 rounded-3xl overflow-hidden border border-white/5 mb-24">
           {stats.map((stat) => (
-            <div key={stat.label} className="bg-[#070707] p-8 md:p-10 text-center">
+            <div key={stat.label} className="bg-[#070707] px-2 py-8 md:p-10 text-center">
               <p
                 className="stat-value tabular-nums text-[clamp(28px,4.5vw,48px)] font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 mb-2"
                 data-value={stat.value}

@@ -71,7 +71,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative pt-40 pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
+    <section ref={sectionRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       {/* SEO: Dynamic meta tags for blog listing */}
       <SEOHead
         title="Blog Q4 Studio | Guide Meta Advertising e AI Automation"
@@ -85,7 +85,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div ref={titleRef} className="text-center mb-20">
-          <span className="text-indigo-500 tracking-[0.08em] mb-6 block text-sm uppercase">
+          <span className="text-indigo-500 tracking-[0.08em] mb-5 block text-sm uppercase">
             Insights & Strategie
           </span>
           <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">

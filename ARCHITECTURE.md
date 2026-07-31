@@ -83,6 +83,36 @@ vedi nota sulla scala tipografica.
 
 ---
 
+## Ritmo Verticale (Spaziature)
+
+Scala di spaziatura verticale applicata a tutte le pagine (componenti React e template
+statici di `scripts/prerender.ts`, che devono restare coerenti). Riguarda solo padding
+verticale di sezione, margini tra blocchi e `gap` di griglia: font-size, line-height,
+letter-spacing e larghezze massime dei contenuti non cambiano (vedi sezioni sopra).
+
+| Gradino | Mobile | Desktop | Ruolo |
+|---|---|---|---|
+| **Apertura pagina (hero-like)** | `pt-36 pb-24` (144px / 96px) | `md:pt-44 md:pb-32` (176px / 128px) | Padding del blocco h1 + lead di apertura delle pagine secondarie: `AIAgents`, `SeoDirectory`, `SeoLandingPage`, `BlogArticle`, `Privacy`, `AppSupport`, `Blog`. Prima: valori tutti diversi (`pt-32/36/40`, `pb-20/24/28/32`) e **senza crescita da mobile a desktop** in nessuno dei sei file. Ora un solo gradino, con crescita su desktop. |
+| **Sezione di contenuto bordata (`border-t`)** | `py-32` (128px) | `md:py-44` (176px) | Separazione tra blocchi tematici in pagine lunghe: le sei sotto-sezioni di `AIAgents.tsx` (cosa fa, integrazioni, metodo, ti riconosci, FAQ, CTA finale) usavano `py-28`/`py-32` fissi, senza crescita su desktop. Allineate al gradino già corretto di `home2/Agents2.tsx` e `home2/Services2.tsx` (che restano invariati: erano già a norma). |
+| **Kicker → titolo (h1/h2)** | `mb-5` (20px) | invariato | Distanza tra l'etichetta uppercase sopra il titolo e il titolo stesso. Prima disomogenea: `mb-4`/`mb-5`/`mb-6`/`mb-7` a seconda del file (`HomeSeoContent`, `ContactForm`, `AppSupport`, `SeoDirectory`, `Blog`, `AIAgents`). Un solo valore, invariante per breakpoint (etichetta piccola e statica). |
+| **Titolo (h1/h2) → paragrafo/lead** | `mb-6` (24px) | invariato | Distanza tra il titolo di pagina/sezione e il paragrafo o blocco che segue. Prima disomogenea: `mb-4`/`mb-5`/`mb-6`/`mb-8` (`HomeSeoContent`, `Pipeline2`, `AIAgents` h1). Un solo valore. |
+| **Gap tra card in griglia (peso analogo)** | `gap-5` (20px) | `md:gap-8` dove già presente | Gap delle griglie di card informative a 3 colonne (`HomeSeoContent`, confrontata con `SeoLandingPage`): la prima usava `gap-4` (16px), più stretta delle griglie equivalenti altrove. Portata a `gap-5`. |
+| **Titolo di card (h3) → testo** | `mb-4` (16px) | invariato | Distanza tra il titolo di una card/blocco e il testo sottostante. Prima disomogenea: `mb-3`/`mb-4` (`HomeSeoContent`, `SeoLandingPage`, `AIAgents` metodo). Un solo valore. |
+
+**Sezioni già corrette, lasciate invariate** (generose e già scalate mobile→desktop,
+non gonfiate ulteriormente per non allungare la pagina senza motivo):
+`Manifesto2` (`py-40 md:py-56`), `home2/Agents2.tsx` e `home2/Services2.tsx`
+(`py-32 md:py-44`, presi a modello per il gradino "sezione di contenuto" sopra),
+`FinalCTA` + `ContactForm` in home (il gap ravvicinato tra i due è voluto: sono
+pensati come un unico flusso, "il form segue subito sotto" la CTA, non due
+sezioni separate).
+
+**Casi risolti con intervento di layout, non di spaziatura** (vedi anche sezioni
+sopra): le etichette delle statistiche e il badge "Stape Partner" in
+`components/home2/Services2.tsx` — dettagli nel changelog del componente.
+
+---
+
 ## Stack Tecnologico
 
 ### Frontend

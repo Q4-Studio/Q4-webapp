@@ -43,7 +43,7 @@ const Privacy: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative pt-32 pb-20 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
+    <div ref={containerRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       {/* Background gradient */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
 

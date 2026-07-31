@@ -101,7 +101,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
   }, []);
 
   return (
-    <footer ref={footerRef} className={`relative bg-[#050505] text-white ${showCta ? 'pt-40' : 'pt-20'} pb-10 px-6 overflow-hidden`}>
+    <footer ref={footerRef} className={`relative bg-[#050505] text-white ${showCta ? 'pt-40 md:pt-52' : 'pt-20'} pb-10 px-6 overflow-hidden`}>
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-[120px] pointer-events-none" />
 
