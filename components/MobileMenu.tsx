@@ -17,8 +17,17 @@ interface MobileMenuProps {
  * mix-blend-difference): reso qui evita che il pannello erediti quel blend
  * mode e diventi illeggibile.
  */
+/** Seleziona gli elementi focusabili (nell'ordine del DOM) dentro un contenitore. */
+const getFocusableElements = (container: HTMLElement): HTMLElement[] =>
+  Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+  );
+
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateAgents, onNavigateBlog, onContact }) => {
   const firstItemRef = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   // Chiusura con tasto ESC
   useEffect(() => {
@@ -29,6 +38,40 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateAgen
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isOpen, onClose]);
+
+  // Focus trap: mentre il menu è aperto, Tab e Shift+Tab restano dentro al
+  // pannello. Il resto dell'app viene reso `inert` da App.tsx, ma un handler
+  // esplicito è comunque necessario perché Tab dall'ultimo elemento del
+  // pannello altrimenti uscirebbe verso il browser (barra indirizzi ecc.),
+  // da cui poi rientrerebbe in un punto imprevisto della pagina.
+  useEffect(() => {
+    if (!isOpen) return;
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+      const focusable = getFocusableElements(panel);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (e.shiftKey) {
+        if (active === first || !panel.contains(active)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (active === last || !panel.contains(active)) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isOpen]);
 
   // Blocca lo scroll della pagina solo mentre il menu è aperto (non tocca altri
   // overflow globali, così ScrollTrigger non perde le sue misurazioni).
@@ -81,6 +124,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateAgen
 
       {/* Pannello */}
       <div
+        ref={panelRef}
         className={`relative h-full w-full overflow-y-auto overscroll-contain px-6 pt-28 pb-12 transition-all duration-300 ease-out motion-reduce:transition-none motion-reduce:duration-0 ${
           isOpen ? 'translate-y-0 opacity-100' : '-translate-y-3 opacity-0'
         }`}

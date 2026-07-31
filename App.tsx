@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import Marquee from './components/Marquee';
@@ -34,6 +34,15 @@ const App: React.FC = () => {
   const [isLoadingBlog, setIsLoadingBlog] = useState(true);
   const [blogError, setBlogError] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Chiude il menu e riporta il focus sull'hamburger che lo aveva aperto:
+  // senza questo, con tastiera/screen reader il focus si perde in cima al
+  // documento (di solito sul <body>) invece di restare su un elemento noto.
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+    hamburgerButtonRef.current?.focus();
+  };
 
   // Chiude il menu mobile quando cambia pagina o quando il viewport supera md
   useEffect(() => {
@@ -261,6 +270,7 @@ const App: React.FC = () => {
 
           {/* Hamburger mobile: stessa area del logo, area di tap >= 44x44px */}
           <button
+            ref={hamburgerButtonRef}
             type="button"
             onClick={() => setMobileMenuOpen((open) => !open)}
             aria-label={mobileMenuOpen ? 'Chiudi menu' : 'Apri menu'}
@@ -277,94 +287,101 @@ const App: React.FC = () => {
           mix-blend-difference, ma manteniamo comunque la separazione strutturale). */}
       <MobileMenu
         isOpen={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
+        onClose={closeMobileMenu}
         onNavigateAgents={() => navigateTo('agenti-ai')}
         onNavigateBlog={() => navigateTo('blog')}
         onContact={scrollToContact}
       />
 
-      <CustomCursor />
-      <CookieBanner />
+      {/* Mentre il menu mobile è aperto, il resto dell'app (cursore custom,
+          cookie banner, contenuto di pagina) viene reso `inert`: non è più
+          raggiungibile da tastiera/screen reader, anche se resta visibile
+          sotto il pannello. La <nav> resta fuori da questo wrapper perché
+          l'hamburger, che serve a chiudere il menu, deve restare cliccabile. */}
+      <div inert={mobileMenuOpen}>
+        <CustomCursor />
+        <CookieBanner />
 
-      {/* Page Routing */}
-      {currentPage === 'home' && <HomeV2 />}
+        {/* Page Routing */}
+        {currentPage === 'home' && <HomeV2 />}
 
-      <Suspense fallback={null}>
-        {currentPage === 'blog' && (
-          <>
-            <Blog
-              posts={blogPosts}
-              isLoading={isLoadingBlog}
-              error={blogError}
-              onArticleClick={(slug) => navigateTo('blog-article', slug)}
+        <Suspense fallback={null}>
+          {currentPage === 'blog' && (
+            <>
+              <Blog
+                posts={blogPosts}
+                isLoading={isLoadingBlog}
+                error={blogError}
+                onArticleClick={(slug) => navigateTo('blog-article', slug)}
+              />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'blog-article' && currentArticle && (
+            <>
+              <BlogArticle
+                post={currentArticle}
+                onBack={() => navigateTo('blog')}
+              />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'privacy' && (
+            <>
+              <Privacy />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'app-support' && (
+            <>
+              <AppSupport />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'directory' && (
+            <>
+              <SeoDirectory />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'agenti-ai' && (
+            <>
+              <AIAgents />
+              <Marquee />
+              <ContactForm />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'seo-page' && currentSeoPage && (
+            <>
+              <SeoLandingPage page={currentSeoPage} />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'dashq4login' && (
+            <DashboardLogin
+              onLoginSuccess={() => navigateTo('dashboard')}
             />
-            <Footer />
-          </>
-        )}
+          )}
 
-        {currentPage === 'blog-article' && currentArticle && (
-          <>
-            <BlogArticle
-              post={currentArticle}
-              onBack={() => navigateTo('blog')}
+          {currentPage === 'dashboard' && (
+            <Dashboard
+              onLogout={() => navigateTo('dashq4login')}
             />
-            <Footer />
-          </>
-        )}
+          )}
 
-        {currentPage === 'privacy' && (
-          <>
-            <Privacy />
-            <Footer />
-          </>
-        )}
-
-        {currentPage === 'app-support' && (
-          <>
-            <AppSupport />
-            <Footer />
-          </>
-        )}
-
-        {currentPage === 'directory' && (
-          <>
-            <SeoDirectory />
-            <Footer />
-          </>
-        )}
-
-        {currentPage === 'agenti-ai' && (
-          <>
-            <AIAgents />
-            <Marquee />
-            <ContactForm />
-            <Footer />
-          </>
-        )}
-
-        {currentPage === 'seo-page' && currentSeoPage && (
-          <>
-            <SeoLandingPage page={currentSeoPage} />
-            <Footer />
-          </>
-        )}
-
-        {currentPage === 'dashq4login' && (
-          <DashboardLogin
-            onLoginSuccess={() => navigateTo('dashboard')}
-          />
-        )}
-
-        {currentPage === 'dashboard' && (
-          <Dashboard
-            onLogout={() => navigateTo('dashq4login')}
-          />
-        )}
-
-        {currentPage === '404' && (
-          <NotFound />
-        )}
-      </Suspense>
+          {currentPage === '404' && (
+            <NotFound />
+          )}
+        </Suspense>
+      </div>
 
     </main>
   );

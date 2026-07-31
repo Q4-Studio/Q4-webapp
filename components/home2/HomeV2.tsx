@@ -33,10 +33,21 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
   const barRef = useRef<HTMLDivElement>(null);
   const wordsRef = useRef<(HTMLSpanElement | null)[]>([]);
 
+  // `onDone` arriva dal genitore come arrow function inline: se HomeV2 si
+  // re-renderizza mentre il preloader è a schermo (es. il fetch blog di
+  // App.tsx che risolve durante i ~1,3s di conteggio), la prop cambia identità
+  // a ogni render. Una ref tiene sempre l'ultima versione senza far dipendere
+  // da essa l'effetto che monta la timeline: così la timeline GSAP parte una
+  // sola volta, indipendentemente da quante volte il genitore re-renderizza.
+  const onDoneRef = useRef(onDone);
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  });
+
   useEffect(() => {
     // Con reduced-motion il sipario non ha senso: si va dritti al contenuto.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      onDone();
+      onDoneRef.current();
       return;
     }
 
@@ -47,7 +58,7 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
     const total = 1.3; // durata del conteggio, le parole si distribuiscono qui dentro
     const slot = total / PRELOADER_WORDS.length;
 
-    const tl = gsap.timeline({ onComplete: onDone });
+    const tl = gsap.timeline({ onComplete: () => onDoneRef.current() });
 
     // Contatore 000 → 100 e riga di avanzamento, in parallelo
     tl.to(counter, {
@@ -79,13 +90,15 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
 
     // Rete di sicurezza: il preloader copre tutta la pagina, quindi non deve mai
     // poter restare bloccato (rAF sospeso, GSAP che non parte, tab in background).
-    const failSafe = window.setTimeout(onDone, 3000);
+    const failSafe = window.setTimeout(() => onDoneRef.current(), 3000);
 
     return () => {
       window.clearTimeout(failSafe);
       tl.kill();
     };
-  }, [onDone]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- di proposito: la
+    // timeline deve montarsi una sola volta, `onDone` è letta dalla ref sopra.
+  }, []);
 
   return (
     <div ref={overlayRef} className="fixed inset-0 z-[9999] bg-[#050505] overflow-hidden">

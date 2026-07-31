@@ -96,6 +96,10 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     updateMetaTag('twitter:title', title);
     updateMetaTag('twitter:description', description);
     updateMetaTag('twitter:image', image);
+    // Stesso ragionamento di og:image:alt: index.html fissa "Q4 Studio", che
+    // resterebbe a descrivere la copertina di un articolo dopo una navigazione
+    // lato client.
+    updateMetaTag('twitter:image:alt', image === DEFAULT_OG_IMAGE ? DEFAULT_OG_IMAGE_ALT : title);
     updateMetaTag('twitter:url', url);
 
     // Update canonical link
