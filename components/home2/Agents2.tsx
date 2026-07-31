@@ -121,12 +121,12 @@ const AgentTerminal: React.FC = () => {
           <span className="w-3 h-3 rounded-full bg-emerald-500/60" />
         </div>
         <span className="text-[11px] tracking-[0.2em] text-gray-500">{scenarios[scenarioIdx].name}</span>
-        <span className="flex items-center gap-1.5 text-[10px] tracking-widest text-emerald-400">
+        <span className="flex items-center gap-1.5 text-[11px] tracking-widest text-emerald-400">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           LIVE
         </span>
       </div>
-      <div className="p-6 text-[13px] min-h-[240px] space-y-3">
+      <div className="p-6 text-sm min-h-[240px] space-y-3">
         {doneLines.map((line, i) => renderLine(line, line.text, `${scenarioIdx}-${i}`))}
         {typing && renderLine(typing.line, typing.line.text.slice(0, typing.chars), 'typing', true)}
       </div>
@@ -222,7 +222,7 @@ const Agents2: React.FC = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center relative z-10">
         {/* Testo */}
         <div>
-          <h2 className="agents-reveal text-4xl md:text-6xl font-bold leading-tight mb-6">
+          <h2 className="agents-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-tight mb-6">
             Colleghi digitali,
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
@@ -238,7 +238,7 @@ const Agents2: React.FC = () => {
             {integrations.map((item) => (
               <span
                 key={item.name}
-                className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-gray-400 hover:border-indigo-500/40 hover:text-indigo-300 transition-colors"
+                className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/5 border border-white/10 text-[11px] text-gray-400 hover:border-indigo-500/40 hover:text-indigo-300 transition-colors"
               >
                 {item.icon}
                 {item.name}

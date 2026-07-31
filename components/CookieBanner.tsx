@@ -109,10 +109,10 @@ const CookieBanner: React.FC = () => {
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-2">
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
                     Questo sito utilizza cookie
                   </h3>
-                  <p className="text-gray-400 text-sm md:text-base mb-6 leading-relaxed">
+                  <p className="text-gray-400 text-base mb-6 leading-relaxed">
                     Utilizziamo cookie tecnici, analytics (Google Analytics 4) e di marketing (Meta Pixel) per migliorare la tua esperienza
                     e mostrarti contenuti personalizzati. Puoi scegliere quali cookie accettare.
                   </p>
@@ -141,7 +141,7 @@ const CookieBanner: React.FC = () => {
                     </button>
                   </div>
 
-                  <p className="text-gray-500 text-xs mt-4">
+                  <p className="text-gray-500 text-[11px] mt-4">
                     Cliccando "Accetta tutto" acconsenti all'uso di tutti i cookie. Leggi la nostra{' '}
                     <a
                       href="/#privacy"
@@ -158,7 +158,7 @@ const CookieBanner: React.FC = () => {
             // Settings Panel
             <div className="p-6 md:p-8">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl md:text-2xl font-bold text-white">
+                <h3 className="text-2xl md:text-3xl font-bold text-white">
                   Preferenze Cookie
                 </h3>
                 <button
@@ -173,7 +173,7 @@ const CookieBanner: React.FC = () => {
                 {/* Necessary Cookies */}
                 <div className="flex items-start justify-between p-4 bg-white/5 rounded-xl border border-white/5">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-white mb-1">Cookie Necessari</h4>
+                    <h4 className="font-semibold text-lg text-white mb-1">Cookie Necessari</h4>
                     <p className="text-sm text-gray-400">
                       Essenziali per il funzionamento del sito. Non possono essere disabilitati.
                     </p>
@@ -188,7 +188,7 @@ const CookieBanner: React.FC = () => {
                 {/* Analytics Cookies */}
                 <div className="flex items-start justify-between p-4 bg-white/5 rounded-xl border border-white/5">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-white mb-1">Cookie Analytics</h4>
+                    <h4 className="font-semibold text-lg text-white mb-1">Cookie Analytics</h4>
                     <p className="text-sm text-gray-400">
                       Google Analytics 4 per statistiche anonime di utilizzo del sito.
                     </p>
@@ -210,7 +210,7 @@ const CookieBanner: React.FC = () => {
                 {/* Marketing Cookies */}
                 <div className="flex items-start justify-between p-4 bg-white/5 rounded-xl border border-white/5">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-white mb-1">Cookie di Marketing</h4>
+                    <h4 className="font-semibold text-lg text-white mb-1">Cookie di Marketing</h4>
                     <p className="text-sm text-gray-400">
                       Meta Pixel per tracciamento conversioni e remarketing su Facebook/Instagram.
                     </p>
@@ -246,7 +246,7 @@ const CookieBanner: React.FC = () => {
                 </button>
               </div>
 
-              <p className="text-gray-500 text-xs mt-4">
+              <p className="text-gray-500 text-[11px] mt-4">
                 Per maggiori informazioni consulta la nostra{' '}
                 <a
                   href="/#privacy"

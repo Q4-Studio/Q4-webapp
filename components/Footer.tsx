@@ -108,7 +108,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
       <div className="max-w-7xl mx-auto relative z-10 flex flex-col items-center text-center">
         {showCta && (
           <>
-            <h2 ref={titleRef} className="text-5xl md:text-8xl font-bold tracking-tighter mb-12">
+            <h2 ref={titleRef} className="text-[clamp(28px,4.5vw,48px)] font-bold tracking-tighter mb-12">
               Pronto a crescere?
             </h2>
 
@@ -175,7 +175,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                 </div>
             </div>
             <div>
-                <h4 className="text-white font-bold mb-4">Servizi</h4>
+                <h4 className="text-white font-bold text-lg mb-4">Servizi</h4>
                 <ul className="space-y-2">
                     <li
                         className="hover:text-indigo-400 cursor-pointer transition-colors"
@@ -195,7 +195,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                 </ul>
             </div>
             <div>
-                 <h4 className="text-white font-bold mb-4">Legale</h4>
+                 <h4 className="text-white font-bold text-lg mb-4">Legale</h4>
                 <ul className="space-y-2">
                     <li>
                         <a href="/risorse" className="hover:text-indigo-400 transition-colors">
@@ -217,7 +217,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
             </div>
         </div>
         
-        <div ref={bottomRef} className="w-full flex flex-col md:flex-row justify-between items-center gap-2 mt-20 text-xs text-gray-600">
+        <div ref={bottomRef} className="w-full flex flex-col md:flex-row justify-between items-center gap-2 mt-20 text-[11px] text-gray-600">
             <span>© {new Date().getFullYear()} Q4 Studio. Tutti i diritti riservati. • P.I. 03033250352</span>
             <span>Reggio Emilia</span>
         </div>

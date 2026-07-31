@@ -43,7 +43,7 @@ const Manifesto2: React.FC = () => {
         <ScrollRevealText
           text={MANIFESTO}
           className="font-bold leading-snug tracking-tight"
-          style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(28px, 4.5vw, 56px)' }}
+          style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(28px, 4.5vw, 48px)' }}
           start="top 70%"
           end="bottom 60%"
         />

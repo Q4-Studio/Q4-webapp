@@ -88,10 +88,10 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
           <span className="text-indigo-500 tracking-widest mb-6 block text-sm uppercase">
             Insights & Strategie
           </span>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-tight">
             Il nostro <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span>
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Agenti AI.
           </p>
         </div>
@@ -140,7 +140,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
 
                 {/* Category Badge */}
                 <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-indigo-500/20 backdrop-blur-sm border border-indigo-500/30">
-                  <span className="text-indigo-300 text-xs font-medium">{post.category}</span>
+                  <span className="text-indigo-300 text-[11px] font-medium">{post.category}</span>
                 </div>
               </div>
 

@@ -8,11 +8,36 @@
 ## Indice
 1. [Stack Tecnologico](#stack-tecnologico)
 2. [Struttura del Progetto](#struttura-del-progetto)
-3. [Componenti Principali](#componenti-principali)
-4. [Sistema di Blog](#sistema-di-blog)
-5. [Routing](#routing)
-6. [Variabili d'Ambiente](#variabili-dambiente)
-7. [Build e Deploy](#build-e-deploy)
+3. [Scala Tipografica](#scala-tipografica)
+4. [Componenti Principali](#componenti-principali)
+5. [Sistema di Blog](#sistema-di-blog)
+6. [Routing](#routing)
+7. [Variabili d'Ambiente](#variabili-dambiente)
+8. [Build e Deploy](#build-e-deploy)
+
+---
+
+## Scala Tipografica
+
+Scala unica per tutti i `font-size` del sito (solo dimensione: interlinea, tracking e
+spaziature sono fuori scope e vengono gestiti separatamente). 7 gradini, rapporto ~1.15-1.35
+tra gradini adiacenti, più aperto sui due gradini "display". Regola: nessun paragrafo sotto
+16px su mobile, nessuna micro-etichetta sotto 11px.
+
+| Gradino | Mobile | Desktop | Classe Tailwind / valore | Uso |
+|---|---|---|---|---|
+| **Display** | ~40px | ~80px | `text-[clamp(40px,6.5vw,80px)]` | Solo `<h1>` di pagina (Blog, BlogArticle, SeoDirectory, SeoLandingPage, AIAgents, Privacy, AppSupport). **Eccezione**: l'h1 dell'hero (`Hero2.tsx`) ha una propria variante già tarata e verificata, invariata: `clamp(44px,12.8vw,52px)` fino a 768px, `clamp(56px,7.5vw,108px)` sopra. |
+| **H2 sezione** | 28px | 48px | `text-[clamp(28px,4.5vw,48px)]` | Tutti gli `<h2>` di sezione (Pipeline2, Agents2, Services2, HomeSeoContent, AIAgents, SeoLandingPage, Footer CTA, FinalCTA). Anche il paragrafo-manifesto di `Manifesto2.tsx` (eccezione documentata: è un `<p>` ma con peso visivo di un h2/claim). |
+| **H3** | 24px | 30px | `text-2xl md:text-3xl` | Sotto-titoli di sezione, titoli di card, `<h3>` negli articoli blog. |
+| **Body Large** | 18px | 20px | `text-lg md:text-xl` | Paragrafi lead/intro sotto h1/h2, sottotitolo hero. Copre anche gli `<h4>` reali (Cookie Banner, Privacy, Footer colonne), che a questa taglia già coincidevano. |
+| **Body** | 16px | 16px | `text-base` | Paragrafi normali, form, bottoni, nav, liste. |
+| **Small / kicker** | 14px | 14px | `text-sm` | Meta info secondarie, etichette "kicker" uppercase sopra i titoli (stesse dimensioni di un testo secondario: si distinguono per tracking/uppercase, non per size). |
+| **Micro / etichette** | 11px | 11px | `text-[11px]` | Badge, pillole, contatori, tag piccolissimi. Non scende mai sotto gli 11px. |
+
+**Eccezioni note** (documentate, non nella scala):
+- `NotFound.tsx`: il numero "404" (`text-[200px] md:text-[280px]`) è un glifo decorativo, non un titolo editoriale: resta fuori scala.
+- Testi ghost/decorativi `aria-hidden` (il "Q4" e "FUTURE-READY" in filigrana in `Hero2.tsx`/`HomeV2.tsx`) restano fuori scala: sono elementi grafici, non contenuto testuale.
+- Preloader (`HomeV2.tsx`): fuori scope per richiesta esplicita del cliente.
 
 ---
 

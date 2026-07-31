@@ -252,7 +252,7 @@ const Hero2: React.FC = () => {
       >
         <p
           ref={kickerRef}
-          className="mb-4 md:mb-5 uppercase tracking-[0.3em] text-[11px] md:text-xs text-indigo-300/70"
+          className="mb-4 md:mb-5 uppercase tracking-[0.3em] text-[11px] text-indigo-300/70"
         >
           Bring AI&Tech to Marketing
         </p>
@@ -279,7 +279,7 @@ const Hero2: React.FC = () => {
 
         <p
           ref={subRef}
-          className="mt-8 text-lg md:text-2xl text-gray-300 max-w-xl mx-auto leading-relaxed"
+          className="mt-8 text-lg md:text-xl text-gray-300 max-w-xl mx-auto leading-relaxed"
           style={{ textShadow: '0 1px 12px rgba(0,0,0,0.6)' }}
         >
           Lo studio di consulenza che porta AI e le ultime tecnologie nel tuo marketing.

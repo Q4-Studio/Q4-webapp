@@ -86,7 +86,7 @@ const steps: Step[] = [
 const VisualShell: React.FC<{ label: string; accent: Step['accent']; children: React.ReactNode }> = ({ label, accent, children }) => (
   <div className="rounded-2xl bg-black/50 border border-white/10 overflow-hidden">
     <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/5">
-      <span className={`text-[10px] tracking-[0.25em] ${accent.text}`}>{label}</span>
+      <span className={`text-[11px] tracking-[0.25em] ${accent.text}`}>{label}</span>
       <div className="flex gap-1.5">
         <span className="w-2 h-2 rounded-full bg-white/10" />
         <span className="w-2 h-2 rounded-full bg-white/10" />
@@ -108,7 +108,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
             </div>
             <div>
               <p className="text-sm font-semibold text-white">Mario Rossi</p>
-              <p className="text-xs text-gray-400">Direttore Commerciale — Meccanica Estense Srl</p>
+              <p className="text-sm text-gray-400">Direttore Commerciale — Meccanica Estense Srl</p>
             </div>
           </div>
           <div className="pipe-stagger mt-4 flex flex-wrap gap-2">
@@ -136,7 +136,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
               </span>
             ))}
           </div>
-          <div className="pipe-stagger space-y-2 text-xs text-gray-400">
+          <div className="pipe-stagger space-y-2 text-sm text-gray-400">
             <p><span className="text-gray-600">fonte:</span> Meta Ads — Lead Form</p>
             <p><span className="text-gray-600">assegnato a:</span> <span className="text-white">Riccardo (Sales)</span></p>
             <p><span className="text-gray-600">priorità:</span> <span className="text-indigo-300">alta</span></p>
@@ -164,7 +164,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
     case 'enrichment':
       return (
         <VisualShell label="DATA ENRICHMENT" accent={step.accent}>
-          <div className="grid grid-cols-2 gap-2.5 text-xs">
+          <div className="grid grid-cols-2 gap-2.5 text-sm">
             {[
               ['Dipendenti', '45'],
               ['Settore', 'Meccanica di precisione'],
@@ -172,7 +172,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
               ['Sito e LinkedIn', 'Verificati'],
             ].map(([k, v]) => (
               <div key={k} className="pipe-stagger rounded-xl bg-white/5 border border-white/10 px-3 py-2.5">
-                <p className="text-gray-500 text-[10px] uppercase tracking-wider mb-1">{k}</p>
+                <p className="text-gray-500 text-[11px] uppercase tracking-wider mb-1">{k}</p>
                 <p className="text-white font-medium">{v}</p>
               </div>
             ))}
@@ -193,7 +193,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
               { icon: <MessageCircle className="w-3.5 h-3.5" />, when: '+3 giorni', what: 'Promemoria WhatsApp' },
               { icon: <BellRing className="w-3.5 h-3.5" />, when: 'sempre', what: 'Ogni lead resta presidiato' },
             ].map((row) => (
-              <div key={row.what} className="pipe-stagger flex items-center gap-3 text-xs">
+              <div key={row.what} className="pipe-stagger flex items-center gap-3 text-sm">
                 <span className="w-7 h-7 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 flex items-center justify-center flex-shrink-0">
                   {row.icon}
                 </span>
@@ -213,7 +213,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
 
 const PipelineHeader: React.FC = () => (
   <div className="mb-12 md:mb-10">
-    <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-5">
+    <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-tight mb-5">
       Dal click al cliente.
       <br />
       <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">In automatico.</span>
@@ -303,8 +303,8 @@ const PipelineDesktop: React.FC = () => {
                     {step.time}
                   </span>
                 </div>
-                <h3 className="text-3xl md:text-4xl font-bold mb-4">{step.title}</h3>
-                <p className="text-gray-400 text-lg leading-relaxed mb-8 max-w-xl">{step.desc}</p>
+                <h3 className="text-2xl md:text-3xl font-bold mb-4">{step.title}</h3>
+                <p className="text-gray-400 text-lg md:text-xl leading-relaxed mb-8 max-w-xl">{step.desc}</p>
                 <div className="max-w-md">
                   <StepVisual step={step} />
                 </div>
@@ -410,11 +410,11 @@ const PipelineMobile: React.FC = () => {
                   <span className="scale-[0.65] flex">{s.icon}</span>
                 </div>
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="text-xs text-gray-600">0{i + 1}/05</span>
-                  <span className={`text-[10px] tracking-[0.2em] ${s.accent.text}`}>{s.time}</span>
+                  <span className="text-sm text-gray-600">0{i + 1}/05</span>
+                  <span className={`text-[11px] tracking-[0.2em] ${s.accent.text}`}>{s.time}</span>
                 </div>
-                <h3 className="text-xl font-bold mb-2">{s.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed mb-4">{s.desc}</p>
+                <h3 className="text-2xl font-bold mb-2">{s.title}</h3>
+                <p className="text-gray-400 text-lg leading-relaxed mb-4">{s.desc}</p>
                 <StepVisual step={s} />
               </div>
             ))}

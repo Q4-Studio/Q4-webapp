@@ -75,7 +75,7 @@ const SpotlightCard: React.FC<{ service: Service }> = ({ service }) => {
         <p className="text-gray-400 leading-relaxed mb-8">{service.desc}</p>
         <ul className="space-y-3">
           {service.points.map((point) => (
-            <li key={point} className="flex items-center gap-3 text-sm text-gray-300">
+            <li key={point} className="flex items-center gap-3 text-base text-gray-300">
               <span className="w-5 h-5 rounded-full bg-indigo-500/10 border border-indigo-400/30 flex items-center justify-center flex-shrink-0">
                 <Check className="w-3 h-3 text-indigo-300" />
               </span>
@@ -88,7 +88,7 @@ const SpotlightCard: React.FC<{ service: Service }> = ({ service }) => {
             href={service.partner.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-9 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-cyan-500/5 border border-cyan-400/20 text-xs tracking-wider text-cyan-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-colors"
+            className="mt-9 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-cyan-500/5 border border-cyan-400/20 text-[11px] tracking-wider text-cyan-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-colors"
           >
             <Server className="w-3.5 h-3.5" />
             {service.partner.label}
@@ -210,7 +210,7 @@ const Services2: React.FC = () => {
     <section id="services" ref={sectionRef} className="relative py-32 md:py-44 px-6 bg-[#050505] text-white border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16 md:mb-20">
-          <h2 className="services-reveal text-4xl md:text-6xl font-bold leading-tight mb-6">
+          <h2 className="services-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-tight mb-6">
             Due leve.
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Un unico sistema.</span>
@@ -232,7 +232,7 @@ const Services2: React.FC = () => {
           {stats.map((stat) => (
             <div key={stat.label} className="bg-[#070707] p-8 md:p-10 text-center">
               <p
-                className="stat-value tabular-nums text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 mb-2"
+                className="stat-value tabular-nums text-[clamp(28px,4.5vw,48px)] font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 mb-2"
                 data-value={stat.value}
                 data-prefix={stat.prefix}
                 data-suffix={stat.suffix}
@@ -240,7 +240,7 @@ const Services2: React.FC = () => {
               >
                 {stat.prefix}0{stat.suffix}
               </p>
-              <p className="text-xs md:text-sm tracking-wider text-gray-500 uppercase">{stat.label}</p>
+              <p className="text-sm tracking-wider text-gray-500 uppercase">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -251,8 +251,8 @@ const Services2: React.FC = () => {
             <div key={step.n} className="method-step relative pt-8 border-t border-white/10">
               <span className="absolute -top-px left-0 w-12 h-px bg-gradient-to-r from-indigo-400 to-purple-400" />
               <span className="text-sm text-indigo-400 tracking-widest">{step.n}</span>
-              <h3 className="text-xl font-bold mt-3 mb-3">{step.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{step.desc}</p>
+              <h3 className="text-2xl font-bold mt-3 mb-3">{step.title}</h3>
+              <p className="text-gray-400 text-base leading-relaxed">{step.desc}</p>
             </div>
           ))}
         </div>

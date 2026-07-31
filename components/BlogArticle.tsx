@@ -70,7 +70,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
       if (line.startsWith('# ')) {
         flushList();
         elements.push(
-          <h1 key={`h1-${key++}`} className="text-4xl md:text-5xl font-bold mb-6 mt-8">
+          <h1 key={`h1-${key++}`} className="text-[clamp(28px,4.5vw,48px)] font-bold mb-6 mt-8">
             {line.replace('# ', '')}
           </h1>
         );
@@ -79,7 +79,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
       else if (line.startsWith('## ')) {
         flushList();
         elements.push(
-          <h2 key={`h2-${key++}`} className="text-3xl md:text-4xl font-bold mb-4 mt-8 text-indigo-300">
+          <h2 key={`h2-${key++}`} className="text-2xl md:text-3xl font-bold mb-4 mt-8 text-indigo-300">
             {line.replace('## ', '')}
           </h2>
         );
@@ -88,7 +88,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
       else if (line.startsWith('### ')) {
         flushList();
         elements.push(
-          <h3 key={`h3-${key++}`} className="text-2xl font-bold mb-3 mt-6 text-purple-300">
+          <h3 key={`h3-${key++}`} className="text-lg md:text-xl font-bold mb-3 mt-6 text-purple-300">
             {line.replace('### ', '')}
           </h3>
         );
@@ -108,7 +108,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
         // Handle bold text **text**
         const html = line.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
         elements.push(
-          <p key={`p-${key++}`} className="text-lg text-gray-300 leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: html }} />
+          <p key={`p-${key++}`} className="text-lg md:text-xl text-gray-300 leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: html }} />
         );
       }
     });
@@ -157,7 +157,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-tight">
             {post.title}
           </h1>
 

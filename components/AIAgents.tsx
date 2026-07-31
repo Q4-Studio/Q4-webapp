@@ -343,9 +343,9 @@ const LiveAgentPanel: React.FC<{ reducedMotion: boolean }> = ({ reducedMotion })
             <span className="absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75 animate-ping" />
             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-violet-400" />
           </span>
-          <span className="text-xs uppercase tracking-[0.25em] text-violet-300">Agente al lavoro</span>
+          <span className="text-[11px] uppercase tracking-[0.25em] text-violet-300">Agente al lavoro</span>
         </div>
-        <span className="text-xs text-gray-600">q4 · operations</span>
+        <span className="text-[11px] text-gray-600">q4 · operations</span>
       </div>
 
       <div className="p-6 min-h-[400px] flex flex-col">
@@ -353,7 +353,7 @@ const LiveAgentPanel: React.FC<{ reducedMotion: boolean }> = ({ reducedMotion })
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 mb-5">
           <div className="flex items-center gap-2 text-gray-400 mb-2">
             {scenario.sourceIcon}
-            <span className="text-xs uppercase tracking-widest">{scenario.source}</span>
+            <span className="text-[11px] uppercase tracking-widest">{scenario.source}</span>
           </div>
           <p className="text-gray-200 leading-relaxed">{scenario.trigger}</p>
         </div>
@@ -547,18 +547,18 @@ const AIAgents: React.FC = () => {
               Agenti AI · consulenza e sviluppo
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold leading-[1.02] tracking-tighter mb-8">
+            <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.02] tracking-tighter mb-8">
               Agenti AI su misura per togliere al tuo team il lavoro che un software può fare meglio.
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-400 leading-relaxed max-w-2xl">
+            <p className="text-lg md:text-xl text-gray-400 leading-relaxed max-w-2xl">
               Leggono email e WhatsApp, inseriscono gli ordini nel gestionale, preparano i preventivi,
               qualificano i lead e rispondono ai clienti. Tu mantieni il controllo:{' '}
               <span className="text-white">l'agente propone, le persone decidono.</span>
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-2">
-              <span className="text-xs uppercase tracking-widest text-gray-600 mr-1">
+              <span className="text-[11px] uppercase tracking-widest text-gray-600 mr-1">
                 Lavora dentro:
               </span>
               {[
@@ -570,7 +570,7 @@ const AIAgents: React.FC = () => {
               ].map((item) => (
                 <span
                   key={item.label}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-gray-300"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] text-gray-300"
                 >
                   <span className="text-violet-300">{item.icon}</span>
                   {item.label}
@@ -606,7 +606,7 @@ const AIAgents: React.FC = () => {
             <span className="text-violet-300 tracking-widest text-sm uppercase mb-5 block">
               Cosa fa, in concreto
             </span>
-            <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-tight mb-6">
               Scegli un processo.{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-purple-400">
                 Guarda cosa cambia.
@@ -615,7 +615,7 @@ const AIAgents: React.FC = () => {
             <ScrollRevealText
               as="p"
               text="Ogni agente nasce da un processo vero: come lo gestisci oggi, cosa fa l'agente al posto del team e dove resta il controllo delle persone."
-              className="text-xl text-gray-400 leading-relaxed"
+              className="text-lg md:text-xl text-gray-400 leading-relaxed"
             />
           </div>
 
@@ -654,13 +654,13 @@ const AIAgents: React.FC = () => {
             >
               <div className="absolute top-0 right-0 w-72 h-72 bg-violet-400/[0.04] rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
 
-              <h3 className="text-2xl md:text-4xl font-bold leading-snug mb-8 relative z-10">
+              <h3 className="text-2xl md:text-3xl font-bold leading-snug mb-8 relative z-10">
                 {currentCase.title}
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
                 <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                  <span className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-gray-500 mb-4">
+                  <span className="flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-gray-500 mb-4">
                     <Clock className="w-4 h-4" />
                     Oggi, senza agente
                   </span>
@@ -668,7 +668,7 @@ const AIAgents: React.FC = () => {
                 </div>
 
                 <div className="rounded-2xl border border-violet-400/20 bg-violet-400/[0.04] p-6">
-                  <span className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-violet-300/80 mb-4">
+                  <span className="flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-violet-300/80 mb-4">
                     <Bot className="w-4 h-4" />
                     Con l'agente
                   </span>
@@ -676,7 +676,7 @@ const AIAgents: React.FC = () => {
                     {currentCase.withAgent.map((step) => (
                       <li key={step} className="flex items-start gap-3">
                         <CheckCircle2 className="w-4 h-4 mt-1 flex-shrink-0 text-violet-400" />
-                        <span className="text-sm text-gray-300 leading-relaxed">{step}</span>
+                        <span className="text-base text-gray-300 leading-relaxed">{step}</span>
                       </li>
                     ))}
                   </ul>
@@ -685,13 +685,13 @@ const AIAgents: React.FC = () => {
 
               <div className="mt-6 flex flex-col md:flex-row md:items-center gap-4 md:gap-6 relative z-10">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs uppercase tracking-widest text-gray-600 mr-1">
+                  <span className="text-[11px] uppercase tracking-widest text-gray-600 mr-1">
                     Si collega a:
                   </span>
                   {currentCase.tools.map((tool) => (
                     <span
                       key={tool}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-gray-300"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] text-gray-300"
                     >
                       <span className="text-violet-300">{toolIcons[tool]}</span>
                       {tool}
@@ -715,10 +715,10 @@ const AIAgents: React.FC = () => {
             <span className="text-indigo-400 tracking-widest text-sm uppercase mb-5 block">
               Integrazioni
             </span>
-            <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-tight mb-6">
               Si collega agli strumenti che usi già.
             </h2>
-            <p className="text-xl text-gray-400 leading-relaxed mb-8">
+            <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8">
               Nessuna piattaforma nuova da imparare, nessun cambio di gestionale. L'agente entra nei
               flussi esistenti: legge da dove arrivano le informazioni e scrive dove servono.
             </p>
@@ -729,7 +729,7 @@ const AIAgents: React.FC = () => {
               </span>
               <div>
                 <p className="font-semibold mb-1">Usate un software particolare?</p>
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <p className="text-gray-400 text-base leading-relaxed">
                   Se ha un'API, un'esportazione o anche solo una casella email, lo colleghiamo. Lo
                   verifichiamo insieme nella fase di mappatura, prima di qualsiasi investimento.
                 </p>
@@ -814,20 +814,20 @@ const AIAgents: React.FC = () => {
             <span className="text-indigo-400 tracking-widest text-sm uppercase mb-5 block">
               Il nostro metodo
             </span>
-            <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-tight mb-6">
               Non ti vendiamo un software.{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
                 Ti affianchiamo finché funziona.
               </span>
             </h2>
-            <p className="text-xl text-gray-400 leading-relaxed mb-8">
+            <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8">
               Siamo uno studio di consulenza: prima capiamo come lavora la tua azienda, poi
               costruiamo. Ogni tappa ha una durata, un obiettivo e un risultato concreto che ti porti
               a casa, anche se decidi di fermarti lì.
             </p>
             <div className="flex items-center gap-3 text-gray-500">
               <ShieldCheck className="w-5 h-5 text-indigo-400 flex-shrink-0" />
-              <p className="text-sm leading-relaxed">
+              <p className="text-base leading-relaxed">
                 Nessun vincolo lungo: si prosegue solo se i numeri della tappa precedente lo
                 giustificano.
               </p>
@@ -857,7 +857,7 @@ const AIAgents: React.FC = () => {
                           {step.icon}
                         </span>
                         <div>
-                          <span className="block text-xs uppercase tracking-widest text-gray-600">
+                          <span className="block text-[11px] uppercase tracking-widest text-gray-600">
                             {step.phase}
                           </span>
                           <span className="text-sm text-gray-400">{step.duration}</span>
@@ -869,11 +869,11 @@ const AIAgents: React.FC = () => {
                     <p className="text-gray-400 leading-relaxed mb-5">{step.description}</p>
 
                     <div className="rounded-2xl border border-indigo-400/15 bg-indigo-500/[0.06] p-4">
-                      <span className="flex items-center gap-2 text-xs uppercase tracking-widest text-indigo-300/80 mb-1.5">
+                      <span className="flex items-center gap-2 text-[11px] uppercase tracking-widest text-indigo-300/80 mb-1.5">
                         <FileCheck className="w-4 h-4" />
                         Cosa ti porti a casa
                       </span>
-                      <p className="text-sm text-gray-300 leading-relaxed">{step.deliverable}</p>
+                      <p className="text-base text-gray-300 leading-relaxed">{step.deliverable}</p>
                     </div>
                   </div>
                 </div>
@@ -890,7 +890,7 @@ const AIAgents: React.FC = () => {
             <span className="text-violet-300 tracking-widest text-sm uppercase mb-5 block">
               Ti suona familiare?
             </span>
-            <h2 className="text-4xl md:text-6xl font-bold leading-tight">
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-tight">
               Le frasi che sentiamo in ogni prima call.
             </h2>
           </div>
@@ -929,7 +929,7 @@ const AIAgents: React.FC = () => {
             <span className="text-indigo-400 tracking-widest text-sm uppercase mb-5 block">
               Domande frequenti
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight">
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-tight">
               Le domande che ci fanno tutti gli imprenditori.
             </h2>
           </div>
@@ -992,13 +992,13 @@ const AIAgents: React.FC = () => {
           <span className="text-violet-300 tracking-widest text-sm uppercase mb-6 block">
             Il primo passo
           </span>
-          <h2 className="text-4xl md:text-7xl font-bold leading-tight mb-8">
+          <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-tight mb-8">
             Porta un processo che ti ruba tempo.{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-400 to-indigo-400">
               Ne usciamo con un piano.
             </span>
           </h2>
-          <p className="text-xl text-gray-400 leading-relaxed max-w-2xl mx-auto mb-10">
+          <p className="text-lg md:text-xl text-gray-400 leading-relaxed max-w-2xl mx-auto mb-10">
             In 30 minuti analizziamo insieme dove oggi si perde tempo, quali dati avete già e quale
             agente può generare il primo risultato misurabile. Senza impegno e senza slide.
           </p>
