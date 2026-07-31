@@ -36,7 +36,7 @@ const steps: Step[] = [
     id: 'meta',
     label: 'META ADS',
     title: 'Il lead entra dal feed.',
-    desc: 'Campagne Meta progettate su ICP e offerta. Il form qualifica già in partenza: chi compila è davvero in target.',
+    desc: 'Campagne Meta progettate sul profilo del cliente giusto e sull\'offerta. Il form qualifica già in partenza: chi compila è davvero in target.',
     time: 'T+0 s',
     icon: <Megaphone className="w-5 h-5" />,
     accent: { text: 'text-blue-400', border: 'border-blue-400/50', bg: 'bg-blue-500', shadow: 'shadow-[0_0_30px_rgba(59,130,246,0.35)]' },
@@ -45,7 +45,7 @@ const steps: Step[] = [
     id: 'crm',
     label: 'CRM',
     title: 'Nel CRM prima che tu lo veda.',
-    desc: 'Il contatto viene creato in pipeline con fonte, campagna e priorità. Assegnato al commerciale giusto, con il contesto già pronto.',
+    desc: 'Assegnato al commerciale giusto, con fonte, campagna e contesto già pronti.',
     time: 'T+2 s',
     icon: <Database className="w-5 h-5" />,
     accent: { text: 'text-indigo-400', border: 'border-indigo-400/50', bg: 'bg-indigo-500', shadow: 'shadow-[0_0_30px_rgba(99,102,241,0.35)]' },
@@ -123,7 +123,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
       );
     case 'crm':
       return (
-        <VisualShell label="CRM · PIPELINE" accent={step.accent}>
+        <VisualShell label="CRM · CONTATTI" accent={step.accent}>
           <div className="pipe-stagger flex gap-2 mb-4 flex-wrap">
             {['Nuovo', 'Qualificato', 'Opportunità', 'Cliente'].map((stage, i) => (
               <span
@@ -372,15 +372,26 @@ const PipelineMobile: React.FC = () => {
 
   useEffect(() => {
     if (!sectionRef.current) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>('.pipe-card').forEach((card) => {
-        gsap.from(card, {
-          scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none reverse' },
-          y: 50,
-          opacity: 0,
-          duration: 0.7,
-          ease: 'power3.out',
-        });
+        // fromTo + immediateRender:false + once: niente più `reverse` (il
+        // contenuto non si rispegne scrollando indietro) e niente più rischio
+        // di restare bloccati a opacity 0 se il trigger non scatta mai.
+        gsap.fromTo(
+          card,
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: card, start: 'top 85%', once: true },
+          }
+        );
       });
     }, sectionRef);
     return () => ctx.revert();

@@ -25,7 +25,7 @@ const services: Service[] = [
     title: 'B2B Lead Generation',
     desc: "Un sistema di acquisizione completo: posizionamento, offerta, Meta Advertising, CRM e follow-up. Il tracking è il nostro punto forte: dati di conversione precisi e conformi, che l'algoritmo può davvero usare per ottimizzare.",
     points: [
-      'Meta Ads su ICP e offerta',
+      'Meta Ads sul profilo del cliente giusto e sull\'offerta',
       'Server-Side Tracking e Consent Mode',
       'Segnali di qualità dal CRM alle campagne',
       'Qualifica lead e follow-up multicanale',
@@ -131,48 +131,75 @@ const Services2: React.FC = () => {
 
   useEffect(() => {
     if (!sectionRef.current) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const ctx = gsap.context(() => {
-      gsap.from('.services-reveal', {
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 70%', toggleActions: 'play none none reverse' },
-        y: 50,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.12,
-        ease: 'power3.out',
-      });
+      if (!reduced) {
+        // fromTo + immediateRender:false + once: se il trigger non scatta mai
+        // (layout non ancora assestato quando misurato), il contenuto resta
+        // visibile invece che bloccato a opacity 0; una volta acceso non si
+        // rispegne più tornando indietro con lo scroll.
+        gsap.fromTo(
+          '.services-reveal',
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.9,
+            stagger: 0.12,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 70%', once: true },
+          }
+        );
 
-      gsap.from('.service-card', {
-        scrollTrigger: { trigger: '.services-grid', start: 'top 78%' },
-        y: 90,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.15,
-        ease: 'power3.out',
-      });
+        gsap.fromTo(
+          '.service-card',
+          { y: 90, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.9,
+            stagger: 0.15,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: '.services-grid', start: 'top 78%', once: true },
+          }
+        );
 
-      // Contatori
+        gsap.fromTo(
+          '.method-step',
+          { y: 60, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: '.method-grid', start: 'top 82%', once: true },
+          }
+        );
+      }
+
+      // Contatori: sotto reduced-motion mostriamo subito il valore finale,
+      // senza animazione, invece di lasciare il contenuto fermo a "0".
       gsap.utils.toArray<HTMLElement>('.stat-value').forEach((el) => {
         const target = Number(el.dataset.value ?? 0);
+        if (reduced) {
+          el.innerText = `${el.dataset.prefix ?? ''}${target}${el.dataset.suffix ?? ''}`;
+          return;
+        }
         const obj = { v: 0 };
         gsap.to(obj, {
           v: target,
           duration: 1.6,
           ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 88%' },
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true },
           onUpdate: () => {
             el.innerText = `${el.dataset.prefix ?? ''}${Math.round(obj.v)}${el.dataset.suffix ?? ''}`;
           },
         });
-      });
-
-      gsap.from('.method-step', {
-        scrollTrigger: { trigger: '.method-grid', start: 'top 82%' },
-        y: 60,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.12,
-        ease: 'power3.out',
       });
     }, sectionRef);
 
