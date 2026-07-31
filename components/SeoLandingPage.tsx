@@ -67,7 +67,7 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
         </nav>
 
         <header className="mb-14">
-          <p className="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-5">{page.keyword}</p>
+          <p className="text-indigo-400 text-sm tracking-[0.35em] uppercase mb-5">{page.keyword}</p>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">{page.title}</h1>
           <p className="text-xl text-gray-300 leading-relaxed max-w-3xl">{page.description}</p>
         </header>

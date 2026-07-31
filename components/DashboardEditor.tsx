@@ -254,7 +254,7 @@ const DashboardEditor: React.FC<DashboardEditorProps> = ({ post, onBack, onSave 
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
                   placeholder="slug-articolo-esempio"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors font-mono text-sm"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors text-sm"
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   URL: www.q4.studio/blog/{slug || 'slug-articolo'}
@@ -372,7 +372,7 @@ const DashboardEditor: React.FC<DashboardEditorProps> = ({ post, onBack, onSave 
                   onChange={(e) => setContent(e.target.value)}
                   placeholder={`# Titolo principale\n\n## Sottotitolo\n\nTesto normale con **grassetto**.\n\n1. Lista ordinata\n2. Secondo elemento`}
                   rows={20}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors resize-none font-mono text-sm"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors resize-none text-sm"
                 />
                 <p className="text-xs text-gray-500 mt-2">
                   Supporto Markdown: # H1, ## H2, ### H3, **grassetto**

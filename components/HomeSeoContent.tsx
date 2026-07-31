@@ -29,7 +29,7 @@ const HomeSeoContent: React.FC = () => {
         <section className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 md:p-10">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-12">
             <div>
-              <p className="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-4">Metodo</p>
+              <p className="text-indigo-400 text-sm tracking-[0.35em] uppercase mb-4">Metodo</p>
               <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">Consulenza B2B Lead Generation su Meta</h2>
             </div>
             <div className="space-y-5 text-lg leading-relaxed text-gray-300">
@@ -67,7 +67,7 @@ const HomeSeoContent: React.FC = () => {
 
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <article className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-indigo-950/30 to-white/[0.03] p-6 md:p-8">
-            <p className="text-indigo-300 font-mono text-xs tracking-[0.3em] uppercase mb-4">Meta Ads Advisory</p>
+            <p className="text-indigo-300 text-xs tracking-[0.3em] uppercase mb-4">Meta Ads Advisory</p>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-5">Meta Ads orientate alla qualità</h2>
             <div className="space-y-4 text-lg text-gray-300 leading-relaxed">
               <p>
@@ -80,7 +80,7 @@ const HomeSeoContent: React.FC = () => {
           </article>
 
           <article className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-purple-950/30 to-white/[0.03] p-6 md:p-8">
-            <p className="text-purple-300 font-mono text-xs tracking-[0.3em] uppercase mb-4">AI Process Consulting</p>
+            <p className="text-purple-300 text-xs tracking-[0.3em] uppercase mb-4">AI Process Consulting</p>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-5">Agenti AI sul processo sales</h2>
             <div className="space-y-4 text-lg text-gray-300 leading-relaxed">
               <p>
@@ -96,7 +96,7 @@ const HomeSeoContent: React.FC = () => {
         <section className="rounded-[2rem] border border-white/10 bg-[#080808] p-6 md:p-10">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.8fr] gap-8 lg:gap-12 items-start">
             <div>
-              <p className="text-cyan-300 font-mono text-sm tracking-[0.35em] uppercase mb-4">Misurazione</p>
+              <p className="text-cyan-300 text-sm tracking-[0.35em] uppercase mb-4">Misurazione</p>
               <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Risultati misurabili, leggibili dal team</h2>
               <div className="space-y-5 text-lg text-gray-300 leading-relaxed">
                 <p>
@@ -108,7 +108,7 @@ const HomeSeoContent: React.FC = () => {
               </div>
             </div>
             <div className="rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-6">
-              <p className="text-sm font-mono uppercase tracking-[0.25em] text-indigo-200 mb-5">Focus consulenziale</p>
+              <p className="text-sm uppercase tracking-[0.25em] text-indigo-200 mb-5">Focus consulenziale</p>
               <ul className="space-y-4 text-gray-300">
                 <li>Audit e priorità operative prima dell&apos;execution.</li>
                 <li>Affiancamento a marketing e sales nella lettura dei dati.</li>
@@ -120,7 +120,7 @@ const HomeSeoContent: React.FC = () => {
 
         <section id="faq" className="pt-10 border-t border-white/10">
           <div className="mb-8">
-            <p className="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-4">FAQ</p>
+            <p className="text-indigo-400 text-sm tracking-[0.35em] uppercase mb-4">FAQ</p>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Domande frequenti su Meta Ads B2B e Agenti AI</h2>
             <p className="text-lg text-gray-400 leading-relaxed max-w-3xl">
               Abbiamo raccolto in un unico punto le risposte operative sulle campagne Meta B2B, sugli Agenti AI e sul collegamento con CRM e automazioni.

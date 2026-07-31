@@ -220,7 +220,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
         </nav>
 
         <header class="mb-14">
-          <p class="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-5">${escapeHtml(page.keyword)}</p>
+          <p class="text-indigo-400 text-sm tracking-[0.35em] uppercase mb-5">${escapeHtml(page.keyword)}</p>
           <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">${escapeHtml(page.title)}</h1>
           <p class="text-xl text-gray-300 leading-relaxed max-w-3xl">${escapeHtml(page.description)}</p>
         </header>
@@ -321,7 +321,7 @@ function generateResourcesHtml(): string {
   const pagesHtml = seoPages
     .map((page) => `
       <a href="${resourcesPath}/${page.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
-        <span class="text-xs font-mono uppercase tracking-widest text-indigo-300">${escapeHtml(page.keyword)}</span>
+        <span class="text-xs uppercase tracking-widest text-indigo-300">${escapeHtml(page.keyword)}</span>
         <h2 class="text-2xl font-bold mt-4 mb-3 group-hover:text-indigo-200 transition-colors">${escapeHtml(page.title)}</h2>
         <p class="text-gray-400 leading-relaxed mb-6">${escapeHtml(page.description)}</p>
         <span class="inline-flex items-center gap-2 text-indigo-300 font-medium">Apri pagina <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
@@ -341,7 +341,7 @@ function generateResourcesHtml(): string {
           </ol>
         </nav>
 
-        <p class="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-6">Risorse</p>
+        <p class="text-indigo-400 text-sm tracking-[0.35em] uppercase mb-6">Risorse</p>
         <h1 class="text-5xl md:text-7xl font-bold tracking-tight max-w-4xl mb-6">Risorse su Agenti AI, Automazioni e Tecnologia per Aziende B2B</h1>
         <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
           Questa directory raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico e collega servizi, problemi, soluzioni e FAQ.
@@ -369,7 +369,7 @@ function generateBlogIndexHtml(): string {
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none"></div>
       <div class="max-w-7xl mx-auto relative z-10">
         <div class="text-center mb-20">
-          <span class="text-indigo-500 font-mono tracking-widest mb-6 block text-sm uppercase">Insights & Strategie</span>
+          <span class="text-indigo-500 tracking-widest mb-6 block text-sm uppercase">Insights & Strategie</span>
           <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">Il nostro <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span></h1>
           <p class="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Agenti AI.
@@ -448,7 +448,7 @@ function generateAIAgentsHtml(): string {
   ];
 
   const useCasesHtml = useCases
-    .map(([area, title, description]) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-xs font-mono uppercase tracking-widest text-violet-300 mb-4">${escapeHtml(area)}</p><h3 class="text-2xl font-bold leading-snug mb-4">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
+    .map(([area, title, description]) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-xs uppercase tracking-widest text-violet-300 mb-4">${escapeHtml(area)}</p><h3 class="text-2xl font-bold leading-snug mb-4">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
     .join('\n          ');
 
   const methodHtml = [
@@ -477,7 +477,7 @@ function generateAIAgentsHtml(): string {
         </nav>
 
         <header class="mb-16">
-          <p class="text-violet-300 font-mono text-sm tracking-[0.3em] uppercase mb-5">Agenti AI · consulenza e sviluppo</p>
+          <p class="text-violet-300 text-sm tracking-[0.3em] uppercase mb-5">Agenti AI · consulenza e sviluppo</p>
           <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">Agenti AI su misura per togliere al tuo team il lavoro che un software può fare meglio</h1>
           <p class="text-xl text-gray-300 leading-relaxed max-w-3xl">
             Leggono email e WhatsApp, inseriscono gli ordini nel gestionale, preparano i preventivi, qualificano i lead e rispondono ai clienti. Tu mantieni il controllo: l'agente propone, le persone decidono.

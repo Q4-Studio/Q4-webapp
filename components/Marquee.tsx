@@ -84,7 +84,7 @@ const Marquee: React.FC = () => {
   return (
     <div ref={containerRef} className="w-full bg-[#050505] py-20 border-y border-white/5 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
-            <p className="text-sm font-mono text-gray-500 uppercase tracking-widest">Aziende che ci hanno già scelto</p>
+            <p className="text-sm text-gray-500 uppercase tracking-widest">Aziende che ci hanno già scelto</p>
         </div>
       <div className="relative w-full overflow-hidden">
         <div ref={trackRef} className="flex whitespace-nowrap gap-16 md:gap-24 items-center">

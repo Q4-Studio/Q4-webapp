@@ -88,7 +88,7 @@ const SpotlightCard: React.FC<{ service: Service }> = ({ service }) => {
             href={service.partner.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-9 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-cyan-500/5 border border-cyan-400/20 text-xs font-mono tracking-wider text-cyan-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-colors"
+            className="mt-9 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-cyan-500/5 border border-cyan-400/20 text-xs tracking-wider text-cyan-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-colors"
           >
             <Server className="w-3.5 h-3.5" />
             {service.partner.label}
@@ -232,7 +232,7 @@ const Services2: React.FC = () => {
           {stats.map((stat) => (
             <div key={stat.label} className="bg-[#070707] p-8 md:p-10 text-center">
               <p
-                className="stat-value text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 mb-2"
+                className="stat-value tabular-nums text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 mb-2"
                 data-value={stat.value}
                 data-prefix={stat.prefix}
                 data-suffix={stat.suffix}
@@ -240,7 +240,7 @@ const Services2: React.FC = () => {
               >
                 {stat.prefix}0{stat.suffix}
               </p>
-              <p className="text-xs md:text-sm font-mono tracking-wider text-gray-500 uppercase">{stat.label}</p>
+              <p className="text-xs md:text-sm tracking-wider text-gray-500 uppercase">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -250,7 +250,7 @@ const Services2: React.FC = () => {
           {methodSteps.map((step) => (
             <div key={step.n} className="method-step relative pt-8 border-t border-white/10">
               <span className="absolute -top-px left-0 w-12 h-px bg-gradient-to-r from-indigo-400 to-purple-400" />
-              <span className="font-mono text-sm text-indigo-400 tracking-widest">{step.n}</span>
+              <span className="text-sm text-indigo-400 tracking-widest">{step.n}</span>
               <h3 className="text-xl font-bold mt-3 mb-3">{step.title}</h3>
               <p className="text-gray-400 text-sm leading-relaxed">{step.desc}</p>
             </div>

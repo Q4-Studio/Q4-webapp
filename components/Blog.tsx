@@ -85,7 +85,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div ref={titleRef} className="text-center mb-20">
-          <span className="text-indigo-500 font-mono tracking-widest mb-6 block text-sm uppercase">
+          <span className="text-indigo-500 tracking-widest mb-6 block text-sm uppercase">
             Insights & Strategie
           </span>
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">

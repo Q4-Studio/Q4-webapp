@@ -120,13 +120,13 @@ const AgentTerminal: React.FC = () => {
           <span className="w-3 h-3 rounded-full bg-white/10" />
           <span className="w-3 h-3 rounded-full bg-emerald-500/60" />
         </div>
-        <span className="font-mono text-[11px] tracking-[0.2em] text-gray-500">{scenarios[scenarioIdx].name}</span>
-        <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-widest text-emerald-400">
+        <span className="text-[11px] tracking-[0.2em] text-gray-500">{scenarios[scenarioIdx].name}</span>
+        <span className="flex items-center gap-1.5 text-[10px] tracking-widest text-emerald-400">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           LIVE
         </span>
       </div>
-      <div className="p-6 font-mono text-[13px] min-h-[240px] space-y-3">
+      <div className="p-6 text-[13px] min-h-[240px] space-y-3">
         {doneLines.map((line, i) => renderLine(line, line.text, `${scenarioIdx}-${i}`))}
         {typing && renderLine(typing.line, typing.line.text.slice(0, typing.chars), 'typing', true)}
       </div>
@@ -238,7 +238,7 @@ const Agents2: React.FC = () => {
             {integrations.map((item) => (
               <span
                 key={item.name}
-                className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-400 hover:border-indigo-500/40 hover:text-indigo-300 transition-colors"
+                className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-gray-400 hover:border-indigo-500/40 hover:text-indigo-300 transition-colors"
               >
                 {item.icon}
                 {item.name}

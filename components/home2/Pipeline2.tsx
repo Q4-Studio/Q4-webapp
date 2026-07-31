@@ -86,7 +86,7 @@ const steps: Step[] = [
 const VisualShell: React.FC<{ label: string; accent: Step['accent']; children: React.ReactNode }> = ({ label, accent, children }) => (
   <div className="rounded-2xl bg-black/50 border border-white/10 overflow-hidden">
     <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/5">
-      <span className={`font-mono text-[10px] tracking-[0.25em] ${accent.text}`}>{label}</span>
+      <span className={`text-[10px] tracking-[0.25em] ${accent.text}`}>{label}</span>
       <div className="flex gap-1.5">
         <span className="w-2 h-2 rounded-full bg-white/10" />
         <span className="w-2 h-2 rounded-full bg-white/10" />
@@ -112,10 +112,10 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
             </div>
           </div>
           <div className="pipe-stagger mt-4 flex flex-wrap gap-2">
-            <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-mono text-gray-400">
+            <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] text-gray-400">
               Campagna: B2B — Preventivo
             </span>
-            <span className="px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-[11px] font-mono text-blue-300">
+            <span className="px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-[11px] text-blue-300">
               Nuovo lead
             </span>
           </div>
@@ -128,7 +128,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
             {['Nuovo', 'Qualificato', 'Opportunità', 'Cliente'].map((stage, i) => (
               <span
                 key={stage}
-                className={`px-2.5 py-1 rounded-full text-[11px] font-mono border ${
+                className={`px-2.5 py-1 rounded-full text-[11px] border ${
                   i === 0 ? 'bg-indigo-500/20 border-indigo-400/40 text-indigo-300' : 'bg-white/5 border-white/10 text-gray-500'
                 }`}
               >
@@ -136,7 +136,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
               </span>
             ))}
           </div>
-          <div className="pipe-stagger space-y-2 text-xs font-mono text-gray-400">
+          <div className="pipe-stagger space-y-2 text-xs text-gray-400">
             <p><span className="text-gray-600">fonte:</span> Meta Ads — Lead Form</p>
             <p><span className="text-gray-600">assegnato a:</span> <span className="text-white">Riccardo (Sales)</span></p>
             <p><span className="text-gray-600">priorità:</span> <span className="text-indigo-300">alta</span></p>
@@ -172,12 +172,12 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
               ['Sito e LinkedIn', 'Verificati'],
             ].map(([k, v]) => (
               <div key={k} className="pipe-stagger rounded-xl bg-white/5 border border-white/10 px-3 py-2.5">
-                <p className="text-gray-500 font-mono text-[10px] uppercase tracking-wider mb-1">{k}</p>
+                <p className="text-gray-500 text-[10px] uppercase tracking-wider mb-1">{k}</p>
                 <p className="text-white font-medium">{v}</p>
               </div>
             ))}
           </div>
-          <div className="pipe-stagger mt-3 flex items-center gap-2 text-[11px] font-mono text-purple-300">
+          <div className="pipe-stagger mt-3 flex items-center gap-2 text-[11px] text-purple-300">
             <ShieldCheck className="w-3.5 h-3.5" />
             Dossier completo inviato al commerciale
           </div>
@@ -197,7 +197,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
                 <span className="w-7 h-7 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 flex items-center justify-center flex-shrink-0">
                   {row.icon}
                 </span>
-                <span className="font-mono text-gray-500 w-16 flex-shrink-0">{row.when}</span>
+                <span className="text-gray-500 w-16 flex-shrink-0">{row.when}</span>
                 <span className="text-gray-300">{row.what}</span>
               </div>
             ))}
@@ -295,10 +295,10 @@ const PipelineDesktop: React.FC = () => {
             <div className="col-span-7">
               <div ref={cardRef} key={active} className="relative">
                 <div className="flex items-center gap-4 mb-5">
-                  <span className="font-mono text-sm text-gray-600 tracking-widest">
+                  <span className="text-sm text-gray-600 tracking-widest tabular-nums">
                     0{active + 1}<span className="text-gray-700">/05</span>
                   </span>
-                  <span className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${step.accent.border} ${step.accent.text} bg-white/5 font-mono text-[11px] tracking-[0.2em]`}>
+                  <span className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${step.accent.border} ${step.accent.text} bg-white/5 text-[11px] tracking-[0.2em]`}>
                     <Clock className="w-3.5 h-3.5" />
                     {step.time}
                   </span>
@@ -345,7 +345,7 @@ const PipelineDesktop: React.FC = () => {
                         </div>
                       </div>
                       <span
-                        className={`absolute left-[calc(50%+3rem)] font-mono text-[11px] tracking-[0.25em] transition-colors duration-500 whitespace-nowrap ${
+                        className={`absolute left-[calc(50%+3rem)] text-[11px] tracking-[0.25em] transition-colors duration-500 whitespace-nowrap ${
                           reached ? s.accent.text : 'text-gray-700'
                         }`}
                       >
@@ -410,8 +410,8 @@ const PipelineMobile: React.FC = () => {
                   <span className="scale-[0.65] flex">{s.icon}</span>
                 </div>
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="font-mono text-xs text-gray-600">0{i + 1}/05</span>
-                  <span className={`font-mono text-[10px] tracking-[0.2em] ${s.accent.text}`}>{s.time}</span>
+                  <span className="text-xs text-gray-600">0{i + 1}/05</span>
+                  <span className={`text-[10px] tracking-[0.2em] ${s.accent.text}`}>{s.time}</span>
                 </div>
                 <h3 className="text-xl font-bold mb-2">{s.title}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed mb-4">{s.desc}</p>
