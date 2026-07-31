@@ -62,21 +62,34 @@ function generateBaseHtml(options: {
     title,
     description,
     canonical,
-    ogImage = `${siteUrl}/og-image.jpg`,
-    ogImageWidth = 1200,
-    ogImageHeight = 630,
-    ogImageAlt = 'Q4 Studio',
+    ogImage,
+    ogImageWidth,
+    ogImageHeight,
+    ogImageAlt,
     type = 'website',
     schema = [],
     bodyContent
   } = options;
 
+  const defaultOgImage = `${siteUrl}/og-image.jpg`;
+  const resolvedOgImage = ogImage || defaultOgImage;
+  // Le dimensioni 1200x630 sono note solo per l'immagine di default (asset locale
+  // in public/). Per immagini diverse (es. copertine articolo da Supabase) le
+  // dimensioni reali non sono note a build time: meglio nessun dato che uno
+  // falso, quindi i tag width/height/alt di default si applicano solo quando
+  // l'immagine è davvero quella di default, a meno che il chiamante non passi
+  // valori espliciti.
+  const isDefaultOgImage = resolvedOgImage === defaultOgImage;
+  const resolvedOgImageWidth = ogImageWidth ?? (isDefaultOgImage ? 1200 : undefined);
+  const resolvedOgImageHeight = ogImageHeight ?? (isDefaultOgImage ? 630 : undefined);
+  const resolvedOgImageAlt = ogImageAlt ?? (isDefaultOgImage ? 'Q4 Studio' : title);
+
   const schemaScripts = schema
     .map((s) => `<script type="application/ld+json">${JSON.stringify(s)}</script>`)
     .join('\n    ');
 
-  const imageDimensionsMeta = ogImageWidth && ogImageHeight
-    ? `\n  <meta property="og:image:width" content="${ogImageWidth}" />\n  <meta property="og:image:height" content="${ogImageHeight}" />`
+  const imageDimensionsMeta = resolvedOgImageWidth && resolvedOgImageHeight
+    ? `\n  <meta property="og:image:width" content="${resolvedOgImageWidth}" />\n  <meta property="og:image:height" content="${resolvedOgImageHeight}" />`
     : '';
 
   return `<!DOCTYPE html>
@@ -93,16 +106,16 @@ function generateBaseHtml(options: {
   <meta property="og:url" content="${canonical}" />
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:description" content="${escapeHtml(description)}" />
-  <meta property="og:image" content="${ogImage}" />
-  <meta property="og:image:alt" content="${escapeHtml(ogImageAlt)}" />${imageDimensionsMeta}
+  <meta property="og:image" content="${resolvedOgImage}" />
+  <meta property="og:image:alt" content="${escapeHtml(resolvedOgImageAlt)}" />${imageDimensionsMeta}
   <meta property="og:locale" content="it_IT" />
   <meta property="og:site_name" content="Q4 Studio" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="${canonical}" />
   <meta name="twitter:title" content="${escapeHtml(title)}" />
   <meta name="twitter:description" content="${escapeHtml(description)}" />
-  <meta name="twitter:image" content="${ogImage}" />
-  <meta name="twitter:image:alt" content="${escapeHtml(ogImageAlt)}" />
+  <meta name="twitter:image" content="${resolvedOgImage}" />
+  <meta name="twitter:image:alt" content="${escapeHtml(resolvedOgImageAlt)}" />
   <meta name="theme-color" content="#050505" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -438,17 +451,93 @@ function generateAIAgentsHtml(): string {
     }))
   };
 
+  // Testo identico a components/AIAgents.tsx (array `useCases`), stesso ordine
+  // e stesse stringhe, per evitare mismatch tra prerender e contenuto React.
   const useCases = [
-    ['Ordini', 'Gli ordini arrivano da WhatsApp ed email ed entrano nel gestionale da soli', "L'agente legge messaggi e allegati, riconosce cliente, codici e quantità e crea la bozza d'ordine nel gestionale con i prezzi corretti. Una persona conferma solo quando serve."],
-    ['Preventivi', 'Il preventivo parte in giornata, mentre il cliente è ancora interessato', "Estrae le specifiche dalla richiesta, recupera listini e offerte simili e compila l'offerta sul template aziendale. Una persona revisiona e invia."],
-    ['Lead e vendite', 'Ogni contatto viene qualificato e richiamato mentre è ancora caldo', "Riceve il lead da form e campagne, arricchisce i dati dell'azienda, lo assegna al commerciale giusto nel CRM e prepara il primo messaggio di follow-up."],
-    ['Assistenza clienti', 'Le domande ricorrenti ricevono risposta subito, anche fuori orario', 'Risponde su WhatsApp ed email a stato ordine, tempi e documenti controllando i dati reali nel gestionale, e passa i casi delicati a una persona.'],
-    ['Amministrazione', 'Fatture, DDT e documenti letti, controllati e registrati', 'Legge i documenti appena arrivano, controlla che importi e quantità tornino con gli ordini, prepara le registrazioni e segnala solo le anomalie.'],
-    ['Report e controllo', 'Il lunedì mattina il report è già pronto, con i numeri che contano', 'Raccoglie i dati da gestionale, CRM e fogli condivisi, calcola gli indicatori e evidenzia gli scostamenti che meritano una decisione.']
+    {
+      tab: 'Ordini',
+      title: 'Gli ordini arrivano da WhatsApp ed email. Entrano nel gestionale da soli.',
+      today: "Oggi qualcuno legge il messaggio, cerca il cliente, controlla i codici, riscrive tutto nel gestionale. Dieci minuti a ordine, errori di battitura inclusi.",
+      withAgent: [
+        'Legge messaggi, email e allegati appena arrivano',
+        'Riconosce cliente, codici, quantità e date di consegna',
+        "Crea la bozza d'ordine nel gestionale con i prezzi corretti",
+        'Chiede conferma a una persona solo quando serve',
+      ],
+      tools: ['WhatsApp', 'Email', 'Gestionale / ERP'],
+      impact: 'Da 10 minuti a 40 secondi per ordine',
+    },
+    {
+      tab: 'Preventivi',
+      title: 'Il preventivo parte in giornata, mentre il cliente è ancora interessato.',
+      today: 'Oggi la richiesta resta in inbox finché il titolare o il tecnico non ha mezzora libera. Intanto il cliente chiede anche ai concorrenti.',
+      withAgent: [
+        'Estrae le specifiche dalla richiesta e dagli allegati',
+        'Recupera listini, distinte e offerte simili già fatte',
+        "Compila l'offerta sul tuo template, con i tuoi margini",
+        'Una persona revisiona e invia: il lavoro noioso è già fatto',
+      ],
+      tools: ['Email', 'Listini / Excel', 'Storico offerte'],
+      impact: 'Risposta al cliente in giornata',
+    },
+    {
+      tab: 'Lead e vendite',
+      title: 'Ogni contatto viene qualificato e richiamato mentre è ancora caldo.',
+      today: 'Oggi i lead delle campagne finiscono in un foglio o in una casella email. Chi può li richiama "appena ha un attimo". Spesso troppo tardi.',
+      withAgent: [
+        'Riceve il lead da form, campagne o LinkedIn',
+        "Arricchisce i dati dell'azienda e applica i tuoi criteri di priorità",
+        'Lo assegna al commerciale giusto nel CRM, con il contesto già pronto',
+        'Prepara il primo messaggio e i promemoria di follow-up',
+      ],
+      tools: ['Form sito', 'Meta / LinkedIn', 'CRM'],
+      impact: 'Primo contatto in minuti: il tasso di risposta cambia',
+    },
+    {
+      tab: 'Assistenza clienti',
+      title: '«Dov\'è il mio ordine?» riceve risposta subito, anche alle 21.',
+      today: 'Oggi le stesse dieci domande (stato ordine, tempi, documenti, resi) interrompono il team decine di volte al giorno.',
+      withAgent: [
+        'Risponde su WhatsApp ed email alle domande ricorrenti',
+        'Controlla lo stato reale di ordini e spedizioni nel gestionale',
+        'Gestisce il primo livello e passa i casi delicati a una persona',
+        'Tiene traccia di tutto: nessuna richiesta si perde',
+      ],
+      tools: ['WhatsApp', 'Email', 'Gestionale / ERP'],
+      impact: 'Clienti seguiti 24/7, team interrotto molto meno',
+    },
+    {
+      tab: 'Amministrazione',
+      title: 'Fatture, DDT e documenti letti, controllati e registrati.',
+      today: 'Oggi i documenti dei fornitori arrivano via email e qualcuno li ricopia a mano, riga per riga, sperando di non sbagliare un importo.',
+      withAgent: [
+        'Legge fatture, DDT e conferme appena arrivano',
+        'Controlla che importi e quantità tornino con gli ordini',
+        'Prepara le registrazioni nel gestionale',
+        'Segnala solo le anomalie da verificare',
+      ],
+      tools: ['Email / PEC', 'Gestionale / ERP', 'Fogli di calcolo'],
+      impact: 'Meno ore di data entry, meno errori a fine mese',
+    },
+    {
+      tab: 'Report e controllo',
+      title: 'Il lunedì mattina trovi il report già pronto, con i numeri che contano.',
+      today: "Oggi capire come sta andando l'azienda richiede una caccia al tesoro tra gestionale, CRM, fogli Excel ed estratti banca.",
+      withAgent: [
+        'Raccoglie i dati da gestionale, CRM e fogli condivisi',
+        'Calcola i tuoi indicatori: vendite, margini, consegne, incassi',
+        'Prepara un report leggibile, sempre uguale, sempre puntuale',
+        'Evidenzia gli scostamenti che meritano una decisione',
+      ],
+      tools: ['Gestionale / ERP', 'CRM', 'Excel / Sheets'],
+      impact: 'Decisioni prese su numeri aggiornati',
+    },
   ];
 
   const useCasesHtml = useCases
-    .map(([area, title, description]) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-[11px] uppercase tracking-[0.08em] text-violet-300 mb-4">${escapeHtml(area)}</p><h3 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
+    .map(
+      (uc) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-[11px] uppercase tracking-[0.08em] text-violet-300 mb-4">${escapeHtml(uc.tab)}</p><h3 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">${escapeHtml(uc.title)}</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div><p class="text-[11px] uppercase tracking-[0.08em] text-gray-500 mb-2">Oggi, senza agente</p><p class="text-gray-400 leading-relaxed">${escapeHtml(uc.today)}</p></div><div><p class="text-[11px] uppercase tracking-[0.08em] text-violet-300/80 mb-2">Con l'agente</p><ul class="space-y-2">${uc.withAgent.map((step) => `<li class="text-gray-300 leading-relaxed">${escapeHtml(step)}</li>`).join('')}</ul></div></div><p class="mt-4 text-sm text-gray-500">Si collega a: ${uc.tools.map((t) => escapeHtml(t)).join(', ')}</p><p class="mt-2 text-sm font-medium text-violet-300">${escapeHtml(uc.impact)}</p></article>`
+    )
     .join('\n          ');
 
   const methodHtml = [
@@ -628,8 +717,9 @@ function generateHomeBodyContent(): string {
       </nav>
 
       <header class="hero">
+        <p class="hero-kicker">Bring AI&amp;Tech to Marketing</p>
         <h1>Il tuo AI<br />Marketing Partner.</h1>
-        <p class="hero-sub">Lo studio di consulenza che applica l'AI al marketing: campagne che convertono, automazioni che inseguono ogni lead e agenti AI che alleggeriscono i processi del tuo team.</p>
+        <p class="hero-sub">Lo studio di consulenza che porta AI e le ultime tecnologie nel tuo marketing.</p>
         <div class="hero-cta">
           <a href="#contatti" class="btn-primary">Inizia il percorso</a>
           <a href="/agenti-ai" class="btn-secondary">Scopri gli Agenti AI</a>
@@ -697,6 +787,21 @@ function generateHomeSeoContentHtml(faqHtml: string): string {
         <p>La B2B Lead Generation su Meta è un sistema di acquisizione contatti pensato per trasformare Facebook e Instagram in canali di crescita misurabile anche per aziende con cicli di vendita complessi. Il nostro ruolo non è comportarci da agenzia che esegue campagne a volume, ma da consulenti che affiancano marketing e sales nella costruzione di un funnel più leggibile, tracciabile e sostenibile.</p>
         <p>Partiamo dall'analisi del processo commerciale: chi è il cliente giusto, proposta di valore, segmentazione, creatività, domande qualificanti, instradamento al CRM e tempi di risposta ai contatti. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del contatto e probabilità di diventare cliente, non solo per costo per contatto.</p>
 
+        <div class="method-cards">
+          <article class="method-card">
+            <h3>Diagnosi prima delle campagne</h3>
+            <p>Audit di funnel, audience, offerta e gestione lead prima di aumentare budget o test creativi.</p>
+          </article>
+          <article class="method-card">
+            <h3>Sistema, non singola ads</h3>
+            <p>Campagne, CRM e follow-up vengono progettati insieme per ridurre dispersione e tempi morti.</p>
+          </article>
+          <article class="method-card">
+            <h3>Governance dei KPI</h3>
+            <p>Misuriamo contatti che diventano davvero clienti, appuntamenti e opportunità generate, non solo il costo per contatto e numeri di facciata.</p>
+          </article>
+        </div>
+
         <h2>Meta Ads orientate alla qualità</h2>
         <p>Lavoriamo come consulenti operativi sulle campagne Meta B2B: audit account, architettura delle campagne, piano test creativo, tracking server-side e lettura dei dati commerciali. L'obiettivo è aiutare il team a capire cosa sta generando opportunità reali e cosa sta solo gonfiando il volume dei lead.</p>
         <p>L'algoritmo Andromeda dà valore ai segnali di conversione ad alta intenzione. Per questo allineiamo campagne e CRM su eventi come completamento di domande qualificanti, risposta del prospect e progressione nello stage commerciale.</p>
@@ -708,6 +813,15 @@ function generateHomeSeoContentHtml(faqHtml: string): string {
         <h2>Risultati misurabili, leggibili dal team</h2>
         <p>Ogni attività viene valutata su metriche operative e metriche di business. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.</p>
         <p>Nei progetti B2B monitoriamo nel tempo quanti contatti diventano davvero clienti e confrontiamo i dati prima e dopo integrazione CRM, instradamento e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.</p>
+
+        <div class="focus-consulenziale">
+          <p class="focus-consulenziale-label">Focus consulenziale</p>
+          <ul>
+            <li>Audit e priorità operative prima dell'execution.</li>
+            <li>Affiancamento a marketing e sales nella lettura dei dati.</li>
+            <li>Documentazione di naming, eventi e criteri di qualificazione.</li>
+          </ul>
+        </div>
 
         <h2>Domande frequenti su Meta Ads B2B e Agenti AI</h2>
         <p>Abbiamo raccolto in un unico punto le risposte operative sulle campagne Meta B2B, sugli Agenti AI e sul collegamento con CRM e automazioni.</p>
@@ -912,7 +1026,12 @@ function generateBlogArticleHtml(post: any): string {
     title: `${post.title} | Q4 Studio Blog`,
     description: post.excerpt,
     canonical: pageUrl,
+    // La copertina è un URL remoto (Supabase): le dimensioni reali non sono note
+    // a build time, quindi non passiamo ogImageWidth/Height (generateBaseHtml
+    // le omette quando l'immagine non è quella di default). L'alt riprende il
+    // titolo dell'articolo invece del generico "Q4 Studio".
     ogImage: post.coverImage,
+    ogImageAlt: post.title,
     type: 'article',
     schema: [blogSchema, breadcrumbSchema],
     bodyContent,

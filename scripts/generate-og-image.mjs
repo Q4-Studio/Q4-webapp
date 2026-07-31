@@ -32,7 +32,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
         font-weight="700" fill="none" stroke="#818cf8" stroke-opacity="0.10" stroke-width="2">Q4</text>
 
   <!-- Wordmark -->
-  <text x="80" y="112" font-family="Consolas, Menlo, monospace" font-size="24" letter-spacing="9"
+  <text x="80" y="112" font-family="Segoe UI, Arial, sans-serif" font-size="24" letter-spacing="9"
         fill="#ffffff" font-weight="600">Q4 STUDIO</text>
   <rect x="80" y="132" width="64" height="2" fill="url(#bar)"/>
 
@@ -41,12 +41,12 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
   <text x="80" y="392" font-family="Segoe UI, Arial, sans-serif" font-size="76" font-weight="700" fill="url(#grad)">Marketing Partner.</text>
 
   <!-- Subline -->
-  <text x="80" y="470" font-family="Segoe UI, Arial, sans-serif" font-size="27" fill="#9ca3af">Lead generation B2B, agenti AI e automazioni</text>
-  <text x="80" y="510" font-family="Segoe UI, Arial, sans-serif" font-size="27" fill="#9ca3af">per le PMI italiane.</text>
+  <text x="80" y="470" font-family="Segoe UI, Arial, sans-serif" font-size="27" fill="#9ca3af">Agenti AI, automazioni e tecnologia</text>
+  <text x="80" y="510" font-family="Segoe UI, Arial, sans-serif" font-size="27" fill="#9ca3af">applicata al marketing delle PMI italiane.</text>
 
   <!-- Footer -->
-  <text x="80" y="576" font-family="Consolas, Menlo, monospace" font-size="19" letter-spacing="4" fill="#6b7280">REGGIO EMILIA — VERONA</text>
-  <text x="1120" y="576" text-anchor="end" font-family="Consolas, Menlo, monospace" font-size="19" letter-spacing="4" fill="#818cf8">q4.studio</text>
+  <text x="80" y="576" font-family="Segoe UI, Arial, sans-serif" font-size="19" letter-spacing="4" fill="#6b7280">REGGIO EMILIA</text>
+  <text x="1120" y="576" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="19" letter-spacing="4" fill="#818cf8">q4.studio</text>
 
   <rect x="0" y="0" width="1200" height="4" fill="url(#bar)"/>
 </svg>`;
