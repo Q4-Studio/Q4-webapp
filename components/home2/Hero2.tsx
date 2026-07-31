@@ -258,17 +258,20 @@ const Hero2: React.FC = () => {
         </p>
 
         <h1
-          className="font-bold tracking-tighter leading-[0.95] text-white"
+          className="font-bold tracking-tighter leading-[0.95] text-white max-w-[8.5ch] md:max-w-none text-[clamp(44px,12.8vw,52px)] md:text-[clamp(56px,7.5vw,108px)]"
           style={{
-            fontSize: 'clamp(30px, 9vw, 108px)',
             perspective: '800px',
             textShadow: '0 2px 24px rgba(0,0,0,0.55)',
           }}
         >
           <span ref={line1Ref} className="block">Il tuo AI</span>
+          {/* pb + margin-bottom negativo: allargano l'area di paint del
+              background (bg-clip-text) oltre la line-box stretta (leading-0.95)
+              così il discendente della "g" non resta fuori dal gradiente, senza
+              spostare gli elementi sotto (il margin negativo compensa il padding). */}
           <span
             ref={line2Ref}
-            className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400"
+            className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 pb-[0.2em] -mb-[0.2em]"
           >
             Marketing Partner.
           </span>
