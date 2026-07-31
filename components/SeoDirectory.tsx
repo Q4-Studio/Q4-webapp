@@ -19,8 +19,8 @@ const SeoDirectory: React.FC = () => {
   return (
     <section className="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       <SEOHead
-        title="Risorse B2B Lead Generation e AI | Q4 Studio"
-        description="Risorse Q4 Studio su Meta Ads B2B, lead generation, automazioni CRM, WhatsApp e Agenti AI."
+        title="Risorse su AI, Automazioni e Tecnologia per PMI B2B | Q4 Studio"
+        description="Risorse Q4 Studio su agenti AI, automazioni WhatsApp e CRM, centralino e chatbot intelligenti per le aziende B2B."
         url={`${siteUrl}${resourcesPath}`}
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
@@ -30,7 +30,7 @@ const SeoDirectory: React.FC = () => {
       <div className="max-w-6xl mx-auto relative z-10">
         <p className="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-6">Risorse</p>
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight max-w-4xl mb-6">
-          Risorse su Lead Generation B2B, Meta Ads e Agenti AI
+          Risorse su Agenti AI, Automazioni e Tecnologia per Aziende B2B
         </h1>
         <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
           Questa directory raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico e collega servizi, problemi, soluzioni e FAQ.

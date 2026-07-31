@@ -42,44 +42,57 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
   useEffect(() => {
     if (!footerRef.current) return;
 
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const ctx = gsap.context(() => {
+      if (reduced) return;
+
+      // fromTo + immediateRender:false + once (invece di tl.from(...) con
+      // toggleActions "play none none reverse"): se lo ScrollTrigger non
+      // scatta (misure prese prima che il layout si assestasse) il footer
+      // resta visibile invece di restare bloccato a opacity 0; una volta
+      // acceso non si rispegne più tornando indietro con lo scroll.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: footerRef.current,
           start: "top 75%", // Animation starts when top of footer hits 75% of viewport
-          toggleActions: "play none none reverse",
+          once: true,
         }
       });
 
       if (titleRef.current) {
-        tl.from(titleRef.current, {
-          y: 100,
-          opacity: 0,
+        tl.fromTo(titleRef.current, { y: 100, opacity: 0 }, {
+          y: 0,
+          opacity: 1,
           duration: 1.2,
-          ease: "power3.out"
+          ease: "power3.out",
+          immediateRender: false,
         });
       }
       if (buttonWrapperRef.current) {
-        tl.from(buttonWrapperRef.current, {
-          scale: 0.8,
-          y: 50,
-          opacity: 0,
+        tl.fromTo(buttonWrapperRef.current, { scale: 0.8, y: 50, opacity: 0 }, {
+          scale: 1,
+          y: 0,
+          opacity: 1,
           duration: 1,
-          ease: "elastic.out(1, 0.7)"
+          ease: "elastic.out(1, 0.7)",
+          immediateRender: false,
         }, "-=0.8");
       }
-      tl.from(linksRef.current?.children || [], {
-        y: 30,
-        opacity: 0,
+      tl.fromTo(linksRef.current?.children || [], { y: 30, opacity: 0 }, {
+        y: 0,
+        opacity: 1,
         duration: 0.8,
         stagger: 0.1,
-        ease: "power2.out"
+        ease: "power2.out",
+        immediateRender: false,
       }, "-=0.6")
-      .from(bottomRef.current, {
-        opacity: 0,
-        y: 10,
+      .fromTo(bottomRef.current, { opacity: 0, y: 10 }, {
+        opacity: 1,
+        y: 0,
         duration: 1,
-        ease: "power2.out"
+        ease: "power2.out",
+        immediateRender: false,
       }, "-=0.6");
 
     }, footerRef);

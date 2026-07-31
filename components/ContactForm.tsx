@@ -32,18 +32,31 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true }) => {
   useEffect(() => {
     if (!sectionRef.current) return;
 
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const ctx = gsap.context(() => {
-      gsap.from(sectionRef.current, {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          toggleActions: "play none none reverse"
-        },
-        y: 60,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out"
-      });
+      if (reduced) return;
+
+      // fromTo + immediateRender:false + once: se lo ScrollTrigger non scatta
+      // (misure prese prima che il layout si assestasse) il contenuto resta
+      // visibile invece di restare bloccato a opacity 0; una volta acceso non
+      // si rispegne più tornando indietro con lo scroll.
+      gsap.fromTo(
+        sectionRef.current,
+        { y: 60, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
+            once: true
+          }
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();

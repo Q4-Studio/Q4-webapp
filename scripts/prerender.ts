@@ -538,7 +538,7 @@ function generateHomeBodyContent(): string {
   const tickerItems = ['LEAD GENERATION B2B', 'AGENTI AI', 'META ADS', 'CRM AUTOMATION', 'WHATSAPP FOLLOW-UP', 'DIGITAL ANALYTICS'];
 
   const pipelineSteps = [
-    { label: 'META ADS', time: 'T+0 s', title: 'Il lead entra dal feed.', desc: 'Campagne Meta progettate sul profilo del cliente giusto e sull'offerta. Il form qualifica già in partenza: chi compila è davvero in target.' },
+    { label: 'META ADS', time: 'T+0 s', title: 'Il lead entra dal feed.', desc: "Campagne Meta progettate sul profilo del cliente giusto e sull'offerta. Il form qualifica già in partenza: chi compila è davvero in target." },
     { label: 'CRM', time: 'T+2 s', title: 'Nel CRM prima che tu lo veda.', desc: 'Assegnato al commerciale giusto, con fonte, campagna e contesto già pronti.' },
     { label: 'WHATSAPP', time: 'T+60 s', title: 'Primo contatto in 60 secondi.', desc: 'Un messaggio personalizzato parte mentre il lead è ancora sul telefono. La velocità di risposta è la prima leva di conversione.' },
     { label: 'ENRICHMENT', time: 'T+90 s', title: 'Il lead diventa un dossier.', desc: 'Dati aziendali arricchiti da fonti pubbliche: dimensione, settore, segnali di priorità. Il commerciale sa con chi parla prima di chiamare.' },
@@ -551,7 +551,7 @@ function generateHomeBodyContent(): string {
     {
       title: 'B2B Lead Generation',
       desc: "Un sistema di acquisizione completo: posizionamento, offerta, Meta Advertising, CRM e follow-up. Il tracking è il nostro punto forte: dati di conversione precisi e conformi, che l'algoritmo può davvero usare per ottimizzare.",
-      points: ['Meta Ads sul profilo del cliente giusto e sull'offerta', 'Server-Side Tracking e Consent Mode', 'Segnali di qualità dal CRM alle campagne', 'Qualifica lead e follow-up multicanale']
+      points: ["Meta Ads sul profilo del cliente giusto e sull'offerta", 'Server-Side Tracking e Consent Mode', 'Segnali di qualità dal CRM alle campagne', 'Qualifica lead e follow-up multicanale']
     },
     {
       title: 'Agenti AI & Automazioni',

@@ -146,20 +146,34 @@ const FinalCTA: React.FC = () => {
 
   useEffect(() => {
     if (!sectionRef.current) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const ctx = gsap.context(() => {
-      gsap.from('.cta-reveal', {
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 75%', toggleActions: 'play none none reverse' },
-        y: 60,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: 'power3.out',
-      });
-      gsap.to('.cta-ghost', {
-        xPercent: -12,
-        ease: 'none',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: true },
-      });
+      if (!reduced) {
+        // fromTo + immediateRender:false + once: sostituisce gsap.from(...) con
+        // toggleActions '... reverse'. Se il trigger non scatta mai (misure
+        // prese prima che il layout finisse di assestarsi) il contenuto resta
+        // visibile invece di restare bloccato a opacity 0; una volta acceso,
+        // non si rispegne più tornando indietro con lo scroll.
+        gsap.fromTo(
+          '.cta-reveal',
+          { y: 60, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.15,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 75%', once: true },
+          }
+        );
+        gsap.to('.cta-ghost', {
+          xPercent: -12,
+          ease: 'none',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: true },
+        });
+      }
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -221,6 +235,20 @@ const HomeV2: React.FC = () => {
   useEffect(() => {
     if (!loading) ScrollTrigger.refresh();
   }, [loading]);
+
+  // Rete di sicurezza aggiuntiva: il layout può assestarsi anche dopo la fine
+  // del preloader (font che finiscono di caricare e cambiano le altezze del
+  // testo, immagini che arrivano). Ricalcoliamo le posizioni dei trigger in
+  // questi momenti, altrimenti uno ScrollTrigger misurato troppo presto può
+  // restare "storto" per tutta la sessione.
+  useEffect(() => {
+    const refresh = () => ScrollTrigger.refresh();
+    if (typeof document !== 'undefined' && 'fonts' in document) {
+      document.fonts.ready.then(refresh).catch(() => {});
+    }
+    window.addEventListener('load', refresh);
+    return () => window.removeEventListener('load', refresh);
+  }, []);
 
   return (
     <div className="relative w-full bg-[#050505] text-white">

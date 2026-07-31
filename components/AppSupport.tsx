@@ -24,21 +24,25 @@ const AppSupport: React.FC = () => {
 
     if (!containerRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.from(headerRef.current, {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out'
-      });
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      gsap.from(formRef.current, {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.3,
-        ease: 'power2.out'
-      });
+    const ctx = gsap.context(() => {
+      if (reduced) return;
+
+      // Animazione all'ingresso pagina (nessuno ScrollTrigger): fromTo con
+      // immediateRender:true equivale al comportamento precedente di
+      // gsap.from(...), riscritto per coerenza di stile col resto del codice.
+      gsap.fromTo(
+        headerRef.current,
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: 'power3.out', immediateRender: true }
+      );
+
+      gsap.fromTo(
+        formRef.current,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, delay: 0.3, ease: 'power2.out', immediateRender: true }
+      );
     }, containerRef);
 
     return () => ctx.revert();

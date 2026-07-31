@@ -152,31 +152,45 @@ const Agents2: React.FC = () => {
 
   useEffect(() => {
     if (!sectionRef.current) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const ctx = gsap.context(() => {
-      gsap.from('.agents-reveal', {
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 70%', toggleActions: 'play none none reverse' },
-        y: 50,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.12,
-        ease: 'power3.out',
-      });
+      if (!reduced) {
+        // gsap.fromTo + immediateRender:false: lo stato "spento" viene applicato
+        // solo quando il tween parte davvero. Se lo ScrollTrigger, per qualunque
+        // motivo, non dovesse scattare (misure prese prima che il layout si
+        // assestasse), il contenuto resta visibile invece di sparire per sempre.
+        // `once: true` sostituisce il vecchio `toggleActions: '... reverse'`:
+        // una volta acceso il contenuto non si spegne più tornando indietro.
+        gsap.fromTo(
+          '.agents-reveal',
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.9,
+            stagger: 0.12,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 70%', once: true },
+          }
+        );
 
-      // Il terminale sale più lentamente del resto: profondità
-      gsap.fromTo(
-        terminalWrapRef.current,
-        { y: 80 },
-        {
-          y: -80,
-          ease: 'none',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: true },
-        }
-      );
+        // Il terminale sale più lentamente del resto: profondità
+        gsap.fromTo(
+          terminalWrapRef.current,
+          { y: 80 },
+          {
+            y: -80,
+            ease: 'none',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: true },
+          }
+        );
+      }
 
       // Tilt 3D del terminale al passaggio del mouse
       const wrap = tiltRef.current;
-      if (wrap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (wrap && !reduced) {
         const onMove = (e: MouseEvent) => {
           const rect = wrap.getBoundingClientRect();
           const x = (e.clientX - rect.left) / rect.width - 0.5;

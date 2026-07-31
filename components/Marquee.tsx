@@ -20,8 +20,22 @@ const Marquee: React.FC = () => {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduced) {
+      // Niente scroll/marquee: il contenuto (loghi) resta semplicemente
+      // visibile e fermo, senza animazioni.
+      if (containerRef.current) gsap.set(containerRef.current, { opacity: 1, y: 0 });
+      return;
+    }
+
     const ctx = gsap.context(() => {
       // 1. Entrance Animation
+      // immediateRender:false + once: prima non c'era una classe statica che
+      // teneva il blocco a opacity 0 finché GSAP non lo riaccendeva: se lo
+      // ScrollTrigger non scattava (misure premature), i loghi restavano
+      // invisibili per sempre. Ora lo stato "spento" viene applicato solo
+      // quando il tween parte davvero, e una volta acceso resta acceso.
       gsap.fromTo(containerRef.current,
         {
           y: 50,
@@ -32,10 +46,11 @@ const Marquee: React.FC = () => {
           opacity: 1,
           duration: 1,
           ease: "power3.out",
+          immediateRender: false,
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top 85%",
-            toggleActions: "play none none reverse"
+            once: true
           }
         }
       );
@@ -67,7 +82,7 @@ const Marquee: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full bg-[#050505] py-20 border-y border-white/5 overflow-hidden opacity-0">
+    <div ref={containerRef} className="w-full bg-[#050505] py-20 border-y border-white/5 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
             <p className="text-sm font-mono text-gray-500 uppercase tracking-widest">Aziende che ci hanno già scelto</p>
         </div>

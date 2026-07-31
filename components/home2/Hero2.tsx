@@ -14,7 +14,11 @@ gsap.registerPlugin(ScrollTrigger);
 /* animazioni.                                                         */
 /* ------------------------------------------------------------------ */
 
-const HERO_VIDEO_OPACITY = 0.45;
+// Opacità abbassata (da 0.45) e desaturazione via filter direttamente sul
+// video: nessun overlay/scrim, il titolo bianco e il gradiente risaltano di
+// più su uno sfondo neutro e più tenue.
+const HERO_VIDEO_OPACITY = 0.28;
+const HERO_VIDEO_FILTER = 'grayscale(1) contrast(1.05) brightness(1.05)';
 
 const HeroBackgroundVideo: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -27,11 +31,27 @@ const HeroBackgroundVideo: React.FC = () => {
     if (videoRef.current) videoRef.current.muted = true;
   }, []);
 
+  useEffect(() => {
+    // Il video non ha altezza intrinseca nel flusso (è absolute inset-0), ma
+    // il suo caricamento può comunque coincidere con altri assestamenti di
+    // layout (font, immagini). Ricalcoliamo le posizioni dei trigger quando
+    // ha davvero un frame pronto, per sicurezza.
+    const video = videoRef.current;
+    if (!video) return;
+    const onLoaded = () => ScrollTrigger.refresh();
+    video.addEventListener('loadeddata', onLoaded);
+    return () => video.removeEventListener('loadeddata', onLoaded);
+  }, []);
+
   if (reducedMotion) {
     return (
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center"
-        style={{ backgroundImage: "url('/hero-poster.jpg')", opacity: HERO_VIDEO_OPACITY }}
+        style={{
+          backgroundImage: "url('/hero-poster.jpg')",
+          opacity: HERO_VIDEO_OPACITY,
+          filter: HERO_VIDEO_FILTER,
+        }}
         aria-hidden="true"
       />
     );
@@ -48,7 +68,7 @@ const HeroBackgroundVideo: React.FC = () => {
       preload="metadata"
       aria-hidden="true"
       className="absolute inset-0 w-full h-full object-cover"
-      style={{ opacity: HERO_VIDEO_OPACITY }}
+      style={{ opacity: HERO_VIDEO_OPACITY, filter: HERO_VIDEO_FILTER }}
     >
       <source src="/hero-bg.mp4" type="video/mp4" />
     </video>

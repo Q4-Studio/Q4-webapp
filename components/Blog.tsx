@@ -22,30 +22,49 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
   useEffect(() => {
     if (!sectionRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.from(titleRef.current, {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 75%',
-          toggleActions: 'play none none reverse'
-        },
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out'
-      });
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      gsap.from(cardsRef.current, {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 70%',
-        },
-        y: 100,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.2,
-        ease: 'power3.out'
-      });
+    const ctx = gsap.context(() => {
+      if (reduced) return;
+
+      // fromTo + immediateRender:false + once: se lo ScrollTrigger non scatta
+      // (misure prese prima che il layout si assestasse) il contenuto resta
+      // visibile invece di restare bloccato a opacity 0; una volta acceso non
+      // si rispegne più tornando indietro con lo scroll.
+      gsap.fromTo(
+        titleRef.current,
+        { y: 50, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: 'power3.out',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 75%',
+            once: true
+          }
+        }
+      );
+
+      gsap.fromTo(
+        cardsRef.current,
+        { y: 100, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.2,
+          ease: 'power3.out',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 70%',
+            once: true
+          }
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();

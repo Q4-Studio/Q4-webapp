@@ -435,39 +435,66 @@ const AIAgents: React.FC = () => {
     if (!pageRef.current || reducedMotion) return;
 
     const ctx = gsap.context(() => {
+      // fromTo + immediateRender:false + once: al posto di gsap.from(...) con
+      // toggleActions '... reverse'. Se il trigger non scatta mai (misure
+      // prese prima che il layout si assestasse) il contenuto resta visibile
+      // invece di restare bloccato a opacity 0; una volta acceso non si
+      // rispegne più tornando indietro con lo scroll.
       gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
-        gsap.from(el, {
-          scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' },
-          y: 40,
-          opacity: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-        });
+        gsap.fromTo(
+          el,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+          }
+        );
       });
 
       gsap.utils.toArray<HTMLElement>('[data-reveal-group]').forEach((group) => {
-        gsap.from(group.children, {
-          scrollTrigger: { trigger: group, start: 'top 85%', toggleActions: 'play none none reverse' },
-          y: 40,
-          opacity: 0,
-          duration: 0.7,
-          stagger: 0.1,
-          ease: 'power3.out',
-        });
+        gsap.fromTo(
+          group.children,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            stagger: 0.1,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: group, start: 'top 85%', once: true },
+          }
+        );
       });
 
-      // La linea del percorso si disegna mentre scorri
+      // La linea del percorso si disegna mentre scorri.
+      // Qui lo ScrollTrigger usa scrub (non toggleActions/reverse): il
+      // progresso segue sempre la posizione di scroll corrente, quindi non è
+      // soggetto al bug "invisibile per sempre" degli altri reveal. Passiamo
+      // comunque a fromTo + immediateRender:false per non impostare scaleY:0
+      // prima che ScrollTrigger abbia misurato il layout, ma senza `once`:
+      // con scrub l'animazione deve continuare a rispondere allo scroll in
+      // entrambe le direzioni, non fermarsi al primo trigger.
       if (timelineLineRef.current) {
-        gsap.from(timelineLineRef.current, {
-          scrollTrigger: {
-            trigger: timelineLineRef.current.parentElement,
-            start: 'top 70%',
-            end: 'bottom 60%',
-            scrub: 0.6,
-          },
-          scaleY: 0,
-          transformOrigin: 'top center',
-        });
+        gsap.fromTo(
+          timelineLineRef.current,
+          { scaleY: 0, transformOrigin: 'top center' },
+          {
+            scaleY: 1,
+            transformOrigin: 'top center',
+            immediateRender: false,
+            scrollTrigger: {
+              trigger: timelineLineRef.current.parentElement,
+              start: 'top 70%',
+              end: 'bottom 60%',
+              scrub: 0.6,
+            },
+          }
+        );
       }
     }, pageRef);
 
