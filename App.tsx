@@ -208,7 +208,7 @@ const App: React.FC = () => {
           Niente più mix-blend-difference: logo/voci hanno ora sfondi propri
           (pillola) e su blend-difference risulterebbero con colori sbagliati.
           Tutte le pagine sono a fondo scuro, quindi restano leggibili anche senza. */}
-      <nav className="fixed top-0 left-0 w-full z-[70] p-4 sm:p-5 flex justify-between items-center">
+      <nav className="fixed top-0 left-0 w-full z-[70] p-6 sm:p-7 flex justify-between items-center">
         <img
           src="/logo.webp"
           alt="Q4 Studio"
@@ -216,16 +216,16 @@ const App: React.FC = () => {
           height={40}
           loading="eager"
           fetchPriority="high"
-          className="h-9 md:h-12 w-auto cursor-pointer"
+          className="h-10 md:h-14 w-auto cursor-pointer"
           onClick={() => navigateTo('home')}
         />
 
         {/* Pillola centrale flottante con le voci di menu (solo desktop), centrata
             in assoluto sulla nav indipendentemente dalla larghezza di logo/CTA */}
-        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 rounded-full border border-white/30 bg-white/20 backdrop-blur-md px-2 py-2">
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 rounded-full border border-white/30 bg-white/20 backdrop-blur-md px-3 py-2.5">
           <button
             onClick={() => navigateTo('agenti-ai')}
-            className={`text-sm font-medium px-4 py-1.5 rounded-full transition-colors cursor-pointer border-0 ${
+            className={`text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${
               currentPage === 'agenti-ai' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
             }`}
           >
@@ -233,7 +233,7 @@ const App: React.FC = () => {
           </button>
           <button
             onClick={() => navigateTo('blog')}
-            className={`text-sm font-medium px-4 py-1.5 rounded-full transition-colors cursor-pointer border-0 ${
+            className={`text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${
               currentPage === 'blog' || currentPage === 'blog-article' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
             }`}
           >
@@ -242,7 +242,7 @@ const App: React.FC = () => {
           {/* Link reale all'hub risorse: vale anche come link interno per i crawler */}
           <a
             href={resourcesPath}
-            className={`text-sm font-medium px-4 py-1.5 rounded-full transition-colors cursor-pointer ${
+            className={`text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer ${
               currentPage === 'directory' || currentPage === 'seo-page' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
             }`}
           >
@@ -254,7 +254,7 @@ const App: React.FC = () => {
           {/* CTA "Scrivici": pillola bianca piena, visibile da md in su */}
           <button
             onClick={scrollToContact}
-            className="hidden md:inline-flex text-sm font-semibold px-6 py-2.5 rounded-full bg-white text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer border-0"
+            className="hidden md:inline-flex text-base font-semibold px-7 py-3 rounded-full bg-white text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer border-0"
           >
             Scrivici
           </button>

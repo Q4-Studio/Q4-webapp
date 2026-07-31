@@ -7,9 +7,14 @@ import MagneticButton from '../MagneticButton';
 gsap.registerPlugin(ScrollTrigger);
 
 /* ------------------------------------------------------------------ */
-/* Video di sfondo dell'hero: autoplay silenzioso, sostituito da un    */
-/* fermo immagine se l'utente preferisce meno animazioni.              */
+/* Video di sfondo dell'hero: copre tutta l'area, a opacità ridotta    */
+/* così il titolo resta leggibile anche in cima alla pagina. Niente    */
+/* overlay/scrim: l'opacità è applicata direttamente al <video>.       */
+/* Sostituito da un fermo immagine se l'utente preferisce meno         */
+/* animazioni.                                                         */
 /* ------------------------------------------------------------------ */
+
+const HERO_VIDEO_OPACITY = 0.45;
 
 const HeroBackgroundVideo: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -26,7 +31,7 @@ const HeroBackgroundVideo: React.FC = () => {
     return (
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center"
-        style={{ backgroundImage: "url('/hero-poster.jpg')" }}
+        style={{ backgroundImage: "url('/hero-poster.jpg')", opacity: HERO_VIDEO_OPACITY }}
         aria-hidden="true"
       />
     );
@@ -43,6 +48,7 @@ const HeroBackgroundVideo: React.FC = () => {
       preload="metadata"
       aria-hidden="true"
       className="absolute inset-0 w-full h-full object-cover"
+      style={{ opacity: HERO_VIDEO_OPACITY }}
     >
       <source src="/hero-bg.mp4" type="video/mp4" />
     </video>
@@ -98,52 +104,11 @@ const Hero2: React.FC = () => {
   const canvasWrapRef = useRef<HTMLDivElement>(null);
   const ghostRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
+  const kickerRef = useRef<HTMLParagraphElement>(null);
   const line1Ref = useRef<HTMLSpanElement>(null);
   const line2Ref = useRef<HTMLSpanElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-
-  // Il video di sfondo non deve mai arrivare fino al bordo superiore: sotto il
-  // titolo resta una fascia nera piena (nessun overlay/gradiente). L'offset è
-  // calcolato dall'altezza reale del titolo (varia per breakpoint/contenuto)
-  // invece di una percentuale fissa, così il titolo resta sempre sul nero.
-  useEffect(() => {
-    const updateVideoOffset = () => {
-      if (!titleRef.current || !containerRef.current || !canvasWrapRef.current) return;
-      const containerTop = containerRef.current.getBoundingClientRect().top;
-      const titleBottom = titleRef.current.getBoundingClientRect().bottom;
-      const gap = 40; // margine di sicurezza tra fine titolo e inizio video
-      const offset = Math.max(0, titleBottom - containerTop + gap);
-      canvasWrapRef.current.style.top = `${offset}px`;
-    };
-
-    updateVideoOffset();
-    window.addEventListener('resize', updateVideoOffset);
-    // ResizeObserver sul titolo: cattura qualunque cambio di layout (breakpoint,
-    // orientamento, reflow da font caricato) anche quando non viene emesso un
-    // evento `resize` sulla window (es. resize del viewport via devtools/CDP).
-    let ro: ResizeObserver | undefined;
-    if (titleRef.current && 'ResizeObserver' in window) {
-      ro = new ResizeObserver(updateVideoOffset);
-      ro.observe(titleRef.current);
-    }
-    // Il font (Space Grotesk) può caricare dopo il primo render e cambiare
-    // l'altezza del titolo: ricalcola quando i webfont sono pronti.
-    document.fonts?.ready?.then(updateVideoOffset).catch(() => {});
-    const t1 = setTimeout(updateVideoOffset, 300);
-    // Il titolo entra con un'animazione GSAP (translateY sui caratteri): durante
-    // l'animazione il bounding box è temporaneamente più basso del riposo finale.
-    // Ricalcola a animazione conclusa per non lasciare un distacco eccessivo.
-    const t2 = setTimeout(updateVideoOffset, 2600);
-
-    return () => {
-      window.removeEventListener('resize', updateVideoOffset);
-      ro?.disconnect();
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, []);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -178,10 +143,16 @@ const Hero2: React.FC = () => {
       const tl = gsap.timeline({ delay: 0.15 });
       tl.to(containerRef.current, { opacity: 1, duration: 0.4 })
         .fromTo(
+          kickerRef.current,
+          { y: 14, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' },
+          '-=0.2'
+        )
+        .fromTo(
           chars1,
           { y: 110, opacity: 0, rotateX: -90 },
           { y: 0, opacity: 1, rotateX: 0, stagger: 0.022, duration: 0.9, ease: 'back.out(1.6)' },
-          '-=0.2'
+          '-=0.15'
         )
         // La riga con gradiente non viene splittata in caratteri: figli con
         // opacity/transform rompono background-clip:text. Reveal come blocco.
@@ -196,10 +167,13 @@ const Hero2: React.FC = () => {
         .fromTo(canvasWrapRef.current, { opacity: 0 }, { opacity: 1, duration: 1.6, ease: 'power2.out' }, '-=1.2');
 
       // Parallasse allo scroll: livelli che scorrono a velocità diverse.
-      // Ampiezza contenuta per non scoprire troppo fondo nero sotto il video.
+      // L'opacità del video è già ridotta in modo fisso (HERO_VIDEO_OPACITY,
+      // sul tag <video>): qui animiamo solo la posizione, non l'opacità del
+      // wrapper. Se avessimo animato anche l'opacity del wrapper, i due valori
+      // si sarebbero moltiplicati e in fondo all'hero il video sarebbe quasi
+      // sparito: il cliente vuole che scrollando resti visibile com'è ora.
       gsap.to(canvasWrapRef.current, {
         yPercent: 10,
-        opacity: 0.35,
         ease: 'none',
         scrollTrigger: { trigger: containerRef.current, start: 'top top', end: 'bottom top', scrub: true },
       });
@@ -230,10 +204,10 @@ const Hero2: React.FC = () => {
 
   return (
     <div ref={containerRef} className="relative w-full h-[100svh] min-h-[640px] overflow-hidden bg-[#050505] opacity-0">
-      {/* Video di sfondo: parte sotto il titolo, mai dal bordo superiore.
-          Sopra resta il fondo nero pieno del contenitore (nessun overlay/gradiente).
-          Il valore di `top` è impostato via JS in base all'altezza reale del titolo. */}
-      <div ref={canvasWrapRef} className="absolute inset-x-0 bottom-0 z-0" style={{ top: '38%' }}>
+      {/* Video di sfondo: copre tutta l'area dell'hero. La leggibilità del
+          titolo è affidata all'opacità ridotta del video stesso (HERO_VIDEO_OPACITY),
+          non a un overlay/scrim sopra. */}
+      <div ref={canvasWrapRef} className="absolute inset-0 z-0">
         <HeroBackgroundVideo />
       </div>
 
@@ -254,13 +228,19 @@ const Hero2: React.FC = () => {
 
       <div
         ref={contentRef}
-        className="relative z-10 h-full max-w-4xl mx-auto px-6 flex flex-col items-center justify-center text-center"
+        className="relative z-10 h-full max-w-5xl mx-auto px-6 flex flex-col items-center justify-center text-center"
       >
+        <p
+          ref={kickerRef}
+          className="mb-4 md:mb-5 font-mono uppercase tracking-[0.3em] text-[11px] md:text-xs text-indigo-300/70"
+        >
+          Bring AI&Tech to Marketing
+        </p>
+
         <h1
-          ref={titleRef}
           className="font-bold tracking-tighter leading-[0.95] text-white"
           style={{
-            fontSize: 'clamp(44px, 9vw, 132px)',
+            fontSize: 'clamp(30px, 9vw, 108px)',
             perspective: '800px',
             textShadow: '0 2px 24px rgba(0,0,0,0.55)',
           }}
@@ -276,11 +256,10 @@ const Hero2: React.FC = () => {
 
         <p
           ref={subRef}
-          className="mt-8 text-lg md:text-2xl text-gray-300 max-w-2xl mx-auto leading-relaxed"
+          className="mt-8 text-lg md:text-2xl text-gray-300 max-w-xl mx-auto leading-relaxed"
           style={{ textShadow: '0 1px 12px rgba(0,0,0,0.6)' }}
         >
-          Lo studio di consulenza che applica l&apos;AI al marketing: campagne che convertono, automazioni che
-          inseguono ogni lead e agenti AI che alleggeriscono i processi del tuo team.
+          Lo studio di consulenza che porta AI e le ultime tecnologie nel tuo marketing.
         </p>
 
         <div ref={ctaRef} className="mt-10 flex flex-wrap items-center justify-center gap-5">
