@@ -32,18 +32,31 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true }) => {
   useEffect(() => {
     if (!sectionRef.current) return;
 
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const ctx = gsap.context(() => {
-      gsap.from(sectionRef.current, {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          toggleActions: "play none none reverse"
-        },
-        y: 60,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out"
-      });
+      if (reduced) return;
+
+      // fromTo + immediateRender:false + once: se lo ScrollTrigger non scatta
+      // (misure prese prima che il layout si assestasse) il contenuto resta
+      // visibile invece di restare bloccato a opacity 0; una volta acceso non
+      // si rispegne più tornando indietro con lo scroll.
+      gsap.fromTo(
+        sectionRef.current,
+        { y: 60, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
+            once: true
+          }
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -107,8 +120,8 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true }) => {
       <div className="max-w-4xl mx-auto">
         {showHeader && (
           <div className="text-center mb-16">
-            <span className="text-indigo-500 font-mono tracking-widest mb-4 block">CONTATTACI</span>
-            <h2 className="text-4xl md:text-6xl font-bold mb-6">
+            <span className="text-indigo-500 text-sm tracking-[0.08em] mb-5 block">CONTATTACI</span>
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">
               Iniziamo a <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Crescere</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">

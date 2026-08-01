@@ -18,30 +18,34 @@ const Privacy: React.FC = () => {
 
     if (!containerRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.from(headerRef.current, {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out'
-      });
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      gsap.from(contentRef.current, {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.3,
-        ease: 'power2.out'
-      });
+    const ctx = gsap.context(() => {
+      if (reduced) return;
+
+      // Animazione all'ingresso pagina (nessuno ScrollTrigger): fromTo con
+      // immediateRender:true equivale al comportamento precedente di
+      // gsap.from(...), riscritto per coerenza di stile col resto del codice.
+      gsap.fromTo(
+        headerRef.current,
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: 'power3.out', immediateRender: true }
+      );
+
+      gsap.fromTo(
+        contentRef.current,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, delay: 0.3, ease: 'power2.out', immediateRender: true }
+      );
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={containerRef} className="relative pt-32 pb-20 px-6 bg-[#050505] text-white min-h-screen">
+    <div ref={containerRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       {/* Background gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Header */}
@@ -49,7 +53,7 @@ const Privacy: React.FC = () => {
           <div className="inline-flex items-center gap-3 mb-6">
             <Shield className="w-12 h-12 text-indigo-400" />
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">
             Privacy & Cookie Policy
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
@@ -63,20 +67,20 @@ const Privacy: React.FC = () => {
           <section className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8">
             <div className="flex items-center gap-3 mb-6">
               <Eye className="w-6 h-6 text-indigo-400" />
-              <h2 className="text-3xl font-bold text-indigo-300">Privacy Policy</h2>
+              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-indigo-300">Privacy Policy</h2>
             </div>
 
             <div className="space-y-6 text-gray-300 leading-relaxed">
               <div>
-                <h3 className="text-xl font-semibold text-white mb-3">1. Titolare del Trattamento</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">1. Titolare del Trattamento</h3>
                 <p>
-                  Q4 Studio - P.IVA 05018960236<br />
+                  Q4 Studio - P.IVA 03033250352<br />
                   Email: {email && <a href={`mailto:${email}`} className="text-indigo-400 hover:underline">{email}</a>}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold text-white mb-3">2. Dati Raccolti</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">2. Dati Raccolti</h3>
                 <p className="mb-3">Raccogliamo i seguenti dati personali:</p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li><strong>Dati di contatto:</strong> nome, cognome, email, telefono, azienda (tramite form di contatto)</li>
@@ -86,7 +90,7 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold text-white mb-3">3. Finalità del Trattamento</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">3. Finalità del Trattamento</h3>
                 <p className="mb-3">I dati personali sono trattati per:</p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li>Rispondere alle richieste di contatto e preventivi</li>
@@ -97,7 +101,7 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold text-white mb-3">4. Base Giuridica</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">4. Base Giuridica</h3>
                 <p>
                   Il trattamento dei dati è basato su:
                 </p>
@@ -109,7 +113,7 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold text-white mb-3">5. Conservazione dei Dati</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">5. Conservazione dei Dati</h3>
                 <p>
                   I dati personali sono conservati per:
                 </p>
@@ -121,7 +125,7 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold text-white mb-3">6. Diritti dell'Interessato</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">6. Diritti dell'Interessato</h3>
                 <p className="mb-3">Ai sensi del GDPR, hai diritto a:</p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li>Accedere ai tuoi dati personali</li>
@@ -148,12 +152,12 @@ const Privacy: React.FC = () => {
           <section className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8">
             <div className="flex items-center gap-3 mb-6">
               <Cookie className="w-6 h-6 text-purple-400" />
-              <h2 className="text-3xl font-bold text-purple-300">Cookie Policy</h2>
+              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-purple-300">Cookie Policy</h2>
             </div>
 
             <div className="space-y-6 text-gray-300 leading-relaxed">
               <div>
-                <h3 className="text-xl font-semibold text-white mb-3">Cosa sono i Cookie</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">Cosa sono i Cookie</h3>
                 <p>
                   I cookie sono piccoli file di testo che i siti web visitati inviano al browser dell'utente,
                   dove vengono memorizzati per essere ritrasmessi agli stessi siti alla visita successiva.
@@ -161,7 +165,7 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold text-white mb-3">Cookie Utilizzati</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">Cookie Utilizzati</h3>
 
                 {/* Cookie Tecnici */}
                 <div className="mb-6">
@@ -214,7 +218,7 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold text-white mb-3">Gestione dei Cookie</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">Gestione dei Cookie</h3>
                 <p className="mb-3">
                   Puoi gestire le tue preferenze sui cookie tramite il banner presente sul sito o
                   direttamente dalle impostazioni del tuo browser:
@@ -228,7 +232,7 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold text-white mb-3">Link Utili</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">Link Utili</h3>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li>
                     <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">
@@ -254,7 +258,7 @@ const Privacy: React.FC = () => {
           <section className="bg-gradient-to-br from-indigo-950/30 to-purple-950/30 border border-white/10 rounded-3xl p-8">
             <div className="flex items-center gap-3 mb-4">
               <Mail className="w-6 h-6 text-indigo-400" />
-              <h2 className="text-2xl font-bold">Hai domande?</h2>
+              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em]">Hai domande?</h2>
             </div>
             <p className="text-gray-300 mb-4">
               Per qualsiasi domanda relativa alla privacy o ai cookie, contattaci:

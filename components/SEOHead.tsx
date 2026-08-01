@@ -14,14 +14,24 @@ interface SEOHeadProps {
   };
 }
 
+// Immagine di default e relativi metadati dichiarati staticamente in index.html.
+// Quando SEOHead riceve un'altra immagine (es. la copertina di un articolo) non
+// possiamo conoscerne le dimensioni reali lato client: meglio rimuovere questi
+// tag piuttosto che lasciare quelli, sbagliati, dell'immagine di default.
+const DEFAULT_OG_IMAGE = 'https://www.q4.studio/og-image.jpg';
+const DEFAULT_OG_IMAGE_WIDTH = '1200';
+const DEFAULT_OG_IMAGE_HEIGHT = '630';
+const DEFAULT_OG_IMAGE_TYPE = 'image/jpeg';
+const DEFAULT_OG_IMAGE_ALT = 'Q4 Studio — Il tuo AI Marketing Partner';
+
 /**
  * Component to dynamically update meta tags for SEO
  * Use this component to set page-specific SEO meta tags
  */
 const SEOHead: React.FC<SEOHeadProps> = ({
-  title = 'Q4 Studio | B2B Lead Generation & Agenti AI',
-  description = 'Specialisti in Lead Generation B2B su Meta Ads e Agenti AI personalizzati. Aumenta i contatti qualificati e automatizza i processi con l\'algoritmo Andromeda.',
-  image = 'https://www.q4.studio/og-image.jpg',
+  title = 'Q4 Studio | AI Marketing Partner per PMI B2B',
+  description = 'Studio di consulenza per crescita B2B: AI applicata al marketing, lead generation automatizzata e agenti AI che alleggeriscono i processi aziendali.',
+  image = DEFAULT_OG_IMAGE,
   url = 'https://www.q4.studio/',
   type = 'website',
   noIndex = false,
@@ -45,6 +55,12 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       element.content = content;
     };
 
+    // Remove a meta tag entirely (used when a value would otherwise be false/stale)
+    const removeMetaTag = (property: string, isProperty = false) => {
+      const attribute = isProperty ? 'property' : 'name';
+      document.querySelector(`meta[${attribute}="${property}"]`)?.remove();
+    };
+
     // Update robots meta tag
     updateMetaTag('robots', noIndex ? 'noindex, nofollow' : 'index, follow');
 
@@ -59,10 +75,31 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     updateMetaTag('og:url', url, true);
     updateMetaTag('og:type', type, true);
 
+    // og:image:width/height/type/alt sono dichiarati in index.html per l'immagine
+    // di default. Se l'immagine cambia (es. copertina di un articolo), quei
+    // valori non sono più veri: li aggiorniamo solo quando torniamo all'immagine
+    // di default, altrimenti li rimuoviamo (dimensioni/tipo reali non noti lato
+    // client) e usiamo il title come alt, più sensato del generico "Q4 Studio".
+    if (image === DEFAULT_OG_IMAGE) {
+      updateMetaTag('og:image:width', DEFAULT_OG_IMAGE_WIDTH, true);
+      updateMetaTag('og:image:height', DEFAULT_OG_IMAGE_HEIGHT, true);
+      updateMetaTag('og:image:type', DEFAULT_OG_IMAGE_TYPE, true);
+      updateMetaTag('og:image:alt', DEFAULT_OG_IMAGE_ALT, true);
+    } else {
+      removeMetaTag('og:image:width', true);
+      removeMetaTag('og:image:height', true);
+      removeMetaTag('og:image:type', true);
+      updateMetaTag('og:image:alt', title, true);
+    }
+
     // Update Twitter Card tags
     updateMetaTag('twitter:title', title);
     updateMetaTag('twitter:description', description);
     updateMetaTag('twitter:image', image);
+    // Stesso ragionamento di og:image:alt: index.html fissa "Q4 Studio", che
+    // resterebbe a descrivere la copertina di un articolo dopo una navigazione
+    // lato client.
+    updateMetaTag('twitter:image:alt', image === DEFAULT_OG_IMAGE ? DEFAULT_OG_IMAGE_ALT : title);
     updateMetaTag('twitter:url', url);
 
     // Update canonical link

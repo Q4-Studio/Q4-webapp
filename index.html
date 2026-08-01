@@ -25,10 +25,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Primary Meta Tags -->
-    <title>Q4 Studio | Consulenza B2B, Meta Ads e Agenti AI</title>
-    <meta name="title" content="Q4 Studio | Consulenza B2B, Meta Ads e Agenti AI" />
-    <meta name="description" content="Studio di consulenza per crescita B2B, Meta Ads e Agenti AI. Affianchiamo marketing, sales e operations per trasformare processi, lead e dati in sistemi misurabili." />
-    <meta name="keywords" content="lead generation b2b, meta advertising, facebook ads b2b, instagram ads b2b, agenti ai, ai automation, meta ads specialist, algoritmo andromeda, lead generation italia, crm automation, whatsapp automation" />
+    <title>Q4 Studio | AI Marketing Partner per PMI B2B</title>
+    <meta name="title" content="Q4 Studio | AI Marketing Partner per PMI B2B" />
+    <meta name="description" content="Studio di consulenza per crescita B2B: AI applicata al marketing, lead generation automatizzata e agenti AI che alleggeriscono i processi aziendali." />
+    <meta name="keywords" content="ai marketing partner, lead generation b2b, meta advertising, facebook ads b2b, instagram ads b2b, agenti ai, ai automation, algoritmo andromeda, lead generation italia, crm automation, whatsapp automation, digital analytics" />
     <meta name="author" content="Q4 Studio" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://www.q4.studio/" />
@@ -36,24 +36,30 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.q4.studio/" />
-    <meta property="og:title" content="Q4 Studio | Consulenza B2B, Meta Ads e Agenti AI" />
-    <meta property="og:description" content="Studio di consulenza per crescita B2B, Meta Ads e Agenti AI. Trasformiamo lead, processi e dati in sistemi misurabili." />
+    <meta property="og:title" content="Q4 Studio | AI Marketing Partner per PMI B2B" />
+    <meta property="og:description" content="Studio di consulenza per crescita B2B: AI applicata al marketing, lead generation automatizzata e agenti AI che alleggeriscono i processi aziendali." />
     <meta property="og:image" content="https://www.q4.studio/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Q4 Studio — Il tuo AI Marketing Partner" />
     <meta property="og:locale" content="it_IT" />
     <meta property="og:site_name" content="Q4 Studio" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://www.q4.studio/" />
-    <meta name="twitter:title" content="Q4 Studio | Consulenza B2B, Meta Ads e Agenti AI" />
-    <meta name="twitter:description" content="Studio di consulenza per crescita B2B, Meta Ads e Agenti AI personalizzati." />
+    <meta name="twitter:title" content="Q4 Studio | AI Marketing Partner per PMI B2B" />
+    <meta name="twitter:description" content="Studio di consulenza per crescita B2B: AI applicata al marketing, lead generation automatizzata e agenti AI." />
     <meta name="twitter:image" content="https://www.q4.studio/og-image.jpg" />
+    <meta name="twitter:image:alt" content="Q4 Studio" />
 
-    <!-- Geo Tags -->
-    <meta name="geo.region" content="IT-VR" />
-    <meta name="geo.placename" content="Verona" />
-    <meta name="geo.position" content="45.4384;10.9916" />
-    <meta name="ICBM" content="45.4384, 10.9916" />
+    <!-- Geo Tags: sede unica Reggio Emilia (nessun indirizzo civico disponibile) -->
+    <meta name="geo.region" content="IT-RE" />
+    <meta name="geo.placename" content="Reggio Emilia" />
+    <meta name="geo.position" content="44.6989;10.6297" />
+    <meta name="ICBM" content="44.6989, 10.6297" />
+    <meta name="theme-color" content="#050505" />
 
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
@@ -65,13 +71,22 @@
     <script src="https://cdn.tailwindcss.com" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://esm.sh">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="preload" href="/logo.webp" as="image" fetchpriority="high">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+      /* Guardia anti-overflow orizzontale: su iOS Safari overflow-x sul solo
+         body non basta, serve anche su html per evitare la barra nera a destra. */
+      html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+        overscroll-behavior-x: none;
+      }
       body {
         font-family: 'Inter', sans-serif;
         background-color: #050505;
         color: #ffffff;
-        overflow-x: hidden;
       }
       h1, h2, h3, h4, h5, h6 {
         font-family: 'Space Grotesk', sans-serif;
@@ -158,16 +173,23 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
+      "@type": "ProfessionalService",
       "name": "Q4 Studio",
       "url": "https://www.q4.studio",
-      "description": "Studio di consulenza per crescita B2B, Meta Ads e Agenti AI personalizzati per aziende italiane.",
+      "logo": "https://www.q4.studio/logo.png",
+      "image": "https://www.q4.studio/logo.png",
+      "description": "Studio di consulenza che applica l'AI al marketing: Meta Ads, lead generation B2B, automazioni CRM/WhatsApp e agenti AI per PMI italiane.",
+      "areaServed": "IT",
+      "vatID": "IT03033250352",
       "address": {
         "@type": "PostalAddress",
+        "addressLocality": "Reggio Emilia",
+        "addressRegion": "Emilia-Romagna",
         "addressCountry": "IT"
       },
       "sameAs": [
         "https://www.facebook.com/q4studio",
+        "https://www.instagram.com/q4.studio",
         "https://www.linkedin.com/company/q4studio"
       ]
     }
@@ -182,7 +204,7 @@
           "name": "In pratica, cos'è la B2B Lead Generation su Meta?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "È l'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate su ICP, messaggio, form, CRM e segnali di qualità."
+            "text": "È l'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate sul profilo del cliente giusto, messaggio, form, CRM e segnali di qualità."
           }
         },
         {
@@ -190,7 +212,7 @@
           "name": "Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Sì, se l'obiettivo non è solo il costo per lead. Nei cicli complessi servono domande qualificanti, follow-up rapido e ottimizzazione su eventi come MQL, SQL e pipeline."
+            "text": "Sì, se l'obiettivo non è solo il costo per lead."
           }
         },
         {

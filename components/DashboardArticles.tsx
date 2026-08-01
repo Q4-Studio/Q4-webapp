@@ -30,13 +30,19 @@ const DashboardArticles: React.FC<DashboardArticlesProps> = ({
   useEffect(() => {
     if (!containerRef.current || isLoading) return;
 
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const ctx = gsap.context(() => {
-      gsap.from(headerRef.current, {
-        y: 20,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-      });
+      if (reduced) return;
+
+      // Animazione all'ingresso pagina (nessuno ScrollTrigger): fromTo con
+      // immediateRender:true equivale al comportamento precedente di
+      // gsap.from(...), riscritto per coerenza di stile col resto del codice.
+      gsap.fromTo(
+        headerRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', immediateRender: true }
+      );
     }, containerRef);
 
     return () => ctx.revert();
@@ -97,10 +103,10 @@ const DashboardArticles: React.FC<DashboardArticlesProps> = ({
   return (
     <div
       ref={containerRef}
-      className="relative w-full min-h-screen bg-[#050505] text-white px-6 pt-24 pb-12"
+      className="relative w-full min-h-screen bg-[#050505] text-white px-6 pt-24 pb-12 overflow-hidden"
     >
       {/* Background gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header */}

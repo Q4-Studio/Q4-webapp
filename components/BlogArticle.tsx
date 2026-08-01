@@ -20,21 +20,26 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
 
     if (!articleRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.from(headerRef.current, {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out'
-      });
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      gsap.from(contentRef.current, {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.3,
-        ease: 'power2.out'
-      });
+    const ctx = gsap.context(() => {
+      if (reduced) return;
+
+      // Animazione all'ingresso pagina (nessuno ScrollTrigger): fromTo con
+      // immediateRender:true equivale al comportamento precedente di
+      // gsap.from(...), qui riscritto per coerenza di stile col resto del
+      // codice, senza introdurre il rischio di ScrollTrigger che non scatta.
+      gsap.fromTo(
+        headerRef.current,
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: 'power3.out', immediateRender: true }
+      );
+
+      gsap.fromTo(
+        contentRef.current,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, delay: 0.3, ease: 'power2.out', immediateRender: true }
+      );
     }, articleRef);
 
     return () => ctx.revert();
@@ -65,7 +70,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
       if (line.startsWith('# ')) {
         flushList();
         elements.push(
-          <h1 key={`h1-${key++}`} className="text-4xl md:text-5xl font-bold mb-6 mt-8">
+          <h1 key={`h1-${key++}`} className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6 mt-8">
             {line.replace('# ', '')}
           </h1>
         );
@@ -74,7 +79,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
       else if (line.startsWith('## ')) {
         flushList();
         elements.push(
-          <h2 key={`h2-${key++}`} className="text-3xl md:text-4xl font-bold mb-4 mt-8 text-indigo-300">
+          <h2 key={`h2-${key++}`} className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4 mt-8 text-indigo-300">
             {line.replace('## ', '')}
           </h2>
         );
@@ -83,7 +88,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
       else if (line.startsWith('### ')) {
         flushList();
         elements.push(
-          <h3 key={`h3-${key++}`} className="text-2xl font-bold mb-3 mt-6 text-purple-300">
+          <h3 key={`h3-${key++}`} className="text-lg md:text-xl font-bold leading-[1.5] mb-3 mt-6 text-purple-300">
             {line.replace('### ', '')}
           </h3>
         );
@@ -103,7 +108,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
         // Handle bold text **text**
         const html = line.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
         elements.push(
-          <p key={`p-${key++}`} className="text-lg text-gray-300 leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: html }} />
+          <p key={`p-${key++}`} className="text-lg md:text-xl text-gray-300 leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: html }} />
         );
       }
     });
@@ -113,7 +118,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
   };
 
   return (
-    <article ref={articleRef} className="relative pt-32 pb-20 px-6 bg-[#050505] text-white min-h-screen">
+    <article ref={articleRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       {/* SEO: Schema.org BlogPosting structured data */}
       <BlogSchema post={post} />
 
@@ -132,7 +137,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
       />
 
       {/* Background gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Back Button */}
@@ -152,7 +157,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">
             {post.title}
           </h1>
 
@@ -217,7 +222,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
               }}
             />
             <div className="flex-1 text-center md:text-left">
-              <h3 className="text-2xl font-bold mb-2">{post.author.name}</h3>
+              <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-2">{post.author.name}</h3>
               <p className="text-gray-400">
                 Vuoi approfondire queste strategie per il tuo business? Contattaci per una consulenza personalizzata.
               </p>

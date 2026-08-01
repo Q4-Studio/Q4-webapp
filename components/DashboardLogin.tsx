@@ -20,13 +20,19 @@ const DashboardLogin: React.FC<DashboardLoginProps> = ({ onLoginSuccess }) => {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const ctx = gsap.context(() => {
-      gsap.from(formRef.current, {
-        y: 30,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out',
-      });
+      if (reduced) return;
+
+      // Animazione all'ingresso pagina (nessuno ScrollTrigger): fromTo con
+      // immediateRender:true equivale al comportamento precedente di
+      // gsap.from(...), riscritto per coerenza di stile col resto del codice.
+      gsap.fromTo(
+        formRef.current,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: 'power3.out', immediateRender: true }
+      );
     }, containerRef);
 
     return () => ctx.revert();

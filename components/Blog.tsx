@@ -22,37 +22,56 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
   useEffect(() => {
     if (!sectionRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.from(titleRef.current, {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 75%',
-          toggleActions: 'play none none reverse'
-        },
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out'
-      });
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      gsap.from(cardsRef.current, {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 70%',
-        },
-        y: 100,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.2,
-        ease: 'power3.out'
-      });
+    const ctx = gsap.context(() => {
+      if (reduced) return;
+
+      // fromTo + immediateRender:false + once: se lo ScrollTrigger non scatta
+      // (misure prese prima che il layout si assestasse) il contenuto resta
+      // visibile invece di restare bloccato a opacity 0; una volta acceso non
+      // si rispegne più tornando indietro con lo scroll.
+      gsap.fromTo(
+        titleRef.current,
+        { y: 50, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: 'power3.out',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 75%',
+            once: true
+          }
+        }
+      );
+
+      gsap.fromTo(
+        cardsRef.current,
+        { y: 100, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.2,
+          ease: 'power3.out',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 70%',
+            once: true
+          }
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative pt-40 pb-32 px-6 bg-[#050505] text-white min-h-screen">
+    <section ref={sectionRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       {/* SEO: Dynamic meta tags for blog listing */}
       <SEOHead
         title="Blog Q4 Studio | Guide Meta Advertising e AI Automation"
@@ -61,18 +80,18 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
       />
 
       {/* Background gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div ref={titleRef} className="text-center mb-20">
-          <span className="text-indigo-500 font-mono tracking-widest mb-6 block text-sm uppercase">
+          <span className="text-indigo-500 tracking-[0.08em] mb-5 block text-sm uppercase">
             Insights & Strategie
           </span>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">
             Il nostro <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span>
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Agenti AI.
           </p>
         </div>
@@ -121,7 +140,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
 
                 {/* Category Badge */}
                 <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-indigo-500/20 backdrop-blur-sm border border-indigo-500/30">
-                  <span className="text-indigo-300 text-xs font-medium">{post.category}</span>
+                  <span className="text-indigo-300 text-[11px] font-medium">{post.category}</span>
                 </div>
               </div>
 
@@ -140,7 +159,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
                 </div>
 
                 {/* Title */}
-                <h3 className="text-2xl font-bold mb-3 group-hover:text-indigo-300 transition-colors duration-300 line-clamp-2">
+                <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3 group-hover:text-indigo-300 transition-colors duration-300 line-clamp-2">
                   {post.title}
                 </h3>
 

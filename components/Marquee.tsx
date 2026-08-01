@@ -20,54 +20,71 @@ const Marquee: React.FC = () => {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 1. Entrance Animation
-    gsap.fromTo(containerRef.current,
-      {
-        y: 50,
-        opacity: 0
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 85%",
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // 2. Infinite Scroll Animation
-    if (trackRef.current) {
-      const track = trackRef.current;
-
-      // Calculate the width of one set of logos (we rendered 3 sets)
-      const singleSetWidth = track.scrollWidth / 3;
-
-      // Animate seamlessly
-      gsap.fromTo(track,
-        { x: 0 },
-        {
-          x: -singleSetWidth,
-          duration: 30,
-          ease: "none",
-          repeat: -1
-        }
-      );
+    if (reduced) {
+      // Niente scroll/marquee: il contenuto (loghi) resta semplicemente
+      // visibile e fermo, senza animazioni.
+      if (containerRef.current) gsap.set(containerRef.current, { opacity: 1, y: 0 });
+      return;
     }
 
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      gsap.killTweensOf(trackRef.current);
-    };
+    const ctx = gsap.context(() => {
+      // 1. Entrance Animation
+      // immediateRender:false + once: prima non c'era una classe statica che
+      // teneva il blocco a opacity 0 finché GSAP non lo riaccendeva: se lo
+      // ScrollTrigger non scattava (misure premature), i loghi restavano
+      // invisibili per sempre. Ora lo stato "spento" viene applicato solo
+      // quando il tween parte davvero, e una volta acceso resta acceso.
+      gsap.fromTo(containerRef.current,
+        {
+          y: 50,
+          opacity: 0
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 85%",
+            once: true
+          }
+        }
+      );
+
+      // 2. Infinite Scroll Animation
+      if (trackRef.current) {
+        const track = trackRef.current;
+
+        // Calculate the width of one set of logos (we rendered 3 sets)
+        const singleSetWidth = track.scrollWidth / 3;
+
+        // Animate seamlessly
+        gsap.fromTo(track,
+          { x: 0 },
+          {
+            x: -singleSetWidth,
+            duration: 30,
+            ease: "none",
+            repeat: -1
+          }
+        );
+      }
+    }, containerRef);
+
+    // Il cleanup del context uccide solo i tween/ScrollTrigger creati qui sopra,
+    // non quelli di altre sezioni dell'app (bug precedente: killava TUTTI gli
+    // ScrollTrigger globali con ScrollTrigger.getAll().forEach(kill)).
+    return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full bg-[#050505] py-20 border-y border-white/5 overflow-hidden opacity-0">
+    <div ref={containerRef} className="w-full bg-[#050505] py-20 border-y border-white/5 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
-            <p className="text-sm font-mono text-gray-500 uppercase tracking-widest">Aziende che ci hanno già scelto</p>
+            <p className="text-sm text-gray-500 uppercase tracking-[0.08em]">Aziende che ci hanno già scelto</p>
         </div>
       <div className="relative w-full overflow-hidden">
         <div ref={trackRef} className="flex whitespace-nowrap gap-16 md:gap-24 items-center">

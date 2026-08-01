@@ -11,42 +11,141 @@ import Manifesto2 from './Manifesto2';
 import Pipeline2 from './Pipeline2';
 import Agents2 from './Agents2';
 import Services2 from './Services2';
+import ScrollRevealText from './ScrollRevealText';
 import { siteUrl } from '../../data/seoPages';
 
 gsap.registerPlugin(ScrollTrigger);
 
 /* ------------------------------------------------------------------ */
-/* Preloader: contatore rapido, poi sipario verso l'alto               */
+/* Preloader editoriale: due parole in serif corsivo che si alternano    */
+/* al centro, contatore in basso a destra, riga di avanzamento e poi    */
+/* sipario verso l'alto.                                               */
 /* ------------------------------------------------------------------ */
+
+/** I due tempi del lavoro di Q4. Basta cambiare queste stringhe. */
+const PRELOADER_WORDS = ['Web', 'Agenti'];
+
+const SERIF_ITALIC = "'Times New Roman', Georgia, 'Playfair Display', serif";
 
 const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const wordsRef = useRef<(HTMLSpanElement | null)[]>([]);
+
+  // `onDone` arriva dal genitore come arrow function inline: se HomeV2 si
+  // re-renderizza mentre il preloader è a schermo (es. il fetch blog di
+  // App.tsx che risolve durante i ~1,3s di conteggio), la prop cambia identità
+  // a ogni render. Una ref tiene sempre l'ultima versione senza far dipendere
+  // da essa l'effetto che monta la timeline: così la timeline GSAP parte una
+  // sola volta, indipendentemente da quante volte il genitore re-renderizza.
+  const onDoneRef = useRef(onDone);
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  });
 
   useEffect(() => {
-    const obj = { v: 0 };
-    const tl = gsap.timeline({ onComplete: onDone });
-    tl.to(obj, {
+    // Con reduced-motion il sipario non ha senso: si va dritti al contenuto.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      onDoneRef.current();
+      return;
+    }
+
+    const words = wordsRef.current.filter(Boolean) as HTMLSpanElement[];
+    const counter = { v: 0 };
+    // Tempo totale volutamente breve: il preloader sta davanti al contenuto,
+    // quindi ogni decimo in piu` pesa su rimbalzo e LCP.
+    const total = 1.3; // durata del conteggio, le parole si distribuiscono qui dentro
+    const slot = total / PRELOADER_WORDS.length;
+
+    const tl = gsap.timeline({ onComplete: () => onDoneRef.current() });
+
+    // Contatore 000 → 100 e riga di avanzamento, in parallelo
+    tl.to(counter, {
       v: 100,
-      duration: 1.1,
-      ease: 'power3.inOut',
+      duration: total,
+      ease: 'power1.inOut',
       onUpdate: () => {
-        if (counterRef.current) counterRef.current.innerText = String(Math.round(obj.v)).padStart(3, '0');
+        if (counterRef.current) counterRef.current.innerText = String(Math.round(counter.v)).padStart(3, '0');
       },
-    }).to(overlayRef.current, { yPercent: -100, duration: 0.7, ease: 'power4.inOut' }, '+=0.15');
+    }, 0);
+    tl.fromTo(barRef.current, { scaleX: 0 }, { scaleX: 1, duration: total, ease: 'power1.inOut' }, 0);
+
+    // Ogni parola entra dal basso, resta, ed esce verso l'alto
+    words.forEach((word, i) => {
+      const at = i * slot;
+      tl.fromTo(
+        word,
+        { yPercent: 110, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.38, ease: 'power3.out' },
+        at
+      );
+      // L'ultima parola resta finché non parte il sipario
+      if (i < words.length - 1) {
+        tl.to(word, { yPercent: -110, opacity: 0, duration: 0.3, ease: 'power3.in' }, at + slot - 0.3);
+      }
+    });
+
+    tl.to(overlayRef.current, { yPercent: -100, duration: 0.6, ease: 'power4.inOut' }, total + 0.05);
+
+    // Rete di sicurezza: il preloader copre tutta la pagina, quindi non deve mai
+    // poter restare bloccato (rAF sospeso, GSAP che non parte, tab in background).
+    const failSafe = window.setTimeout(() => onDoneRef.current(), 3000);
+
     return () => {
+      window.clearTimeout(failSafe);
       tl.kill();
     };
-  }, [onDone]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- di proposito: la
+    // timeline deve montarsi una sola volta, `onDone` è letta dalla ref sopra.
+  }, []);
 
   return (
-    <div ref={overlayRef} className="fixed inset-0 z-[9999] bg-[#050505] flex flex-col items-center justify-center">
-      <img src="/logo.webp" alt="Q4 Studio" className="h-10 w-auto mb-8" />
-      <div className="flex items-center gap-4 font-mono text-sm text-gray-500 tracking-[0.3em]">
-        <span className="w-8 h-px bg-indigo-500/50" />
-        <span ref={counterRef} className="text-indigo-300 tabular-nums">000</span>
-        <span className="w-8 h-px bg-indigo-500/50" />
+    <div ref={overlayRef} className="fixed inset-0 z-[9999] bg-[#050505] overflow-hidden">
+      {/* Logo in alto a sinistra */}
+      <img
+        src="/logo.webp"
+        alt="Q4 Studio"
+        width={130}
+        height={40}
+        loading="eager"
+        fetchPriority="high"
+        className="absolute top-6 left-6 h-7 w-auto"
+      />
+
+      {/* Parole al centro: un solo slot, le parole si sovrappongono */}
+      <div className="absolute inset-0 flex items-center justify-center px-6">
+        {/* Larghezza piena e parole tutte in absolute: così la parola più lunga
+            non viene tagliata dall'overflow-hidden usato per lo scorrimento. */}
+        <div className="relative w-full h-[1.3em] overflow-hidden" style={{ fontSize: 'clamp(38px, 8vw, 88px)' }}>
+          {PRELOADER_WORDS.map((word, i) => (
+            <span
+              key={word}
+              ref={(el) => { wordsRef.current[i] = el; }}
+              className="absolute inset-0 flex items-center justify-center whitespace-nowrap text-gray-300"
+              style={{ fontFamily: SERIF_ITALIC, fontStyle: 'italic', opacity: 0 }}
+            >
+              {word}
+            </span>
+          ))}
+        </div>
       </div>
+
+      {/* Contatore in basso a destra */}
+      <span
+        ref={counterRef}
+        className="absolute bottom-8 right-6 text-white tabular-nums leading-none"
+        style={{ fontFamily: SERIF_ITALIC, fontSize: 'clamp(56px, 13vw, 132px)' }}
+      >
+        000
+      </span>
+
+      {/* Riga di avanzamento in fondo */}
+      <div
+        ref={barRef}
+        className="absolute bottom-0 left-0 h-px w-full origin-left bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400"
+        style={{ transform: 'scaleX(0)' }}
+      />
     </div>
   );
 };
@@ -60,20 +159,34 @@ const FinalCTA: React.FC = () => {
 
   useEffect(() => {
     if (!sectionRef.current) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const ctx = gsap.context(() => {
-      gsap.from('.cta-reveal', {
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 75%', toggleActions: 'play none none reverse' },
-        y: 60,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: 'power3.out',
-      });
-      gsap.to('.cta-ghost', {
-        xPercent: -12,
-        ease: 'none',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: true },
-      });
+      if (!reduced) {
+        // fromTo + immediateRender:false + once: sostituisce gsap.from(...) con
+        // toggleActions '... reverse'. Se il trigger non scatta mai (misure
+        // prese prima che il layout finisse di assestarsi) il contenuto resta
+        // visibile invece di restare bloccato a opacity 0; una volta acceso,
+        // non si rispegne più tornando indietro con lo scroll.
+        gsap.fromTo(
+          '.cta-reveal',
+          { y: 60, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.15,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 75%', once: true },
+          }
+        );
+        gsap.to('.cta-ghost', {
+          xPercent: -12,
+          ease: 'none',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: true },
+        });
+      }
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -94,16 +207,18 @@ const FinalCTA: React.FC = () => {
       </div>
 
       <div className="max-w-5xl mx-auto text-center relative z-10">
-        <h2 className="cta-reveal text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.02] tracking-tight mb-8">
+        <h2 className="cta-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-8">
           Costruiamo il tuo
           <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400">
             vantaggio.
           </span>
         </h2>
-        <p className="cta-reveal text-lg md:text-xl text-gray-400 max-w-xl mx-auto leading-relaxed">
-          Raccontaci la tua sfida: ti mostriamo come trasformarla in un sistema che cresce.
-        </p>
+        <ScrollRevealText
+          as="p"
+          text="Raccontaci la tua sfida: ti mostriamo come trasformarla in un sistema che cresce."
+          className="text-lg md:text-xl text-gray-400 max-w-xl mx-auto leading-relaxed"
+        />
       </div>
     </section>
   );
@@ -134,10 +249,24 @@ const HomeV2: React.FC = () => {
     if (!loading) ScrollTrigger.refresh();
   }, [loading]);
 
+  // Rete di sicurezza aggiuntiva: il layout può assestarsi anche dopo la fine
+  // del preloader (font che finiscono di caricare e cambiano le altezze del
+  // testo, immagini che arrivano). Ricalcoliamo le posizioni dei trigger in
+  // questi momenti, altrimenti uno ScrollTrigger misurato troppo presto può
+  // restare "storto" per tutta la sessione.
+  useEffect(() => {
+    const refresh = () => ScrollTrigger.refresh();
+    if (typeof document !== 'undefined' && 'fonts' in document) {
+      document.fonts.ready.then(refresh).catch(() => {});
+    }
+    window.addEventListener('load', refresh);
+    return () => window.removeEventListener('load', refresh);
+  }, []);
+
   return (
     <div className="relative w-full bg-[#050505] text-white">
       <SEOHead
-        title="Q4 Studio | AI Marketing Partner"
+        title="Q4 Studio | AI Marketing Partner per PMI B2B"
         description="Studio di consulenza per crescita B2B: AI applicata al marketing, lead generation automatizzata e agenti AI che alleggeriscono i processi aziendali."
         url={`${siteUrl}/`}
       />

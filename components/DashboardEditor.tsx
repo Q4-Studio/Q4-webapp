@@ -30,13 +30,19 @@ const DashboardEditor: React.FC<DashboardEditorProps> = ({ post, onBack, onSave 
   useEffect(() => {
     if (!containerRef.current) return;
 
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const ctx = gsap.context(() => {
-      gsap.from(formRef.current, {
-        y: 20,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-      });
+      if (reduced) return;
+
+      // Animazione all'ingresso pagina (nessuno ScrollTrigger): fromTo con
+      // immediateRender:true equivale al comportamento precedente di
+      // gsap.from(...), riscritto per coerenza di stile col resto del codice.
+      gsap.fromTo(
+        formRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', immediateRender: true }
+      );
     }, containerRef);
 
     return () => ctx.revert();
@@ -141,10 +147,10 @@ const DashboardEditor: React.FC<DashboardEditorProps> = ({ post, onBack, onSave 
   return (
     <div
       ref={containerRef}
-      className="relative w-full min-h-screen bg-[#050505] text-white px-6 pt-24 pb-12"
+      className="relative w-full min-h-screen bg-[#050505] text-white px-6 pt-24 pb-12 overflow-hidden"
     >
       {/* Background gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* Header */}
@@ -248,7 +254,7 @@ const DashboardEditor: React.FC<DashboardEditorProps> = ({ post, onBack, onSave 
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
                   placeholder="slug-articolo-esempio"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors font-mono text-sm"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors text-sm"
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   URL: www.q4.studio/blog/{slug || 'slug-articolo'}
@@ -366,7 +372,7 @@ const DashboardEditor: React.FC<DashboardEditorProps> = ({ post, onBack, onSave 
                   onChange={(e) => setContent(e.target.value)}
                   placeholder={`# Titolo principale\n\n## Sottotitolo\n\nTesto normale con **grassetto**.\n\n1. Lista ordinata\n2. Secondo elemento`}
                   rows={20}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors resize-none font-mono text-sm"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors resize-none text-sm"
                 />
                 <p className="text-xs text-gray-500 mt-2">
                   Supporto Markdown: # H1, ## H2, ### H3, **grassetto**

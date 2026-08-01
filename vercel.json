@@ -1,8 +1,78 @@
 {
   "redirects": [
     {
+      "source": "/risorse/b2b-lead-generation-meta-ads",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
+      "source": "/risorse/meta-ads-b2b-verona",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
+      "source": "/risorse/meta-ads-b2b-reggio-emilia",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
+      "source": "/risorse/meta-ads-b2b-modena",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
+      "source": "/risorse/meta-ads-b2b-parma",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
+      "source": "/risorse/meta-ads-b2b-mantova",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
+      "source": "/risorse/algoritmo-andromeda-meta-b2b",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
       "source": "/home-2",
       "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/seo/b2b-lead-generation-meta-ads",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
+      "source": "/seo/meta-ads-b2b-verona",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
+      "source": "/seo/meta-ads-b2b-reggio-emilia",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
+      "source": "/seo/meta-ads-b2b-modena",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
+      "source": "/seo/meta-ads-b2b-parma",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
+      "source": "/seo/meta-ads-b2b-mantova",
+      "destination": "/risorse",
+      "permanent": true
+    },
+    {
+      "source": "/seo/algoritmo-andromeda-meta-b2b",
+      "destination": "/risorse",
       "permanent": true
     },
     {
@@ -41,7 +111,7 @@
       ]
     },
     {
-      "source": "/(.*)\\.(js|css|png|jpg|jpeg|webp|woff2|svg|ico)$",
+      "source": "/(.*)\\.(js|css|png|jpg|jpeg|webp|avif|svg|ico|woff2|mp4|webm)$",
       "headers": [
         {
           "key": "Cache-Control",

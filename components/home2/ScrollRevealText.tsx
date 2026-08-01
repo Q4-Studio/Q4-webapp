@@ -22,8 +22,11 @@ const ScrollRevealText: React.FC<ScrollRevealTextProps> = ({
   text,
   className,
   style,
-  start = 'top 82%',
-  end = 'bottom 55%',
+  // Il reveal parte appena il testo entra dal basso e si completa quando il
+  // blocco è ancora in zona di lettura: prima l'ultima parte del paragrafo
+  // restava spenta troppo a lungo e sembrava un testo mezzo rotto.
+  start = 'top 92%',
+  end = 'bottom 65%',
   as = 'p',
 }) => {
   const ref = useRef<HTMLElement>(null);
@@ -31,6 +34,14 @@ const ScrollRevealText: React.FC<ScrollRevealTextProps> = ({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    // Con prefers-reduced-motion il testo resta leggibile fin da subito:
+    // niente split in parole, niente opacity 0.14 agganciata allo scroll.
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      el.style.opacity = '1';
+      return;
+    }
 
     const ctx = gsap.context(() => {
       el.innerHTML = '';

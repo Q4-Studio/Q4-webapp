@@ -11,26 +11,36 @@ const NotFound: React.FC = () => {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const ctx = gsap.context(() => {
+      if (reduced) return;
+
+      // Animazione all'ingresso pagina (nessuno ScrollTrigger): fromTo con
+      // immediateRender:true equivale al comportamento precedente di
+      // tl.from(...), riscritto per coerenza di stile col resto del codice.
       const tl = gsap.timeline();
 
-      tl.from(numberRef.current, {
-        scale: 0.5,
-        opacity: 0,
+      tl.fromTo(numberRef.current, { scale: 0.5, opacity: 0 }, {
+        scale: 1,
+        opacity: 1,
         duration: 1,
-        ease: "elastic.out(1, 0.5)"
+        ease: "elastic.out(1, 0.5)",
+        immediateRender: true,
       })
-      .from(textRef.current, {
-        y: 30,
-        opacity: 0,
+      .fromTo(textRef.current, { y: 30, opacity: 0 }, {
+        y: 0,
+        opacity: 1,
         duration: 0.8,
-        ease: "power3.out"
+        ease: "power3.out",
+        immediateRender: true,
       }, "-=0.5")
-      .from(buttonsRef.current, {
-        y: 20,
-        opacity: 0,
+      .fromTo(buttonsRef.current, { y: 20, opacity: 0 }, {
+        y: 0,
+        opacity: 1,
         duration: 0.6,
-        ease: "power2.out"
+        ease: "power2.out",
+        immediateRender: true,
       }, "-=0.4");
     }, containerRef);
 

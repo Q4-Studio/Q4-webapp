@@ -24,21 +24,25 @@ const AppSupport: React.FC = () => {
 
     if (!containerRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.from(headerRef.current, {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out'
-      });
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      gsap.from(formRef.current, {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.3,
-        ease: 'power2.out'
-      });
+    const ctx = gsap.context(() => {
+      if (reduced) return;
+
+      // Animazione all'ingresso pagina (nessuno ScrollTrigger): fromTo con
+      // immediateRender:true equivale al comportamento precedente di
+      // gsap.from(...), riscritto per coerenza di stile col resto del codice.
+      gsap.fromTo(
+        headerRef.current,
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: 'power3.out', immediateRender: true }
+      );
+
+      gsap.fromTo(
+        formRef.current,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, delay: 0.3, ease: 'power2.out', immediateRender: true }
+      );
     }, containerRef);
 
     return () => ctx.revert();
@@ -85,9 +89,9 @@ const AppSupport: React.FC = () => {
   };
 
   return (
-    <div ref={containerRef} className="relative pt-32 pb-20 px-6 bg-[#050505] text-white min-h-screen">
+    <div ref={containerRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
       {/* Background gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Header */}
@@ -95,8 +99,8 @@ const AppSupport: React.FC = () => {
           <div className="inline-flex items-center justify-center gap-3 mb-6">
             <Smartphone className="w-12 h-12 text-indigo-400" />
           </div>
-          <span className="text-indigo-500 font-mono tracking-widest mb-4 block">SUPPORTO APP</span>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+          <span className="text-indigo-500 text-sm tracking-[0.08em] mb-5 block">SUPPORTO APP</span>
+          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">
             Supporto{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
               Q4 CRM
@@ -139,7 +143,7 @@ const AppSupport: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-3xl -z-10" />
 
           <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold">Invia una richiesta di supporto</h2>
+            <h2 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em]">Invia una richiesta di supporto</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

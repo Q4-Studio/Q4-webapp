@@ -6,7 +6,7 @@ import ScrollRevealText from './ScrollRevealText';
 gsap.registerPlugin(ScrollTrigger);
 
 const MANIFESTO =
-  "Q4 Studio è uno studio di consulenza. Entriamo nei processi, applichiamo l'AI al marketing e costruiamo agenti che lavorano al fianco del tuo team. Meno attività ripetitive, più pipeline.";
+  "Q4 Studio è uno studio di consulenza. Entriamo nei processi, applichiamo l'AI al marketing e costruiamo agenti che lavorano al fianco del tuo team.";
 
 const Manifesto2: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -42,8 +42,8 @@ const Manifesto2: React.FC = () => {
       <div className="max-w-5xl mx-auto relative z-10">
         <ScrollRevealText
           text={MANIFESTO}
-          className="font-bold leading-snug tracking-tight"
-          style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(28px, 4.5vw, 56px)' }}
+          className="font-bold leading-[1.15] tracking-[-0.02em]"
+          style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(28px, 4.5vw, 48px)' }}
           start="top 70%"
           end="bottom 60%"
         />

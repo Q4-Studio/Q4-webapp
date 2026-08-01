@@ -7,213 +7,72 @@ import MagneticButton from '../MagneticButton';
 gsap.registerPlugin(ScrollTrigger);
 
 /* ------------------------------------------------------------------ */
-/* Sfera neurale 3D — canvas 2D con proiezione prospettica.            */
-/* I punti sono distribuiti su una sfera di Fibonacci; gli archi tra   */
-/* punti vicini sono precalcolati (la rotazione è rigida, le distanze  */
-/* non cambiano) così il render resta O(n) per frame.                  */
+/* Video di sfondo dell'hero: copre tutta l'area, a opacità ridotta    */
+/* così il titolo resta leggibile anche in cima alla pagina. Niente    */
+/* overlay/scrim: l'opacità è applicata direttamente al <video>.       */
+/* Sostituito da un fermo immagine se l'utente preferisce meno         */
+/* animazioni.                                                         */
 /* ------------------------------------------------------------------ */
 
-type Vec3 = { x: number; y: number; z: number };
+// Opacità abbassata (da 0.45) e desaturazione via filter direttamente sul
+// video: nessun overlay/scrim, il titolo bianco e il gradiente risaltano di
+// più su uno sfondo neutro e più tenue.
+const HERO_VIDEO_OPACITY = 0.28;
+const HERO_VIDEO_FILTER = 'grayscale(1) contrast(1.05) brightness(1.05)';
 
-const buildSphere = (count: number) => {
-  const pts: Vec3[] = [];
-  const golden = Math.PI * (3 - Math.sqrt(5));
-  for (let i = 0; i < count; i++) {
-    const y = 1 - (i / (count - 1)) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const theta = golden * i;
-    pts.push({ x: Math.cos(theta) * r, y, z: Math.sin(theta) * r });
-  }
-  // Archi tra punti angolarmente vicini
-  const edges: [number, number][] = [];
-  const threshold = 0.32;
-  for (let i = 0; i < count; i++) {
-    for (let j = i + 1; j < count; j++) {
-      const dx = pts[i].x - pts[j].x;
-      const dy = pts[i].y - pts[j].y;
-      const dz = pts[i].z - pts[j].z;
-      if (dx * dx + dy * dy + dz * dz < threshold * threshold) {
-        edges.push([i, j]);
-      }
-    }
-  }
-  return { pts, edges };
-};
-
-const NeuralSphere: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+const HeroBackgroundVideo: React.FC = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const reducedMotion =
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const { pts, edges } = buildSphere(300);
-
-    let width = 0;
-    let height = 0;
-    let dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let frame = 0;
-    let running = true;
-    let visible = true;
-
-    const resize = () => {
-      const parent = canvas.parentElement;
-      if (!parent) return;
-      width = parent.clientWidth;
-      height = parent.clientHeight;
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    resize();
-
-    // Rotazione continua + inclinazione guidata dal mouse (con inerzia)
-    let rotY = 0;
-    let tiltX = 0;
-    let tiltY = 0;
-    let targetTiltX = 0;
-    let targetTiltY = 0;
-
-    const onMouseMove = (e: MouseEvent) => {
-      targetTiltY = (e.clientX / window.innerWidth - 0.5) * 0.6;
-      targetTiltX = (e.clientY / window.innerHeight - 0.5) * 0.5;
-    };
-
-    // Sinapsi: archi che lampeggiano brevemente
-    type Synapse = { edge: number; t: number };
-    let synapses: Synapse[] = [];
-
-    const projected: { x: number; y: number; s: number; z: number }[] = pts.map(() => ({ x: 0, y: 0, s: 0, z: 0 }));
-
-    const render = () => {
-      if (!running) return;
-      frame = requestAnimationFrame(render);
-      if (!visible) return;
-
-      ctx.clearRect(0, 0, width, height);
-
-      const isMobile = width < 768;
-      const cx = isMobile ? width * 0.5 : width * 0.72;
-      const cy = isMobile ? height * 0.34 : height * 0.46;
-      const radius = isMobile ? Math.min(width, height) * 0.36 : Math.min(width, height) * 0.34;
-      const fov = 3.2;
-
-      rotY += reduced ? 0 : 0.0022;
-      tiltX += (targetTiltX - tiltX) * 0.04;
-      tiltY += (targetTiltY - tiltY) * 0.04;
-
-      const cosY = Math.cos(rotY + tiltY);
-      const sinY = Math.sin(rotY + tiltY);
-      const cosX = Math.cos(tiltX * 0.6 - 0.18);
-      const sinX = Math.sin(tiltX * 0.6 - 0.18);
-
-      for (let i = 0; i < pts.length; i++) {
-        const p = pts[i];
-        // rotazione Y poi X
-        const x1 = p.x * cosY - p.z * sinY;
-        const z1 = p.x * sinY + p.z * cosY;
-        const y2 = p.y * cosX - z1 * sinX;
-        const z2 = p.y * sinX + z1 * cosX;
-        const scale = fov / (fov + z2);
-        projected[i].x = cx + x1 * radius * scale;
-        projected[i].y = cy + y2 * radius * scale;
-        projected[i].s = scale;
-        projected[i].z = z2;
-      }
-
-      // Archi
-      ctx.lineWidth = 0.6;
-      for (let e = 0; e < edges.length; e++) {
-        const [a, b] = edges[e];
-        const pa = projected[a];
-        const pb = projected[b];
-        const depth = (pa.z + pb.z) / 2; // -1 (davanti) → 1 (dietro)
-        const alpha = Math.max(0, 0.16 * (1 - (depth + 1) / 2) + 0.015);
-        ctx.strokeStyle = `rgba(129, 140, 248, ${alpha})`;
-        ctx.beginPath();
-        ctx.moveTo(pa.x, pa.y);
-        ctx.lineTo(pb.x, pb.y);
-        ctx.stroke();
-      }
-
-      // Sinapsi lampeggianti
-      if (!reduced && synapses.length < 9 && Math.random() < 0.09) {
-        synapses.push({ edge: Math.floor(Math.random() * edges.length), t: 0 });
-      }
-      synapses = synapses.filter((s) => s.t < 1);
-      for (const s of synapses) {
-        s.t += 0.018;
-        const [a, b] = edges[s.edge];
-        const pa = projected[a];
-        const pb = projected[b];
-        const pulse = Math.sin(Math.PI * s.t);
-        ctx.strokeStyle = `rgba(165, 180, 252, ${0.75 * pulse})`;
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        ctx.moveTo(pa.x, pa.y);
-        ctx.lineTo(pb.x, pb.y);
-        ctx.stroke();
-        ctx.lineWidth = 0.6;
-        // scintilla che percorre l'arco
-        const sx = pa.x + (pb.x - pa.x) * s.t;
-        const sy = pa.y + (pb.y - pa.y) * s.t;
-        ctx.fillStyle = `rgba(199, 210, 254, ${pulse})`;
-        ctx.beginPath();
-        ctx.arc(sx, sy, 1.6, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Punti
-      for (let i = 0; i < projected.length; i++) {
-        const p = projected[i];
-        const depthAlpha = Math.max(0.05, (p.s - 0.7) * 1.4);
-        ctx.fillStyle = `rgba(148, 163, 255, ${Math.min(0.85, depthAlpha)})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, Math.max(0.6, 1.7 * p.s), 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Nucleo luminoso
-      const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 0.5);
-      core.addColorStop(0, 'rgba(99, 102, 241, 0.10)');
-      core.addColorStop(1, 'rgba(99, 102, 241, 0)');
-      ctx.fillStyle = core;
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius * 0.5, 0, Math.PI * 2);
-      ctx.fill();
-    };
-
-    const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-    });
-    observer.observe(canvas);
-
-    const onVisibility = () => {
-      visible = !document.hidden;
-    };
-
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('visibilitychange', onVisibility);
-    render();
-
-    return () => {
-      running = false;
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('visibilitychange', onVisibility);
-    };
+    // React non riflette sempre l'attributo `muted` nel DOM: lo forziamo via
+    // ref perché senza (insieme a playsInline) iOS blocca l'autoplay.
+    if (videoRef.current) videoRef.current.muted = true;
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" aria-hidden="true" />;
+  useEffect(() => {
+    // Il video non ha altezza intrinseca nel flusso (è absolute inset-0), ma
+    // il suo caricamento può comunque coincidere con altri assestamenti di
+    // layout (font, immagini). Ricalcoliamo le posizioni dei trigger quando
+    // ha davvero un frame pronto, per sicurezza.
+    const video = videoRef.current;
+    if (!video) return;
+    const onLoaded = () => ScrollTrigger.refresh();
+    video.addEventListener('loadeddata', onLoaded);
+    return () => video.removeEventListener('loadeddata', onLoaded);
+  }, []);
+
+  if (reducedMotion) {
+    return (
+      <div
+        className="absolute inset-0 w-full h-full bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/hero-poster.jpg')",
+          opacity: HERO_VIDEO_OPACITY,
+          filter: HERO_VIDEO_FILTER,
+        }}
+        aria-hidden="true"
+      />
+    );
+  }
+
+  return (
+    <video
+      ref={videoRef}
+      autoPlay
+      muted
+      loop
+      playsInline
+      poster="/hero-poster.jpg"
+      preload="metadata"
+      aria-hidden="true"
+      className="absolute inset-0 w-full h-full object-cover"
+      style={{ opacity: HERO_VIDEO_OPACITY, filter: HERO_VIDEO_FILTER }}
+    >
+      <source src="/hero-bg.mp4" type="video/mp4" />
+    </video>
+  );
 };
 
 /* ------------------------------------------------------------------ */
@@ -244,7 +103,7 @@ const HeroTicker: React.FC = () => {
 
   return (
     <div className="absolute bottom-0 left-0 w-full border-t border-white/5 py-4 overflow-hidden bg-[#050505]/60 backdrop-blur-sm">
-      <div ref={trackRef} className="flex whitespace-nowrap items-center gap-10 text-[11px] font-mono tracking-[0.25em] text-gray-500">
+      <div ref={trackRef} className="flex whitespace-nowrap items-center gap-10 text-[11px] tracking-[0.08em] text-gray-500">
         {[...tickerItems, ...tickerItems, ...tickerItems].map((item, i) => (
           <span key={i} className="flex items-center gap-3 flex-shrink-0">
             <span className="text-indigo-500/70">{item.icon}</span>
@@ -265,6 +124,7 @@ const Hero2: React.FC = () => {
   const canvasWrapRef = useRef<HTMLDivElement>(null);
   const ghostRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const kickerRef = useRef<HTMLParagraphElement>(null);
   const line1Ref = useRef<HTMLSpanElement>(null);
   const line2Ref = useRef<HTMLSpanElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
@@ -303,10 +163,16 @@ const Hero2: React.FC = () => {
       const tl = gsap.timeline({ delay: 0.15 });
       tl.to(containerRef.current, { opacity: 1, duration: 0.4 })
         .fromTo(
+          kickerRef.current,
+          { y: 14, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' },
+          '-=0.2'
+        )
+        .fromTo(
           chars1,
           { y: 110, opacity: 0, rotateX: -90 },
           { y: 0, opacity: 1, rotateX: 0, stagger: 0.022, duration: 0.9, ease: 'back.out(1.6)' },
-          '-=0.2'
+          '-=0.15'
         )
         // La riga con gradiente non viene splittata in caratteri: figli con
         // opacity/transform rompono background-clip:text. Reveal come blocco.
@@ -320,10 +186,14 @@ const Hero2: React.FC = () => {
         .fromTo(ctaRef.current, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, '-=0.6')
         .fromTo(canvasWrapRef.current, { opacity: 0 }, { opacity: 1, duration: 1.6, ease: 'power2.out' }, '-=1.2');
 
-      // Parallasse allo scroll: livelli che scorrono a velocità diverse
+      // Parallasse allo scroll: livelli che scorrono a velocità diverse.
+      // L'opacità del video è già ridotta in modo fisso (HERO_VIDEO_OPACITY,
+      // sul tag <video>): qui animiamo solo la posizione, non l'opacità del
+      // wrapper. Se avessimo animato anche l'opacity del wrapper, i due valori
+      // si sarebbero moltiplicati e in fondo all'hero il video sarebbe quasi
+      // sparito: il cliente vuole che scrollando resti visibile com'è ora.
       gsap.to(canvasWrapRef.current, {
-        yPercent: 22,
-        opacity: 0.25,
+        yPercent: 10,
         ease: 'none',
         scrollTrigger: { trigger: containerRef.current, start: 'top top', end: 'bottom top', scrub: true },
       });
@@ -354,9 +224,11 @@ const Hero2: React.FC = () => {
 
   return (
     <div ref={containerRef} className="relative w-full h-[100svh] min-h-[640px] overflow-hidden bg-[#050505] opacity-0">
-      {/* Sfera neurale */}
+      {/* Video di sfondo: copre tutta l'area dell'hero. La leggibilità del
+          titolo è affidata all'opacità ridotta del video stesso (HERO_VIDEO_OPACITY),
+          non a un overlay/scrim sopra. */}
       <div ref={canvasWrapRef} className="absolute inset-0 z-0">
-        <NeuralSphere />
+        <HeroBackgroundVideo />
       </div>
 
       {/* Ghost text in parallasse */}
@@ -374,36 +246,53 @@ const Hero2: React.FC = () => {
         Q4
       </div>
 
-      {/* Vignettatura laterale per leggibilità */}
-      <div className="absolute inset-0 z-[1] pointer-events-none bg-gradient-to-r from-[#050505] via-transparent to-transparent md:via-[#050505]/30" />
+      <div
+        ref={contentRef}
+        className="relative z-10 h-full max-w-5xl mx-auto px-6 flex flex-col items-center justify-center text-center"
+      >
+        <p
+          ref={kickerRef}
+          className="mb-4 md:mb-5 uppercase tracking-[0.08em] text-[11px] text-indigo-300/70"
+        >
+          Bring AI&Tech to Marketing
+        </p>
 
-      <div ref={contentRef} className="relative z-10 h-full max-w-7xl mx-auto px-6 flex flex-col justify-center">
         <h1
-          className="font-bold tracking-tighter leading-[0.95] text-white"
-          style={{ fontSize: 'clamp(44px, 9vw, 132px)', perspective: '800px' }}
+          className="font-bold tracking-tighter leading-[0.95] text-white max-w-[8.5ch] md:max-w-none text-[clamp(44px,12.8vw,52px)] md:text-[clamp(56px,7.5vw,108px)]"
+          style={{
+            perspective: '800px',
+            textShadow: '0 2px 24px rgba(0,0,0,0.55)',
+          }}
         >
           <span ref={line1Ref} className="block">Il tuo AI</span>
+          {/* pb + margin-bottom negativo: allargano l'area di paint del
+              background (bg-clip-text) oltre la line-box stretta (leading-0.95)
+              così il discendente della "g" non resta fuori dal gradiente, senza
+              spostare gli elementi sotto (il margin negativo compensa il padding). */}
           <span
             ref={line2Ref}
-            className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400"
+            className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 pb-[0.2em] -mb-[0.2em]"
           >
             Marketing Partner.
           </span>
         </h1>
 
-        <p ref={subRef} className="mt-8 text-lg md:text-2xl text-gray-400 max-w-2xl leading-relaxed">
-          Lo studio di consulenza che applica l&apos;AI al marketing: campagne che convertono, automazioni che
-          inseguono ogni lead e agenti AI che alleggeriscono i processi del tuo team.
+        <p
+          ref={subRef}
+          className="mt-8 text-lg md:text-xl text-gray-300 max-w-xl mx-auto leading-relaxed"
+          style={{ textShadow: '0 1px 12px rgba(0,0,0,0.6)' }}
+        >
+          Lo studio di consulenza che porta AI e le ultime tecnologie nel tuo marketing.
         </p>
 
-        <div ref={ctaRef} className="mt-10 flex flex-wrap items-center gap-5">
+        <div ref={ctaRef} className="mt-10 flex flex-wrap items-center justify-center gap-5">
           <MagneticButton onClick={scrollToForm} className="text-white">
             Inizia il percorso
             <ArrowUpRight className="w-5 h-5" />
           </MagneticButton>
           <button
             onClick={goToAgents}
-            className="group flex items-center gap-2 text-sm font-mono tracking-widest text-gray-400 hover:text-indigo-300 transition-colors cursor-pointer bg-transparent border-0 uppercase"
+            className="group flex items-center gap-2 text-sm tracking-[0.08em] text-gray-400 hover:text-indigo-300 transition-colors cursor-pointer bg-transparent border-0 uppercase"
           >
             Scopri gli Agenti AI
             <ArrowDownRight className="w-4 h-4 -rotate-90 group-hover:translate-x-1 transition-transform" />

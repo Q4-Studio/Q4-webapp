@@ -8,11 +8,108 @@
 ## Indice
 1. [Stack Tecnologico](#stack-tecnologico)
 2. [Struttura del Progetto](#struttura-del-progetto)
-3. [Componenti Principali](#componenti-principali)
-4. [Sistema di Blog](#sistema-di-blog)
-5. [Routing](#routing)
-6. [Variabili d'Ambiente](#variabili-dambiente)
-7. [Build e Deploy](#build-e-deploy)
+3. [Scala Tipografica](#scala-tipografica)
+4. [Componenti Principali](#componenti-principali)
+5. [Sistema di Blog](#sistema-di-blog)
+6. [Routing](#routing)
+7. [Variabili d'Ambiente](#variabili-dambiente)
+8. [Build e Deploy](#build-e-deploy)
+
+---
+
+## Scala Tipografica
+
+Scala unica per tutti i `font-size` del sito (solo dimensione: interlinea, tracking e
+spaziature sono fuori scope e vengono gestiti separatamente). 7 gradini, rapporto ~1.15-1.35
+tra gradini adiacenti, più aperto sui due gradini "display". Regola: nessun paragrafo sotto
+16px su mobile, nessuna micro-etichetta sotto 11px.
+
+| Gradino | Mobile | Desktop | Classe Tailwind / valore | Uso |
+|---|---|---|---|---|
+| **Display** | ~40px | ~80px | `text-[clamp(40px,6.5vw,80px)]` | Solo `<h1>` di pagina (Blog, BlogArticle, SeoDirectory, SeoLandingPage, AIAgents, Privacy, AppSupport). **Eccezione**: l'h1 dell'hero (`Hero2.tsx`) ha una propria variante già tarata e verificata, invariata: `clamp(44px,12.8vw,52px)` fino a 768px, `clamp(56px,7.5vw,108px)` sopra. |
+| **H2 sezione** | 28px | 48px | `text-[clamp(28px,4.5vw,48px)]` | Tutti gli `<h2>` di sezione (Pipeline2, Agents2, Services2, HomeSeoContent, AIAgents, SeoLandingPage, Footer CTA, FinalCTA). Anche il paragrafo-manifesto di `Manifesto2.tsx` (eccezione documentata: è un `<p>` ma con peso visivo di un h2/claim). |
+| **H3** | 24px | 30px | `text-2xl md:text-3xl` | Sotto-titoli di sezione, titoli di card, `<h3>` negli articoli blog. |
+| **Body Large** | 18px | 20px | `text-lg md:text-xl` | Paragrafi lead/intro sotto h1/h2, sottotitolo hero. Copre anche gli `<h4>` reali (Cookie Banner, Privacy, Footer colonne), che a questa taglia già coincidevano. |
+| **Body** | 16px | 16px | `text-base` | Paragrafi normali, form, bottoni, nav, liste. |
+| **Small / kicker** | 14px | 14px | `text-sm` | Meta info secondarie, etichette "kicker" uppercase sopra i titoli (stesse dimensioni di un testo secondario: si distinguono per tracking/uppercase, non per size). |
+| **Micro / etichette** | 11px | 11px | `text-[11px]` | Badge, pillole, contatori, tag piccolissimi. Non scende mai sotto gli 11px. |
+
+**Eccezioni note** (documentate, non nella scala):
+- `NotFound.tsx`: il numero "404" (`text-[200px] md:text-[280px]`) è un glifo decorativo, non un titolo editoriale: resta fuori scala.
+- Testi ghost/decorativi `aria-hidden` (il "Q4" e "FUTURE-READY" in filigrana in `Hero2.tsx`/`HomeV2.tsx`) restano fuori scala: sono elementi grafici, non contenuto testuale.
+- Preloader (`HomeV2.tsx`): fuori scope per richiesta esplicita del cliente.
+
+---
+
+## Interlinea e Letter-Spacing
+
+Regola esplicita per gradino, applicata a tutti i componenti e ai template statici di
+`scripts/prerender.ts` (che devono restare identici ai componenti React). Il `font-size`
+non cambia: qui si interviene solo su `line-height` (`leading-*`) e `letter-spacing`
+(`tracking-*`).
+
+| Gradino | line-height | letter-spacing | Motivazione |
+|---|---|---|---|
+| Display (h1 pagina) | `leading-[1.1]` | `tracking-[-0.03em]` | Titolo compatto, i caratteri grandi hanno bisogno di meno spazio. |
+| H2 sezione (+ claim Manifesto2) | `leading-[1.15]` | `tracking-[-0.02em]` | Compatto ma leggermente più aperto del display. |
+| H3 (sottotitoli, card, h3 markdown blog) | `leading-[1.25]` | `tracking-[-0.01em]` | Via di mezzo: ancora un titolo, ma più vicino al corpo testo. |
+| Body Large (18-20px) | `leading-relaxed`/`leading-[1.5]` (1.5-1.65) | neutro (nessuna classe) | Testo di lettura: deve restare comodo, non compatto. |
+| Body (16px) | `leading-relaxed` (1.5-1.65) | neutro | Idem. |
+| Small/kicker uppercase (14px e 11px) | invariata (di norma una riga) | **`tracking-[0.08em]`** (valore unico) | Prima 4 valori diversi (`0.25/0.3/0.35em`, `tracking-widest`, `tracking-wider`); un solo valore, scelto perché regge anche le etichette più strette a 375px. |
+| Small/kicker non uppercase (meta info, timestamp, testo normale) | `leading-relaxed`/default | neutro | Non è un'etichetta maiuscola: nessun tracking positivo. |
+
+**Eccezione al tracking unico** — badge "Stape Partner — Server-Side Tagging"
+(`components/home2/Services2.tsx`): a 375px anche a `tracking-[0]` il testo natural
+è più largo della pillola disponibile (~253px vs ~277px). Per riportarlo su una riga
+usa `tracking-[-0.08em]`, l'unico modo entro il perimetro "solo tracking" per farlo
+rientrare. Documentato qui perché rompe la regola generale (tracking negativo su
+un'etichetta maiuscola), ma è l'unica soluzione possibile senza toccare padding o
+dimensione.
+
+**Elementi esclusi dall'unificazione del tracking** (lasciati con i loro valori
+originali, non sono etichette maiuscole ma letture numeriche/tecniche in stile
+"console" — `tabular-nums`, orari, contatori step):
+- `components/home2/Pipeline2.tsx`: il contatore `0{active+1}/05` (`tracking-widest tabular-nums`) e il badge dell'orario `step.time` / `s.time` (es. "T+0 s", `tracking-[0.2em]`).
+- `components/home2/Agents2.tsx`: il nome dello scenario nel terminale mock (es. "q4-agent · preventivi", `tracking-[0.2em]`, minuscolo per estetica da riga di comando).
+
+**Elementi con `leading-none` lasciati invariati** (etichette/numeri brevi e
+compatti in badge, non testo di lettura): "Agente Q4" in `AIAgents.tsx`, il
+contatore del preloader e il ghost text in `home2/HomeV2.tsx`/`home2/Hero2.tsx`,
+il "404" di `NotFound.tsx`.
+
+**`h1` dell'hero** (`components/home2/Hero2.tsx`): resta con la sua variante
+verificata (`leading-[0.95]`, `tracking-tighter`), fuori da questa unificazione —
+vedi nota sulla scala tipografica.
+
+---
+
+## Ritmo Verticale (Spaziature)
+
+Scala di spaziatura verticale applicata a tutte le pagine (componenti React e template
+statici di `scripts/prerender.ts`, che devono restare coerenti). Riguarda solo padding
+verticale di sezione, margini tra blocchi e `gap` di griglia: font-size, line-height,
+letter-spacing e larghezze massime dei contenuti non cambiano (vedi sezioni sopra).
+
+| Gradino | Mobile | Desktop | Ruolo |
+|---|---|---|---|
+| **Apertura pagina (hero-like)** | `pt-36 pb-24` (144px / 96px) | `md:pt-44 md:pb-32` (176px / 128px) | Padding del blocco h1 + lead di apertura delle pagine secondarie: `AIAgents`, `SeoDirectory`, `SeoLandingPage`, `BlogArticle`, `Privacy`, `AppSupport`, `Blog`. Prima: valori tutti diversi (`pt-32/36/40`, `pb-20/24/28/32`) e **senza crescita da mobile a desktop** in nessuno dei sei file. Ora un solo gradino, con crescita su desktop. |
+| **Sezione di contenuto bordata (`border-t`)** | `py-32` (128px) | `md:py-44` (176px) | Separazione tra blocchi tematici in pagine lunghe: le sei sotto-sezioni di `AIAgents.tsx` (cosa fa, integrazioni, metodo, ti riconosci, FAQ, CTA finale) usavano `py-28`/`py-32` fissi, senza crescita su desktop. Allineate al gradino già corretto di `home2/Agents2.tsx` e `home2/Services2.tsx` (che restano invariati: erano già a norma). |
+| **Kicker → titolo (h1/h2)** | `mb-5` (20px) | invariato | Distanza tra l'etichetta uppercase sopra il titolo e il titolo stesso. Prima disomogenea: `mb-4`/`mb-5`/`mb-6`/`mb-7` a seconda del file (`HomeSeoContent`, `ContactForm`, `AppSupport`, `SeoDirectory`, `Blog`, `AIAgents`). Un solo valore, invariante per breakpoint (etichetta piccola e statica). |
+| **Titolo (h1/h2) → paragrafo/lead** | `mb-6` (24px) | invariato | Distanza tra il titolo di pagina/sezione e il paragrafo o blocco che segue. Prima disomogenea: `mb-4`/`mb-5`/`mb-6`/`mb-8` (`HomeSeoContent`, `Pipeline2`, `AIAgents` h1). Un solo valore. |
+| **Gap tra card in griglia (peso analogo)** | `gap-5` (20px) | `md:gap-8` dove già presente | Gap delle griglie di card informative a 3 colonne (`HomeSeoContent`, confrontata con `SeoLandingPage`): la prima usava `gap-4` (16px), più stretta delle griglie equivalenti altrove. Portata a `gap-5`. |
+| **Titolo di card (h3) → testo** | `mb-4` (16px) | invariato | Distanza tra il titolo di una card/blocco e il testo sottostante. Prima disomogenea: `mb-3`/`mb-4` (`HomeSeoContent`, `SeoLandingPage`, `AIAgents` metodo). Un solo valore. |
+
+**Sezioni già corrette, lasciate invariate** (generose e già scalate mobile→desktop,
+non gonfiate ulteriormente per non allungare la pagina senza motivo):
+`Manifesto2` (`py-40 md:py-56`), `home2/Agents2.tsx` e `home2/Services2.tsx`
+(`py-32 md:py-44`, presi a modello per il gradino "sezione di contenuto" sopra),
+`FinalCTA` + `ContactForm` in home (il gap ravvicinato tra i due è voluto: sono
+pensati come un unico flusso, "il form segue subito sotto" la CTA, non due
+sezioni separate).
+
+**Casi risolti con intervento di layout, non di spaziatura** (vedi anche sezioni
+sopra): le etichette delle statistiche e il badge "Stape Partner" in
+`components/home2/Services2.tsx` — dettagli nel changelog del componente.
 
 ---
 

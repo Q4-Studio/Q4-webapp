@@ -25,7 +25,7 @@ const services: Service[] = [
     title: 'B2B Lead Generation',
     desc: "Un sistema di acquisizione completo: posizionamento, offerta, Meta Advertising, CRM e follow-up. Il tracking è il nostro punto forte: dati di conversione precisi e conformi, che l'algoritmo può davvero usare per ottimizzare.",
     points: [
-      'Meta Ads su ICP e offerta',
+      'Meta Ads sul profilo del cliente giusto e sull\'offerta',
       'Server-Side Tracking e Consent Mode',
       'Segnali di qualità dal CRM alle campagne',
       'Qualifica lead e follow-up multicanale',
@@ -71,11 +71,11 @@ const SpotlightCard: React.FC<{ service: Service }> = ({ service }) => {
       />
       <div className="relative z-10">
         <div className="mb-7">{service.icon}</div>
-        <h3 className="text-2xl md:text-3xl font-bold mb-4">{service.title}</h3>
+        <h3 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">{service.title}</h3>
         <p className="text-gray-400 leading-relaxed mb-8">{service.desc}</p>
         <ul className="space-y-3">
           {service.points.map((point) => (
-            <li key={point} className="flex items-center gap-3 text-sm text-gray-300">
+            <li key={point} className="flex items-center gap-3 text-base text-gray-300">
               <span className="w-5 h-5 rounded-full bg-indigo-500/10 border border-indigo-400/30 flex items-center justify-center flex-shrink-0">
                 <Check className="w-3 h-3 text-indigo-300" />
               </span>
@@ -88,7 +88,7 @@ const SpotlightCard: React.FC<{ service: Service }> = ({ service }) => {
             href={service.partner.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-9 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-cyan-500/5 border border-cyan-400/20 text-xs font-mono tracking-wider text-cyan-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-colors"
+            className="mt-9 inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-cyan-500/5 border border-cyan-400/20 text-[11px] tracking-[-0.08em] text-cyan-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-colors"
           >
             <Server className="w-3.5 h-3.5" />
             {service.partner.label}
@@ -131,48 +131,75 @@ const Services2: React.FC = () => {
 
   useEffect(() => {
     if (!sectionRef.current) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const ctx = gsap.context(() => {
-      gsap.from('.services-reveal', {
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 70%', toggleActions: 'play none none reverse' },
-        y: 50,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.12,
-        ease: 'power3.out',
-      });
+      if (!reduced) {
+        // fromTo + immediateRender:false + once: se il trigger non scatta mai
+        // (layout non ancora assestato quando misurato), il contenuto resta
+        // visibile invece che bloccato a opacity 0; una volta acceso non si
+        // rispegne più tornando indietro con lo scroll.
+        gsap.fromTo(
+          '.services-reveal',
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.9,
+            stagger: 0.12,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 70%', once: true },
+          }
+        );
 
-      gsap.from('.service-card', {
-        scrollTrigger: { trigger: '.services-grid', start: 'top 78%' },
-        y: 90,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.15,
-        ease: 'power3.out',
-      });
+        gsap.fromTo(
+          '.service-card',
+          { y: 90, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.9,
+            stagger: 0.15,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: '.services-grid', start: 'top 78%', once: true },
+          }
+        );
 
-      // Contatori
+        gsap.fromTo(
+          '.method-step',
+          { y: 60, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: '.method-grid', start: 'top 82%', once: true },
+          }
+        );
+      }
+
+      // Contatori: sotto reduced-motion mostriamo subito il valore finale,
+      // senza animazione, invece di lasciare il contenuto fermo a "0".
       gsap.utils.toArray<HTMLElement>('.stat-value').forEach((el) => {
         const target = Number(el.dataset.value ?? 0);
+        if (reduced) {
+          el.innerText = `${el.dataset.prefix ?? ''}${target}${el.dataset.suffix ?? ''}`;
+          return;
+        }
         const obj = { v: 0 };
         gsap.to(obj, {
           v: target,
           duration: 1.6,
           ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 88%' },
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true },
           onUpdate: () => {
             el.innerText = `${el.dataset.prefix ?? ''}${Math.round(obj.v)}${el.dataset.suffix ?? ''}`;
           },
         });
-      });
-
-      gsap.from('.method-step', {
-        scrollTrigger: { trigger: '.method-grid', start: 'top 82%' },
-        y: 60,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.12,
-        ease: 'power3.out',
       });
     }, sectionRef);
 
@@ -183,7 +210,7 @@ const Services2: React.FC = () => {
     <section id="services" ref={sectionRef} className="relative py-32 md:py-44 px-6 bg-[#050505] text-white border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16 md:mb-20">
-          <h2 className="services-reveal text-4xl md:text-6xl font-bold leading-tight mb-6">
+          <h2 className="services-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">
             Due leve.
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Un unico sistema.</span>
@@ -203,9 +230,9 @@ const Services2: React.FC = () => {
         {/* Metriche */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/5 rounded-3xl overflow-hidden border border-white/5 mb-24">
           {stats.map((stat) => (
-            <div key={stat.label} className="bg-[#070707] p-8 md:p-10 text-center">
+            <div key={stat.label} className="bg-[#070707] px-2 py-8 md:p-10 text-center">
               <p
-                className="stat-value text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 mb-2"
+                className="stat-value tabular-nums text-[clamp(28px,4.5vw,48px)] font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 mb-2"
                 data-value={stat.value}
                 data-prefix={stat.prefix}
                 data-suffix={stat.suffix}
@@ -213,7 +240,7 @@ const Services2: React.FC = () => {
               >
                 {stat.prefix}0{stat.suffix}
               </p>
-              <p className="text-xs md:text-sm font-mono tracking-wider text-gray-500 uppercase">{stat.label}</p>
+              <p className="text-sm tracking-[0.08em] text-gray-500 uppercase">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -223,9 +250,9 @@ const Services2: React.FC = () => {
           {methodSteps.map((step) => (
             <div key={step.n} className="method-step relative pt-8 border-t border-white/10">
               <span className="absolute -top-px left-0 w-12 h-px bg-gradient-to-r from-indigo-400 to-purple-400" />
-              <span className="font-mono text-sm text-indigo-400 tracking-widest">{step.n}</span>
-              <h3 className="text-xl font-bold mt-3 mb-3">{step.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{step.desc}</p>
+              <span className="text-sm text-indigo-400 tracking-[0.08em]">{step.n}</span>
+              <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mt-3 mb-3">{step.title}</h3>
+              <p className="text-gray-400 text-base leading-relaxed">{step.desc}</p>
             </div>
           ))}
         </div>

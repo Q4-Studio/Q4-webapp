@@ -42,44 +42,57 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
   useEffect(() => {
     if (!footerRef.current) return;
 
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const ctx = gsap.context(() => {
+      if (reduced) return;
+
+      // fromTo + immediateRender:false + once (invece di tl.from(...) con
+      // toggleActions "play none none reverse"): se lo ScrollTrigger non
+      // scatta (misure prese prima che il layout si assestasse) il footer
+      // resta visibile invece di restare bloccato a opacity 0; una volta
+      // acceso non si rispegne più tornando indietro con lo scroll.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: footerRef.current,
           start: "top 75%", // Animation starts when top of footer hits 75% of viewport
-          toggleActions: "play none none reverse",
+          once: true,
         }
       });
 
       if (titleRef.current) {
-        tl.from(titleRef.current, {
-          y: 100,
-          opacity: 0,
+        tl.fromTo(titleRef.current, { y: 100, opacity: 0 }, {
+          y: 0,
+          opacity: 1,
           duration: 1.2,
-          ease: "power3.out"
+          ease: "power3.out",
+          immediateRender: false,
         });
       }
       if (buttonWrapperRef.current) {
-        tl.from(buttonWrapperRef.current, {
-          scale: 0.8,
-          y: 50,
-          opacity: 0,
+        tl.fromTo(buttonWrapperRef.current, { scale: 0.8, y: 50, opacity: 0 }, {
+          scale: 1,
+          y: 0,
+          opacity: 1,
           duration: 1,
-          ease: "elastic.out(1, 0.7)"
+          ease: "elastic.out(1, 0.7)",
+          immediateRender: false,
         }, "-=0.8");
       }
-      tl.from(linksRef.current?.children || [], {
-        y: 30,
-        opacity: 0,
+      tl.fromTo(linksRef.current?.children || [], { y: 30, opacity: 0 }, {
+        y: 0,
+        opacity: 1,
         duration: 0.8,
         stagger: 0.1,
-        ease: "power2.out"
+        ease: "power2.out",
+        immediateRender: false,
       }, "-=0.6")
-      .from(bottomRef.current, {
-        opacity: 0,
-        y: 10,
+      .fromTo(bottomRef.current, { opacity: 0, y: 10 }, {
+        opacity: 1,
+        y: 0,
         duration: 1,
-        ease: "power2.out"
+        ease: "power2.out",
+        immediateRender: false,
       }, "-=0.6");
 
     }, footerRef);
@@ -88,14 +101,14 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
   }, []);
 
   return (
-    <footer ref={footerRef} className={`relative bg-[#050505] text-white ${showCta ? 'pt-40' : 'pt-20'} pb-10 px-6 overflow-hidden`}>
+    <footer ref={footerRef} className={`relative bg-[#050505] text-white ${showCta ? 'pt-40 md:pt-52' : 'pt-20'} pb-10 px-6 overflow-hidden`}>
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10 flex flex-col items-center text-center">
         {showCta && (
           <>
-            <h2 ref={titleRef} className="text-5xl md:text-8xl font-bold tracking-tighter mb-12">
+            <h2 ref={titleRef} className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-12">
               Pronto a crescere?
             </h2>
 
@@ -162,7 +175,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                 </div>
             </div>
             <div>
-                <h4 className="text-white font-bold mb-4">Servizi</h4>
+                <h4 className="text-white font-bold text-lg mb-4">Servizi</h4>
                 <ul className="space-y-2">
                     <li
                         className="hover:text-indigo-400 cursor-pointer transition-colors"
@@ -182,7 +195,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                 </ul>
             </div>
             <div>
-                 <h4 className="text-white font-bold mb-4">Legale</h4>
+                 <h4 className="text-white font-bold text-lg mb-4">Legale</h4>
                 <ul className="space-y-2">
                     <li>
                         <a href="/risorse" className="hover:text-indigo-400 transition-colors">
@@ -204,9 +217,9 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
             </div>
         </div>
         
-        <div ref={bottomRef} className="w-full flex flex-col md:flex-row justify-between items-center gap-2 mt-20 text-xs text-gray-600 font-mono">
-            <span>© {new Date().getFullYear()} Q4 Studio. Tutti i diritti riservati. • P.I. 05018960236</span>
-            <span>Verona / Reggio Emilia</span>
+        <div ref={bottomRef} className="w-full flex flex-col md:flex-row justify-between items-center gap-2 mt-20 text-[11px] text-gray-600">
+            <span>© {new Date().getFullYear()} Q4 Studio. Tutti i diritti riservati. • P.I. 03033250352</span>
+            <span>Reggio Emilia</span>
         </div>
       </div>
     </footer>

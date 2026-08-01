@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import SEOHead from './SEOHead';
 import MagneticButton from './MagneticButton';
+import ScrollRevealText from './home2/ScrollRevealText';
 import { siteUrl } from '../data/seoPages';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -342,9 +343,9 @@ const LiveAgentPanel: React.FC<{ reducedMotion: boolean }> = ({ reducedMotion })
             <span className="absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75 animate-ping" />
             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-violet-400" />
           </span>
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-violet-300">Agente al lavoro</span>
+          <span className="text-[11px] uppercase tracking-[0.08em] text-violet-300">Agente al lavoro</span>
         </div>
-        <span className="text-xs font-mono text-gray-600">q4 · operations</span>
+        <span className="text-[11px] text-gray-600">q4 · operations</span>
       </div>
 
       <div className="p-6 min-h-[400px] flex flex-col">
@@ -352,7 +353,7 @@ const LiveAgentPanel: React.FC<{ reducedMotion: boolean }> = ({ reducedMotion })
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 mb-5">
           <div className="flex items-center gap-2 text-gray-400 mb-2">
             {scenario.sourceIcon}
-            <span className="text-xs font-mono uppercase tracking-widest">{scenario.source}</span>
+            <span className="text-[11px] uppercase tracking-[0.08em]">{scenario.source}</span>
           </div>
           <p className="text-gray-200 leading-relaxed">{scenario.trigger}</p>
         </div>
@@ -434,39 +435,66 @@ const AIAgents: React.FC = () => {
     if (!pageRef.current || reducedMotion) return;
 
     const ctx = gsap.context(() => {
+      // fromTo + immediateRender:false + once: al posto di gsap.from(...) con
+      // toggleActions '... reverse'. Se il trigger non scatta mai (misure
+      // prese prima che il layout si assestasse) il contenuto resta visibile
+      // invece di restare bloccato a opacity 0; una volta acceso non si
+      // rispegne più tornando indietro con lo scroll.
       gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
-        gsap.from(el, {
-          scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' },
-          y: 40,
-          opacity: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-        });
+        gsap.fromTo(
+          el,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+          }
+        );
       });
 
       gsap.utils.toArray<HTMLElement>('[data-reveal-group]').forEach((group) => {
-        gsap.from(group.children, {
-          scrollTrigger: { trigger: group, start: 'top 85%', toggleActions: 'play none none reverse' },
-          y: 40,
-          opacity: 0,
-          duration: 0.7,
-          stagger: 0.1,
-          ease: 'power3.out',
-        });
+        gsap.fromTo(
+          group.children,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            stagger: 0.1,
+            ease: 'power3.out',
+            immediateRender: false,
+            scrollTrigger: { trigger: group, start: 'top 85%', once: true },
+          }
+        );
       });
 
-      // La linea del percorso si disegna mentre scorri
+      // La linea del percorso si disegna mentre scorri.
+      // Qui lo ScrollTrigger usa scrub (non toggleActions/reverse): il
+      // progresso segue sempre la posizione di scroll corrente, quindi non è
+      // soggetto al bug "invisibile per sempre" degli altri reveal. Passiamo
+      // comunque a fromTo + immediateRender:false per non impostare scaleY:0
+      // prima che ScrollTrigger abbia misurato il layout, ma senza `once`:
+      // con scrub l'animazione deve continuare a rispondere allo scroll in
+      // entrambe le direzioni, non fermarsi al primo trigger.
       if (timelineLineRef.current) {
-        gsap.from(timelineLineRef.current, {
-          scrollTrigger: {
-            trigger: timelineLineRef.current.parentElement,
-            start: 'top 70%',
-            end: 'bottom 60%',
-            scrub: 0.6,
-          },
-          scaleY: 0,
-          transformOrigin: 'top center',
-        });
+        gsap.fromTo(
+          timelineLineRef.current,
+          { scaleY: 0, transformOrigin: 'top center' },
+          {
+            scaleY: 1,
+            transformOrigin: 'top center',
+            immediateRender: false,
+            scrollTrigger: {
+              trigger: timelineLineRef.current.parentElement,
+              start: 'top 70%',
+              end: 'bottom 60%',
+              scrub: 0.6,
+            },
+          }
+        );
       }
     }, pageRef);
 
@@ -506,7 +534,7 @@ const AIAgents: React.FC = () => {
       `}</style>
 
       {/* ============================== HERO ============================== */}
-      <section className="relative px-6 pt-36 pb-24 lg:min-h-screen flex items-center">
+      <section className="relative px-6 pt-36 md:pt-44 pb-24 md:pb-32 lg:min-h-screen flex items-center">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute right-[-10%] top-[10%] h-[640px] w-[640px] rounded-full bg-violet-500/[0.07] blur-[140px]" />
           <div className="absolute left-[-15%] bottom-[-10%] h-[520px] w-[520px] rounded-full bg-indigo-600/10 blur-[140px]" />
@@ -514,23 +542,23 @@ const AIAgents: React.FC = () => {
 
         <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-14 items-center">
           <div>
-            <div className="flex items-center gap-2 text-violet-300 font-mono text-sm tracking-[0.3em] uppercase mb-7">
+            <div className="flex items-center gap-2 text-violet-300 text-sm tracking-[0.08em] uppercase mb-5">
               <span className="w-2 h-2 bg-violet-400 rounded-full animate-pulse" />
               Agenti AI · consulenza e sviluppo
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold leading-[1.02] tracking-tighter mb-8">
+            <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">
               Agenti AI su misura per togliere al tuo team il lavoro che un software può fare meglio.
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-400 leading-relaxed max-w-2xl">
+            <p className="text-lg md:text-xl text-gray-400 leading-relaxed max-w-2xl">
               Leggono email e WhatsApp, inseriscono gli ordini nel gestionale, preparano i preventivi,
               qualificano i lead e rispondono ai clienti. Tu mantieni il controllo:{' '}
               <span className="text-white">l'agente propone, le persone decidono.</span>
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-2">
-              <span className="text-xs font-mono uppercase tracking-widest text-gray-600 mr-1">
+              <span className="text-[11px] uppercase tracking-[0.08em] text-gray-600 mr-1">
                 Lavora dentro:
               </span>
               {[
@@ -542,7 +570,7 @@ const AIAgents: React.FC = () => {
               ].map((item) => (
                 <span
                   key={item.label}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-gray-300"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] text-gray-300"
                 >
                   <span className="text-violet-300">{item.icon}</span>
                   {item.label}
@@ -560,7 +588,7 @@ const AIAgents: React.FC = () => {
               </MagneticButton>
               <a
                 href="#cosa-fa"
-                className="text-sm font-mono text-gray-500 hover:text-violet-300 transition-colors uppercase tracking-widest"
+                className="text-sm text-gray-500 hover:text-violet-300 transition-colors uppercase tracking-[0.08em]"
               >
                 Vedi cosa fa, in concreto ↓
               </a>
@@ -572,22 +600,23 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* ====================== COSA FA, IN CONCRETO ====================== */}
-      <section id="cosa-fa" className="relative px-6 py-28 border-t border-white/5 bg-[#070707]">
+      <section id="cosa-fa" className="relative px-6 py-32 md:py-44 border-t border-white/5 bg-[#070707]">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mb-16" data-reveal>
-            <span className="text-violet-300 font-mono tracking-widest text-sm uppercase mb-5 block">
+            <span className="text-violet-300 tracking-[0.08em] text-sm uppercase mb-5 block">
               Cosa fa, in concreto
             </span>
-            <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">
               Scegli un processo.{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-purple-400">
                 Guarda cosa cambia.
               </span>
             </h2>
-            <p className="text-xl text-gray-400 leading-relaxed">
-              Ogni agente nasce da un processo vero: come lo gestisci oggi, cosa fa l'agente al posto
-              del team e dove resta il controllo delle persone.
-            </p>
+            <ScrollRevealText
+              as="p"
+              text="Ogni agente nasce da un processo vero: come lo gestisci oggi, cosa fa l'agente al posto del team e dove resta il controllo delle persone."
+              className="text-lg md:text-xl text-gray-400 leading-relaxed"
+            />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 items-start">
@@ -625,13 +654,13 @@ const AIAgents: React.FC = () => {
             >
               <div className="absolute top-0 right-0 w-72 h-72 bg-violet-400/[0.04] rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
 
-              <h3 className="text-2xl md:text-4xl font-bold leading-snug mb-8 relative z-10">
+              <h3 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-8 relative z-10">
                 {currentCase.title}
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
                 <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                  <span className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-gray-500 mb-4">
+                  <span className="flex items-center gap-2 text-[11px] uppercase tracking-[0.08em] text-gray-500 mb-4">
                     <Clock className="w-4 h-4" />
                     Oggi, senza agente
                   </span>
@@ -639,7 +668,7 @@ const AIAgents: React.FC = () => {
                 </div>
 
                 <div className="rounded-2xl border border-violet-400/20 bg-violet-400/[0.04] p-6">
-                  <span className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-violet-300/80 mb-4">
+                  <span className="flex items-center gap-2 text-[11px] uppercase tracking-[0.08em] text-violet-300/80 mb-4">
                     <Bot className="w-4 h-4" />
                     Con l'agente
                   </span>
@@ -647,7 +676,7 @@ const AIAgents: React.FC = () => {
                     {currentCase.withAgent.map((step) => (
                       <li key={step} className="flex items-start gap-3">
                         <CheckCircle2 className="w-4 h-4 mt-1 flex-shrink-0 text-violet-400" />
-                        <span className="text-sm text-gray-300 leading-relaxed">{step}</span>
+                        <span className="text-base text-gray-300 leading-relaxed">{step}</span>
                       </li>
                     ))}
                   </ul>
@@ -656,13 +685,13 @@ const AIAgents: React.FC = () => {
 
               <div className="mt-6 flex flex-col md:flex-row md:items-center gap-4 md:gap-6 relative z-10">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-mono uppercase tracking-widest text-gray-600 mr-1">
+                  <span className="text-[11px] uppercase tracking-[0.08em] text-gray-600 mr-1">
                     Si collega a:
                   </span>
                   {currentCase.tools.map((tool) => (
                     <span
                       key={tool}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-gray-300"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] text-gray-300"
                     >
                       <span className="text-violet-300">{toolIcons[tool]}</span>
                       {tool}
@@ -680,16 +709,16 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* ========================== INTEGRAZIONI ========================== */}
-      <section className="relative px-6 py-28 border-t border-white/5">
+      <section className="relative px-6 py-32 md:py-44 border-t border-white/5">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
           <div data-reveal>
-            <span className="text-indigo-400 font-mono tracking-widest text-sm uppercase mb-5 block">
+            <span className="text-indigo-400 tracking-[0.08em] text-sm uppercase mb-5 block">
               Integrazioni
             </span>
-            <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">
               Si collega agli strumenti che usi già.
             </h2>
-            <p className="text-xl text-gray-400 leading-relaxed mb-8">
+            <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8">
               Nessuna piattaforma nuova da imparare, nessun cambio di gestionale. L'agente entra nei
               flussi esistenti: legge da dove arrivano le informazioni e scrive dove servono.
             </p>
@@ -700,7 +729,7 @@ const AIAgents: React.FC = () => {
               </span>
               <div>
                 <p className="font-semibold mb-1">Usate un software particolare?</p>
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <p className="text-gray-400 text-base leading-relaxed">
                   Se ha un'API, un'esportazione o anche solo una casella email, lo colleghiamo. Lo
                   verifichiamo insieme nella fase di mappatura, prima di qualsiasi investimento.
                 </p>
@@ -737,7 +766,7 @@ const AIAgents: React.FC = () => {
               <div className="rounded-3xl border border-violet-400/30 bg-[#0A0A0A] px-7 py-6 text-center shadow-[0_0_80px_-20px_rgba(168,85,247,0.45)]">
                 <Bot className="w-9 h-9 text-violet-300 mx-auto mb-2" />
                 <p className="font-bold text-lg leading-none mb-1.5">Agente Q4</p>
-                <p className="text-[11px] font-mono uppercase tracking-widest text-gray-500">
+                <p className="text-[11px] uppercase tracking-[0.08em] text-gray-500">
                   legge · decide · agisce
                 </p>
               </div>
@@ -779,26 +808,26 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* ========================= METODO / PERCORSO ========================= */}
-      <section className="relative px-6 py-28 border-t border-white/5 bg-[#070707]">
+      <section className="relative px-6 py-32 md:py-44 border-t border-white/5 bg-[#070707]">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-14">
           <div className="lg:sticky lg:top-32 self-start" data-reveal>
-            <span className="text-indigo-400 font-mono tracking-widest text-sm uppercase mb-5 block">
+            <span className="text-indigo-400 tracking-[0.08em] text-sm uppercase mb-5 block">
               Il nostro metodo
             </span>
-            <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">
               Non ti vendiamo un software.{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
                 Ti affianchiamo finché funziona.
               </span>
             </h2>
-            <p className="text-xl text-gray-400 leading-relaxed mb-8">
+            <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8">
               Siamo uno studio di consulenza: prima capiamo come lavora la tua azienda, poi
               costruiamo. Ogni tappa ha una durata, un obiettivo e un risultato concreto che ti porti
               a casa, anche se decidi di fermarti lì.
             </p>
             <div className="flex items-center gap-3 text-gray-500">
               <ShieldCheck className="w-5 h-5 text-indigo-400 flex-shrink-0" />
-              <p className="text-sm leading-relaxed">
+              <p className="text-base leading-relaxed">
                 Nessun vincolo lungo: si prosegue solo se i numeri della tappa precedente lo
                 giustificano.
               </p>
@@ -828,7 +857,7 @@ const AIAgents: React.FC = () => {
                           {step.icon}
                         </span>
                         <div>
-                          <span className="block text-xs font-mono uppercase tracking-widest text-gray-600">
+                          <span className="block text-[11px] uppercase tracking-[0.08em] text-gray-600">
                             {step.phase}
                           </span>
                           <span className="text-sm text-gray-400">{step.duration}</span>
@@ -836,15 +865,15 @@ const AIAgents: React.FC = () => {
                       </div>
                     </div>
 
-                    <h3 className="text-2xl font-bold mb-3">{step.title}</h3>
+                    <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">{step.title}</h3>
                     <p className="text-gray-400 leading-relaxed mb-5">{step.description}</p>
 
                     <div className="rounded-2xl border border-indigo-400/15 bg-indigo-500/[0.06] p-4">
-                      <span className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-indigo-300/80 mb-1.5">
+                      <span className="flex items-center gap-2 text-[11px] uppercase tracking-[0.08em] text-indigo-300/80 mb-1.5">
                         <FileCheck className="w-4 h-4" />
                         Cosa ti porti a casa
                       </span>
-                      <p className="text-sm text-gray-300 leading-relaxed">{step.deliverable}</p>
+                      <p className="text-base text-gray-300 leading-relaxed">{step.deliverable}</p>
                     </div>
                   </div>
                 </div>
@@ -855,13 +884,13 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* ========================= TI RICONOSCI? ========================= */}
-      <section className="relative px-6 py-28 border-t border-white/5">
+      <section className="relative px-6 py-32 md:py-44 border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mb-14" data-reveal>
-            <span className="text-violet-300 font-mono tracking-widest text-sm uppercase mb-5 block">
+            <span className="text-violet-300 tracking-[0.08em] text-sm uppercase mb-5 block">
               Ti suona familiare?
             </span>
-            <h2 className="text-4xl md:text-6xl font-bold leading-tight">
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em]">
               Le frasi che sentiamo in ogni prima call.
             </h2>
           </div>
@@ -894,13 +923,13 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* =============================== FAQ =============================== */}
-      <section className="relative px-6 py-28 border-t border-white/5 bg-[#070707]">
+      <section className="relative px-6 py-32 md:py-44 border-t border-white/5 bg-[#070707]">
         <div className="max-w-4xl mx-auto">
           <div className="mb-14 text-center" data-reveal>
-            <span className="text-indigo-400 font-mono tracking-widest text-sm uppercase mb-5 block">
+            <span className="text-indigo-400 tracking-[0.08em] text-sm uppercase mb-5 block">
               Domande frequenti
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight">
+            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em]">
               Le domande che ci fanno tutti gli imprenditori.
             </h2>
           </div>
@@ -954,22 +983,22 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* ============================ CTA FINALE ============================ */}
-      <section className="relative px-6 py-32 border-t border-white/5 overflow-hidden">
+      <section className="relative px-6 py-32 md:py-44 border-t border-white/5 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[480px] w-[760px] rounded-full bg-indigo-600/10 blur-[140px]" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto text-center" data-reveal>
-          <span className="text-violet-300 font-mono tracking-widest text-sm uppercase mb-6 block">
+          <span className="text-violet-300 tracking-[0.08em] text-sm uppercase mb-5 block">
             Il primo passo
           </span>
-          <h2 className="text-4xl md:text-7xl font-bold leading-tight mb-8">
+          <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-8">
             Porta un processo che ti ruba tempo.{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-400 to-indigo-400">
               Ne usciamo con un piano.
             </span>
           </h2>
-          <p className="text-xl text-gray-400 leading-relaxed max-w-2xl mx-auto mb-10">
+          <p className="text-lg md:text-xl text-gray-400 leading-relaxed max-w-2xl mx-auto mb-10">
             In 30 minuti analizziamo insieme dove oggi si perde tempo, quali dati avete già e quale
             agente può generare il primo risultato misurabile. Senza impegno e senza slide.
           </p>

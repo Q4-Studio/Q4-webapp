@@ -1,4 +1,5 @@
-import React, { lazy, Suspense, useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useRef } from 'react';
+import { Menu, X } from 'lucide-react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import Marquee from './components/Marquee';
 import ContactForm from './components/ContactForm';
@@ -7,6 +8,7 @@ import CustomCursor from './components/CustomCursor';
 import CookieBanner from './components/CookieBanner';
 import SEOHead from './components/SEOHead';
 import HomeV2 from './components/home2/HomeV2';
+import MobileMenu, { MOBILE_MENU_PANEL_ID } from './components/MobileMenu';
 import { BlogPost } from './types/blog';
 import { getBlogPosts } from './lib/supabase';
 import { getSeoPageBySlug, resourcesPath } from './data/seoPages';
@@ -31,6 +33,30 @@ const App: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoadingBlog, setIsLoadingBlog] = useState(true);
   const [blogError, setBlogError] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Chiude il menu e riporta il focus sull'hamburger che lo aveva aperto:
+  // senza questo, con tastiera/screen reader il focus si perde in cima al
+  // documento (di solito sul <body>) invece di restare su un elemento noto.
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+    hamburgerButtonRef.current?.focus();
+  };
+
+  // Chiude il menu mobile quando cambia pagina o quando il viewport supera md
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [currentPage]);
+
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 768px)');
+    const onChange = () => {
+      if (query.matches) setMobileMenuOpen(false);
+    };
+    query.addEventListener('change', onChange);
+    return () => query.removeEventListener('change', onChange);
+  }, []);
 
   // Fetch blog posts from Supabase on mount
   useEffect(() => {
@@ -150,6 +176,28 @@ const App: React.FC = () => {
     }
   };
 
+  // Scrolla alla sezione del form contatti. Se non siamo in home, naviga prima
+  // lì e poi attende (con qualche retry) che la sezione sia nel DOM prima di
+  // scrollare: un singolo setTimeout(100ms) può scattare prima che HomeV2
+  // abbia finito di montarsi, perdendo lo scroll.
+  const scrollToContact = () => {
+    const trySmoothScroll = (attemptsLeft: number) => {
+      const contactForm = document.querySelector('section:has(form)');
+      if (contactForm) {
+        contactForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (attemptsLeft > 0) {
+        setTimeout(() => trySmoothScroll(attemptsLeft - 1), 100);
+      }
+    };
+
+    if (currentPage !== 'home') {
+      navigateTo('home');
+      setTimeout(() => trySmoothScroll(20), 100);
+    } else {
+      trySmoothScroll(20);
+    }
+  };
+
   const currentArticle = currentArticleSlug ? getBlogPostBySlug(currentArticleSlug) : null;
   const currentSeoPage = currentSeoSlug ? getSeoPageBySlug(currentSeoSlug) : null;
 
@@ -163,8 +211,13 @@ const App: React.FC = () => {
           noIndex={true}
         />
       )}
-      {/* Navbar overlay - simplified for immersive feel */}
-      <nav className="absolute md:fixed top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference">
+      {/* Navbar overlay - simplified for immersive feel. Sempre "fixed": su
+          mobile prima non lo era (si perdeva scrollando), ma ora che esiste
+          un menu da raggiungere da ovunque deve restare ancorata come su desktop.
+          Niente più mix-blend-difference: logo/voci hanno ora sfondi propri
+          (pillola) e su blend-difference risulterebbero con colori sbagliati.
+          Tutte le pagine sono a fondo scuro, quindi restano leggibili anche senza. */}
+      <nav className="fixed top-0 left-0 w-full z-[70] p-6 sm:p-7 flex justify-between items-center">
         <img
           src="/logo.webp"
           alt="Q4 Studio"
@@ -172,124 +225,163 @@ const App: React.FC = () => {
           height={40}
           loading="eager"
           fetchPriority="high"
-          className="h-8 md:h-10 w-auto cursor-pointer"
+          className="h-10 md:h-14 w-auto cursor-pointer"
           onClick={() => navigateTo('home')}
         />
-        <div className="hidden md:flex items-center gap-8">
+
+        {/* Pillola centrale flottante con le voci di menu (solo desktop), centrata
+            in assoluto sulla nav indipendentemente dalla larghezza di logo/CTA */}
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 rounded-full border border-white/30 bg-white/20 backdrop-blur-md px-3 py-2.5">
           <button
             onClick={() => navigateTo('agenti-ai')}
-            className="text-sm font-mono hover:text-indigo-400 transition-colors cursor-pointer bg-transparent border-0"
+            className={`text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${
+              currentPage === 'agenti-ai' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
+            }`}
           >
             AGENTI AI
           </button>
           <button
             onClick={() => navigateTo('blog')}
-            className="text-sm font-mono hover:text-indigo-400 transition-colors cursor-pointer bg-transparent border-0"
+            className={`text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${
+              currentPage === 'blog' || currentPage === 'blog-article' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
+            }`}
           >
             BLOG
           </button>
-          <button
-            onClick={() => {
-              if (currentPage !== 'home') {
-                navigateTo('home');
-                setTimeout(() => {
-                  const contactForm = document.querySelector('section:has(form)');
-                  contactForm?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 100);
-              } else {
-                const contactForm = document.querySelector('section:has(form)');
-                contactForm?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }
-            }}
-            className="text-sm font-mono hover:text-indigo-400 transition-colors cursor-pointer bg-transparent border-0"
+          {/* Link reale all'hub risorse: vale anche come link interno per i crawler */}
+          <a
+            href={resourcesPath}
+            className={`text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer ${
+              currentPage === 'directory' || currentPage === 'seo-page' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
+            }`}
           >
-            CONTATTACI
+            RISORSE
+          </a>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {/* CTA "Scrivici": pillola bianca piena, visibile da md in su */}
+          <button
+            onClick={scrollToContact}
+            className="hidden md:inline-flex text-base font-semibold px-7 py-3 rounded-full bg-white text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer border-0"
+          >
+            Scrivici
+          </button>
+
+          {/* Hamburger mobile: stessa area del logo, area di tap >= 44x44px */}
+          <button
+            ref={hamburgerButtonRef}
+            type="button"
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            aria-label={mobileMenuOpen ? 'Chiudi menu' : 'Apri menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls={MOBILE_MENU_PANEL_ID}
+            className="md:hidden flex h-11 w-11 items-center justify-center cursor-pointer bg-transparent border-0"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </nav>
 
-      <CustomCursor />
-      <CookieBanner />
+      {/* Pannello del menu mobile: reso FUORI dalla <nav> (che ora non usa più
+          mix-blend-difference, ma manteniamo comunque la separazione strutturale). */}
+      <MobileMenu
+        isOpen={mobileMenuOpen}
+        onClose={closeMobileMenu}
+        onNavigateAgents={() => navigateTo('agenti-ai')}
+        onNavigateBlog={() => navigateTo('blog')}
+        onContact={scrollToContact}
+      />
 
-      {/* Page Routing */}
-      {currentPage === 'home' && <HomeV2 />}
+      {/* Mentre il menu mobile è aperto, il resto dell'app (cursore custom,
+          cookie banner, contenuto di pagina) viene reso `inert`: non è più
+          raggiungibile da tastiera/screen reader, anche se resta visibile
+          sotto il pannello. La <nav> resta fuori da questo wrapper perché
+          l'hamburger, che serve a chiudere il menu, deve restare cliccabile. */}
+      <div inert={mobileMenuOpen}>
+        <CustomCursor />
+        <CookieBanner />
 
-      <Suspense fallback={null}>
-        {currentPage === 'blog' && (
-          <>
-            <Blog
-              posts={blogPosts}
-              isLoading={isLoadingBlog}
-              error={blogError}
-              onArticleClick={(slug) => navigateTo('blog-article', slug)}
+        {/* Page Routing */}
+        {currentPage === 'home' && <HomeV2 />}
+
+        <Suspense fallback={null}>
+          {currentPage === 'blog' && (
+            <>
+              <Blog
+                posts={blogPosts}
+                isLoading={isLoadingBlog}
+                error={blogError}
+                onArticleClick={(slug) => navigateTo('blog-article', slug)}
+              />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'blog-article' && currentArticle && (
+            <>
+              <BlogArticle
+                post={currentArticle}
+                onBack={() => navigateTo('blog')}
+              />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'privacy' && (
+            <>
+              <Privacy />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'app-support' && (
+            <>
+              <AppSupport />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'directory' && (
+            <>
+              <SeoDirectory />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'agenti-ai' && (
+            <>
+              <AIAgents />
+              <Marquee />
+              <ContactForm />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'seo-page' && currentSeoPage && (
+            <>
+              <SeoLandingPage page={currentSeoPage} />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'dashq4login' && (
+            <DashboardLogin
+              onLoginSuccess={() => navigateTo('dashboard')}
             />
-            <Footer />
-          </>
-        )}
+          )}
 
-        {currentPage === 'blog-article' && currentArticle && (
-          <>
-            <BlogArticle
-              post={currentArticle}
-              onBack={() => navigateTo('blog')}
+          {currentPage === 'dashboard' && (
+            <Dashboard
+              onLogout={() => navigateTo('dashq4login')}
             />
-            <Footer />
-          </>
-        )}
+          )}
 
-        {currentPage === 'privacy' && (
-          <>
-            <Privacy />
-            <Footer />
-          </>
-        )}
-
-        {currentPage === 'app-support' && (
-          <>
-            <AppSupport />
-            <Footer />
-          </>
-        )}
-
-        {currentPage === 'directory' && (
-          <>
-            <SeoDirectory />
-            <Footer />
-          </>
-        )}
-
-        {currentPage === 'agenti-ai' && (
-          <>
-            <AIAgents />
-            <Marquee />
-            <ContactForm />
-            <Footer />
-          </>
-        )}
-
-        {currentPage === 'seo-page' && currentSeoPage && (
-          <>
-            <SeoLandingPage page={currentSeoPage} />
-            <Footer />
-          </>
-        )}
-
-        {currentPage === 'dashq4login' && (
-          <DashboardLogin
-            onLoginSuccess={() => navigateTo('dashboard')}
-          />
-        )}
-
-        {currentPage === 'dashboard' && (
-          <Dashboard
-            onLogout={() => navigateTo('dashq4login')}
-          />
-        )}
-
-        {currentPage === '404' && (
-          <NotFound />
-        )}
-      </Suspense>
+          {currentPage === '404' && (
+            <NotFound />
+          )}
+        </Suspense>
+      </div>
 
     </main>
   );

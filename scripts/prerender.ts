@@ -1,6 +1,6 @@
-import { seoPages, siteUrl } from '../data/seoPages.ts';
+import { seoPages, siteUrl, resourcesPath } from '../data/seoPages.ts';
 import { createClient } from '@supabase/supabase-js';
-import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync } from 'fs';
+import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -51,15 +51,46 @@ function generateBaseHtml(options: {
   description: string;
   canonical: string;
   ogImage?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  ogImageAlt?: string;
   type?: 'website' | 'article';
   schema?: object[];
   bodyContent: string;
 }) {
-  const { title, description, canonical, ogImage = `${siteUrl}/og-image.jpg`, type = 'website', schema = [], bodyContent } = options;
+  const {
+    title,
+    description,
+    canonical,
+    ogImage,
+    ogImageWidth,
+    ogImageHeight,
+    ogImageAlt,
+    type = 'website',
+    schema = [],
+    bodyContent
+  } = options;
+
+  const defaultOgImage = `${siteUrl}/og-image.jpg`;
+  const resolvedOgImage = ogImage || defaultOgImage;
+  // Le dimensioni 1200x630 sono note solo per l'immagine di default (asset locale
+  // in public/). Per immagini diverse (es. copertine articolo da Supabase) le
+  // dimensioni reali non sono note a build time: meglio nessun dato che uno
+  // falso, quindi i tag width/height/alt di default si applicano solo quando
+  // l'immagine è davvero quella di default, a meno che il chiamante non passi
+  // valori espliciti.
+  const isDefaultOgImage = resolvedOgImage === defaultOgImage;
+  const resolvedOgImageWidth = ogImageWidth ?? (isDefaultOgImage ? 1200 : undefined);
+  const resolvedOgImageHeight = ogImageHeight ?? (isDefaultOgImage ? 630 : undefined);
+  const resolvedOgImageAlt = ogImageAlt ?? (isDefaultOgImage ? 'Q4 Studio' : title);
 
   const schemaScripts = schema
     .map((s) => `<script type="application/ld+json">${JSON.stringify(s)}</script>`)
     .join('\n    ');
+
+  const imageDimensionsMeta = resolvedOgImageWidth && resolvedOgImageHeight
+    ? `\n  <meta property="og:image:width" content="${resolvedOgImageWidth}" />\n  <meta property="og:image:height" content="${resolvedOgImageHeight}" />`
+    : '';
 
   return `<!DOCTYPE html>
 <html lang="it" class="bg-[#050505]">
@@ -75,20 +106,25 @@ function generateBaseHtml(options: {
   <meta property="og:url" content="${canonical}" />
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:description" content="${escapeHtml(description)}" />
-  <meta property="og:image" content="${ogImage}" />
+  <meta property="og:image" content="${resolvedOgImage}" />
+  <meta property="og:image:alt" content="${escapeHtml(resolvedOgImageAlt)}" />${imageDimensionsMeta}
   <meta property="og:locale" content="it_IT" />
   <meta property="og:site_name" content="Q4 Studio" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="${canonical}" />
   <meta name="twitter:title" content="${escapeHtml(title)}" />
   <meta name="twitter:description" content="${escapeHtml(description)}" />
-  <meta name="twitter:image" content="${ogImage}" />
+  <meta name="twitter:image" content="${resolvedOgImage}" />
+  <meta name="twitter:image:alt" content="${escapeHtml(resolvedOgImageAlt)}" />
+  <meta name="theme-color" content="#050505" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://esm.sh">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com" defer></script>
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; overflow-x: hidden; }
+    html, body { max-width: 100%; overflow-x: hidden; overscroll-behavior-x: none; }
+    body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
     h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
   </style>
   ${schemaScripts}
@@ -103,7 +139,7 @@ function generateBaseHtml(options: {
 }
 
 function generateLandingPageHtml(page: typeof seoPages[0]): string {
-  const pageUrl = `${siteUrl}/seo/${page.slug}`;
+  const pageUrl = `${siteUrl}${resourcesPath}/${page.slug}`;
   const relatedPages = seoPages.filter((p) => p.slug !== page.slug).slice(0, 3);
 
   const serviceSchema = {
@@ -139,7 +175,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Directory', item: `${siteUrl}/directory` },
+      { '@type': 'ListItem', position: 2, name: 'Risorse', item: `${siteUrl}${resourcesPath}` },
       { '@type': 'ListItem', position: 3, name: page.title, item: pageUrl }
     ]
   };
@@ -153,12 +189,12 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     .join('\n              ');
 
   const clustersHtml = page.clusters
-    .map((cluster) => `<section class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-xl font-semibold mb-3 text-indigo-200">${escapeHtml(cluster.heading)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(cluster.content)}</p></section>`)
+    .map((cluster) => `<section class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3 text-indigo-200">${escapeHtml(cluster.heading)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(cluster.content)}</p></section>`)
     .join('\n            ');
 
   const comparisonTableHtml = page.comparisonTable ? `
     <section class="mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold mb-6">${escapeHtml(page.comparisonTable.title)}</h2>
+      <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(page.comparisonTable.title)}</h2>
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
@@ -175,62 +211,62 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
   ` : '';
 
   const faqsHtml = page.faqs
-    .map((faq) => `<div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-xl font-semibold mb-3">${escapeHtml(faq.question)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(faq.answer)}</p></div>`)
+    .map((faq) => `<div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3">${escapeHtml(faq.question)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(faq.answer)}</p></div>`)
     .join('\n            ');
 
   const relatedHtml = relatedPages
-    .map((p) => `<a href="/seo/${p.slug}" class="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors">${escapeHtml(p.title)}</a>`)
+    .map((p) => `<a href="${resourcesPath}/${p.slug}" class="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors">${escapeHtml(p.title)}</a>`)
     .join('\n            ');
 
   const bodyContent = `
-    <article class="relative pt-36 pb-28 px-6 bg-[#050505] text-white min-h-screen">
+    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
       <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-purple-900/10 rounded-full blur-[160px] pointer-events-none"></div>
       <div class="max-w-5xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
           <ol class="flex items-center gap-2 text-sm text-gray-400">
             <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
             <li>/</li>
-            <li><a href="/directory" class="hover:text-indigo-300 transition-colors">Directory</a></li>
+            <li><a href="${resourcesPath}" class="hover:text-indigo-300 transition-colors">Risorse</a></li>
             <li>/</li>
             <li class="text-gray-300">${escapeHtml(page.title)}</li>
           </ol>
         </nav>
 
         <header class="mb-14">
-          <p class="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-5">${escapeHtml(page.keyword)}</p>
-          <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">${escapeHtml(page.title)}</h1>
-          <p class="text-xl text-gray-300 leading-relaxed max-w-3xl">${escapeHtml(page.description)}</p>
+          <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">${escapeHtml(page.keyword)}</p>
+          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">${escapeHtml(page.title)}</h1>
+          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">${escapeHtml(page.description)}</p>
         </header>
 
         <section class="mb-16 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
-          <h2 class="text-2xl font-bold mb-4">Risposta diretta</h2>
-          <p class="text-lg text-gray-200 leading-relaxed">${escapeHtml(page.directAnswer)}</p>
+          <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Risposta diretta</h2>
+          <p class="text-lg md:text-xl text-gray-200 leading-relaxed">${escapeHtml(page.directAnswer)}</p>
         </section>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-16">
           <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 class="text-xl font-bold mb-3">Per chi</h2>
+            <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Per chi</h2>
             <p class="text-gray-400 leading-relaxed">${escapeHtml(page.audience)}.</p>
           </section>
           <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 class="text-xl font-bold mb-3">Problema</h2>
+            <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Problema</h2>
             <p class="text-gray-400 leading-relaxed">${escapeHtml(page.pain)}.</p>
           </section>
           <section class="rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-6">
-            <h2 class="text-xl font-bold mb-3">Risultato</h2>
+            <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Risultato</h2>
             <p class="text-gray-300 leading-relaxed">${escapeHtml(page.proof)}.</p>
           </section>
         </div>
 
         <section class="mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold mb-6">Dati e risultati</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Dati e risultati</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             ${dataPointsHtml}
           </div>
         </section>
 
         <section class="mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold mb-6">Argomenti correlati</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Argomenti correlati</h2>
           <div class="space-y-6">
             ${clustersHtml}
           </div>
@@ -239,22 +275,22 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
         ${comparisonTableHtml}
 
         <section class="mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold mb-5">Come interveniamo</h2>
-          <p class="text-lg text-gray-300 leading-relaxed mb-8">${escapeHtml(page.solution)}.</p>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-5">Come interveniamo</h2>
+          <p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">${escapeHtml(page.solution)}.</p>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             ${servicesHtml}
           </div>
         </section>
 
         <section class="mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold mb-6">FAQ</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">FAQ</h2>
           <div class="space-y-4">
             ${faqsHtml}
           </div>
         </section>
 
         <section>
-          <h2 class="text-3xl md:text-4xl font-bold mb-6">Pagine correlate</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Pagine correlate</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             ${relatedHtml}
           </div>
@@ -273,16 +309,16 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
   });
 }
 
-function generateDirectoryHtml(): string {
+function generateResourcesHtml(): string {
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'Directory SEO Q4 Studio',
+    name: 'Risorse Q4 Studio',
     itemListElement: seoPages.map((page, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       name: page.title,
-      url: `${siteUrl}/seo/${page.slug}`
+      url: `${siteUrl}${resourcesPath}/${page.slug}`
     }))
   };
 
@@ -291,15 +327,15 @@ function generateDirectoryHtml(): string {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Directory', item: `${siteUrl}/directory` }
+      { '@type': 'ListItem', position: 2, name: 'Risorse', item: `${siteUrl}${resourcesPath}` }
     ]
   };
 
   const pagesHtml = seoPages
     .map((page) => `
-      <a href="/seo/${page.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
-        <span class="text-xs font-mono uppercase tracking-widest text-indigo-300">${escapeHtml(page.keyword)}</span>
-        <h2 class="text-2xl font-bold mt-4 mb-3 group-hover:text-indigo-200 transition-colors">${escapeHtml(page.title)}</h2>
+      <a href="${resourcesPath}/${page.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
+        <span class="text-[11px] uppercase tracking-[0.08em] text-indigo-300">${escapeHtml(page.keyword)}</span>
+        <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mt-4 mb-3 group-hover:text-indigo-200 transition-colors">${escapeHtml(page.title)}</h2>
         <p class="text-gray-400 leading-relaxed mb-6">${escapeHtml(page.description)}</p>
         <span class="inline-flex items-center gap-2 text-indigo-300 font-medium">Apri pagina <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
       </a>
@@ -307,21 +343,21 @@ function generateDirectoryHtml(): string {
     .join('\n          ');
 
   const bodyContent = `
-    <section class="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen">
+    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
       <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
       <div class="max-w-6xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
           <ol class="flex items-center gap-2 text-sm text-gray-400">
             <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
             <li>/</li>
-            <li class="text-gray-300">Directory</li>
+            <li class="text-gray-300">Risorse</li>
           </ol>
         </nav>
 
-        <p class="text-indigo-400 font-mono text-sm tracking-[0.35em] uppercase mb-6">Directory</p>
-        <h1 class="text-5xl md:text-7xl font-bold tracking-tight max-w-4xl mb-6">Risorse su Lead Generation B2B, Meta Ads e Agenti AI</h1>
+        <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">Risorse</p>
+        <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] max-w-4xl mb-6">Risorse su Agenti AI, Automazioni e Tecnologia per Aziende B2B</h1>
         <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
-          Questa directory raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico con dati, confronti, cluster semantici e FAQ.
+          Questa directory raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico e collega servizi, problemi, soluzioni e FAQ.
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -332,9 +368,9 @@ function generateDirectoryHtml(): string {
   `;
 
   return generateBaseHtml({
-    title: 'Directory servizi B2B Lead Generation e AI | Q4 Studio',
-    description: 'Directory SEO Q4 Studio: tutte le pagine su Meta Ads B2B, lead generation, automazioni CRM, WhatsApp e Agenti AI.',
-    canonical: `${siteUrl}/directory`,
+    title: 'Risorse su AI, Automazioni e Tecnologia per PMI B2B | Q4 Studio',
+    description: 'Risorse Q4 Studio su agenti AI, automazioni WhatsApp e CRM, centralino e chatbot intelligenti per le aziende B2B.',
+    canonical: `${siteUrl}${resourcesPath}`,
     schema: [itemListSchema, breadcrumbSchema],
     bodyContent
   });
@@ -342,13 +378,13 @@ function generateDirectoryHtml(): string {
 
 function generateBlogIndexHtml(): string {
   const bodyContent = `
-    <section class="relative pt-40 pb-32 px-6 bg-[#050505] text-white min-h-screen">
+    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none"></div>
       <div class="max-w-7xl mx-auto relative z-10">
         <div class="text-center mb-20">
-          <span class="text-indigo-500 font-mono tracking-widest mb-6 block text-sm uppercase">Insights & Strategie</span>
-          <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">Il nostro <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span></h1>
-          <p class="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          <span class="text-indigo-500 tracking-[0.08em] mb-5 block text-sm uppercase">Insights & Strategie</span>
+          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">Il nostro <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span></h1>
+          <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Agenti AI.
           </p>
         </div>
@@ -394,13 +430,15 @@ function generateAIAgentsHtml(): string {
     ]
   };
 
+  // Testo identico a components/AIAgents.tsx (array `faqs`) per evitare mismatch
+  // tra il markup prerenderato e il contenuto renderizzato da React (cloaking).
   const faqs = [
-    ['Quanto costa un agente AI?', "Dipende dal processo e dai sistemi da collegare. Il percorso parte dalla mappatura: prima di investire sai esattamente quanto costa il progetto pilota e quante ore di lavoro può restituirti."],
-    ['In quanto tempo vedo i primi risultati?', 'Il primo agente lavora su un processo reale entro 6–8 settimane dal via. Si parte da un processo solo, misurabile, e si allarga solo quando funziona.'],
-    ["E se l'agente sbaglia?", "Dove conta, l'agente propone e una persona conferma: si definisce insieme cosa può fare in autonomia e cosa deve passare da un controllo umano. Ogni azione resta tracciata."],
-    ['I dati della mia azienda dove finiscono?', 'Restano nei tuoi sistemi: gestionale, CRM ed email rimangono la fonte dei dati. Permessi e accessi vengono definiti prima di partire, in conformità al GDPR.'],
-    ['Il mio team non è tecnico. Ce la facciamo?', "Sì: il team continua a usare WhatsApp, email e gestionale come sempre, perché è l'agente che si adatta ai vostri strumenti."],
-    ['È un chatbot?', 'No. Un chatbot risponde a domande. Un agente lavora: legge documenti, aggiorna il gestionale, prepara ordini e preventivi, passa la palla a una persona quando serve.']
+    ['Quanto costa un agente AI?', "Dipende dal processo e dai sistemi da collegare. Per questo il percorso parte dalla mappatura: prima di investire sai esattamente quanto costa il progetto pilota e quante ore di lavoro può restituirti. Niente canoni a sorpresa, niente preventivi al buio."],
+    ['In quanto tempo vedo i primi risultati?', 'Il primo agente lavora su un processo reale entro 6–8 settimane dal via. Non partiamo mai da un progetto enorme: partiamo da un processo solo, misurabile, e allarghiamo solo quando funziona.'],
+    ["E se l'agente sbaglia?", "Dove conta, l'agente propone e una persona conferma: definiamo insieme cosa può fare in autonomia e cosa deve passare da un controllo umano. Ogni azione resta tracciata, quindi puoi sempre verificare cosa ha fatto e perché."],
+    ['I dati della mia azienda dove finiscono?', 'Restano nei tuoi sistemi: gestionale, CRM ed email rimangono la fonte dei dati. Definiamo permessi e accessi prima di partire e lavoriamo in conformità al GDPR. Nessun dato viene usato per addestrare modelli pubblici.'],
+    ['Il mio team non è tecnico. Ce la facciamo?', "Sì, ed è il punto: il team continua a usare WhatsApp, email e gestionale come sempre, perché è l'agente che si adatta ai vostri strumenti. La formazione la facciamo noi, sul vostro caso concreto."],
+    ['È un chatbot?', "No. Un chatbot risponde a domande. Un agente lavora: legge documenti, aggiorna il gestionale, prepara ordini e preventivi, passa la palla a una persona quando serve. La chat è solo uno dei canali da cui riceve il lavoro."]
   ];
 
   const faqSchema = {
@@ -413,17 +451,93 @@ function generateAIAgentsHtml(): string {
     }))
   };
 
+  // Testo identico a components/AIAgents.tsx (array `useCases`), stesso ordine
+  // e stesse stringhe, per evitare mismatch tra prerender e contenuto React.
   const useCases = [
-    ['Ordini', 'Gli ordini arrivano da WhatsApp ed email ed entrano nel gestionale da soli', "L'agente legge messaggi e allegati, riconosce cliente, codici e quantità e crea la bozza d'ordine nel gestionale con i prezzi corretti. Una persona conferma solo quando serve."],
-    ['Preventivi', 'Il preventivo parte in giornata, mentre il cliente è ancora interessato', "Estrae le specifiche dalla richiesta, recupera listini e offerte simili e compila l'offerta sul template aziendale. Una persona revisiona e invia."],
-    ['Lead e vendite', 'Ogni contatto viene qualificato e richiamato mentre è ancora caldo', "Riceve il lead da form e campagne, arricchisce i dati dell'azienda, lo assegna al commerciale giusto nel CRM e prepara il primo messaggio di follow-up."],
-    ['Assistenza clienti', 'Le domande ricorrenti ricevono risposta subito, anche fuori orario', 'Risponde su WhatsApp ed email a stato ordine, tempi e documenti controllando i dati reali nel gestionale, e passa i casi delicati a una persona.'],
-    ['Amministrazione', 'Fatture, DDT e documenti letti, controllati e registrati', 'Legge i documenti appena arrivano, controlla che importi e quantità tornino con gli ordini, prepara le registrazioni e segnala solo le anomalie.'],
-    ['Report e controllo', 'Il lunedì mattina il report è già pronto, con i numeri che contano', 'Raccoglie i dati da gestionale, CRM e fogli condivisi, calcola gli indicatori e evidenzia gli scostamenti che meritano una decisione.']
+    {
+      tab: 'Ordini',
+      title: 'Gli ordini arrivano da WhatsApp ed email. Entrano nel gestionale da soli.',
+      today: "Oggi qualcuno legge il messaggio, cerca il cliente, controlla i codici, riscrive tutto nel gestionale. Dieci minuti a ordine, errori di battitura inclusi.",
+      withAgent: [
+        'Legge messaggi, email e allegati appena arrivano',
+        'Riconosce cliente, codici, quantità e date di consegna',
+        "Crea la bozza d'ordine nel gestionale con i prezzi corretti",
+        'Chiede conferma a una persona solo quando serve',
+      ],
+      tools: ['WhatsApp', 'Email', 'Gestionale / ERP'],
+      impact: 'Da 10 minuti a 40 secondi per ordine',
+    },
+    {
+      tab: 'Preventivi',
+      title: 'Il preventivo parte in giornata, mentre il cliente è ancora interessato.',
+      today: 'Oggi la richiesta resta in inbox finché il titolare o il tecnico non ha mezzora libera. Intanto il cliente chiede anche ai concorrenti.',
+      withAgent: [
+        'Estrae le specifiche dalla richiesta e dagli allegati',
+        'Recupera listini, distinte e offerte simili già fatte',
+        "Compila l'offerta sul tuo template, con i tuoi margini",
+        'Una persona revisiona e invia: il lavoro noioso è già fatto',
+      ],
+      tools: ['Email', 'Listini / Excel', 'Storico offerte'],
+      impact: 'Risposta al cliente in giornata',
+    },
+    {
+      tab: 'Lead e vendite',
+      title: 'Ogni contatto viene qualificato e richiamato mentre è ancora caldo.',
+      today: 'Oggi i lead delle campagne finiscono in un foglio o in una casella email. Chi può li richiama "appena ha un attimo". Spesso troppo tardi.',
+      withAgent: [
+        'Riceve il lead da form, campagne o LinkedIn',
+        "Arricchisce i dati dell'azienda e applica i tuoi criteri di priorità",
+        'Lo assegna al commerciale giusto nel CRM, con il contesto già pronto',
+        'Prepara il primo messaggio e i promemoria di follow-up',
+      ],
+      tools: ['Form sito', 'Meta / LinkedIn', 'CRM'],
+      impact: 'Primo contatto in minuti: il tasso di risposta cambia',
+    },
+    {
+      tab: 'Assistenza clienti',
+      title: '«Dov\'è il mio ordine?» riceve risposta subito, anche alle 21.',
+      today: 'Oggi le stesse dieci domande (stato ordine, tempi, documenti, resi) interrompono il team decine di volte al giorno.',
+      withAgent: [
+        'Risponde su WhatsApp ed email alle domande ricorrenti',
+        'Controlla lo stato reale di ordini e spedizioni nel gestionale',
+        'Gestisce il primo livello e passa i casi delicati a una persona',
+        'Tiene traccia di tutto: nessuna richiesta si perde',
+      ],
+      tools: ['WhatsApp', 'Email', 'Gestionale / ERP'],
+      impact: 'Clienti seguiti 24/7, team interrotto molto meno',
+    },
+    {
+      tab: 'Amministrazione',
+      title: 'Fatture, DDT e documenti letti, controllati e registrati.',
+      today: 'Oggi i documenti dei fornitori arrivano via email e qualcuno li ricopia a mano, riga per riga, sperando di non sbagliare un importo.',
+      withAgent: [
+        'Legge fatture, DDT e conferme appena arrivano',
+        'Controlla che importi e quantità tornino con gli ordini',
+        'Prepara le registrazioni nel gestionale',
+        'Segnala solo le anomalie da verificare',
+      ],
+      tools: ['Email / PEC', 'Gestionale / ERP', 'Fogli di calcolo'],
+      impact: 'Meno ore di data entry, meno errori a fine mese',
+    },
+    {
+      tab: 'Report e controllo',
+      title: 'Il lunedì mattina trovi il report già pronto, con i numeri che contano.',
+      today: "Oggi capire come sta andando l'azienda richiede una caccia al tesoro tra gestionale, CRM, fogli Excel ed estratti banca.",
+      withAgent: [
+        'Raccoglie i dati da gestionale, CRM e fogli condivisi',
+        'Calcola i tuoi indicatori: vendite, margini, consegne, incassi',
+        'Prepara un report leggibile, sempre uguale, sempre puntuale',
+        'Evidenzia gli scostamenti che meritano una decisione',
+      ],
+      tools: ['Gestionale / ERP', 'CRM', 'Excel / Sheets'],
+      impact: 'Decisioni prese su numeri aggiornati',
+    },
   ];
 
   const useCasesHtml = useCases
-    .map(([area, title, description]) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-xs font-mono uppercase tracking-widest text-violet-300 mb-4">${escapeHtml(area)}</p><h3 class="text-2xl font-bold leading-snug mb-4">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></article>`)
+    .map(
+      (uc) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-[11px] uppercase tracking-[0.08em] text-violet-300 mb-4">${escapeHtml(uc.tab)}</p><h3 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">${escapeHtml(uc.title)}</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div><p class="text-[11px] uppercase tracking-[0.08em] text-gray-500 mb-2">Oggi, senza agente</p><p class="text-gray-400 leading-relaxed">${escapeHtml(uc.today)}</p></div><div><p class="text-[11px] uppercase tracking-[0.08em] text-violet-300/80 mb-2">Con l'agente</p><ul class="space-y-2">${uc.withAgent.map((step) => `<li class="text-gray-300 leading-relaxed">${escapeHtml(step)}</li>`).join('')}</ul></div></div><p class="mt-4 text-sm text-gray-500">Si collega a: ${uc.tools.map((t) => escapeHtml(t)).join(', ')}</p><p class="mt-2 text-sm font-medium text-violet-300">${escapeHtml(uc.impact)}</p></article>`
+    )
     .join('\n          ');
 
   const methodHtml = [
@@ -432,7 +546,7 @@ function generateAIAgentsHtml(): string {
     ['Tappa 03 · Messa in produzione', "Integrazione completa, regole chiare su cosa l'agente fa da solo e formazione del team. Risultato: il team usa l'agente in autonomia."],
     ['Tappa 04 · Crescita e controllo', 'Monitoriamo i risultati ed estendiamo il lavoro ad altri processi. Risultato: un report mensile con ore recuperate, errori evitati e prossimi passi.']
   ]
-    .map(([title, description]) => `<li class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-xl font-bold mb-2">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></li>`)
+    .map(([title, description]) => `<li class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-2">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></li>`)
     .join('\n              ');
 
   const faqHtml = faqs
@@ -440,7 +554,7 @@ function generateAIAgentsHtml(): string {
     .join('\n          ');
 
   const bodyContent = `
-    <article class="relative pt-40 pb-28 px-6 bg-[#050505] text-white min-h-screen">
+    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
       <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-violet-900/10 rounded-full blur-[160px] pointer-events-none"></div>
       <div class="max-w-7xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
@@ -452,28 +566,28 @@ function generateAIAgentsHtml(): string {
         </nav>
 
         <header class="mb-16">
-          <p class="text-violet-300 font-mono text-sm tracking-[0.3em] uppercase mb-5">Agenti AI · consulenza e sviluppo</p>
-          <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">Agenti AI su misura per togliere al tuo team il lavoro che un software può fare meglio</h1>
-          <p class="text-xl text-gray-300 leading-relaxed max-w-3xl">
+          <p class="text-violet-300 text-sm tracking-[0.08em] uppercase mb-5">Agenti AI · consulenza e sviluppo</p>
+          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">Agenti AI su misura per togliere al tuo team il lavoro che un software può fare meglio</h1>
+          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">
             Leggono email e WhatsApp, inseriscono gli ordini nel gestionale, preparano i preventivi, qualificano i lead e rispondono ai clienti. Tu mantieni il controllo: l'agente propone, le persone decidono.
           </p>
         </header>
 
         <section class="mb-24">
-          <h2 class="text-4xl md:text-6xl font-bold tracking-tight mb-6">Cosa fa un agente AI, in concreto</h2>
-          <p class="text-xl text-gray-300 leading-relaxed max-w-3xl mb-10">Ogni agente nasce da un processo vero: come lo gestisci oggi, cosa fa l'agente al posto del team e dove resta il controllo delle persone.</p>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Cosa fa un agente AI, in concreto</h2>
+          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-10">Ogni agente nasce da un processo vero: come lo gestisci oggi, cosa fa l'agente al posto del team e dove resta il controllo delle persone.</p>
           <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             ${useCasesHtml}
           </div>
         </section>
 
         <section class="mb-24 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
-          <h2 class="text-3xl md:text-4xl font-bold mb-4">Si collega agli strumenti che usi già</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-4">Si collega agli strumenti che usi già</h2>
           <p class="text-lg text-gray-200 leading-relaxed mb-6">Nessuna piattaforma nuova da imparare, nessun cambio di gestionale. L'agente entra nei flussi esistenti: WhatsApp, email e PEC, gestionale/ERP, CRM, Excel e Google Sheets, calendario, sito e form, centralino. Se un software ha un'API, un'esportazione o anche solo una casella email, si può collegare.</p>
         </section>
 
         <section class="mb-24">
-          <h2 class="text-4xl md:text-5xl font-bold mb-6">Non ti vendiamo un software. Ti affianchiamo finché funziona.</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Non ti vendiamo un software. Ti affianchiamo finché funziona.</h2>
           <p class="text-xl text-gray-300 leading-relaxed max-w-3xl mb-10">Q4 Studio è uno studio di consulenza: ogni tappa del percorso ha una durata, un obiettivo e un risultato concreto che ti porti a casa, anche se decidi di fermarti lì.</p>
           <ul class="grid grid-cols-1 md:grid-cols-2 gap-5">
               ${methodHtml}
@@ -481,14 +595,14 @@ function generateAIAgentsHtml(): string {
         </section>
 
         <section class="mb-16">
-          <h2 class="text-4xl md:text-5xl font-bold mb-10">Le domande che ci fanno tutti gli imprenditori</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-10">Le domande che ci fanno tutti gli imprenditori</h2>
           <div class="space-y-4">
           ${faqHtml}
           </div>
         </section>
 
         <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-8 md:p-12 text-center">
-          <h2 class="text-3xl md:text-5xl font-bold mb-6">Porta un processo che ti ruba tempo. Ne usciamo con un piano.</h2>
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Porta un processo che ti ruba tempo. Ne usciamo con un piano.</h2>
           <p class="text-lg text-gray-300 leading-relaxed mb-8 max-w-2xl mx-auto">In 30 minuti analizziamo insieme dove oggi si perde tempo, quali dati avete già e quale agente può generare il primo risultato misurabile.</p>
           <a href="/" class="inline-flex items-center rounded-full bg-indigo-600 px-7 py-4 font-semibold text-white hover:bg-indigo-500 transition-colors">Prenota la chiamata</a>
         </section>
@@ -503,6 +617,219 @@ function generateAIAgentsHtml(): string {
     schema: [serviceSchema, breadcrumbSchema, faqSchema],
     bodyContent
   });
+}
+
+// Static content of the homepage (mirrors components/home2/* and HomeSeoContent.tsx)
+// so non-JS crawlers see the same text React renders after hydration. Visual/animation
+// chrome (GSAP, canvas, terminal typing effect) is intentionally simplified to plain
+// markup: only the actual copy needs to match 1:1 to avoid cloaking.
+function generateHomeBodyContent(): string {
+  const tickerItems = ['LEAD GENERATION B2B', 'AGENTI AI', 'META ADS', 'CRM AUTOMATION', 'WHATSAPP FOLLOW-UP', 'DIGITAL ANALYTICS'];
+
+  const pipelineSteps = [
+    { label: 'META ADS', time: 'T+0 s', title: 'Il lead entra dal feed.', desc: "Campagne Meta progettate sul profilo del cliente giusto e sull'offerta. Il form qualifica già in partenza: chi compila è davvero in target." },
+    { label: 'CRM', time: 'T+2 s', title: 'Nel CRM prima che tu lo veda.', desc: 'Assegnato al commerciale giusto, con fonte, campagna e contesto già pronti.' },
+    { label: 'WHATSAPP', time: 'T+60 s', title: 'Primo contatto in 60 secondi.', desc: 'Un messaggio personalizzato parte mentre il lead è ancora sul telefono. La velocità di risposta è la prima leva di conversione.' },
+    { label: 'ENRICHMENT', time: 'T+90 s', title: 'Il lead diventa un dossier.', desc: 'Dati aziendali arricchiti da fonti pubbliche: dimensione, settore, segnali di priorità. Il commerciale sa con chi parla prima di chiamare.' },
+    { label: 'FOLLOW-UP', time: 'GIORNI 1–7', title: 'Ogni lead viene seguito. Sempre.', desc: 'Sequenze automatiche su più canali finché il lead risponde. Il sistema insiste, il team vende.' }
+  ];
+
+  const agentsIntegrations = ['WhatsApp', 'Email / PEC', 'Gestionale / ERP', 'CRM', 'Excel / Sheets', 'Calendario'];
+
+  const services = [
+    {
+      title: 'B2B Lead Generation',
+      desc: "Un sistema di acquisizione completo: posizionamento, offerta, Meta Advertising, CRM e follow-up. Il tracking è il nostro punto forte: dati di conversione precisi e conformi, che l'algoritmo può davvero usare per ottimizzare.",
+      points: ["Meta Ads sul profilo del cliente giusto e sull'offerta", 'Server-Side Tracking e Consent Mode', 'Segnali di qualità dal CRM alle campagne', 'Qualifica lead e follow-up multicanale']
+    },
+    {
+      title: 'Agenti AI & Automazioni',
+      desc: "Agenti su misura per sales, back office, customer care e processi interni. Partiamo dall'audit operativo, integriamo gli strumenti già in uso e accompagniamo il team nell'adozione.",
+      points: ['Audit e mappatura dei processi', 'Agenti costruiti sul caso reale', 'Integrazione con gestionale e CRM', 'Formazione e adozione del team']
+    }
+  ];
+
+  const stats = [
+    { value: '≤ 60 s', label: 'primo contatto al lead' },
+    { value: '40 s', label: 'per processare un ordine' },
+    { value: '24/7', label: 'follow-up sempre attivo' },
+    { value: '100%', label: 'lead tracciati nel CRM' }
+  ];
+
+  const methodSteps = [
+    { n: '01', title: 'Diagnosi', desc: 'Mappiamo business, funnel, processi e dati. Capiamo dove si perde valore e quale leva ha più impatto.' },
+    { n: '02', title: 'Progetto', desc: 'Definiamo architettura, metriche e responsabilità. Campagne, CRM e agenti pensati come un unico sistema.' },
+    { n: '03', title: 'Implementazione', desc: 'Mettiamo online, formiamo il team e miglioriamo sui dati reali. Utile, misurabile, adottato.' }
+  ];
+
+  const homeFaqs = [
+    { q: "In pratica, cos'è la B2B Lead Generation su Meta?", a: "È l'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate sul profilo del cliente giusto, messaggio, form, CRM e segnali di qualità." },
+    { q: 'Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?', a: 'Sì, se l\'obiettivo non è solo il costo per lead.' },
+    { q: 'Cosa sono gli Agenti AI personalizzati?', a: "Sono sistemi costruiti sul processo commerciale dell'azienda per qualificare lead, rispondere più velocemente, assegnare contatti e automatizzare attività ripetitive." },
+    { q: 'Perché collegare Meta Ads, CRM e automazioni?', a: 'Perché il CRM restituisce segnali più utili dell\'invio form. Quando questi dati rientrano nel modello di ottimizzazione, le campagne possono cercare contatti più vicini al valore commerciale reale.' }
+  ];
+
+  const tickerHtml = tickerItems.map((t) => `<span class="ticker-item">${escapeHtml(t)}</span>`).join('\n            ');
+
+  const pipelineHtml = pipelineSteps
+    .map((s, i) => `<article class="pipeline-step">
+              <p class="pipeline-step-meta">0${i + 1}/05 · ${escapeHtml(s.label)} · ${escapeHtml(s.time)}</p>
+              <h3>${escapeHtml(s.title)}</h3>
+              <p>${escapeHtml(s.desc)}</p>
+            </article>`)
+    .join('\n            ');
+
+  const integrationsHtml = agentsIntegrations.map((i) => `<span class="integration-pill">${escapeHtml(i)}</span>`).join('\n              ');
+
+  const servicesHtml = services
+    .map(
+      (s) => `<article class="service-card">
+              <h3>${escapeHtml(s.title)}</h3>
+              <p>${escapeHtml(s.desc)}</p>
+              <ul>
+                ${s.points.map((p) => `<li>${escapeHtml(p)}</li>`).join('\n                ')}
+              </ul>
+            </article>`
+    )
+    .join('\n            ');
+
+  const statsHtml = stats
+    .map((s) => `<div class="stat-tile"><p class="stat-value">${escapeHtml(s.value)}</p><p class="stat-label">${escapeHtml(s.label)}</p></div>`)
+    .join('\n            ');
+
+  const methodHtml = methodSteps
+    .map((s) => `<div class="method-step"><span>${escapeHtml(s.n)}</span><h3>${escapeHtml(s.title)}</h3><p>${escapeHtml(s.desc)}</p></div>`)
+    .join('\n            ');
+
+  const faqHtml = homeFaqs
+    .map((f) => `<details class="faq-item"><summary>${escapeHtml(f.q)}</summary><p>${escapeHtml(f.a)}</p></details>`)
+    .join('\n            ');
+
+  return `
+    <div class="home-static">
+      <nav aria-label="Principale" class="home-nav">
+        <a href="/"><img src="/logo.webp" alt="Q4 Studio" width="130" height="40" /></a>
+        <div class="home-nav-links">
+          <a href="/agenti-ai">Agenti AI</a>
+          <a href="/blog">Blog</a>
+          <a href="${resourcesPath}">Risorse</a>
+        </div>
+      </nav>
+
+      <header class="hero">
+        <p class="hero-kicker">Bring AI&amp;Tech to Marketing</p>
+        <h1>Il tuo AI<br />Marketing Partner.</h1>
+        <p class="hero-sub">Lo studio di consulenza che porta AI e le ultime tecnologie nel tuo marketing.</p>
+        <div class="hero-cta">
+          <a href="#contatti" class="btn-primary">Inizia il percorso</a>
+          <a href="/agenti-ai" class="btn-secondary">Scopri gli Agenti AI</a>
+        </div>
+        <div class="hero-ticker">
+          ${tickerHtml}
+        </div>
+      </header>
+
+      <section class="manifesto">
+        <p>Q4 Studio è uno studio di consulenza. Entriamo nei processi, applichiamo l'AI al marketing e costruiamo agenti che lavorano al fianco del tuo team.</p>
+      </section>
+
+      <section class="pipeline">
+        <h2>Dal click al cliente.<br />In automatico.</h2>
+        <p>Il nostro sistema di lead generation collega Meta, CRM e WhatsApp: ogni lead viene arricchito, contattato e seguito, dal primo click alla firma.</p>
+        <div class="pipeline-steps">
+          ${pipelineHtml}
+        </div>
+      </section>
+
+      <section class="agents">
+        <h2>Colleghi digitali,<br />progettati sul tuo processo.</h2>
+        <p>Agenti costruiti sui processi reali dell'azienda: leggono email e messaggi, interrogano il gestionale, preparano preventivi e ordini, e coinvolgono una persona quando serve una decisione.</p>
+        <div class="integrations">
+          ${integrationsHtml}
+        </div>
+        <a href="/agenti-ai" class="btn-secondary">Esplora gli Agenti AI</a>
+      </section>
+
+      <section class="services">
+        <h2>Due leve.<br />Un unico sistema.</h2>
+        <p>Acquisizione B2B da un lato, automazione intelligente dall'altro. Studiamo il processo, definiamo le priorità e costruiamo sistemi misurabili.</p>
+        <div class="services-grid">
+          ${servicesHtml}
+        </div>
+        <div class="stats">
+          ${statsHtml}
+        </div>
+        <div class="method">
+          ${methodHtml}
+        </div>
+      </section>
+
+      ${generateHomeSeoContentHtml(faqHtml)}
+
+      <section class="final-cta">
+        <h2>Costruiamo il tuo<br />vantaggio.</h2>
+        <p>Raccontaci la tua sfida: ti mostriamo come trasformarla in un sistema che cresce.</p>
+      </section>
+
+      <section id="contatti" class="contact-anchor" aria-label="Contatti">
+        <h2>Parla con un esperto</h2>
+        <p>Raccontaci il tuo processo: ti proponiamo il primo passo misurabile.</p>
+      </section>
+    </div>
+  `;
+}
+
+// Sezione "Metodo + FAQ" della home, testo identico a components/HomeSeoContent.tsx
+function generateHomeSeoContentHtml(faqHtml: string): string {
+  return `
+      <section class="home-seo-content">
+        <h2>Consulenza B2B Lead Generation su Meta</h2>
+        <p>La B2B Lead Generation su Meta è un sistema di acquisizione contatti pensato per trasformare Facebook e Instagram in canali di crescita misurabile anche per aziende con cicli di vendita complessi. Il nostro ruolo non è comportarci da agenzia che esegue campagne a volume, ma da consulenti che affiancano marketing e sales nella costruzione di un funnel più leggibile, tracciabile e sostenibile.</p>
+        <p>Partiamo dall'analisi del processo commerciale: chi è il cliente giusto, proposta di valore, segmentazione, creatività, domande qualificanti, instradamento al CRM e tempi di risposta ai contatti. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del contatto e probabilità di diventare cliente, non solo per costo per contatto.</p>
+
+        <div class="method-cards">
+          <article class="method-card">
+            <h3>Diagnosi prima delle campagne</h3>
+            <p>Audit di funnel, audience, offerta e gestione lead prima di aumentare budget o test creativi.</p>
+          </article>
+          <article class="method-card">
+            <h3>Sistema, non singola ads</h3>
+            <p>Campagne, CRM e follow-up vengono progettati insieme per ridurre dispersione e tempi morti.</p>
+          </article>
+          <article class="method-card">
+            <h3>Governance dei KPI</h3>
+            <p>Misuriamo contatti che diventano davvero clienti, appuntamenti e opportunità generate, non solo il costo per contatto e numeri di facciata.</p>
+          </article>
+        </div>
+
+        <h2>Meta Ads orientate alla qualità</h2>
+        <p>Lavoriamo come consulenti operativi sulle campagne Meta B2B: audit account, architettura delle campagne, piano test creativo, tracking server-side e lettura dei dati commerciali. L'obiettivo è aiutare il team a capire cosa sta generando opportunità reali e cosa sta solo gonfiando il volume dei lead.</p>
+        <p>L'algoritmo Andromeda dà valore ai segnali di conversione ad alta intenzione. Per questo allineiamo campagne e CRM su eventi come completamento di domande qualificanti, risposta del prospect e progressione nello stage commerciale.</p>
+
+        <h2>Agenti AI sul processo sales</h2>
+        <p>Gli Agenti AI non sono chatbot generici. Li disegniamo insieme al team, partendo da regole operative, tono di voce, CRM e punti di frizione nel processo commerciale. Il risultato è un supporto che qualifica, prioritizza e prepara il lavoro umano invece di sostituirlo.</p>
+        <p>Nei progetti più maturi, l'integrazione Meta Ads + Agenti AI riduce i tempi di prima risposta, aumenta la precisione nel routing e rende il funnel meno dipendente da interventi manuali ripetitivi.</p>
+
+        <h2>Risultati misurabili, leggibili dal team</h2>
+        <p>Ogni attività viene valutata su metriche operative e metriche di business. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.</p>
+        <p>Nei progetti B2B monitoriamo nel tempo quanti contatti diventano davvero clienti e confrontiamo i dati prima e dopo integrazione CRM, instradamento e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.</p>
+
+        <div class="focus-consulenziale">
+          <p class="focus-consulenziale-label">Focus consulenziale</p>
+          <ul>
+            <li>Audit e priorità operative prima dell'execution.</li>
+            <li>Affiancamento a marketing e sales nella lettura dei dati.</li>
+            <li>Documentazione di naming, eventi e criteri di qualificazione.</li>
+          </ul>
+        </div>
+
+        <h2>Domande frequenti su Meta Ads B2B e Agenti AI</h2>
+        <p>Abbiamo raccolto in un unico punto le risposte operative sulle campagne Meta B2B, sugli Agenti AI e sul collegamento con CRM e automazioni.</p>
+        <div class="faq-list">
+          ${faqHtml}
+        </div>
+      </section>
+  `;
 }
 
 // Supabase client for build-time fetch
@@ -568,13 +895,13 @@ function renderMarkdown(content: string): string {
   lines.forEach((line) => {
     if (line.startsWith('# ')) {
       flushList();
-      elements.push(`<h1 class="text-4xl md:text-5xl font-bold mb-6 mt-8">${escapeHtml(line.replace('# ', ''))}</h1>`);
+      elements.push(`<h1 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6 mt-8">${escapeHtml(line.replace('# ', ''))}</h1>`);
     } else if (line.startsWith('## ')) {
       flushList();
-      elements.push(`<h2 class="text-3xl md:text-4xl font-bold mb-4 mt-8 text-indigo-300">${escapeHtml(line.replace('## ', ''))}</h2>`);
+      elements.push(`<h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4 mt-8 text-indigo-300">${escapeHtml(line.replace('## ', ''))}</h2>`);
     } else if (line.startsWith('### ')) {
       flushList();
-      elements.push(`<h3 class="text-2xl font-bold mb-3 mt-6 text-purple-300">${escapeHtml(line.replace('### ', ''))}</h3>`);
+      elements.push(`<h3 class="text-lg md:text-xl font-bold leading-[1.5] mb-3 mt-6 text-purple-300">${escapeHtml(line.replace('### ', ''))}</h3>`);
     } else if (/^\d+\.\s/.test(line)) {
       const text = line.replace(/^\d+\.\s/, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       currentList.push(text);
@@ -583,7 +910,7 @@ function renderMarkdown(content: string): string {
     } else if (line.trim() !== '') {
       flushList();
       const html = line.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
-      elements.push(`<p class="text-lg text-gray-300 leading-relaxed mb-4">${html}</p>`);
+      elements.push(`<p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-4">${html}</p>`);
     }
   });
 
@@ -638,7 +965,7 @@ function generateBlogArticleHtml(post: any): string {
   };
 
   const bodyContent = `
-    <article class="relative pt-32 pb-20 px-6 bg-[#050505] text-white min-h-screen">
+    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none"></div>
       <div class="max-w-4xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-8">
@@ -656,7 +983,7 @@ function generateBlogArticleHtml(post: any): string {
             <span class="text-indigo-300 text-sm font-medium">${escapeHtml(post.category)}</span>
           </div>
 
-          <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">${escapeHtml(post.title)}</h1>
+          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">${escapeHtml(post.title)}</h1>
 
           <div class="flex flex-wrap items-center gap-6 text-gray-400 mb-8 pb-8 border-b border-white/10">
             <div class="flex items-center gap-3">
@@ -685,7 +1012,7 @@ function generateBlogArticleHtml(post: any): string {
           <div class="flex flex-col md:flex-row items-center gap-6">
             <img src="${post.author.image}" alt="${escapeHtml(post.author.name)}" loading="lazy" decoding="async" class="w-20 h-20 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=160'" />
             <div class="flex-1 text-center md:text-left">
-              <h3 class="text-2xl font-bold mb-2">${escapeHtml(post.author.name)}</h3>
+              <h3 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-2">${escapeHtml(post.author.name)}</h3>
               <p class="text-gray-400">Vuoi approfondire queste strategie per il tuo business? Contattaci per una consulenza personalizzata.</p>
             </div>
             <a href="/" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all duration-300 whitespace-nowrap">Contattaci</a>
@@ -699,7 +1026,12 @@ function generateBlogArticleHtml(post: any): string {
     title: `${post.title} | Q4 Studio Blog`,
     description: post.excerpt,
     canonical: pageUrl,
+    // La copertina è un URL remoto (Supabase): le dimensioni reali non sono note
+    // a build time, quindi non passiamo ogImageWidth/Height (generateBaseHtml
+    // le omette quando l'immagine non è quella di default). L'alt riprende il
+    // titolo dell'articolo invece del generico "Q4 Studio".
     ogImage: post.coverImage,
+    ogImageAlt: post.title,
     type: 'article',
     schema: [blogSchema, breadcrumbSchema],
     bodyContent,
@@ -707,20 +1039,26 @@ function generateBlogArticleHtml(post: any): string {
 }
 
 function generateSitemap(blogPosts: any[] = []): string {
+  const buildDate = new Date().toISOString().split('T')[0];
+
   const urls = [
-    { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly' },
-    { loc: `${siteUrl}/agenti-ai`, priority: '0.95', changefreq: 'weekly' },
-    { loc: `${siteUrl}/directory`, priority: '0.9', changefreq: 'weekly' },
-    { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'weekly' },
+    { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly', lastmod: buildDate },
+    { loc: `${siteUrl}/agenti-ai`, priority: '0.95', changefreq: 'weekly', lastmod: buildDate },
+    { loc: `${siteUrl}${resourcesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: buildDate },
+    { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'weekly', lastmod: buildDate },
     ...seoPages.map((page) => ({
-      loc: `${siteUrl}/seo/${page.slug}`,
+      loc: `${siteUrl}${resourcesPath}/${page.slug}`,
       priority: '0.8',
-      changefreq: 'monthly'
+      changefreq: 'monthly',
+      lastmod: buildDate
     })),
     ...blogPosts.map((post) => ({
       loc: `${siteUrl}/blog/${post.slug}`,
       priority: '0.7',
-      changefreq: 'monthly'
+      changefreq: 'monthly',
+      // Usa la data reale dell'articolo (da Supabase) invece della data di build,
+      // così il lastmod riflette davvero l'ultima modifica del contenuto.
+      lastmod: post.date ? new Date(post.date).toISOString().split('T')[0] : buildDate
     }))
   ];
 
@@ -728,7 +1066,7 @@ function generateSitemap(blogPosts: any[] = []): string {
     .map(
       (url) => `  <url>
     <loc>${url.loc}</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>${url.lastmod}</lastmod>
     <changefreq>${url.changefreq}</changefreq>
     <priority>${url.priority}</priority>
   </url>`
@@ -748,18 +1086,41 @@ ${urlEntries}
   // Ensure dist directory exists
   ensureDir(distDir);
 
+  // Inject static home content into the Vite-built dist/index.html so non-JS
+  // crawlers see the real H1/paragraphs/sections instead of an empty <div id="root">.
+  const rootIndexPath = join(distDir, 'index.html');
+  if (existsSync(rootIndexPath)) {
+    const builtIndexHtml = readFileSync(rootIndexPath, 'utf-8');
+    if (builtIndexHtml.includes('<div id="root"></div>')) {
+      const withHomeContent = builtIndexHtml.replace(
+        '<div id="root"></div>',
+        `<div id="root">${generateHomeBodyContent()}</div>`
+      );
+      writeFileSync(rootIndexPath, withHomeContent, 'utf-8');
+      console.log('✅ Injected static home content into dist/index.html');
+    } else {
+      console.warn('⚠️  dist/index.html root mount point not in the expected empty state, skipping home content injection.');
+    }
+  } else {
+    console.warn('⚠️  dist/index.html not found, skipping home content injection.');
+  }
+
   // Fetch blog posts from Supabase
   const blogPosts = await fetchBlogPosts();
   console.log(`📚 Fetched ${blogPosts.length} blog posts`);
 
-  // Generate directory page
-  const directoryPath = join(distDir, 'directory');
-  ensureDir(directoryPath);
-  const directoryHtml = generateDirectoryHtml();
-  const directoryStream = createWriteStream(join(directoryPath, 'index.html'));
-  directoryStream.write(directoryHtml);
-  directoryStream.end();
-  console.log('✅ Generated /directory/index.html');
+  // Generate resources hub page (/risorse) — canonical path used by App.tsx and data/seoPages.ts.
+  // NOTE: le vecchie rotte /directory e /seo/<slug> restano solo come redirect 308 in vercel.json
+  // verso /risorse e /risorse/<slug>: qui generiamo direttamente la destinazione finale, altrimenti
+  // Vercel non trova alcun file statico su /risorse* (il rewrite SPA catch-all esclude "risorse")
+  // e la pagina risulta 404 in produzione.
+  const resourcesDir = join(distDir, resourcesPath.replace(/^\//, ''));
+  ensureDir(resourcesDir);
+  const resourcesHtml = generateResourcesHtml();
+  const resourcesStream = createWriteStream(join(resourcesDir, 'index.html'));
+  resourcesStream.write(resourcesHtml);
+  resourcesStream.end();
+  console.log(`✅ Generated ${resourcesPath}/index.html`);
 
   // Generate blog index page
   const blogPath = join(distDir, 'blog');
@@ -790,15 +1151,15 @@ ${urlEntries}
     console.log(`✅ Generated /blog/${post.slug}/index.html`);
   }
 
-  // Generate SEO landing pages
+  // Generate SEO landing pages under /risorse/<slug>
   for (const page of seoPages) {
-    const pageDir = join(distDir, 'seo', page.slug);
+    const pageDir = join(distDir, resourcesPath.replace(/^\//, ''), page.slug);
     ensureDir(pageDir);
     const pageHtml = generateLandingPageHtml(page);
     const pageStream = createWriteStream(join(pageDir, 'index.html'));
     pageStream.write(pageHtml);
     pageStream.end();
-    console.log(`✅ Generated /seo/${page.slug}/index.html`);
+    console.log(`✅ Generated ${resourcesPath}/${page.slug}/index.html`);
   }
 
   // Generate sitemap.xml with blog posts
