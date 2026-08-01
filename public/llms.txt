@@ -20,6 +20,9 @@ Q4 Studio progetta e sviluppa agenti AI per sales, back office e customer care, 
 - Chatbot AI per cliniche e studi medici: https://www.q4.studio/risorse/chatbot-cliniche-studi-medici
 - Integrazione e automazione dei dati aziendali: https://www.q4.studio/risorse/crm-automation-meta-ads
 - Automazione WhatsApp nei processi aziendali: https://www.q4.studio/risorse/whatsapp-automation-lead-b2b
+- Tracking server-side e deduplicazione degli eventi: https://www.q4.studio/risorse/tracking-server-side-deduplicazione-eventi
+- Reminder automatici per ridurre i mancati appuntamenti (no-show): https://www.q4.studio/risorse/reminder-automatici-appuntamenti-no-show
+- Second Brain aziendale con agenti AI: https://www.q4.studio/risorse/second-brain-aziendale-agente-ai
 - Blog: https://www.q4.studio/blog
 
 ### Temi principali
@@ -64,6 +67,9 @@ Q4 Studio designs and builds AI agents for sales, back office and customer care,
 - AI Chatbot for clinics and medical practices: https://www.q4.studio/risorse/chatbot-cliniche-studi-medici
 - Business data integration and automation: https://www.q4.studio/risorse/crm-automation-meta-ads
 - WhatsApp automation for business processes: https://www.q4.studio/risorse/whatsapp-automation-lead-b2b
+- Server-side tracking and event deduplication: https://www.q4.studio/risorse/tracking-server-side-deduplicazione-eventi
+- Automated reminders to reduce missed appointments (no-shows): https://www.q4.studio/risorse/reminder-automatici-appuntamenti-no-show
+- Company Second Brain as an AI agent: https://www.q4.studio/risorse/second-brain-aziendale-agente-ai
 - Blog: https://www.q4.studio/blog
 
 ### Core Topics

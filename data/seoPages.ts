@@ -330,9 +330,9 @@ export const seoPages: SeoPage[] = [
         content: 'L\'API di WhatsApp Business permette alle aziende di collegare la chat ai propri sistemi: inviare messaggi automatici, ricevere richieste strutturate, integrare CRM e gestionale. A differenza dell\'app WhatsApp Business normale, l\'API supporta l\'invio programmato di messaggi e la gestione di più numeri e più operatori insieme. È lo strumento giusto quando i volumi di richieste rendono la chat manuale difficile da gestire.'
       },
       {
-        keyword: 'automazione richieste whatsapp',
-        heading: 'Automatizzare le richieste su WhatsApp',
-        content: 'Una automazione WhatsApp risponde subito alle domande più frequenti (orari, stato di un ordine, disponibilità), raccoglie le informazioni necessarie per una richiesta più complessa e la gira alla persona giusta con già tutti i dati pronti. Il flusso si adatta al tipo di richiesta: chi scrive per un ordine non deve rispondere alle stesse domande di chi scrive per assistenza.'
+        keyword: 'crm automation whatsapp aziende',
+        heading: 'Automatizzare le richieste su WhatsApp collegando il CRM',
+        content: 'Una automazione WhatsApp risponde subito alle domande più frequenti (orari, stato di un ordine, disponibilità), raccoglie le informazioni necessarie per una richiesta più complessa e la gira alla persona giusta con già tutti i dati pronti. Il flusso si adatta al tipo di richiesta: chi scrive per un ordine non deve rispondere alle stesse domande di chi scrive per assistenza. Quando WhatsApp è collegato al CRM, ogni conversazione aggiorna da sola la scheda del contatto - nuovo messaggio, stato della richiesta, esito - così il commerciale trova già tutto pronto senza dover copiare nulla a mano.'
       },
       {
         keyword: 'whatsapp ordini e assistenza aziende',
@@ -367,8 +367,8 @@ export const seoPages: SeoPage[] = [
         answer: 'Si, se usato con consenso, tono corretto e messaggi utili. Non deve mai diventare invasivo.'
       },
       {
-        question: 'Si integra con i sistemi che già uso?',
-        answer: 'Si, quando gestionale o CRM espongono API o automazioni; valutiamo caso per caso.'
+        question: 'Le automazioni WhatsApp si integrano con il CRM che già uso?',
+        answer: 'Si, quando il CRM espone API o automazioni: la conversazione aggiorna da sola scheda contatto, stato della richiesta ed eventuali attività di follow-up, senza copia manuale dei dati.'
       },
       {
         question: 'Serve l\'API ufficiale di WhatsApp?',
@@ -378,6 +378,129 @@ export const seoPages: SeoPage[] = [
         question: 'I clienti trovano invasivo ricevere messaggi automatici?',
         answer: 'Dipende da tono e frequenza. I messaggi utili (conferma richiesta, aggiornamento stato) sono percepiti positivamente; limitiamo sempre il numero di messaggi e lasciamo spazio al passaggio a una persona.'
       }
+    ]
+  },
+  {
+    slug: 'tracking-server-side-deduplicazione-eventi',
+    title: 'Tracking Server-Side e Deduplicazione degli Eventi',
+    metaTitle: 'Tracking Server-Side e Deduplicazione Eventi | Q4 Studio',
+    description: 'Come funziona il tracking server-side, perché senza deduplicazione degli eventi i numeri di conversione si gonfiano. Q4 Studio è Stape Partner.',
+    keyword: 'tracking server-side deduplicazione eventi',
+    audience: 'aziende che investono in advertising digitale (Meta, Google) e vedono i numeri di conversione non coincidere tra piattaforme pubblicitarie, analytics e CRM',
+    pain: 'i browser bloccano sempre più script e cookie eseguiti lato client (cioè direttamente nel browser dell\'utente), quindi una parte delle conversioni reali non viene registrata; se poi si aggiunge un tracciamento server-side senza gestirlo bene, lo stesso evento rischia di essere contato due volte, gonfiando i numeri nella direzione opposta',
+    solution: 'configuriamo il tracciamento server-side (una raccolta dati che passa da un server anziché solo dal browser dell\'utente) e impostiamo la deduplicazione degli eventi tra le due fonti, così ogni conversione viene contata una sola volta ed è più resistente ai blocchi di ad blocker e browser orientati alla privacy',
+    proof: 'siamo Stape Partner per il server-side tagging: la configurazione tecnica corretta non è un dettaglio, è quello che decide se i numeri su cui l\'azienda decide il budget sono affidabili o no',
+    directAnswer: 'Il tracking server-side raccoglie i dati di navigazione e conversione tramite un server intermedio invece che solo dal browser dell\'utente, riducendo l\'impatto di ad blocker e browser privacy-first. La deduplicazione degli eventi assicura che la stessa conversione, se arriva sia dal client che dal server, venga contata una sola volta invece di gonfiare i numeri nei report.',
+    clusters: [
+      { keyword: 'cosa cambia rispetto al tracciamento tradizionale', heading: 'Tracciamento client-side vs server-side: cosa cambia', content: 'Il tracciamento tradizionale (client-side) invia i dati direttamente dal browser dell\'utente alla piattaforma pubblicitaria, tramite pixel e script che ad blocker, Safari ITP e Firefox ETP possono bloccare in parte. Il tracciamento server-side sposta questa raccolta su un server, spesso collegato a un dominio proprio del sito, rendendo la trasmissione dei dati meno dipendente dai blocchi impostati nel browser. Non è una soluzione magica: resta comunque soggetto a consenso e alle regole privacy, ma riduce la perdita di segnali dovuta ai soli blocchi tecnici.' },
+      { keyword: 'cos\'è la deduplicazione degli eventi', heading: 'Cos\'è la deduplicazione degli eventi e perché serve', content: 'Quando lo stesso evento (per esempio un acquisto) viene inviato sia dal browser sia dal server, la piattaforma pubblicitaria rischia di registrarlo due volte se non riceve un\'indicazione che si tratta dello stesso evento. La deduplicazione risolve questo problema assegnando a ogni evento un identificativo univoco, condiviso tra le due fonti: la piattaforma lo riconosce e conta l\'evento una sola volta. Senza questo passaggio, i dati di conversione risultano gonfiati e le decisioni sul budget pubblicitario si basano su numeri sbagliati.' },
+      { keyword: 'perché i dati di advertising non tornano con il crm', heading: 'Perché i numeri di advertising non coincidono con il CRM', content: 'Capita spesso che i numeri di conversione mostrati da Meta o Google non coincidano con quelli reali nel CRM aziendale. Le cause più comuni sono opposte tra loro: da un lato il blocco di cookie e script fa sottostimare le conversioni reali; dall\'altro un tracciamento server-side aggiunto senza deduplicazione le sovrastima. Il modo corretto di leggere questi numeri è confrontarli sempre con i dati reali del CRM, non fidarsi solo di quello che mostra la piattaforma pubblicitaria.' },
+      { keyword: 'stape partner server-side tagging', heading: 'Perché lavoriamo con Stape per il server-side tagging', content: 'Il server-side tagging richiede un\'infrastruttura tecnica da configurare e mantenere: un container che riceve i dati, li elabora e li inoltra correttamente alle piattaforme di advertising e analytics. Q4 Studio è Stape Partner, e usa questa infrastruttura per configurare il tracciamento server-side dei clienti in modo affidabile, mantenendo la deduplicazione degli eventi e monitorando che i dati restino coerenti nel tempo.' }
+    ],
+    comparisonTable: {
+      title: 'Tracciamento client-side vs server-side',
+      headers: ['Aspetto', 'Client-side', 'Server-side'],
+      rows: [
+        ['Sensibilità a blocchi browser e ad blocker', 'Alta', 'Bassa'],
+        ['Dominio da cui parte la richiesta dati', 'Dominio della piattaforma', 'Dominio proprio del sito'],
+        ['Rischio doppio conteggio', 'Nullo (unica fonte)', 'Presente se manca la deduplicazione'],
+        ['Manutenzione richiesta', 'Bassa', 'Richiede configurazione e monitoraggio nel tempo']
+      ]
+    },
+    dataPoints: [
+      'Il tracciamento client-side perde eventi quando ad blocker, Safari ITP o Firefox ETP bloccano script e cookie',
+      'La deduplicazione confronta un identificativo univoco (event ID) tra evento client-side e server-side per contarlo una sola volta',
+      'Senza deduplicazione, lo stesso evento può comparire due volte nei report advertising, gonfiando i risultati',
+      'Q4 Studio è Stape Partner per la configurazione e la manutenzione del server-side tagging'
+    ],
+    services: ['Audit del tracciamento esistente', 'Configurazione server-side tagging (Stape)', 'Deduplicazione degli eventi tra client e server', 'Verifica e monitoraggio continuo dei dati raccolti'],
+    faqs: [
+      { question: 'Il tracking server-side sostituisce completamente quello client-side?', answer: 'No, di solito lavorano insieme: il client-side resta utile per segnali immediati, il server-side aggiunge affidabilità contro i blocchi. La deduplicazione evita che lo stesso evento venga contato due volte.' },
+      { question: 'Cosa serve per attivare il tracking server-side?', answer: 'Un dominio proprio da collegare al container server-side, accesso agli strumenti di advertising e analytics già in uso, e una configurazione tecnica che curiamo noi come Stape Partner.' },
+      { question: 'La deduplicazione richiede modifiche al sito?', answer: 'Serve identificare ogni evento con lo stesso identificativo sia lato client sia lato server: normalmente si interviene sul codice di tracciamento esistente, senza toccare il resto del sito.' },
+      { question: 'Il server-side tagging risolve da solo i problemi di privacy?', answer: 'No. Gli obblighi su consenso, informativa e conservazione dei dati restano gli stessi: cambia dove viene elaborato il dato, non le regole sulla privacy da rispettare.' }
+    ]
+  },
+  {
+    slug: 'reminder-automatici-appuntamenti-no-show',
+    title: 'Reminder Automatici per Ridurre i Mancati Appuntamenti',
+    metaTitle: 'Reminder Automatici contro i No-Show | Q4 Studio',
+    description: 'Sequenze di reminder automatici su WhatsApp, email e SMS collegate a calendario e gestionale, con conferma e disdetta gestite senza intervento manuale.',
+    keyword: 'reminder automatici appuntamenti no-show',
+    audience: 'studi medici e odontoiatrici, centri estetici, officine e studi di consulenza che lavorano su appuntamenti fissati in agenda',
+    pain: 'ogni appuntamento non disdetto in tempo utile è uno slot che nessun altro cliente può occupare, con perdita di fatturato e agenda disorganizzata; richiamare tutti a mano richiede tempo che raramente la segreteria ha davvero',
+    solution: 'colleghiamo calendario e gestionale a sequenze automatiche di promemoria su WhatsApp, email e SMS, che permettono di confermare o disdire senza una telefonata e liberano lo slot in tempo utile per essere riassegnato',
+    proof: 'un promemoria automatico arriva sempre, anche quando la segreteria è al telefono con qualcun altro, e la conferma o la disdetta aggiornano subito l\'agenda',
+    directAnswer: 'I reminder automatici per ridurre i no-show sono sequenze di messaggi su WhatsApp, email e SMS collegate al calendario e al gestionale: ricordano l\'appuntamento, permettono di confermare o disdire con un click e liberano lo slot in tempo utile per essere riassegnato, senza che qualcuno debba telefonare manualmente ogni cliente.',
+    clusters: [
+      { keyword: 'perché si perdono appuntamenti senza reminder', heading: 'Perché nascono i mancati appuntamenti', content: 'Molti no-show non nascono da cattiva volontà: la persona si dimentica, non ha un modo semplice per disdire con anticipo, oppure il promemoria arriva troppo tardi o non arriva affatto. La segreteria, quando c\'è, spesso non ha il tempo di richiamare uno per uno tutti gli appuntamenti del giorno dopo, soprattutto nei momenti di maggior carico.' },
+      { keyword: 'whatsapp email sms per promemoria appuntamenti', heading: 'WhatsApp, email e SMS: quale canale usare', content: 'WhatsApp funziona bene per la rapidità e per un tasso di apertura molto alto rispetto ad altri canali. L\'email resta utile per dettagli più lunghi, come indicazioni o documenti da portare. L\'SMS è un buon canale di riserva per chi non usa WhatsApp o non controlla spesso la posta. Una sequenza tipica prevede un primo promemoria alcuni giorni prima e uno il giorno prima, con la possibilità di confermare o disdire in entrambi.' },
+      { keyword: 'conferma e disdetta automatica appuntamenti', heading: 'Conferma e disdetta gestite in automatico', content: 'Il messaggio di promemoria include un modo semplice per confermare o disdire, per esempio un link o un pulsante. Quando il cliente risponde, il sistema aggiorna da solo calendario e gestionale, senza che una persona debba intervenire manualmente: se disdice, lo slot risulta libero e può essere proposto a un altro cliente in lista d\'attesa.' },
+      { keyword: 'reminder appuntamenti studio medico centro estetico officina', heading: 'Settori dove il reminder automatico fa la differenza', content: 'Negli studi medici e odontoiatrici ogni visita saltata è tempo specialistico non recuperabile. Nei centri estetici i trattamenti sono spesso prenotati con giorni o settimane di anticipo, e un\'assenza dell\'ultimo momento è difficile da rimpiazzare. Nelle officine, tagliandi e revisioni occupano una postazione per ore. Negli studi di consulenza, un appuntamento saltato significa un\'ora di lavoro specializzato non recuperata.' }
+    ],
+    comparisonTable: {
+      title: 'Gestione dei promemoria: manuale vs automatica',
+      headers: ['Aspetto', 'Promemoria manuale', 'Reminder automatico'],
+      rows: [
+        ['Chi se ne occupa', 'Segreteria o titolare, quando ha tempo', 'Sistema collegato a calendario e gestionale'],
+        ['Copertura', 'Solo gli appuntamenti che si riesce a richiamare', 'Ogni appuntamento, sempre'],
+        ['Conferma o disdetta', 'Richiede una telefonata di rientro', 'Gestita dal cliente con un click'],
+        ['Aggiornamento agenda', 'Manuale, spesso in ritardo', 'Immediato']
+      ]
+    },
+    dataPoints: [
+      'WhatsApp ha un tasso di apertura dei messaggi molto più alto rispetto a email e SMS, utile per far leggere il promemoria in tempo',
+      'La sequenza tipica prevede un promemoria alcuni giorni prima e uno il giorno prima dell\'appuntamento',
+      'La disdetta gestita in automatico libera lo slot in tempo utile per riassegnarlo a un altro cliente',
+      'Il collegamento a calendario e gestionale evita che qualcuno debba aggiornare l\'agenda a mano dopo ogni conferma o disdetta'
+    ],
+    services: ['Mappatura del processo di prenotazione', 'Sequenze di promemoria multicanale', 'Integrazione con calendario e gestionale', 'Gestione automatica di conferme e disdette'],
+    faqs: [
+      { question: 'Il reminder automatico elimina del tutto i no-show?', answer: 'Li riduce, non li azzera: alcune assenze restano imprevedibili. L\'obiettivo è dare a tutti la possibilità di confermare o disdire in tempo utile, così lo slot libero può essere riassegnato.' },
+      { question: 'Serve un calendario o un gestionale specifico?', answer: 'Serve un sistema che permetta di leggere e aggiornare gli appuntamenti, come un calendario digitale o il gestionale già in uso. Valutiamo l\'integrazione caso per caso.' },
+      { question: 'Su quali canali arrivano i promemoria?', answer: 'In genere WhatsApp ed email, con l\'SMS come alternativa per chi non ha WhatsApp. La combinazione dipende dai contatti disponibili e dal consenso raccolto.' },
+      { question: 'È adatto anche a piccole strutture con pochi appuntamenti al giorno?', answer: 'Si, il beneficio è proporzionale al valore di ogni slot occupato: anche poche assenze evitate al mese possono giustificare il progetto.' }
+    ]
+  },
+  {
+    slug: 'second-brain-aziendale-agente-ai',
+    title: 'Second Brain Aziendale: un Agente AI per la Conoscenza dell\'Azienda',
+    metaTitle: 'Second Brain Aziendale con Agenti AI | Q4 Studio',
+    description: 'Un agente AI che indicizza documenti, email, offerte e procedure aziendali e risponde al team citando la fonte, senza dipendere dalla memoria delle persone.',
+    keyword: 'second brain aziendale agente ai',
+    audience: 'aziende dove documenti, email, offerte e procedure sono sparsi tra cartelle, caselle di posta e strumenti diversi, e la stessa domanda finisce sempre per essere fatta a chi "sa dove trovare le cose"',
+    pain: 'quando un\'informazione vive solo nella memoria di poche persone o in file sparsi, il team perde tempo a cercarla, la richiede più volte alle stesse persone e si blocca quando quella persona è assente o lascia l\'azienda',
+    solution: 'costruiamo un agente AI che indicizza (cioè legge, organizza e rende ricercabile) i documenti, le email, le offerte e le procedure già esistenti in azienda, e risponde alle domande del team indicando la fonte esatta da cui arriva la risposta',
+    proof: 'un agente che indica da dove arriva la risposta restituisce fiducia in quello che dice, cosa che un semplice elenco di file trovati da una ricerca non garantisce da solo',
+    directAnswer: 'Un Second Brain aziendale è un agente AI che indicizza - cioè legge e rende ricercabili - documenti, email, offerte, procedure e altra conoscenza già presente in azienda, e risponde alle domande del team indicando da quale documento arriva la risposta, riducendo il tempo perso a cercare informazioni e la dipendenza dalla memoria delle singole persone.',
+    clusters: [
+      { keyword: 'dove si perde la conoscenza in azienda', heading: 'Dove si perde la conoscenza aziendale', content: 'La conoscenza operativa di un\'azienda vive spesso in luoghi diversi e poco collegati: cartelle condivise disordinate, email di singole persone, procedure mai scritte o scritte una volta e mai aggiornate, offerte rifatte da zero perché nessuno ritrova la precedente. Il problema si aggrava quando una persona chiave è in ferie, malata o lascia l\'azienda: la conoscenza che aveva in testa va persa o va ricostruita a fatica.' },
+      { keyword: 'come funziona un agente ai che risponde con le fonti', heading: 'Come funziona un agente che risponde citando la fonte', content: 'L\'agente legge i documenti aziendali - PDF, email, offerte passate, procedure interne - e li indicizza, cioè li organizza in modo che diventino ricercabili per contenuto e non solo per nome del file. Quando qualcuno fa una domanda, l\'agente recupera i passaggi rilevanti e costruisce una risposta diretta, indicando il documento (e dove possibile la sezione) da cui l\'ha presa, così chi riceve la risposta può verificarla invece di doversi fidare a scatola chiusa.' },
+      { keyword: 'differenza tra motore di ricerca interno e agente ai', heading: 'Motore di ricerca interno vs agente AI aziendale', content: 'Un motore di ricerca interno restituisce un elenco di documenti che contengono una parola chiave: tocca comunque aprirli e leggerli per trovare la risposta. Un agente AI aziendale, invece, legge il contenuto di quei documenti e restituisce direttamente la risposta, citando la fonte. Il passaggio in più - aprire e leggere i file uno a uno - è proprio quello che si elimina.' },
+      { keyword: 'cosa indicizzare per un second brain aziendale', heading: 'Cosa indicizzare per iniziare', content: 'Conviene partire da un perimetro ristretto: un\'area già ragionevolmente organizzata, per esempio le offerte commerciali oppure le procedure tecniche di un reparto. Si allarga il perimetro solo dopo che il primo agente ha dimostrato di rispondere in modo utile e verificabile, ed è il team a fidarsi delle risposte che riceve.' }
+    ],
+    comparisonTable: {
+      title: 'Come si cerca un\'informazione in azienda',
+      headers: ['Metodo', 'Dove cerca', 'Tipo di risposta', 'Verificabile'],
+      rows: [
+        ['Chiedere a chi "sa"', 'Nella sua memoria', 'Dipende da chi risponde e da quando', 'Difficile'],
+        ['Cartelle e email condivise', 'File sparsi in più strumenti', 'Nessuna: bisogna aprire i file uno a uno', 'Si, ma richiede tempo'],
+        ['Motore di ricerca interno', 'Indice per parole chiave', 'Elenco di documenti da controllare', 'Si, ma serve leggerli'],
+        ['Agente AI (Second Brain)', 'Documenti indicizzati e collegati', 'Risposta diretta con la fonte citata', 'Si, in un solo passaggio']
+      ]
+    },
+    dataPoints: [
+      'L\'agente indicizza documenti, email, offerte e procedure già esistenti, senza richiedere che vengano riscritti da zero',
+      'Ogni risposta indica la fonte esatta - il documento o la sezione - così chi la riceve può verificarla',
+      'Il perimetro iniziale tipico è un\'area sola, per esempio offerte commerciali o procedure tecniche, per poi allargarsi quando il team si fida delle risposte',
+      'Riduce la dipendenza dalla memoria delle singole persone, utile soprattutto quando qualcuno è assente o lascia l\'azienda'
+    ],
+    services: ['Mappatura delle fonti di conoscenza aziendale', 'Indicizzazione di documenti, email e procedure', 'Agente AI con risposte e citazione della fonte', 'Formazione del team all\'uso quotidiano'],
+    faqs: [
+      { question: 'Il Second Brain sostituisce le persone che oggi rispondono alle domande?', answer: 'No, toglie il lavoro ripetitivo di cercare e ripetere le stesse informazioni, lasciando alle persone i casi che richiedono giudizio o conoscenza non ancora documentata.' },
+      { question: 'Serve riscrivere tutte le procedure aziendali prima di iniziare?', answer: 'No. L\'agente parte dai documenti già esistenti, anche se disordinati; il primo passo è mappare cosa c\'è già e scegliere un perimetro iniziale ristretto.' },
+      { question: 'Come fa a sapere se una risposta è affidabile?', answer: 'Ogni risposta indica la fonte da cui arriva, così chi la riceve può controllare il documento originale invece di fidarsi a scatola chiusa.' },
+      { question: 'Quanto tempo serve per avere un primo perimetro funzionante?', answer: 'Dipende da quanti documenti e sistemi sono coinvolti; in genere si parte da un\'area ristretta e già abbastanza ordinata, in linea con i tempi di setup di altri progetti di agenti AI su misura.' }
     ]
   }
 ];

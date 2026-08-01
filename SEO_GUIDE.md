@@ -59,6 +59,9 @@ Pagine attuali:
 - `/risorse/chatbot-cliniche-studi-medici`
 - `/risorse/crm-automation-meta-ads`
 - `/risorse/whatsapp-automation-lead-b2b`
+- `/risorse/tracking-server-side-deduplicazione-eventi`
+- `/risorse/reminder-automatici-appuntamenti-no-show`
+- `/risorse/second-brain-aziendale-agente-ai`
 
 **Nota**: le 7 pagine precedenti su Meta Ads B2B locali (Verona, Reggio Emilia, Modena, Parma, Mantova), lead generation generica e l'algoritmo Andromeda sono state ritirate nell'ambito del rebrand verso il posizionamento tech/AI e redirect 301 a `/risorse` (vedi `vercel.json`).
 
@@ -143,3 +146,5 @@ Prima di aggiungere una pagina, verifica:
 - `/risorse/siti-web-ai-per-pmi-b2b`
 
 Prima di aggiungerle, definisci intento di ricerca, angolo pagina e proof point unici per ciascuna, mantenendo l'angolo tech/AI del nuovo posizionamento invece di quello sulla lead generation.
+
+**Nota cannibalizzazione**: il tema "CRM con automazioni WhatsApp" non ha una pagina dedicata. L'intento si sovrappone a `/risorse/whatsapp-automation-lead-b2b` (automazioni WhatsApp collegate ai sistemi aziendali) e a `/risorse/crm-automation-meta-ads` (integrazione dati tra sistemi). Si è scelto di rafforzare `whatsapp-automation-lead-b2b` (cluster e FAQ dedicati all'aggiornamento automatico del CRM dalla conversazione) invece di creare una terza pagina che avrebbe competuto sulla stessa query.
