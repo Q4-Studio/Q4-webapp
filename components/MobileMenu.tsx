@@ -1,15 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import { ArrowUpRight } from 'lucide-react';
-import { resourcesPath } from '../data/seoPages';
+import { caseStudiesPath } from '../data/caseStudies';
 
 export const MOBILE_MENU_PANEL_ID = 'mobile-menu-panel';
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  onNavigateHome: () => void;
   onNavigateAgents: () => void;
   onNavigateBlog: () => void;
   onContact: () => void;
+  showHomeLink: boolean;
 }
 
 /**
@@ -25,7 +27,7 @@ const getFocusableElements = (container: HTMLElement): HTMLElement[] =>
     )
   );
 
-const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateAgents, onNavigateBlog, onContact }) => {
+const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateHome, onNavigateAgents, onNavigateBlog, onContact, showHomeLink }) => {
   const firstItemRef = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -95,9 +97,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateAgen
   }, [isOpen]);
 
   const items: Array<{ label: string; onClick?: () => void; href?: string }> = [
+    ...(showHomeLink ? [{ label: 'Home', onClick: onNavigateHome }] : []),
     { label: 'Agenti AI', onClick: onNavigateAgents },
     { label: 'Blog', onClick: onNavigateBlog },
-    { label: 'Risorse', href: resourcesPath },
+    { label: 'Casi Studio', href: caseStudiesPath },
   ];
 
   return (

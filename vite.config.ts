@@ -7,6 +7,8 @@ export default defineConfig(() => {
       server: {
         port: 3000,
         host: '0.0.0.0',
+        // Consente l'accesso al dev server dai device del tailnet Tailscale
+        allowedHosts: ['.ts.net', 'ubuntu-16gb'],
       },
       plugins: [react()],
       resolve: {

@@ -12,6 +12,9 @@ Q4 Studio progetta e sviluppa agenti AI per sales, back office e customer care, 
 
 - Homepage: https://www.q4.studio/
 - Agenti AI (consulenza e sviluppo): https://www.q4.studio/agenti-ai
+- Casi Studio: https://www.q4.studio/casi-studio
+- Caso studio Candiani Denim (tracking server-side): https://www.q4.studio/casi-studio/candiani-denim-tracking-server-side
+- Caso studio GP Meccatronica (sito web e rebranding): https://www.q4.studio/casi-studio/gp-meccatronica-sito-web
 - Hub Risorse: https://www.q4.studio/risorse
 - Agenti AI per i processi commerciali e operativi: https://www.q4.studio/risorse/agenti-ai-per-lead-generation
 - Agente vocale AI per aziende: https://www.q4.studio/risorse/agente-vocale-ai-aziende
@@ -59,6 +62,9 @@ Q4 Studio designs and builds AI agents for sales, back office and customer care,
 
 - Homepage: https://www.q4.studio/
 - AI Agents (consulting and development): https://www.q4.studio/agenti-ai
+- Case Studies: https://www.q4.studio/casi-studio
+- Candiani Denim case study (server-side tracking): https://www.q4.studio/casi-studio/candiani-denim-tracking-server-side
+- GP Meccatronica case study (website and rebranding): https://www.q4.studio/casi-studio/gp-meccatronica-sito-web
 - Resources hub: https://www.q4.studio/risorse
 - AI Agents for commercial and operational processes: https://www.q4.studio/risorse/agenti-ai-per-lead-generation
 - AI Voice Agent for businesses: https://www.q4.studio/risorse/agente-vocale-ai-aziende

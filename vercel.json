@@ -92,7 +92,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/((?!risorse|blog|sitemap.xml|robots.txt|llms.txt).+)",
+      "source": "/((?!risorse|casi-studio|blog|sitemap.xml|robots.txt|llms.txt).+)",
       "destination": "/index.html"
     }
   ],

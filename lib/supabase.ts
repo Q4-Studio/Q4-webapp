@@ -5,6 +5,16 @@ import { BlogPost } from '../types/blog';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+const isPlaceholderConfiguration =
+  supabaseUrl === 'https://placeholder.supabase.co' ||
+  supabaseAnonKey === 'placeholder-key';
+
+// Il repository include valori fittizi per far partire il progetto senza
+// esporre credenziali. In quel caso il blog resta vuoto, ma non tenta una
+// richiesta di rete destinata a fallire nel browser.
+export const isSupabaseConfigured =
+  Boolean(supabaseUrl && supabaseAnonKey) && !isPlaceholderConfiguration;
+
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error(
     'Missing Supabase environment variables. Please check your .env.local file.'
