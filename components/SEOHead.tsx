@@ -4,6 +4,9 @@ interface SEOHeadProps {
   title?: string;
   description?: string;
   image?: string;
+  /** Dimensioni reali di `image`, quando note (es. copertine generate a dimensioni fisse). */
+  imageWidth?: number;
+  imageHeight?: number;
   url?: string;
   type?: 'website' | 'article';
   noIndex?: boolean;
@@ -32,6 +35,8 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   title = 'Q4 Studio | AI Marketing Partner per PMI B2B',
   description = 'Studio di consulenza per crescita B2B: AI applicata al marketing, lead generation automatizzata e agenti AI che alleggeriscono i processi aziendali.',
   image = DEFAULT_OG_IMAGE,
+  imageWidth,
+  imageHeight,
   url = 'https://www.q4.studio/',
   type = 'website',
   noIndex = false,
@@ -78,13 +83,20 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     // og:image:width/height/type/alt sono dichiarati in index.html per l'immagine
     // di default. Se l'immagine cambia (es. copertina di un articolo), quei
     // valori non sono più veri: li aggiorniamo solo quando torniamo all'immagine
-    // di default, altrimenti li rimuoviamo (dimensioni/tipo reali non noti lato
-    // client) e usiamo il title come alt, più sensato del generico "Q4 Studio".
+    // di default, o quando il chiamante passa esplicitamente imageWidth/imageHeight
+    // (es. copertine dei casi studio, generate a dimensioni fisse note). Altrimenti
+    // li rimuoviamo (dimensioni reali non note lato client) e usiamo il title come
+    // alt, più sensato del generico "Q4 Studio".
     if (image === DEFAULT_OG_IMAGE) {
       updateMetaTag('og:image:width', DEFAULT_OG_IMAGE_WIDTH, true);
       updateMetaTag('og:image:height', DEFAULT_OG_IMAGE_HEIGHT, true);
       updateMetaTag('og:image:type', DEFAULT_OG_IMAGE_TYPE, true);
       updateMetaTag('og:image:alt', DEFAULT_OG_IMAGE_ALT, true);
+    } else if (imageWidth && imageHeight) {
+      updateMetaTag('og:image:width', String(imageWidth), true);
+      updateMetaTag('og:image:height', String(imageHeight), true);
+      removeMetaTag('og:image:type', true);
+      updateMetaTag('og:image:alt', title, true);
     } else {
       removeMetaTag('og:image:width', true);
       removeMetaTag('og:image:height', true);
@@ -123,7 +135,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
         updateMetaTag('article:section', article.section, true);
       }
     }
-  }, [title, description, image, url, type, noIndex, article]);
+  }, [title, description, image, imageWidth, imageHeight, url, type, noIndex, article]);
 
   // This component doesn't render anything visible
   return null;

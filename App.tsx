@@ -10,8 +10,9 @@ import SEOHead from './components/SEOHead';
 import HomeV2 from './components/home2/HomeV2';
 import MobileMenu, { MOBILE_MENU_PANEL_ID } from './components/MobileMenu';
 import { BlogPost } from './types/blog';
-import { getBlogPosts } from './lib/supabase';
+import { getBlogPosts, isSupabaseConfigured } from './lib/supabase';
 import { getSeoPageBySlug, resourcesPath } from './data/seoPages';
+import { getCaseStudyBySlug, caseStudiesPath } from './data/caseStudies';
 
 const Blog = lazy(() => import('./components/Blog'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
@@ -23,18 +24,22 @@ const AppSupport = lazy(() => import('./components/AppSupport'));
 const SeoDirectory = lazy(() => import('./components/SeoDirectory'));
 const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
 const AIAgents = lazy(() => import('./components/AIAgents'));
+const CaseStudiesIndex = lazy(() => import('./components/CaseStudiesIndex'));
+const CaseStudyPage = lazy(() => import('./components/CaseStudyPage'));
 
-type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | '404';
+type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | 'case-studies' | 'case-study' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [currentArticleSlug, setCurrentArticleSlug] = useState<string>('');
   const [currentSeoSlug, setCurrentSeoSlug] = useState<string>('');
+  const [currentCaseStudySlug, setCurrentCaseStudySlug] = useState<string>('');
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoadingBlog, setIsLoadingBlog] = useState(true);
   const [blogError, setBlogError] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
+  const previousRouteRef = useRef<string | null>(null);
 
   // Chiude il menu e riporta il focus sull'hamburger che lo aveva aperto:
   // senza questo, con tastiera/screen reader il focus si perde in cima al
@@ -60,6 +65,11 @@ const App: React.FC = () => {
 
   // Fetch blog posts from Supabase on mount
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setIsLoadingBlog(false);
+      return;
+    }
+
     const fetchBlogPosts = async () => {
       try {
         setIsLoadingBlog(true);
@@ -87,10 +97,22 @@ const App: React.FC = () => {
     const handleRouteChange = () => {
       const path = window.location.pathname.replace(/\/$/, '') || '/';
       const hash = window.location.hash.slice(1); // Remove #
+      const route = `${path}#${hash}`;
 
       if (path === '/agenti-ai') {
         setCurrentPage('agenti-ai');
         setCurrentSeoSlug('');
+      } else if (path === caseStudiesPath) {
+        setCurrentPage('case-studies');
+        setCurrentCaseStudySlug('');
+      } else if (path.startsWith(`${caseStudiesPath}/`)) {
+        const slug = path.replace(`${caseStudiesPath}/`, '');
+        if (getCaseStudyBySlug(slug)) {
+          setCurrentCaseStudySlug(slug);
+          setCurrentPage('case-study');
+        } else {
+          setCurrentPage('404');
+        }
       } else if (path === '/directory') {
         setCurrentPage('directory');
         setCurrentSeoSlug('');
@@ -138,7 +160,13 @@ const App: React.FC = () => {
       } else {
         setCurrentPage('home');
       }
-      window.scrollTo({ top: 0 });
+      // Il fetch del blog aggiorna questo effect per risolvere le rotte degli
+      // articoli. Scorriamo in alto solo quando cambia davvero l'URL, altrimenti
+      // un aggiornamento dati riporterebbe l'utente in cima mentre legge.
+      if (previousRouteRef.current !== route) {
+        previousRouteRef.current = route;
+        window.scrollTo({ top: 0 });
+      }
     };
 
     handleRouteChange(); // Initial load
@@ -200,6 +228,7 @@ const App: React.FC = () => {
 
   const currentArticle = currentArticleSlug ? getBlogPostBySlug(currentArticleSlug) : null;
   const currentSeoPage = currentSeoSlug ? getSeoPageBySlug(currentSeoSlug) : null;
+  const currentCaseStudy = currentCaseStudySlug ? getCaseStudyBySlug(currentCaseStudySlug) : null;
 
   return (
     <main className="w-full min-h-screen bg-[#050505] text-white selection:bg-indigo-500 selection:text-white cursor-none">
@@ -232,6 +261,14 @@ const App: React.FC = () => {
         {/* Pillola centrale flottante con le voci di menu (solo desktop), centrata
             in assoluto sulla nav indipendentemente dalla larghezza di logo/CTA */}
         <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 rounded-full border border-white/30 bg-white/20 backdrop-blur-md px-3 py-2.5">
+          {currentPage !== 'home' && (
+            <button
+              onClick={() => navigateTo('home')}
+              className="text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer border-0 bg-transparent text-white/80 hover:bg-white/20 hover:text-white"
+            >
+              HOME
+            </button>
+          )}
           <button
             onClick={() => navigateTo('agenti-ai')}
             className={`text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${
@@ -248,14 +285,14 @@ const App: React.FC = () => {
           >
             BLOG
           </button>
-          {/* Link reale all'hub risorse: vale anche come link interno per i crawler */}
+          {/* Link reale ai casi studio: vale anche come link interno per i crawler */}
           <a
-            href={resourcesPath}
+            href={caseStudiesPath}
             className={`text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer ${
-              currentPage === 'directory' || currentPage === 'seo-page' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
+              currentPage === 'case-studies' || currentPage === 'case-study' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
             }`}
           >
-            RISORSE
+            CASI STUDIO
           </a>
         </div>
 
@@ -288,9 +325,11 @@ const App: React.FC = () => {
       <MobileMenu
         isOpen={mobileMenuOpen}
         onClose={closeMobileMenu}
+        onNavigateHome={() => navigateTo('home')}
         onNavigateAgents={() => navigateTo('agenti-ai')}
         onNavigateBlog={() => navigateTo('blog')}
         onContact={scrollToContact}
+        showHomeLink={currentPage !== 'home'}
       />
 
       {/* Mentre il menu mobile è aperto, il resto dell'app (cursore custom,
@@ -361,6 +400,20 @@ const App: React.FC = () => {
           {currentPage === 'seo-page' && currentSeoPage && (
             <>
               <SeoLandingPage page={currentSeoPage} />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'case-studies' && (
+            <>
+              <CaseStudiesIndex />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'case-study' && currentCaseStudy && (
+            <>
+              <CaseStudyPage study={currentCaseStudy} />
               <Footer />
             </>
           )}

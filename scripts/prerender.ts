@@ -1,4 +1,5 @@
 import { seoPages, siteUrl, resourcesPath } from '../data/seoPages.ts';
+import { caseStudies, caseStudiesPath, CaseStudy } from '../data/caseStudies.ts';
 import { createClient } from '@supabase/supabase-js';
 import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
@@ -372,6 +373,243 @@ function generateResourcesHtml(): string {
     description: 'Risorse Q4 Studio su agenti AI, automazioni WhatsApp e CRM, centralino e chatbot intelligenti per le aziende B2B.',
     canonical: `${siteUrl}${resourcesPath}`,
     schema: [itemListSchema, breadcrumbSchema],
+    bodyContent
+  });
+}
+
+function generateCaseStudiesIndexHtml(): string {
+  const pageUrl = `${siteUrl}${caseStudiesPath}`;
+
+  const itemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Casi Studio Q4 Studio',
+    itemListElement: caseStudies.map((study, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: study.client,
+      url: `${pageUrl}/${study.slug}`
+    }))
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Casi Studio', item: pageUrl }
+    ]
+  };
+
+  const cardsHtml = caseStudies
+    .map((study) => `
+      <a href="${caseStudiesPath}/${study.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] overflow-hidden hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
+        <img src="${study.coverImageMobile}" srcset="${study.coverImageMobile} 836w, ${study.coverImage} 1672w" sizes="(min-width: 768px) 50vw, 100vw" alt="${escapeHtml(study.coverImageAlt)}" width="${study.coverImageWidth}" height="${study.coverImageHeight}" loading="lazy" decoding="async" class="w-full aspect-video object-cover border-b border-white/10" />
+        <div class="p-6">
+          <span class="text-[11px] uppercase tracking-[0.08em] text-indigo-300">${escapeHtml(study.kicker)}</span>
+          <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mt-4 mb-3 group-hover:text-indigo-200 transition-colors">${escapeHtml(study.client)}</h2>
+          <p class="text-gray-400 leading-relaxed mb-6">${escapeHtml(study.subheadline)}</p>
+          <span class="inline-flex items-center gap-2 text-indigo-300 font-medium">Leggi il caso studio <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
+        </div>
+      </a>
+    `)
+    .join('\n          ');
+
+  const bodyContent = `
+    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
+      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
+      <div class="max-w-6xl mx-auto relative z-10">
+        <nav aria-label="Breadcrumb" class="mb-10">
+          <ol class="flex items-center gap-2 text-sm text-gray-400">
+            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
+            <li>/</li>
+            <li class="text-gray-300">Casi Studio</li>
+          </ol>
+        </nav>
+
+        <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">Casi Studio</p>
+        <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] max-w-4xl mb-6">Progetti reali, dati reali.</h1>
+        <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
+          Come lavoriamo con i clienti Q4 Studio: cosa abbiamo trovato, cosa abbiamo costruito e cosa è cambiato, con i numeri veri di ogni progetto.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          ${cardsHtml}
+        </div>
+      </div>
+    </section>
+  `;
+
+  return generateBaseHtml({
+    title: 'Casi Studio | Q4 Studio',
+    description: 'I progetti di Q4 Studio per aziende B2B italiane: tracking server-side, automazioni e agenti AI, raccontati con dati reali.',
+    canonical: pageUrl,
+    schema: [itemListSchema, breadcrumbSchema],
+    bodyContent
+  });
+}
+
+function generateCaseStudyDetailHtml(study: CaseStudy): string {
+  const pageUrl = `${siteUrl}${caseStudiesPath}/${study.slug}`;
+  const ogImage = `${siteUrl}${study.ogImage}`;
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `${study.client}: ${study.subheadline}`,
+    description: study.description,
+    image: ogImage,
+    datePublished: study.datePublished,
+    dateModified: study.datePublished,
+    author: {
+      '@type': 'Organization',
+      name: 'Q4 Studio',
+      url: siteUrl
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Q4 Studio',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/logo.png`
+      }
+    },
+    about: {
+      '@type': 'Organization',
+      name: study.client,
+      ...(study.clientUrl ? { url: study.clientUrl } : {})
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': pageUrl
+    },
+    inLanguage: 'it-IT'
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Casi Studio', item: `${siteUrl}${caseStudiesPath}` },
+      { '@type': 'ListItem', position: 3, name: study.client, item: pageUrl }
+    ]
+  };
+
+  const introHtml = study.intro
+    .map((block) => `<p class="text-gray-300 leading-relaxed">${escapeHtml(block.paragraph)}${block.link ? ` <a href="${block.link.href}" target="_blank" rel="noopener noreferrer" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4 decoration-indigo-400/40 transition-colors">${escapeHtml(block.link.label)}</a>` : ''}</p>`)
+    .join('\n          ');
+
+  const challengeHtml = study.challenge.paragraphs
+    .map((p) => `<p class="text-lg md:text-xl text-gray-300 leading-relaxed">${escapeHtml(p)}</p>`)
+    .join('\n            ');
+
+  const workItemsHtml = study.work.items
+    .map((item) => `<div class="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5"><svg class="w-5 h-5 text-indigo-300 mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg><span class="text-gray-200">${escapeHtml(item)}</span></div>`)
+    .join('\n            ');
+
+  const statsHtml = (study.results.stats ?? [])
+    .map((stat) => `<div class="bg-[#070707] p-8 md:p-10 text-center flex flex-col items-center gap-3"><p class="tabular-nums text-[clamp(28px,4.5vw,48px)] font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300" style="font-family: 'Space Grotesk', sans-serif;">${escapeHtml(stat.value)}</p><p class="text-sm text-gray-400 leading-relaxed">${escapeHtml(stat.label)}</p></div>`)
+    .join('\n            ');
+
+  const demoVideoHtml = study.demoVideo
+    ? `
+        <section class="mb-16">
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.demoVideo.heading)}</h2>
+          <div class="relative rounded-3xl overflow-hidden mb-6 border border-white/10">
+            <video autoplay muted loop playsinline preload="metadata" poster="${study.demoVideo.poster}" width="${study.demoVideo.width}" height="${study.demoVideo.height}" aria-label="${escapeHtml(study.demoVideo.alt)}" class="w-full h-auto aspect-video object-cover">
+              <source src="${study.demoVideo.webmSrc}" type="video/webm" />
+              <source src="${study.demoVideo.mp4Src}" type="video/mp4" />
+            </video>
+          </div>
+          <p class="text-gray-400 leading-relaxed max-w-3xl">${escapeHtml(study.demoVideo.caption)}</p>
+        </section>`
+    : '';
+
+  const whyItMattersHtml = study.whyItMatters.paragraphs
+    .map((p) => `<p class="text-lg md:text-xl text-gray-300 leading-relaxed">${escapeHtml(p)}</p>`)
+    .join('\n            ');
+
+  const servicesHtml = study.services
+    .map((service) => `<span class="text-[11px] uppercase tracking-[0.08em] text-gray-400 rounded-full border border-white/10 px-3 py-1.5">${escapeHtml(service)}</span>`)
+    .join('\n          ');
+
+  const bodyContent = `
+    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
+      <div class="max-w-4xl mx-auto relative z-10">
+        <nav aria-label="Breadcrumb" class="mb-10">
+          <ol class="flex items-center gap-2 text-sm text-gray-400">
+            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
+            <li>/</li>
+            <li><a href="${caseStudiesPath}" class="hover:text-indigo-300 transition-colors">Casi Studio</a></li>
+            <li>/</li>
+            <li class="text-gray-300">${escapeHtml(study.client)}</li>
+          </ol>
+        </nav>
+
+        <header class="mb-12">
+          <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">${escapeHtml(study.kicker)}</p>
+          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">${escapeHtml(study.title)}</h1>
+          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">${escapeHtml(study.subheadline)}</p>
+        </header>
+
+        <div class="relative rounded-3xl overflow-hidden mb-14 md:mb-16 border border-white/10">
+          <img src="${study.coverImage}" srcset="${study.coverImageMobile} 836w, ${study.coverImage} 1672w" sizes="(min-width: 896px) 896px, 100vw" alt="${escapeHtml(study.coverImageAlt)}" width="${study.coverImageWidth}" height="${study.coverImageHeight}" loading="eager" fetchpriority="high" decoding="async" class="w-full h-auto object-cover" />
+        </div>
+
+        <div class="space-y-6 mb-16 max-w-3xl">
+          ${introHtml}
+        </div>
+
+        <section class="mb-16">
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.challenge.heading)}</h2>
+          <div class="space-y-4 max-w-3xl">
+            ${challengeHtml}
+          </div>
+        </section>
+
+        <section class="mb-16">
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.work.heading)}</h2>
+          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-8">${escapeHtml(study.work.intro)}</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            ${workItemsHtml}
+          </div>
+        </section>
+${demoVideoHtml}
+        <section class="mb-16">
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.results.heading)}</h2>
+          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-8">${escapeHtml(study.results.intro)}</p>
+          ${statsHtml ? `<div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/5 rounded-3xl overflow-hidden border border-white/5 mb-8">
+            ${statsHtml}
+          </div>` : ''}
+          <p class="text-gray-400 leading-relaxed max-w-3xl">${escapeHtml(study.results.note)}</p>
+        </section>
+
+        <section class="mb-16">
+          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.whyItMatters.heading)}</h2>
+          <div class="space-y-4 max-w-3xl">
+            ${whyItMattersHtml}
+          </div>
+        </section>
+
+        <div class="flex flex-wrap gap-3 pt-8 border-t border-white/10">
+          ${servicesHtml}
+        </div>
+      </div>
+    </article>
+  `;
+
+  return generateBaseHtml({
+    title: study.metaTitle,
+    description: study.description,
+    canonical: pageUrl,
+    ogImage,
+    ogImageWidth: study.ogImageWidth,
+    ogImageHeight: study.ogImageHeight,
+    ogImageAlt: study.coverImageAlt,
+    type: 'article',
+    schema: [articleSchema, breadcrumbSchema],
     bodyContent
   });
 }
@@ -835,8 +1073,11 @@ function generateHomeSeoContentHtml(faqHtml: string): string {
 // Supabase client for build-time fetch
 const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || '';
+const isPlaceholderSupabaseConfiguration =
+  supabaseUrl === 'https://placeholder.supabase.co' ||
+  supabaseAnonKey === 'placeholder-key';
 
-const supabase = supabaseUrl && supabaseAnonKey
+const supabase = supabaseUrl && supabaseAnonKey && !isPlaceholderSupabaseConfiguration
   ? createClient(supabaseUrl, supabaseAnonKey)
   : null;
 
@@ -1044,8 +1285,15 @@ function generateSitemap(blogPosts: any[] = []): string {
   const urls = [
     { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly', lastmod: buildDate },
     { loc: `${siteUrl}/agenti-ai`, priority: '0.95', changefreq: 'weekly', lastmod: buildDate },
+    { loc: `${siteUrl}${caseStudiesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: buildDate },
     { loc: `${siteUrl}${resourcesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: buildDate },
     { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'weekly', lastmod: buildDate },
+    ...caseStudies.map((study) => ({
+      loc: `${siteUrl}${caseStudiesPath}/${study.slug}`,
+      priority: '0.85',
+      changefreq: 'monthly',
+      lastmod: study.datePublished
+    })),
     ...seoPages.map((page) => ({
       loc: `${siteUrl}${resourcesPath}/${page.slug}`,
       priority: '0.8',
@@ -1121,6 +1369,28 @@ ${urlEntries}
   resourcesStream.write(resourcesHtml);
   resourcesStream.end();
   console.log(`✅ Generated ${resourcesPath}/index.html`);
+
+  // Generate case studies index page (/casi-studio) and per-study detail pages.
+  // Stesso motivo di /risorse: senza un file statico dedicato, il rewrite SPA
+  // catch-all di vercel.json intercetterebbe /casi-studio* e servirebbe la shell
+  // vuota invece del contenuto prerenderato (va escluso anche lì dal catch-all).
+  const caseStudiesDir = join(distDir, caseStudiesPath.replace(/^\//, ''));
+  ensureDir(caseStudiesDir);
+  const caseStudiesIndexHtml = generateCaseStudiesIndexHtml();
+  const caseStudiesIndexStream = createWriteStream(join(caseStudiesDir, 'index.html'));
+  caseStudiesIndexStream.write(caseStudiesIndexHtml);
+  caseStudiesIndexStream.end();
+  console.log(`✅ Generated ${caseStudiesPath}/index.html`);
+
+  for (const study of caseStudies) {
+    const studyDir = join(caseStudiesDir, study.slug);
+    ensureDir(studyDir);
+    const studyHtml = generateCaseStudyDetailHtml(study);
+    const studyStream = createWriteStream(join(studyDir, 'index.html'));
+    studyStream.write(studyHtml);
+    studyStream.end();
+    console.log(`✅ Generated ${caseStudiesPath}/${study.slug}/index.html`);
+  }
 
   // Generate blog index page
   const blogPath = join(distDir, 'blog');

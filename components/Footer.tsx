@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, Instagram, Linkedin, Phone, Mail } from 'lucide-react';
 import MagneticButton from './MagneticButton';
 import { OBFUSCATED, decode } from '../utils/obfuscate';
+import { caseStudiesPath } from '../data/caseStudies';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -191,6 +192,11 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                         }}
                     >
                         Agenti AI
+                    </li>
+                    <li>
+                        <a href={caseStudiesPath} className="hover:text-indigo-400 transition-colors">
+                            Casi Studio
+                        </a>
                     </li>
                 </ul>
             </div>

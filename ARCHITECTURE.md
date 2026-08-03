@@ -619,6 +619,31 @@ La cartella `dist/` può essere deployata su:
 - Cloudflare Pages
 - Qualsiasi hosting statico
 
+### Ottimizzazione immagini (`assets/case-studies-src/` → `public/case-studies/`)
+```bash
+npm install --no-save --no-package-lock sharp
+npm run optimize:images
+```
+`scripts/optimize-images.mjs` legge ogni PNG sorgente presente in
+`assets/case-studies-src/` e scrive in `public/case-studies/` (l'unica
+cartella deployata) le varianti da servire:
+- `<nome>.webp` — full-size, servito nella pagina (`coverImage`)
+- `<nome>-836w.webp` — variante mobile, in `srcset` (`coverImageMobile`)
+- `<nome>-og.jpg` — JPG 1200px, usato per `og:image`/`twitter:image`/schema
+  (`ogImage`), perché i crawler social non supportano WebP in modo uniforme
+
+Eccezione: i sorgenti con nome che termina in `-poster` (poster statico di un
+`<video>`) generano solo il WebP full-size — niente variante `-836w` né
+`-og.jpg`, perché il poster non è mai servito in responsive né come
+og:image (la pagina usa già la cover principale per quello).
+
+I PNG sorgente restano versionati in `assets/case-studies-src/` (fuori da
+`public/`, quindi mai deployati) solo come input della pipeline: non vanno
+mai referenziati in `data/caseStudies.ts` né in markup. Sharp non è una
+dipendenza del progetto (si installa on demand, come per
+`scripts/generate-og-image.mjs`) per non appesantire `npm install` in CI/build
+quando non serve rigenerare immagini.
+
 **Configurazione variabili d'ambiente**:
 - Su piattaforma di deploy, configura le stesse variabili di `.env.local`
 - Assicurati che siano prefissate con `VITE_`
