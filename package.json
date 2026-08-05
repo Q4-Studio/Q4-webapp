@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsx scripts/prerender.ts",
+    "build": "vite build && tsx scripts/prerender.ts && node scripts/verify-gtm-output.mjs",
     "preview": "vite preview",
     "optimize:images": "node scripts/optimize-images.mjs"
   },

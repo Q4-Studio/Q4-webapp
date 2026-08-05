@@ -14,6 +14,34 @@ const __dirname = dirname(__filename);
 
 const distDir = join(__dirname, '..', 'dist');
 
+// Keep the standalone prerendered documents aligned with index.html. These
+// pages are served as their own HTML files, so they cannot inherit GTM from the
+// root Vite document.
+const GTM_HEAD = `  <!-- Google Tag Manager -->
+  <script>
+    window.addEventListener('load', function () {
+      const loadGtm = function () {
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-TS9PFGLR');
+      };
+
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadGtm, { timeout: 2500 });
+      } else {
+        setTimeout(loadGtm, 0);
+      }
+    });
+  </script>
+  <!-- End Google Tag Manager -->`;
+
+const GTM_NOSCRIPT = `<!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TS9PFGLR"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->`;
+
 // Extract the importmap and the hashed module script from the Vite-built index.html,
 // so prerendered pages load the real production bundle (not the raw /index.tsx source).
 function getAppScripts(): string {
@@ -96,6 +124,8 @@ function generateBaseHtml(options: {
   return `<!DOCTYPE html>
 <html lang="it" class="bg-[#050505]">
 <head>
+${GTM_HEAD}
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${escapeHtml(title)}</title>
@@ -131,6 +161,8 @@ function generateBaseHtml(options: {
   ${schemaScripts}
 </head>
 <body>
+  ${GTM_NOSCRIPT}
+
   <div id="root">
     ${bodyContent}
   </div>
