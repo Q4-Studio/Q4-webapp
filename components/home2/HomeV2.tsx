@@ -7,6 +7,7 @@ import ContactForm from '../ContactForm';
 import Footer from '../Footer';
 import HomeSeoContent from '../HomeSeoContent';
 import Hero2 from './Hero2';
+import TrackingIntro from './TrackingIntro';
 import Manifesto2 from './Manifesto2';
 import Pipeline2 from './Pipeline2';
 import Agents2 from './Agents2';
@@ -151,7 +152,7 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
 };
 
 /* ------------------------------------------------------------------ */
-/* CTA unica: apre la sezione contatti, il form segue subito sotto     */
+/* CTA finale: porta all'offerta tecnica di ingresso.                  */
 /* ------------------------------------------------------------------ */
 
 const FinalCTA: React.FC = () => {
@@ -217,8 +218,14 @@ const FinalCTA: React.FC = () => {
         <ScrollRevealText
           as="p"
           text="Raccontaci la tua sfida: ti mostriamo come trasformarla in un sistema che cresce."
-          className="text-lg md:text-xl text-gray-400 max-w-xl mx-auto leading-relaxed"
+          className="text-lg md:text-xl text-gray-400 max-w-xl mx-auto leading-relaxed mb-9"
         />
+        <a
+          href="/tracciamento-server-side"
+          className="cta-reveal inline-flex items-center justify-center rounded-full bg-white px-7 py-4 font-semibold text-[#050505] transition-colors hover:bg-cyan-100"
+        >
+          Vedi il tracciamento e i prezzi
+        </a>
       </div>
     </section>
   );
@@ -266,8 +273,8 @@ const HomeV2: React.FC = () => {
   return (
     <div className="relative w-full bg-[#050505] text-white">
       <SEOHead
-        title="Q4 Studio | AI Marketing Partner per PMI B2B"
-        description="Studio di consulenza per crescita B2B: AI applicata al marketing, lead generation automatizzata e agenti AI che alleggeriscono i processi aziendali."
+        title="Tracciamento Server-Side e Automazioni AI per PMI | Q4 Studio"
+        description="Recuperiamo i segnali di conversione che browser e ad blocker bloccano. Tracciamento server-side, Consent Mode, automazioni AI. Reggio Emilia."
         url={`${siteUrl}/`}
       />
 
@@ -294,6 +301,7 @@ const HomeV2: React.FC = () => {
       />
 
       <Hero2 />
+      <TrackingIntro />
       <Manifesto2 />
       <Pipeline2 />
       <Agents2 />

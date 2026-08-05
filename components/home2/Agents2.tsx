@@ -33,7 +33,7 @@ const scenarios: Scenario[] = [
       { kind: 'ok', text: "Specifiche estratte dall'allegato" },
       { kind: 'ok', text: 'Listini e offerte simili recuperati dallo storico' },
       { kind: 'ok', text: 'Bozza offerta compilata sul template aziendale' },
-      { kind: 'out', text: 'In attesa di revisione umana — tempo totale: 2 min' },
+      { kind: 'out', text: 'In attesa di revisione umana' },
     ],
   },
   {
@@ -43,7 +43,7 @@ const scenarios: Scenario[] = [
       { kind: 'ok', text: 'Ordine riconosciuto nel messaggio' },
       { kind: 'ok', text: 'Codice e disponibilità verificati nel gestionale' },
       { kind: 'ok', text: "Bozza d'ordine pronta con i prezzi da listino" },
-      { kind: 'out', text: 'Riepilogo inviato al commerciale — tempo totale: 40 s' },
+      { kind: 'out', text: 'Riepilogo inviato al commerciale' },
     ],
   },
   {
@@ -53,7 +53,7 @@ const scenarios: Scenario[] = [
       { kind: 'ok', text: 'Dati aziendali arricchiti da fonti pubbliche' },
       { kind: 'ok', text: 'Contatto qualificato secondo i criteri definiti' },
       { kind: 'ok', text: 'Assegnato al commerciale giusto nel CRM' },
-      { kind: 'out', text: 'Email di primo contatto inviata — tempo totale: 5 min' },
+      { kind: 'out', text: 'Email di primo contatto inviata' },
     ],
   },
 ];
@@ -223,16 +223,15 @@ const Agents2: React.FC = () => {
         {/* Testo */}
         <div>
           <h2 className="agents-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">
-            Colleghi digitali,
+            Automazioni che partono in due settimane,
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
-              progettati sul tuo processo.
-            </span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">non in sei mesi.</span>
           </h2>
           <ScrollRevealText
-            text="Agenti costruiti sui processi reali dell'azienda: leggono email e messaggi, interrogano il gestionale, preparano preventivi e ordini, e coinvolgono una persona quando serve una decisione."
+            text="Non progetti da mesi di analisi. Automazioni concrete su problemi precisi: la richiesta che arriva su WhatsApp e finisce nel CRM già strutturata, il follow-up che parte da solo, il dato che smette di essere ridigitato a mano."
             className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8 max-w-xl"
           />
+          <p className="agents-reveal mb-8 max-w-xl text-lg leading-relaxed text-gray-400 md:text-xl">Ogni automazione parte da un setup contenuto e da un canone mensile chiaro. Se non risolve un problema che ci puoi raccontare in una frase, non la costruiamo.</p>
 
           <div className="agents-reveal flex flex-wrap gap-2.5 mb-10">
             {integrations.map((item) => (
@@ -249,7 +248,7 @@ const Agents2: React.FC = () => {
           <div className="agents-reveal">
             <MagneticButton onClick={goToAgents} className="text-white">
               <Bot className="w-5 h-5" />
-              Esplora gli Agenti AI
+              Vedi le automazioni
               <ArrowUpRight className="w-5 h-5" />
             </MagneticButton>
           </div>

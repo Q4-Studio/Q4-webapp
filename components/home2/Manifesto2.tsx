@@ -6,7 +6,7 @@ import ScrollRevealText from './ScrollRevealText';
 gsap.registerPlugin(ScrollTrigger);
 
 const MANIFESTO =
-  "Q4 Studio è uno studio di consulenza. Entriamo nei processi, applichiamo l'AI al marketing e costruiamo agenti che lavorano al fianco del tuo team.";
+  "Q4 Studio è uno studio tecnico. Sistemiamo la raccolta dei dati, colleghiamo gli strumenti che usi già, e automatizziamo il lavoro ripetitivo che oggi fa una persona a mano.";
 
 const Manifesto2: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);

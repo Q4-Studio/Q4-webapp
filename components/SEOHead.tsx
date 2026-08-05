@@ -25,15 +25,15 @@ const DEFAULT_OG_IMAGE = 'https://www.q4.studio/og-image.jpg';
 const DEFAULT_OG_IMAGE_WIDTH = '1200';
 const DEFAULT_OG_IMAGE_HEIGHT = '630';
 const DEFAULT_OG_IMAGE_TYPE = 'image/jpeg';
-const DEFAULT_OG_IMAGE_ALT = 'Q4 Studio — Il tuo AI Marketing Partner';
+const DEFAULT_OG_IMAGE_ALT = 'Q4 Studio — Tracciamento Server-Side e Automazioni AI';
 
 /**
  * Component to dynamically update meta tags for SEO
  * Use this component to set page-specific SEO meta tags
  */
 const SEOHead: React.FC<SEOHeadProps> = ({
-  title = 'Q4 Studio | AI Marketing Partner per PMI B2B',
-  description = 'Studio di consulenza per crescita B2B: AI applicata al marketing, lead generation automatizzata e agenti AI che alleggeriscono i processi aziendali.',
+  title = 'Tracciamento Server-Side e Automazioni AI per PMI | Q4 Studio',
+  description = 'Recuperiamo i segnali di conversione che browser e ad blocker bloccano. Tracciamento server-side, Consent Mode, automazioni AI. Reggio Emilia.',
   image = DEFAULT_OG_IMAGE,
   imageWidth,
   imageHeight,

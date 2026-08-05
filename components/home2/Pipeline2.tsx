@@ -54,7 +54,7 @@ const steps: Step[] = [
     id: 'whatsapp',
     label: 'WHATSAPP',
     title: 'Primo contatto in 60 secondi.',
-    desc: 'Un messaggio personalizzato parte mentre il lead è ancora sul telefono. La velocità di risposta è la prima leva di conversione.',
+    desc: 'Un messaggio personalizzato parte mentre il lead è ancora sul telefono. La velocità di risposta è la prima leva di conversione: un lead contattato entro un minuto vale molto più di uno contattato dopo quattro ore.',
     time: 'T+60 s',
     icon: <MessageCircle className="w-5 h-5" />,
     accent: { text: 'text-emerald-400', border: 'border-emerald-400/50', bg: 'bg-emerald-500', shadow: 'shadow-[0_0_30px_rgba(16,185,129,0.35)]' },

@@ -76,6 +76,7 @@ export interface CaseStudy {
     heading: string;
     paragraphs: string[];
   };
+  cta?: { heading: string; body: string; label: string; href: string };
   /** Tag di servizi/tecnologie coinvolte, mostrati come pillole a fine pagina. */
   services: string[];
   /** Video loop opzionale, mostrato come dimostrazione del sito realizzato (non tutti i casi studio ne hanno uno). */
@@ -146,10 +147,14 @@ export const caseStudies: CaseStudy[] = [
     whyItMatters: {
       heading: 'Perché conta',
       paragraphs: [
-        'Il lavoro non riguardava solo le campagne awareness in corso.',
-        'Abbiamo preparato l’infrastruttura di dati che Meta userà quando Candiani passerà alle campagne di conversione: più segnali, più affidabili.',
-        'Tracking, consenso e dati devono essere allineati prima di spingere sul budget.'
+        'Ogni segnale non tracciato è un’informazione che l’algoritmo non ha. Su un budget pubblicitario a cinque cifre, ottimizzare su dati parziali significa pagare per raggiungere le persone sbagliate.'
       ]
+    },
+    cta: {
+      heading: 'Quanti segnali stanno perdendo le tue campagne?',
+      body: 'L’audit di tracciamento ti dà una risposta documentata e una mappa di cosa sistemare.',
+      label: 'Vedi il tracciamento e i prezzi',
+      href: '/tracciamento-server-side'
     },
     services: ['Meta Pixel', 'Meta Conversion API', 'Server-side tagging (Stape)', 'Deduplicazione eventi', 'Consent Mode']
   },

@@ -1,264 +1,80 @@
-import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, ArrowUpRight, Bot, Check, Server, Target } from 'lucide-react';
-import ScrollRevealText from './ScrollRevealText';
+import React from 'react';
+import { ArrowRight, Bot, Check, Server, Target } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
-
-/* ------------------------------------------------------------------ */
-/* Card servizio con spotlight che segue il cursore                    */
-/* ------------------------------------------------------------------ */
-
-type Service = {
-  icon: React.ReactNode;
-  title: string;
-  desc: string;
-  points: string[];
-  linkLabel?: string;
-  partner?: { label: string; href: string };
-};
-
-const services: Service[] = [
+const services = [
   {
-    icon: <Target className="w-10 h-10 text-cyan-400" />,
-    title: 'B2B Lead Generation',
-    desc: "Un sistema di acquisizione completo: posizionamento, offerta, Meta Advertising, CRM e follow-up. Il tracking è il nostro punto forte: dati di conversione precisi e conformi, che l'algoritmo può davvero usare per ottimizzare.",
-    points: [
-      'Meta Ads sul profilo del cliente giusto e sull\'offerta',
-      'Server-Side Tracking e Consent Mode',
-      'Segnali di qualità dal CRM alle campagne',
-      'Qualifica lead e follow-up multicanale',
-    ],
-    partner: { label: 'Stape Partner — Server-Side Tagging', href: 'https://stape.io' },
+    icon: <Server className="h-9 w-9 text-cyan-300" />,
+    title: 'Tracciamento e dati',
+    desc: "Il pezzo tecnico che quasi nessuna agenzia sa fare. Server-side, Consent Mode, segnali dal CRM alle campagne. Dati completi e conformi, che l'algoritmo può davvero usare.",
+    points: ['Container server-side su infrastruttura dedicata', 'Consent Mode v2 e conformità', 'Conversions API e Enhanced Conversions', 'Documentazione di eventi e naming'],
+    price: 'Audit da 490 € · Setup da 1.500 €',
+    href: '/tracciamento-server-side',
+    accent: 'cyan',
   },
   {
-    icon: <Bot className="w-10 h-10 text-purple-400" />,
-    title: 'Agenti AI & Automazioni',
-    desc: "Agenti su misura per sales, back office, customer care e processi interni. Partiamo dall'audit operativo, integriamo gli strumenti già in uso e accompagniamo il team nell'adozione.",
-    points: ['Audit e mappatura dei processi', 'Agenti costruiti sul caso reale', 'Integrazione con gestionale e CRM', 'Formazione e adozione del team'],
-    linkLabel: 'Approfondisci gli Agenti AI',
+    icon: <Bot className="h-9 w-9 text-purple-300" />,
+    title: 'Automazioni e agenti AI',
+    desc: 'Automazioni su problemi precisi, con setup e canone chiari. Richieste inbound strutturate, follow-up automatici, dati che non si ridigitano più.',
+    points: ['Estrazione strutturata da WhatsApp ed email', 'Follow-up automatici multicanale', 'Integrazione con CRM e gestionale', 'Revisione umana dove il dato è incerto'],
+    price: 'Setup da 490 € · Canone da 59 €/mese',
+    href: '/agenti-ai',
+    accent: 'purple',
   },
 ];
-
-const SpotlightCard: React.FC<{ service: Service }> = ({ service }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const onMove = (e: React.MouseEvent) => {
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    card.style.setProperty('--sx', `${e.clientX - rect.left}px`);
-    card.style.setProperty('--sy', `${e.clientY - rect.top}px`);
-  };
-
-  const goToAgents = () => {
-    window.history.pushState(null, '', '/agenti-ai');
-    window.dispatchEvent(new Event('popstate'));
-  };
-
-  return (
-    <div
-      ref={cardRef}
-      onMouseMove={onMove}
-      className="service-card group relative rounded-3xl bg-[#0A0A0A] border border-white/5 p-9 md:p-12 overflow-hidden hover:border-indigo-500/30 transition-colors duration-500"
-      style={{ ['--sx' as string]: '50%', ['--sy' as string]: '50%' }}
-    >
-      {/* Spotlight che segue il mouse */}
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-        style={{ background: 'radial-gradient(520px circle at var(--sx) var(--sy), rgba(99,102,241,0.10), transparent 65%)' }}
-      />
-      <div className="relative z-10">
-        <div className="mb-7">{service.icon}</div>
-        <h3 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">{service.title}</h3>
-        <p className="text-gray-400 leading-relaxed mb-8">{service.desc}</p>
-        <ul className="space-y-3">
-          {service.points.map((point) => (
-            <li key={point} className="flex items-center gap-3 text-base text-gray-300">
-              <span className="w-5 h-5 rounded-full bg-indigo-500/10 border border-indigo-400/30 flex items-center justify-center flex-shrink-0">
-                <Check className="w-3 h-3 text-indigo-300" />
-              </span>
-              {point}
-            </li>
-          ))}
-        </ul>
-        {service.partner && (
-          <a
-            href={service.partner.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-9 inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-cyan-500/5 border border-cyan-400/20 text-[11px] tracking-[-0.08em] text-cyan-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-colors"
-          >
-            <Server className="w-3.5 h-3.5" />
-            {service.partner.label}
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </a>
-        )}
-        {service.linkLabel && (
-          <button
-            onClick={goToAgents}
-            className="mt-9 inline-flex items-center gap-2 text-sm font-semibold text-indigo-300 hover:text-white transition-colors cursor-pointer bg-transparent border-0 p-0"
-          >
-            {service.linkLabel}
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
-        )}
-      </div>
-    </div>
-  );
-};
-
-/* ------------------------------------------------------------------ */
-/* Metriche animate                                                    */
-/* ------------------------------------------------------------------ */
 
 const stats = [
-  { value: 60, suffix: ' s', prefix: '≤ ', label: 'primo contatto al lead' },
-  { value: 40, suffix: ' s', prefix: '', label: 'per processare un ordine' },
-  { value: 24, suffix: '/7', prefix: '', label: 'follow-up sempre attivo' },
-  { value: 100, suffix: '%', prefix: '', label: 'lead tracciati nel CRM' },
+  { value: '1.032.695', label: 'segnali di conversione recuperati in 90 giorni — Candiani Denim' },
+  { value: '963.652', label: 'bloccati dalla tracking prevention del browser — Candiani Denim' },
+  { value: '≤ 60 s', label: 'tempo di primo contatto nel nostro sistema di lead generation' },
+  { value: '8 h', label: 'tempo tipico di setup del tracciamento server-side' },
 ];
 
-const methodSteps = [
-  { n: '01', title: 'Diagnosi', desc: 'Mappiamo business, funnel, processi e dati. Capiamo dove si perde valore e quale leva ha più impatto.' },
-  { n: '02', title: 'Progetto', desc: 'Definiamo architettura, metriche e responsabilità. Campagne, CRM e agenti pensati come un unico sistema.' },
-  { n: '03', title: 'Implementazione', desc: 'Mettiamo online, formiamo il team e miglioriamo sui dati reali. Utile, misurabile, adottato.' },
+const method = [
+  { n: '01', title: 'Audit', desc: 'Guardiamo cosa succede oggi ai tuoi dati. Prezzo fisso, 3-5 giorni, consegna un documento che resta tuo anche se ci fermiamo qui.' },
+  { n: '02', title: 'Setup', desc: 'Implementiamo. Tempi noti, prezzo noto, nessuna sorpresa.' },
+  { n: '03', title: 'Manutenzione', desc: "L'infrastruttura resta monitorata e i dati leggibili. Canone mensile, disdetta libera." },
 ];
 
-const Services2: React.FC = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!sectionRef.current) return;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const ctx = gsap.context(() => {
-      if (!reduced) {
-        // fromTo + immediateRender:false + once: se il trigger non scatta mai
-        // (layout non ancora assestato quando misurato), il contenuto resta
-        // visibile invece che bloccato a opacity 0; una volta acceso non si
-        // rispegne più tornando indietro con lo scroll.
-        gsap.fromTo(
-          '.services-reveal',
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.9,
-            stagger: 0.12,
-            ease: 'power3.out',
-            immediateRender: false,
-            scrollTrigger: { trigger: sectionRef.current, start: 'top 70%', once: true },
-          }
-        );
-
-        gsap.fromTo(
-          '.service-card',
-          { y: 90, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.9,
-            stagger: 0.15,
-            ease: 'power3.out',
-            immediateRender: false,
-            scrollTrigger: { trigger: '.services-grid', start: 'top 78%', once: true },
-          }
-        );
-
-        gsap.fromTo(
-          '.method-step',
-          { y: 60, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.12,
-            ease: 'power3.out',
-            immediateRender: false,
-            scrollTrigger: { trigger: '.method-grid', start: 'top 82%', once: true },
-          }
-        );
-      }
-
-      // Contatori: sotto reduced-motion mostriamo subito il valore finale,
-      // senza animazione, invece di lasciare il contenuto fermo a "0".
-      gsap.utils.toArray<HTMLElement>('.stat-value').forEach((el) => {
-        const target = Number(el.dataset.value ?? 0);
-        if (reduced) {
-          el.innerText = `${el.dataset.prefix ?? ''}${target}${el.dataset.suffix ?? ''}`;
-          return;
-        }
-        const obj = { v: 0 };
-        gsap.to(obj, {
-          v: target,
-          duration: 1.6,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-          onUpdate: () => {
-            el.innerText = `${el.dataset.prefix ?? ''}${Math.round(obj.v)}${el.dataset.suffix ?? ''}`;
-          },
-        });
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <section id="services" ref={sectionRef} className="relative py-32 md:py-44 px-6 bg-[#050505] text-white border-t border-white/5">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-16 md:mb-20">
-          <h2 className="services-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">
-            Due leve.
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Un unico sistema.</span>
-          </h2>
-          <ScrollRevealText
-            text="Acquisizione B2B da un lato, automazione intelligente dall'altro. Studiamo il processo, definiamo le priorità e costruiamo sistemi misurabili."
-            className="text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed"
-          />
-        </div>
-
-        <div className="services-grid grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
-          {services.map((service) => (
-            <SpotlightCard key={service.title} service={service} />
-          ))}
-        </div>
-
-        {/* Metriche */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/5 rounded-3xl overflow-hidden border border-white/5 mb-24">
-          {stats.map((stat) => (
-            <div key={stat.label} className="bg-[#070707] px-2 py-8 md:p-10 text-center">
-              <p
-                className="stat-value tabular-nums text-[clamp(28px,4.5vw,48px)] font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 mb-2"
-                data-value={stat.value}
-                data-prefix={stat.prefix}
-                data-suffix={stat.suffix}
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-              >
-                {stat.prefix}0{stat.suffix}
-              </p>
-              <p className="text-sm tracking-[0.08em] text-gray-500 uppercase">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Metodo */}
-        <div className="method-grid grid grid-cols-1 md:grid-cols-3 gap-8">
-          {methodSteps.map((step) => (
-            <div key={step.n} className="method-step relative pt-8 border-t border-white/10">
-              <span className="absolute -top-px left-0 w-12 h-px bg-gradient-to-r from-indigo-400 to-purple-400" />
-              <span className="text-sm text-indigo-400 tracking-[0.08em]">{step.n}</span>
-              <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mt-3 mb-3">{step.title}</h3>
-              <p className="text-gray-400 text-base leading-relaxed">{step.desc}</p>
-            </div>
-          ))}
-        </div>
+const Services2: React.FC = () => (
+  <section id="services" className="relative border-t border-white/5 bg-[#050505] px-6 py-32 text-white md:py-44">
+    <div className="mx-auto max-w-7xl">
+      <div className="mb-16 max-w-3xl md:mb-20">
+        <p className="mb-5 text-sm uppercase tracking-[0.08em] text-indigo-300">Servizi tecnici</p>
+        <h2 className="mb-6 text-[clamp(32px,5vw,64px)] font-bold leading-[1.08] tracking-[-0.035em]">Due leve. Un unico sistema.</h2>
+        <p className="text-lg leading-relaxed text-gray-400 md:text-xl">Prima rendiamo affidabili i dati. Poi automatizziamo il lavoro che quei dati devono far partire.</p>
       </div>
-    </section>
-  );
-};
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {services.map((service) => (
+          <article key={service.title} className="group rounded-[2rem] border border-white/10 bg-[#0A0A0A] p-7 transition-colors hover:border-indigo-400/30 md:p-10">
+            <div className="mb-7">{service.icon}</div>
+            <h3 className="mb-4 text-3xl font-bold tracking-[-0.02em]">{service.title}</h3>
+            <p className="mb-7 leading-relaxed text-gray-400">{service.desc}</p>
+            <ul className="mb-8 space-y-3">
+              {service.points.map((point) => <li key={point} className="flex items-start gap-3 text-gray-200"><Check className="mt-1 h-4 w-4 flex-shrink-0 text-indigo-300" />{point}</li>)}
+            </ul>
+            <a href={service.href} className="inline-flex items-center gap-2 font-semibold text-indigo-200 transition-colors hover:text-white">{service.price}<ArrowRight className="h-4 w-4" /></a>
+          </article>
+        ))}
+      </div>
+
+      <article className="mt-6 flex flex-col gap-6 rounded-[2rem] border border-white/10 bg-white/[0.025] p-7 md:flex-row md:items-center md:justify-between md:p-9">
+        <div className="flex max-w-3xl items-start gap-5">
+          <Target className="mt-1 h-8 w-8 flex-shrink-0 text-blue-300" />
+          <div><h3 className="mb-2 text-2xl font-bold">Meta Advertising</h3><p className="leading-relaxed text-gray-400">Campagne B2B su Meta, gestite da chi sa anche sistemare il tracciamento a monte. Servizio disponibile per clienti già seguiti sul tecnico.</p></div>
+        </div>
+        <a href="/meta-advertising-b2b" className="inline-flex flex-shrink-0 items-center gap-2 font-semibold text-blue-200 hover:text-white">Approfondisci <ArrowRight className="h-4 w-4" /></a>
+      </article>
+
+      <div className="mt-24 grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-white/5 bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map((stat) => <div key={stat.label} className="bg-[#070707] p-8"><p className="mb-3 text-[clamp(28px,4vw,46px)] font-bold tabular-nums text-indigo-200">{stat.value}</p><p className="text-sm leading-relaxed text-gray-500">{stat.label}</p></div>)}
+      </div>
+
+      <div className="mt-24 grid grid-cols-1 gap-8 md:grid-cols-3">
+        {method.map((step) => <div key={step.n} className="border-t border-white/10 pt-7"><span className="text-sm text-indigo-400">{step.n}</span><h3 className="mb-3 mt-3 text-2xl font-bold">{step.title}</h3><p className="leading-relaxed text-gray-400">{step.desc}</p></div>)}
+      </div>
+    </div>
+  </section>
+);
 
 export default Services2;
