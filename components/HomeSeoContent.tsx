@@ -1,152 +1,35 @@
 import React from 'react';
-import { BarChart3, ChevronDown, GitBranch, Target } from 'lucide-react';
-import ScrollRevealText from './home2/ScrollRevealText';
+import { ChevronDown } from 'lucide-react';
 
-const faqs = [
-  {
-    question: 'In pratica, cos\'è la B2B Lead Generation su Meta?',
-    answer: 'È l\'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate sul profilo del cliente giusto, messaggio, form, CRM e segnali di qualità.'
-  },
-  {
-    question: 'Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?',
-    answer: 'Sì, se l\'obiettivo non è solo il costo per lead.'
-  },
-  {
-    question: 'Cosa sono gli Agenti AI personalizzati?',
-    answer: 'Sono sistemi costruiti sul processo commerciale dell\'azienda per qualificare lead, rispondere più velocemente, assegnare contatti e automatizzare attività ripetitive.'
-  },
-  {
-    question: 'Perché collegare Meta Ads, CRM e automazioni?',
-    answer: 'Perché il CRM restituisce segnali più utili dell\'invio form. Quando questi dati rientrano nel modello di ottimizzazione, le campagne possono cercare contatti più vicini al valore commerciale reale.'
-  }
+export const homeFaqs = [
+  { question: "Cos'è il tracciamento server-side, in parole semplici?", answer: 'Normalmente i dati sulle conversioni vengono raccolti dal browser del visitatore, che però blocca gli script, e dagli ad blocker, che bloccano i pixel. Il tracciamento server-side sposta la raccolta su un server dedicato: i dati arrivano completi e le piattaforme pubblicitarie possono ottimizzare su informazioni reali.' },
+  { question: 'Quanto costa e quanto tempo serve?', answer: "L'audit parte da 490 €. Il setup completo da 1.500 € per un sito non-ecommerce, con tempi di circa una giornata di lavoro. Per gli ecommerce il tempo dipende da piattaforma e numero di prodotti: da una a tre giornate. Il canone di infrastruttura e monitoraggio parte da 100 €/mese." },
+  { question: 'Il tracciamento server-side è conforme al GDPR?', answer: 'È lo strumento che rende la conformità più gestibile, non meno: il consenso viene rispettato a monte tramite Consent Mode v2 e i dati passano da un’infrastruttura che controlliamo. Non siamo consulenti legali e non forniamo pareri: implementiamo quello che il tuo DPO o consulente privacy definisce.' },
+  { question: "In pratica, cos'è la B2B Lead Generation su Meta?", answer: "È l'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate sul profilo del cliente giusto, messaggio, form, CRM e segnali di qualità." },
+  { question: 'Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?', answer: "Sì, se l'obiettivo non è solo il costo per lead." },
+  { question: 'Cosa sono gli Agenti AI personalizzati?', answer: "Sono sistemi costruiti sul processo commerciale dell'azienda per qualificare lead, rispondere più velocemente, assegnare contatti e automatizzare attività ripetitive." },
+  { question: 'Perché collegare Meta Ads, CRM e automazioni?', answer: "Perché il CRM restituisce segnali più utili dell'invio form. Quando questi dati rientrano nel modello di ottimizzazione, le campagne possono cercare contatti più vicini al valore commerciale reale." },
 ];
 
-const HomeSeoContent: React.FC = () => {
-  return (
-    <section className="relative z-10 max-w-6xl mx-auto px-6 py-24 text-gray-200 overflow-hidden">
-      <div className="absolute left-1/2 top-24 -z-10 h-[min(600px,140vw)] w-[min(600px,140vw)] -translate-x-1/2 rounded-full bg-indigo-900/10 blur-[140px]" />
-      <div className="space-y-8">
-        <section className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 md:p-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-12">
-            <div>
-              <p className="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">Metodo</p>
-              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold text-white leading-[1.15] tracking-[-0.02em]">Consulenza B2B Lead Generation su Meta</h2>
-            </div>
-            <div className="space-y-5 text-lg md:text-xl leading-relaxed text-gray-300">
-              <ScrollRevealText
-                as="p"
-                text="La B2B Lead Generation su Meta è un sistema di acquisizione contatti pensato per trasformare Facebook e Instagram in canali di crescita misurabile anche per aziende con cicli di vendita complessi. Il nostro ruolo non è comportarci da agenzia che esegue campagne a volume, ma da consulenti che affiancano marketing e sales nella costruzione di un funnel più leggibile, tracciabile e sostenibile."
-              />
-              {/* Anche il secondo paragrafo usa il reveal: con uno solo dei due
-                  animato il blocco sembrava un testo renderizzato a metà. */}
-              <ScrollRevealText
-                as="p"
-                text="Partiamo dall'analisi del processo commerciale: chi è il cliente giusto, proposta di valore, segmentazione, creatività, domande qualificanti, instradamento al CRM e tempi di risposta ai contatti. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del contatto e probabilità di diventare cliente, non solo per costo per contatto."
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
-            <div className="rounded-3xl border border-white/10 bg-[#080808] p-6">
-              <Target className="w-7 h-7 text-indigo-300 mb-5" />
-              <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-4">Diagnosi prima delle campagne</h3>
-              <p className="text-gray-400 leading-relaxed">Audit di funnel, audience, offerta e gestione lead prima di aumentare budget o test creativi.</p>
-            </div>
-            <div className="rounded-3xl border border-white/10 bg-[#080808] p-6">
-              <GitBranch className="w-7 h-7 text-purple-300 mb-5" />
-              <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-4">Sistema, non singola ads</h3>
-              <p className="text-gray-400 leading-relaxed">Campagne, CRM e follow-up vengono progettati insieme per ridurre dispersione e tempi morti.</p>
-            </div>
-            <div className="rounded-3xl border border-white/10 bg-[#080808] p-6">
-              <BarChart3 className="w-7 h-7 text-cyan-300 mb-5" />
-              <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-4">Governance dei KPI</h3>
-              <p className="text-gray-400 leading-relaxed">Misuriamo contatti che diventano davvero clienti, appuntamenti e opportunità generate, non solo il costo per contatto e numeri di facciata.</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <article className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-indigo-950/30 to-white/[0.03] p-6 md:p-8">
-            <p className="text-indigo-300 text-sm tracking-[0.08em] uppercase mb-5">Meta Ads Advisory</p>
-            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-white mb-6">Meta Ads orientate alla qualità</h2>
-            <div className="space-y-4 text-lg md:text-xl text-gray-300 leading-relaxed">
-              <p>
-                Lavoriamo come consulenti operativi sulle campagne Meta B2B: audit account, architettura delle campagne, piano test creativo, tracking server-side e lettura dei dati commerciali. L&apos;obiettivo è aiutare il team a capire cosa sta generando opportunità reali e cosa sta solo gonfiando il volume dei lead.
-              </p>
-              <p>
-                L&apos;algoritmo Andromeda dà valore ai segnali di conversione ad alta intenzione. Per questo allineiamo campagne e CRM su eventi come completamento di domande qualificanti, risposta del prospect e progressione nello stage commerciale.
-              </p>
-            </div>
-          </article>
-
-          <article className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-purple-950/30 to-white/[0.03] p-6 md:p-8">
-            <p className="text-purple-300 text-sm tracking-[0.08em] uppercase mb-5">AI Process Consulting</p>
-            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-white mb-6">Agenti AI sul processo sales</h2>
-            <div className="space-y-4 text-lg md:text-xl text-gray-300 leading-relaxed">
-              <p>
-                Gli Agenti AI non sono chatbot generici. Li disegniamo insieme al team, partendo da regole operative, tono di voce, CRM e punti di frizione nel processo commerciale. Il risultato è un supporto che qualifica, prioritizza e prepara il lavoro umano invece di sostituirlo.
-              </p>
-              <p>
-                Nei progetti più maturi, l&apos;integrazione Meta Ads + Agenti AI riduce i tempi di prima risposta, aumenta la precisione nel routing e rende il funnel meno dipendente da interventi manuali ripetitivi.
-              </p>
-            </div>
-          </article>
-        </section>
-
-        <section className="rounded-[2rem] border border-white/10 bg-[#080808] p-6 md:p-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.8fr] gap-8 lg:gap-12 items-start">
-            <div>
-              <p className="text-cyan-300 text-sm tracking-[0.08em] uppercase mb-5">Misurazione</p>
-              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-white mb-6">Risultati misurabili, leggibili dal team</h2>
-              <div className="space-y-5 text-lg md:text-xl text-gray-300 leading-relaxed">
-                <p>
-                  Ogni attività viene valutata su metriche operative e metriche di business. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.
-                </p>
-                <p>
-                  Nei progetti B2B monitoriamo nel tempo quanti contatti diventano davvero clienti e confrontiamo i dati prima e dopo integrazione CRM, instradamento e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.
-                </p>
-              </div>
-            </div>
-            <div className="rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-6">
-              <p className="text-sm uppercase tracking-[0.08em] text-indigo-200 mb-5">Focus consulenziale</p>
-              <ul className="space-y-4 text-gray-300">
-                <li>Audit e priorità operative prima dell&apos;execution.</li>
-                <li>Affiancamento a marketing e sales nella lettura dei dati.</li>
-                <li>Documentazione di naming, eventi e criteri di qualificazione.</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section id="faq" className="pt-10 border-t border-white/10">
-          <div className="mb-8">
-            <p className="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">FAQ</p>
-            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-white mb-6">Domande frequenti su Meta Ads B2B e Agenti AI</h2>
-            <p className="text-lg md:text-xl text-gray-400 leading-relaxed max-w-3xl">
-              Abbiamo raccolto in un unico punto le risposte operative sulle campagne Meta B2B, sugli Agenti AI e sul collegamento con CRM e automazioni.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <details
-                key={faq.question}
-                className="group rounded-3xl border border-white/10 bg-white/[0.03] px-6 py-5 transition-colors open:border-indigo-400/40 open:bg-indigo-500/[0.06]"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6">
-                  <h3 className="text-2xl md:text-3xl font-semibold leading-[1.25] tracking-[-0.01em] text-white">{faq.question}</h3>
-                  <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-indigo-300 transition-transform group-open:rotate-180">
-                    <ChevronDown className="h-5 w-5" />
-                  </span>
-                </summary>
-                <p className="mt-5 max-w-3xl text-base text-gray-300 leading-relaxed">{faq.answer}</p>
-              </details>
-            ))}
-          </div>
-        </section>
-      </div>
-    </section>
-  );
-};
+const HomeSeoContent: React.FC = () => (
+  <section id="faq" className="relative mx-auto max-w-5xl overflow-hidden px-6 py-28 text-gray-200">
+    <div className="mb-10">
+      <p className="mb-5 text-sm uppercase tracking-[0.08em] text-indigo-400">FAQ</p>
+      <h2 className="mb-6 text-[clamp(32px,5vw,64px)] font-bold leading-[1.08] tracking-[-0.035em] text-white">Domande frequenti</h2>
+      <p className="max-w-3xl text-lg leading-relaxed text-gray-400 md:text-xl">Risposte chiare su tracciamento server-side, automazioni e campagne B2B.</p>
+    </div>
+    <div className="space-y-4">
+      {homeFaqs.map((faq) => (
+        <details key={faq.question} className="group rounded-3xl border border-white/10 bg-white/[0.03] px-6 py-5 open:border-indigo-400/40 open:bg-indigo-500/[0.06]">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-6">
+            <h3 className="text-xl font-semibold leading-tight text-white md:text-2xl">{faq.question}</h3>
+            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-white/10 text-indigo-300 transition-transform group-open:rotate-180"><ChevronDown className="h-5 w-5" /></span>
+          </summary>
+          <p className="mt-5 max-w-3xl leading-relaxed text-gray-300">{faq.answer}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+);
 
 export default HomeSeoContent;

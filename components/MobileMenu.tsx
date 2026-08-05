@@ -98,9 +98,11 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateHome
 
   const items: Array<{ label: string; onClick?: () => void; href?: string }> = [
     ...(showHomeLink ? [{ label: 'Home', onClick: onNavigateHome }] : []),
+    { label: 'Tracciamento', href: '/tracciamento-server-side' },
     { label: 'Agenti AI', onClick: onNavigateAgents },
-    { label: 'Blog', onClick: onNavigateBlog },
     { label: 'Casi Studio', href: caseStudiesPath },
+    { label: 'Blog', onClick: onNavigateBlog },
+    { label: 'Risorse', href: '/risorse' },
   ];
 
   return (
@@ -114,7 +116,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateHome
       // le sue voci restino raggiungibili da tastiera e screen reader.
       inert={!isOpen}
       // Sotto la <nav> (z-70), così l'hamburger/X resta sempre visibile e toccabile.
-      className={`md:hidden fixed inset-0 z-[60] transition-opacity duration-300 motion-reduce:transition-none motion-reduce:duration-0 ${
+      className={`lg:hidden fixed inset-0 z-[60] transition-opacity duration-300 motion-reduce:transition-none motion-reduce:duration-0 ${
         isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
     >
@@ -182,7 +184,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateHome
           }}
           className="mt-8 w-full rounded-full bg-white px-6 py-4 text-center text-base uppercase tracking-normal text-[#050505] transition-colors hover:bg-gray-200 cursor-pointer border-0"
         >
-          Scrivici
+          Contatti
         </button>
 
         <p className="mt-10 text-[11px] uppercase tracking-[0.08em] text-gray-600">

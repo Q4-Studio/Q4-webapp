@@ -240,6 +240,14 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
           </div>
         </section>
 
+        {study.cta && (
+          <section className="mb-16 rounded-[2rem] border border-cyan-400/20 bg-cyan-400/[0.05] p-8 md:p-12">
+            <h2 className="mb-4 text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em]">{study.cta.heading}</h2>
+            <p className="mb-7 max-w-3xl text-lg leading-relaxed text-gray-300">{study.cta.body}</p>
+            <a href={study.cta.href} className="inline-flex rounded-full bg-white px-6 py-3.5 font-semibold text-[#050505]">{study.cta.label}</a>
+          </section>
+        )}
+
         <div className="flex flex-wrap gap-3 pt-8 border-t border-white/10">
           {study.services.map((service) => (
             <span key={service} className="text-[11px] uppercase tracking-[0.08em] text-gray-400 rounded-full border border-white/10 px-3 py-1.5">

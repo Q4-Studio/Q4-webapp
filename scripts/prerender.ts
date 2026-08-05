@@ -86,6 +86,7 @@ function generateBaseHtml(options: {
   type?: 'website' | 'article';
   schema?: object[];
   bodyContent: string;
+  noIndex?: boolean;
 }) {
   const {
     title,
@@ -97,7 +98,8 @@ function generateBaseHtml(options: {
     ogImageAlt,
     type = 'website',
     schema = [],
-    bodyContent
+    bodyContent,
+    noIndex = false
   } = options;
 
   const defaultOgImage = `${siteUrl}/og-image.jpg`;
@@ -131,7 +133,7 @@ ${GTM_HEAD}
   <title>${escapeHtml(title)}</title>
   <meta name="title" content="${escapeHtml(title)}" />
   <meta name="description" content="${escapeHtml(description)}" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content="${noIndex ? 'noindex, nofollow' : 'index, follow'}" />
   <link rel="canonical" href="${canonical}" />
   <meta property="og:type" content="${type}" />
   <meta property="og:url" content="${canonical}" />
@@ -566,6 +568,10 @@ function generateCaseStudyDetailHtml(study: CaseStudy): string {
     .map((service) => `<span class="text-[11px] uppercase tracking-[0.08em] text-gray-400 rounded-full border border-white/10 px-3 py-1.5">${escapeHtml(service)}</span>`)
     .join('\n          ');
 
+  const ctaHtml = study.cta
+    ? `<section class="mb-16 rounded-3xl border border-cyan-400/20 bg-cyan-400/[0.05] p-8"><h2 class="text-3xl font-bold mb-4">${escapeHtml(study.cta.heading)}</h2><p class="text-gray-300 mb-6">${escapeHtml(study.cta.body)}</p><a href="${study.cta.href}" class="inline-flex rounded-full bg-white px-6 py-3 text-black font-semibold">${escapeHtml(study.cta.label)}</a></section>`
+    : '';
+
   const bodyContent = `
     <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
       <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
@@ -625,6 +631,8 @@ ${demoVideoHtml}
           </div>
         </section>
 
+        ${ctaHtml}
+
         <div class="flex flex-wrap gap-3 pt-8 border-t border-white/10">
           ${servicesHtml}
         </div>
@@ -671,435 +679,6 @@ function generateBlogIndexHtml(): string {
     canonical: `${siteUrl}/blog`,
     bodyContent
   });
-}
-
-function generateAIAgentsHtml(): string {
-  const pageUrl = `${siteUrl}/agenti-ai`;
-
-  const serviceSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: 'Agenti AI per aziende',
-    description: 'Consulenza, progettazione e integrazione di agenti AI su misura per sales, back office, customer care e processi interni.',
-    provider: {
-      '@type': 'Organization',
-      name: 'Q4 Studio',
-      url: siteUrl
-    },
-    areaServed: 'IT',
-    url: pageUrl,
-    serviceType: 'AI agents consulting and automation'
-  };
-
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Agenti AI', item: pageUrl }
-    ]
-  };
-
-  // Testo identico a components/AIAgents.tsx (array `faqs`) per evitare mismatch
-  // tra il markup prerenderato e il contenuto renderizzato da React (cloaking).
-  const faqs = [
-    ['Quanto costa un agente AI?', "Dipende dal processo e dai sistemi da collegare. Per questo il percorso parte dalla mappatura: prima di investire sai esattamente quanto costa il progetto pilota e quante ore di lavoro può restituirti. Niente canoni a sorpresa, niente preventivi al buio."],
-    ['In quanto tempo vedo i primi risultati?', 'Il primo agente lavora su un processo reale entro 6–8 settimane dal via. Non partiamo mai da un progetto enorme: partiamo da un processo solo, misurabile, e allarghiamo solo quando funziona.'],
-    ["E se l'agente sbaglia?", "Dove conta, l'agente propone e una persona conferma: definiamo insieme cosa può fare in autonomia e cosa deve passare da un controllo umano. Ogni azione resta tracciata, quindi puoi sempre verificare cosa ha fatto e perché."],
-    ['I dati della mia azienda dove finiscono?', 'Restano nei tuoi sistemi: gestionale, CRM ed email rimangono la fonte dei dati. Definiamo permessi e accessi prima di partire e lavoriamo in conformità al GDPR. Nessun dato viene usato per addestrare modelli pubblici.'],
-    ['Il mio team non è tecnico. Ce la facciamo?', "Sì, ed è il punto: il team continua a usare WhatsApp, email e gestionale come sempre, perché è l'agente che si adatta ai vostri strumenti. La formazione la facciamo noi, sul vostro caso concreto."],
-    ['È un chatbot?', "No. Un chatbot risponde a domande. Un agente lavora: legge documenti, aggiorna il gestionale, prepara ordini e preventivi, passa la palla a una persona quando serve. La chat è solo uno dei canali da cui riceve il lavoro."]
-  ];
-
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map(([question, answer]) => ({
-      '@type': 'Question',
-      name: question,
-      acceptedAnswer: { '@type': 'Answer', text: answer }
-    }))
-  };
-
-  // Testo identico a components/AIAgents.tsx (array `useCases`), stesso ordine
-  // e stesse stringhe, per evitare mismatch tra prerender e contenuto React.
-  const useCases = [
-    {
-      tab: 'Ordini',
-      title: 'Gli ordini arrivano da WhatsApp ed email. Entrano nel gestionale da soli.',
-      today: "Oggi qualcuno legge il messaggio, cerca il cliente, controlla i codici, riscrive tutto nel gestionale. Dieci minuti a ordine, errori di battitura inclusi.",
-      withAgent: [
-        'Legge messaggi, email e allegati appena arrivano',
-        'Riconosce cliente, codici, quantità e date di consegna',
-        "Crea la bozza d'ordine nel gestionale con i prezzi corretti",
-        'Chiede conferma a una persona solo quando serve',
-      ],
-      tools: ['WhatsApp', 'Email', 'Gestionale / ERP'],
-      impact: 'Da 10 minuti a 40 secondi per ordine',
-    },
-    {
-      tab: 'Preventivi',
-      title: 'Il preventivo parte in giornata, mentre il cliente è ancora interessato.',
-      today: 'Oggi la richiesta resta in inbox finché il titolare o il tecnico non ha mezzora libera. Intanto il cliente chiede anche ai concorrenti.',
-      withAgent: [
-        'Estrae le specifiche dalla richiesta e dagli allegati',
-        'Recupera listini, distinte e offerte simili già fatte',
-        "Compila l'offerta sul tuo template, con i tuoi margini",
-        'Una persona revisiona e invia: il lavoro noioso è già fatto',
-      ],
-      tools: ['Email', 'Listini / Excel', 'Storico offerte'],
-      impact: 'Risposta al cliente in giornata',
-    },
-    {
-      tab: 'Lead e vendite',
-      title: 'Ogni contatto viene qualificato e richiamato mentre è ancora caldo.',
-      today: 'Oggi i lead delle campagne finiscono in un foglio o in una casella email. Chi può li richiama "appena ha un attimo". Spesso troppo tardi.',
-      withAgent: [
-        'Riceve il lead da form, campagne o LinkedIn',
-        "Arricchisce i dati dell'azienda e applica i tuoi criteri di priorità",
-        'Lo assegna al commerciale giusto nel CRM, con il contesto già pronto',
-        'Prepara il primo messaggio e i promemoria di follow-up',
-      ],
-      tools: ['Form sito', 'Meta / LinkedIn', 'CRM'],
-      impact: 'Primo contatto in minuti: il tasso di risposta cambia',
-    },
-    {
-      tab: 'Assistenza clienti',
-      title: '«Dov\'è il mio ordine?» riceve risposta subito, anche alle 21.',
-      today: 'Oggi le stesse dieci domande (stato ordine, tempi, documenti, resi) interrompono il team decine di volte al giorno.',
-      withAgent: [
-        'Risponde su WhatsApp ed email alle domande ricorrenti',
-        'Controlla lo stato reale di ordini e spedizioni nel gestionale',
-        'Gestisce il primo livello e passa i casi delicati a una persona',
-        'Tiene traccia di tutto: nessuna richiesta si perde',
-      ],
-      tools: ['WhatsApp', 'Email', 'Gestionale / ERP'],
-      impact: 'Clienti seguiti 24/7, team interrotto molto meno',
-    },
-    {
-      tab: 'Amministrazione',
-      title: 'Fatture, DDT e documenti letti, controllati e registrati.',
-      today: 'Oggi i documenti dei fornitori arrivano via email e qualcuno li ricopia a mano, riga per riga, sperando di non sbagliare un importo.',
-      withAgent: [
-        'Legge fatture, DDT e conferme appena arrivano',
-        'Controlla che importi e quantità tornino con gli ordini',
-        'Prepara le registrazioni nel gestionale',
-        'Segnala solo le anomalie da verificare',
-      ],
-      tools: ['Email / PEC', 'Gestionale / ERP', 'Fogli di calcolo'],
-      impact: 'Meno ore di data entry, meno errori a fine mese',
-    },
-    {
-      tab: 'Report e controllo',
-      title: 'Il lunedì mattina trovi il report già pronto, con i numeri che contano.',
-      today: "Oggi capire come sta andando l'azienda richiede una caccia al tesoro tra gestionale, CRM, fogli Excel ed estratti banca.",
-      withAgent: [
-        'Raccoglie i dati da gestionale, CRM e fogli condivisi',
-        'Calcola i tuoi indicatori: vendite, margini, consegne, incassi',
-        'Prepara un report leggibile, sempre uguale, sempre puntuale',
-        'Evidenzia gli scostamenti che meritano una decisione',
-      ],
-      tools: ['Gestionale / ERP', 'CRM', 'Excel / Sheets'],
-      impact: 'Decisioni prese su numeri aggiornati',
-    },
-  ];
-
-  const useCasesHtml = useCases
-    .map(
-      (uc) => `<article class="rounded-3xl border border-white/10 bg-[#0A0A0A] p-7"><p class="text-[11px] uppercase tracking-[0.08em] text-violet-300 mb-4">${escapeHtml(uc.tab)}</p><h3 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">${escapeHtml(uc.title)}</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div><p class="text-[11px] uppercase tracking-[0.08em] text-gray-500 mb-2">Oggi, senza agente</p><p class="text-gray-400 leading-relaxed">${escapeHtml(uc.today)}</p></div><div><p class="text-[11px] uppercase tracking-[0.08em] text-violet-300/80 mb-2">Con l'agente</p><ul class="space-y-2">${uc.withAgent.map((step) => `<li class="text-gray-300 leading-relaxed">${escapeHtml(step)}</li>`).join('')}</ul></div></div><p class="mt-4 text-sm text-gray-500">Si collega a: ${uc.tools.map((t) => escapeHtml(t)).join(', ')}</p><p class="mt-2 text-sm font-medium text-violet-300">${escapeHtml(uc.impact)}</p></article>`
-    )
-    .join('\n          ');
-
-  const methodHtml = [
-    ['Tappa 01 · Mappatura dei processi', 'Entriamo in azienda e parliamo con chi fa il lavoro. Risultato: la lista dei processi automatizzabili, ordinata per impatto, con la stima delle ore recuperabili.'],
-    ['Tappa 02 · Primo agente al lavoro', "Partiamo dal processo con il miglior rapporto tra impatto e semplicità. Risultato: un agente funzionante su un processo reale, testato con i vostri dati veri."],
-    ['Tappa 03 · Messa in produzione', "Integrazione completa, regole chiare su cosa l'agente fa da solo e formazione del team. Risultato: il team usa l'agente in autonomia."],
-    ['Tappa 04 · Crescita e controllo', 'Monitoriamo i risultati ed estendiamo il lavoro ad altri processi. Risultato: un report mensile con ore recuperate, errori evitati e prossimi passi.']
-  ]
-    .map(([title, description]) => `<li class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-2">${escapeHtml(title)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(description)}</p></li>`)
-    .join('\n              ');
-
-  const faqHtml = faqs
-    .map(([question, answer]) => `<div class="rounded-2xl border border-white/10 bg-[#0A0A0A] p-6"><h3 class="text-lg font-semibold mb-3">${escapeHtml(question)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(answer)}</p></div>`)
-    .join('\n          ');
-
-  const bodyContent = `
-    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-violet-900/10 rounded-full blur-[160px] pointer-events-none"></div>
-      <div class="max-w-7xl mx-auto relative z-10">
-        <nav aria-label="Breadcrumb" class="mb-10">
-          <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-violet-300 transition-colors">Home</a></li>
-            <li>/</li>
-            <li class="text-gray-300">Agenti AI</li>
-          </ol>
-        </nav>
-
-        <header class="mb-16">
-          <p class="text-violet-300 text-sm tracking-[0.08em] uppercase mb-5">Agenti AI · consulenza e sviluppo</p>
-          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">Agenti AI su misura per togliere al tuo team il lavoro che un software può fare meglio</h1>
-          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">
-            Leggono email e WhatsApp, inseriscono gli ordini nel gestionale, preparano i preventivi, qualificano i lead e rispondono ai clienti. Tu mantieni il controllo: l'agente propone, le persone decidono.
-          </p>
-        </header>
-
-        <section class="mb-24">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Cosa fa un agente AI, in concreto</h2>
-          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-10">Ogni agente nasce da un processo vero: come lo gestisci oggi, cosa fa l'agente al posto del team e dove resta il controllo delle persone.</p>
-          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            ${useCasesHtml}
-          </div>
-        </section>
-
-        <section class="mb-24 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-4">Si collega agli strumenti che usi già</h2>
-          <p class="text-lg text-gray-200 leading-relaxed mb-6">Nessuna piattaforma nuova da imparare, nessun cambio di gestionale. L'agente entra nei flussi esistenti: WhatsApp, email e PEC, gestionale/ERP, CRM, Excel e Google Sheets, calendario, sito e form, centralino. Se un software ha un'API, un'esportazione o anche solo una casella email, si può collegare.</p>
-        </section>
-
-        <section class="mb-24">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Non ti vendiamo un software. Ti affianchiamo finché funziona.</h2>
-          <p class="text-xl text-gray-300 leading-relaxed max-w-3xl mb-10">Q4 Studio è uno studio di consulenza: ogni tappa del percorso ha una durata, un obiettivo e un risultato concreto che ti porti a casa, anche se decidi di fermarti lì.</p>
-          <ul class="grid grid-cols-1 md:grid-cols-2 gap-5">
-              ${methodHtml}
-          </ul>
-        </section>
-
-        <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-10">Le domande che ci fanno tutti gli imprenditori</h2>
-          <div class="space-y-4">
-          ${faqHtml}
-          </div>
-        </section>
-
-        <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-8 md:p-12 text-center">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Porta un processo che ti ruba tempo. Ne usciamo con un piano.</h2>
-          <p class="text-lg text-gray-300 leading-relaxed mb-8 max-w-2xl mx-auto">In 30 minuti analizziamo insieme dove oggi si perde tempo, quali dati avete già e quale agente può generare il primo risultato misurabile.</p>
-          <a href="/" class="inline-flex items-center rounded-full bg-indigo-600 px-7 py-4 font-semibold text-white hover:bg-indigo-500 transition-colors">Prenota la chiamata</a>
-        </section>
-      </div>
-    </article>
-  `;
-
-  return generateBaseHtml({
-    title: 'Agenti AI per aziende | Consulenza e sviluppo su misura | Q4 Studio',
-    description: 'Agenti AI che leggono email e WhatsApp, inseriscono ordini nel gestionale, preparano preventivi e qualificano i lead. Q4 Studio ti affianca dalla mappatura dei processi alla messa in produzione.',
-    canonical: pageUrl,
-    schema: [serviceSchema, breadcrumbSchema, faqSchema],
-    bodyContent
-  });
-}
-
-// Static content of the homepage (mirrors components/home2/* and HomeSeoContent.tsx)
-// so non-JS crawlers see the same text React renders after hydration. Visual/animation
-// chrome (GSAP, canvas, terminal typing effect) is intentionally simplified to plain
-// markup: only the actual copy needs to match 1:1 to avoid cloaking.
-function generateHomeBodyContent(): string {
-  const tickerItems = ['LEAD GENERATION B2B', 'AGENTI AI', 'META ADS', 'CRM AUTOMATION', 'WHATSAPP FOLLOW-UP', 'DIGITAL ANALYTICS'];
-
-  const pipelineSteps = [
-    { label: 'META ADS', time: 'T+0 s', title: 'Il lead entra dal feed.', desc: "Campagne Meta progettate sul profilo del cliente giusto e sull'offerta. Il form qualifica già in partenza: chi compila è davvero in target." },
-    { label: 'CRM', time: 'T+2 s', title: 'Nel CRM prima che tu lo veda.', desc: 'Assegnato al commerciale giusto, con fonte, campagna e contesto già pronti.' },
-    { label: 'WHATSAPP', time: 'T+60 s', title: 'Primo contatto in 60 secondi.', desc: 'Un messaggio personalizzato parte mentre il lead è ancora sul telefono. La velocità di risposta è la prima leva di conversione.' },
-    { label: 'ENRICHMENT', time: 'T+90 s', title: 'Il lead diventa un dossier.', desc: 'Dati aziendali arricchiti da fonti pubbliche: dimensione, settore, segnali di priorità. Il commerciale sa con chi parla prima di chiamare.' },
-    { label: 'FOLLOW-UP', time: 'GIORNI 1–7', title: 'Ogni lead viene seguito. Sempre.', desc: 'Sequenze automatiche su più canali finché il lead risponde. Il sistema insiste, il team vende.' }
-  ];
-
-  const agentsIntegrations = ['WhatsApp', 'Email / PEC', 'Gestionale / ERP', 'CRM', 'Excel / Sheets', 'Calendario'];
-
-  const services = [
-    {
-      title: 'B2B Lead Generation',
-      desc: "Un sistema di acquisizione completo: posizionamento, offerta, Meta Advertising, CRM e follow-up. Il tracking è il nostro punto forte: dati di conversione precisi e conformi, che l'algoritmo può davvero usare per ottimizzare.",
-      points: ["Meta Ads sul profilo del cliente giusto e sull'offerta", 'Server-Side Tracking e Consent Mode', 'Segnali di qualità dal CRM alle campagne', 'Qualifica lead e follow-up multicanale']
-    },
-    {
-      title: 'Agenti AI & Automazioni',
-      desc: "Agenti su misura per sales, back office, customer care e processi interni. Partiamo dall'audit operativo, integriamo gli strumenti già in uso e accompagniamo il team nell'adozione.",
-      points: ['Audit e mappatura dei processi', 'Agenti costruiti sul caso reale', 'Integrazione con gestionale e CRM', 'Formazione e adozione del team']
-    }
-  ];
-
-  const stats = [
-    { value: '≤ 60 s', label: 'primo contatto al lead' },
-    { value: '40 s', label: 'per processare un ordine' },
-    { value: '24/7', label: 'follow-up sempre attivo' },
-    { value: '100%', label: 'lead tracciati nel CRM' }
-  ];
-
-  const methodSteps = [
-    { n: '01', title: 'Diagnosi', desc: 'Mappiamo business, funnel, processi e dati. Capiamo dove si perde valore e quale leva ha più impatto.' },
-    { n: '02', title: 'Progetto', desc: 'Definiamo architettura, metriche e responsabilità. Campagne, CRM e agenti pensati come un unico sistema.' },
-    { n: '03', title: 'Implementazione', desc: 'Mettiamo online, formiamo il team e miglioriamo sui dati reali. Utile, misurabile, adottato.' }
-  ];
-
-  const homeFaqs = [
-    { q: "In pratica, cos'è la B2B Lead Generation su Meta?", a: "È l'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate sul profilo del cliente giusto, messaggio, form, CRM e segnali di qualità." },
-    { q: 'Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?', a: 'Sì, se l\'obiettivo non è solo il costo per lead.' },
-    { q: 'Cosa sono gli Agenti AI personalizzati?', a: "Sono sistemi costruiti sul processo commerciale dell'azienda per qualificare lead, rispondere più velocemente, assegnare contatti e automatizzare attività ripetitive." },
-    { q: 'Perché collegare Meta Ads, CRM e automazioni?', a: 'Perché il CRM restituisce segnali più utili dell\'invio form. Quando questi dati rientrano nel modello di ottimizzazione, le campagne possono cercare contatti più vicini al valore commerciale reale.' }
-  ];
-
-  const tickerHtml = tickerItems.map((t) => `<span class="ticker-item">${escapeHtml(t)}</span>`).join('\n            ');
-
-  const pipelineHtml = pipelineSteps
-    .map((s, i) => `<article class="pipeline-step">
-              <p class="pipeline-step-meta">0${i + 1}/05 · ${escapeHtml(s.label)} · ${escapeHtml(s.time)}</p>
-              <h3>${escapeHtml(s.title)}</h3>
-              <p>${escapeHtml(s.desc)}</p>
-            </article>`)
-    .join('\n            ');
-
-  const integrationsHtml = agentsIntegrations.map((i) => `<span class="integration-pill">${escapeHtml(i)}</span>`).join('\n              ');
-
-  const servicesHtml = services
-    .map(
-      (s) => `<article class="service-card">
-              <h3>${escapeHtml(s.title)}</h3>
-              <p>${escapeHtml(s.desc)}</p>
-              <ul>
-                ${s.points.map((p) => `<li>${escapeHtml(p)}</li>`).join('\n                ')}
-              </ul>
-            </article>`
-    )
-    .join('\n            ');
-
-  const statsHtml = stats
-    .map((s) => `<div class="stat-tile"><p class="stat-value">${escapeHtml(s.value)}</p><p class="stat-label">${escapeHtml(s.label)}</p></div>`)
-    .join('\n            ');
-
-  const methodHtml = methodSteps
-    .map((s) => `<div class="method-step"><span>${escapeHtml(s.n)}</span><h3>${escapeHtml(s.title)}</h3><p>${escapeHtml(s.desc)}</p></div>`)
-    .join('\n            ');
-
-  const faqHtml = homeFaqs
-    .map((f) => `<details class="faq-item"><summary>${escapeHtml(f.q)}</summary><p>${escapeHtml(f.a)}</p></details>`)
-    .join('\n            ');
-
-  return `
-    <div class="home-static">
-      <nav aria-label="Principale" class="home-nav">
-        <a href="/"><img src="/logo.webp" alt="Q4 Studio" width="130" height="40" /></a>
-        <div class="home-nav-links">
-          <a href="/agenti-ai">Agenti AI</a>
-          <a href="/blog">Blog</a>
-          <a href="${resourcesPath}">Risorse</a>
-        </div>
-      </nav>
-
-      <header class="hero">
-        <p class="hero-kicker">Bring AI&amp;Tech to Marketing</p>
-        <h1>Il tuo AI<br />Marketing Partner.</h1>
-        <p class="hero-sub">Lo studio di consulenza che porta AI e le ultime tecnologie nel tuo marketing.</p>
-        <div class="hero-cta">
-          <a href="#contatti" class="btn-primary">Inizia il percorso</a>
-          <a href="/agenti-ai" class="btn-secondary">Scopri gli Agenti AI</a>
-        </div>
-        <div class="hero-ticker">
-          ${tickerHtml}
-        </div>
-      </header>
-
-      <section class="manifesto">
-        <p>Q4 Studio è uno studio di consulenza. Entriamo nei processi, applichiamo l'AI al marketing e costruiamo agenti che lavorano al fianco del tuo team.</p>
-      </section>
-
-      <section class="pipeline">
-        <h2>Dal click al cliente.<br />In automatico.</h2>
-        <p>Il nostro sistema di lead generation collega Meta, CRM e WhatsApp: ogni lead viene arricchito, contattato e seguito, dal primo click alla firma.</p>
-        <div class="pipeline-steps">
-          ${pipelineHtml}
-        </div>
-      </section>
-
-      <section class="agents">
-        <h2>Colleghi digitali,<br />progettati sul tuo processo.</h2>
-        <p>Agenti costruiti sui processi reali dell'azienda: leggono email e messaggi, interrogano il gestionale, preparano preventivi e ordini, e coinvolgono una persona quando serve una decisione.</p>
-        <div class="integrations">
-          ${integrationsHtml}
-        </div>
-        <a href="/agenti-ai" class="btn-secondary">Esplora gli Agenti AI</a>
-      </section>
-
-      <section class="services">
-        <h2>Due leve.<br />Un unico sistema.</h2>
-        <p>Acquisizione B2B da un lato, automazione intelligente dall'altro. Studiamo il processo, definiamo le priorità e costruiamo sistemi misurabili.</p>
-        <div class="services-grid">
-          ${servicesHtml}
-        </div>
-        <div class="stats">
-          ${statsHtml}
-        </div>
-        <div class="method">
-          ${methodHtml}
-        </div>
-      </section>
-
-      ${generateHomeSeoContentHtml(faqHtml)}
-
-      <section class="final-cta">
-        <h2>Costruiamo il tuo<br />vantaggio.</h2>
-        <p>Raccontaci la tua sfida: ti mostriamo come trasformarla in un sistema che cresce.</p>
-      </section>
-
-      <section id="contatti" class="contact-anchor" aria-label="Contatti">
-        <h2>Parla con un esperto</h2>
-        <p>Raccontaci il tuo processo: ti proponiamo il primo passo misurabile.</p>
-      </section>
-    </div>
-  `;
-}
-
-// Sezione "Metodo + FAQ" della home, testo identico a components/HomeSeoContent.tsx
-function generateHomeSeoContentHtml(faqHtml: string): string {
-  return `
-      <section class="home-seo-content">
-        <h2>Consulenza B2B Lead Generation su Meta</h2>
-        <p>La B2B Lead Generation su Meta è un sistema di acquisizione contatti pensato per trasformare Facebook e Instagram in canali di crescita misurabile anche per aziende con cicli di vendita complessi. Il nostro ruolo non è comportarci da agenzia che esegue campagne a volume, ma da consulenti che affiancano marketing e sales nella costruzione di un funnel più leggibile, tracciabile e sostenibile.</p>
-        <p>Partiamo dall'analisi del processo commerciale: chi è il cliente giusto, proposta di valore, segmentazione, creatività, domande qualificanti, instradamento al CRM e tempi di risposta ai contatti. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del contatto e probabilità di diventare cliente, non solo per costo per contatto.</p>
-
-        <div class="method-cards">
-          <article class="method-card">
-            <h3>Diagnosi prima delle campagne</h3>
-            <p>Audit di funnel, audience, offerta e gestione lead prima di aumentare budget o test creativi.</p>
-          </article>
-          <article class="method-card">
-            <h3>Sistema, non singola ads</h3>
-            <p>Campagne, CRM e follow-up vengono progettati insieme per ridurre dispersione e tempi morti.</p>
-          </article>
-          <article class="method-card">
-            <h3>Governance dei KPI</h3>
-            <p>Misuriamo contatti che diventano davvero clienti, appuntamenti e opportunità generate, non solo il costo per contatto e numeri di facciata.</p>
-          </article>
-        </div>
-
-        <h2>Meta Ads orientate alla qualità</h2>
-        <p>Lavoriamo come consulenti operativi sulle campagne Meta B2B: audit account, architettura delle campagne, piano test creativo, tracking server-side e lettura dei dati commerciali. L'obiettivo è aiutare il team a capire cosa sta generando opportunità reali e cosa sta solo gonfiando il volume dei lead.</p>
-        <p>L'algoritmo Andromeda dà valore ai segnali di conversione ad alta intenzione. Per questo allineiamo campagne e CRM su eventi come completamento di domande qualificanti, risposta del prospect e progressione nello stage commerciale.</p>
-
-        <h2>Agenti AI sul processo sales</h2>
-        <p>Gli Agenti AI non sono chatbot generici. Li disegniamo insieme al team, partendo da regole operative, tono di voce, CRM e punti di frizione nel processo commerciale. Il risultato è un supporto che qualifica, prioritizza e prepara il lavoro umano invece di sostituirlo.</p>
-        <p>Nei progetti più maturi, l'integrazione Meta Ads + Agenti AI riduce i tempi di prima risposta, aumenta la precisione nel routing e rende il funnel meno dipendente da interventi manuali ripetitivi.</p>
-
-        <h2>Risultati misurabili, leggibili dal team</h2>
-        <p>Ogni attività viene valutata su metriche operative e metriche di business. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.</p>
-        <p>Nei progetti B2B monitoriamo nel tempo quanti contatti diventano davvero clienti e confrontiamo i dati prima e dopo integrazione CRM, instradamento e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.</p>
-
-        <div class="focus-consulenziale">
-          <p class="focus-consulenziale-label">Focus consulenziale</p>
-          <ul>
-            <li>Audit e priorità operative prima dell'execution.</li>
-            <li>Affiancamento a marketing e sales nella lettura dei dati.</li>
-            <li>Documentazione di naming, eventi e criteri di qualificazione.</li>
-          </ul>
-        </div>
-
-        <h2>Domande frequenti su Meta Ads B2B e Agenti AI</h2>
-        <p>Abbiamo raccolto in un unico punto le risposte operative sulle campagne Meta B2B, sugli Agenti AI e sul collegamento con CRM e automazioni.</p>
-        <div class="faq-list">
-          ${faqHtml}
-        </div>
-      </section>
-  `;
 }
 
 // Supabase client for build-time fetch
@@ -1311,12 +890,80 @@ function generateBlogArticleHtml(post: any): string {
   });
 }
 
+const staticPage = (content: string) => `<main class="min-h-screen bg-[#050505] text-white px-6 pt-36 pb-24"><div class="max-w-6xl mx-auto space-y-16">${content}</div></main>`;
+
+function generateRestyledAIAgentsHtml(): string {
+  const packages = [
+    { title: 'Assistente virtuale sul sito', problem: 'Le stesse domande arrivano per telefono e mail, e fuori orario non risponde nessuno.', requirements: ['Sito accessibile', 'Elenco delle domande frequenti', 'Tono di voce', 'Un referente per la validazione delle risposte'], timing: '2 settimane', price: 'Setup 490 € · canone 59 €/mese' },
+    { title: 'Automazioni CRM e follow-up', problem: 'I lead non vengono ricontattati e il follow-up dipende da chi si ricorda.', actions: ['Riceve il lead da form, campagne o LinkedIn', 'Lo assegna al commerciale giusto nel CRM, con il contesto già pronto', 'Prepara il primo messaggio e i promemoria di follow-up'], requirements: ['CRM esistente o incluso', 'Numero WhatsApp business', 'Elenco dei momenti di contatto da automatizzare'], timing: '2-3 settimane', price: 'Setup da 490 € · canone da 150 €/mese' },
+    { title: 'Richieste WhatsApp che arrivano già compilate', problem: 'I clienti ti scrivono su WhatsApp in tre messaggi disordinati, e qualcuno deve leggere, capire e ridigitare tutto a mano. Nel frattempo passano ore, e il lead ha già chiesto un preventivo a qualcun altro.', description: "Legge i messaggi in arrivo, estrae le informazioni che ti servono per rispondere — nel caso di un preventivo: cosa, dove, quando, quanto — le scrive nel CRM e manda una prima risposta in meno di un minuto. Se manca un'informazione, la chiede. Quando il dato non è certo, segnala invece di inventare.", requirements: ['Un numero WhatsApp collegabile alla piattaforma. Se oggi rispondi dal tuo cellulare con WhatsApp Business, serve un numero dedicato: te lo spieghiamo prima di partire, non dopo.', 'L’elenco delle informazioni che ti servono per rispondere a una richiesta', 'Una persona che valida i primi giorni di funzionamento'], timing: "4-6 settimane dall'avvio", price: 'Setup 990 € · canone 200 €/mese', pilot: 'Per i primi due clienti: setup 490 € invece di 990 €, in cambio del diritto di raccontare il progetto come caso studio e di una call di feedback dopo il primo mese.' },
+  ];
+  const cards = packages.map((pack) => `<article class="rounded-3xl border border-white/10 p-8"><h3 class="text-3xl font-bold mb-5">${escapeHtml(pack.title)}</h3><p><strong>Il problema:</strong> ${escapeHtml(pack.problem)}</p>${pack.description ? `<p class="mt-4"><strong>Cosa fa:</strong> ${escapeHtml(pack.description)}</p>` : ''}${pack.actions ? `<p class="mt-4"><strong>Cosa fa</strong></p><ul>${pack.actions.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}<p class="mt-4"><strong>Cosa serve da te</strong></p><ul>${pack.requirements.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul><p class="mt-4"><strong>Tempi:</strong> ${escapeHtml(pack.timing)}</p><p class="mt-4 text-xl font-bold">${escapeHtml(pack.price)}</p>${pack.pilot ? `<p><strong>Pilot pubblico.</strong> ${escapeHtml(pack.pilot)}</p>` : ''}</article>`).join('');
+  return generateBaseHtml({ title: 'Agenti AI e Automazioni per PMI | Q4 Studio', description: 'Automazioni WhatsApp, CRM e assistenti virtuali con tempi, setup e canoni pubblici. Soluzioni concrete per le attività ripetitive delle PMI.', canonical: `${siteUrl}/agenti-ai`, bodyContent: staticPage(`<header><p>Automazioni · setup e canone chiari</p><h1 class="text-6xl font-bold">Automazioni concrete, su problemi che racconti in una frase.</h1><p>Assistenti sul sito, follow-up nel CRM e richieste WhatsApp già strutturate. Sai prima cosa serve, quanto tempo richiede e quanto costa.</p><a href="#pacchetti-automazioni">Vedi i pacchetti</a></header><section id="pacchetti-automazioni"><p>Tre punti di partenza</p><h2>Scegli il lavoro ripetitivo da togliere al team.</h2><div class="grid gap-6">${cards}</div></section><section><h2>Quale attività stai ancora facendo a mano?</h2><p>Raccontala in una frase. Ti diciamo se uno di questi pacchetti è il punto di partenza giusto.</p><a href="#contatti">Scrivici</a></section><section id="contatti" aria-label="Contatti"></section>`) });
+}
+
+function generateServerSideTrackingHtml(): string {
+  const body = `<header><p>Tracciamento server-side · Meta e Google</p><h1 class="text-6xl font-bold">Il tuo account pubblicitario vede meno conversioni di quelle che fai.</h1><p>Non è un problema di campagne. È un problema di raccolta dati.</p></header>
+  <section><h2>Cosa sta succedendo</h2><p>Safari e Firefox limitano i cookie di terze parti. Gli ad blocker bloccano i pixel. Il consenso negato interrompe la raccolta. Il risultato è che Meta e Google vedono una parte delle tue conversioni, e ottimizzano su quella parte.</p><p>Se il tuo account dice 40 conversioni e il tuo gestionale dice 90, non è un errore di lettura: è il tracciamento che non arriva.</p></section>
+  <section><h2>Come lo risolviamo</h2><p>Spostiamo la raccolta dati dal browser a un container server-side su infrastruttura dedicata. I segnali passano da lì, vengono normalizzati e inviati alle piattaforme via API server-to-server.</p><p>Aggiungiamo i segnali che contano davvero: non l'invio del form, ma la qualificazione, la risposta del prospect, l'avanzamento nel CRM. Sono i segnali che l'algoritmo usa per cercare persone simili a chi compra, non a chi compila.</p></section>
+  <section id="services"><p>Prezzi pubblici</p><h2>I pacchetti</h2><article><p>3-5 giorni lavorativi</p><h3>Audit tracciamento</h3><p>490 €</p><ul><li>Verifica di cosa viene tracciato e cosa si perde oggi</li><li>Confronto tra dati piattaforma e dati reali</li><li>Analisi del Consent Mode e della configurazione attuale</li><li>Documento con le priorità di intervento</li></ul><p>Il documento resta tuo. Se decidi di non procedere, hai comunque una mappa di cosa sistemare.</p></article><article><p>circa una giornata di lavoro per siti non-ecommerce, 1-3 giornate per ecommerce</p><h3>Setup server-side</h3><p>da 1.500 €</p><ul><li>Container server-side su infrastruttura dedicata</li><li>Consent Mode v2 configurato e verificato</li><li>Conversions API Meta ed Enhanced Conversions Google</li><li>Eventi personalizzati sui passaggi che contano</li><li>Documentazione di eventi e naming, che resta all'azienda</li></ul></article><article><p>Disdetta libera. Nessun vincolo di durata.</p><h3>Infrastruttura e lettura dati</h3><p>da 100 €/mese</p><ul><li>Container monitorato, con alert se qualcosa si interrompe</li><li>Aggiornamenti quando le piattaforme cambiano le regole</li><li>Report mensile con la lettura dei dati, non solo i numeri</li></ul></article></section>
+  <section><p>Un caso reale</p><h2>Oltre un milione di segnali recuperati.</h2><p>Su Candiani Denim abbiamo recuperato oltre un milione di segnali di conversione in 90 giorni, di cui 963.652 bloccati dai sistemi di tracking prevention dei browser e 69.043 dagli ad blocker.</p><a href="/casi-studio/candiani-denim-tracking-server-side">Leggi il caso studio completo</a></section>
+  <section id="faq"><h2>Domande frequenti</h2><h3>Cos'è il tracciamento server-side, in parole semplici?</h3><p>Normalmente i dati sulle conversioni vengono raccolti dal browser del visitatore, che però blocca gli script, e dagli ad blocker, che bloccano i pixel. Il tracciamento server-side sposta la raccolta su un server dedicato: i dati arrivano completi e le piattaforme pubblicitarie possono ottimizzare su informazioni reali.</p><h3>Quanto costa e quanto tempo serve?</h3><p>L'audit parte da 490 €. Il setup completo da 1.500 € per un sito non-ecommerce, con tempi di circa una giornata di lavoro. Per gli ecommerce il tempo dipende da piattaforma e numero di prodotti: da una a tre giornate. Il canone di infrastruttura e monitoraggio parte da 100 €/mese.</p><h3>Il tracciamento server-side è conforme al GDPR?</h3><p>È lo strumento che rende la conformità più gestibile, non meno: il consenso viene rispettato a monte tramite Consent Mode v2 e i dati passano da un’infrastruttura che controlliamo. Non siamo consulenti legali e non forniamo pareri: implementiamo quello che il tuo DPO o consulente privacy definisce.</p><h3>Serve cambiare qualcosa sul mio sito?</h3><p>Nell'implementazione standard no: il container gira su un sottodominio del tuo sito e il codice esistente resta. In alcuni casi serve un intervento sul tema o sui template, e te lo diciamo dopo l'audit.</p><h3>Lavori anche con la mia agenzia?</h3><p>Sì. Molte agenzie non hanno un tecnico interno per questa parte: possiamo lavorare direttamente con loro.</p></section>
+  <section><h2>Non sai se il tuo tracciamento è a posto?</h2><p>L'audit da 490 € ti dà una risposta documentata in cinque giorni.</p><a href="#contatti">Richiedi l'audit</a></section><section id="contatti" aria-label="Audit tracciamento"></section>`;
+  return generateBaseHtml({ title: 'Tracciamento Server-Side per Meta e Google | Q4 Studio', description: 'Recuperiamo i segnali di conversione che browser e ad blocker bloccano. Setup server-side, Consent Mode v2, Conversions API. Audit da 490 €.', canonical: `${siteUrl}/tracciamento-server-side`, bodyContent: staticPage(body) });
+}
+
+function generateTechnicalPartnerHtml(): string {
+  const body = `<header><p>White label · per agenzie</p><h1 class="text-6xl font-bold">Sono il tecnico che la tua agenzia non ha in casa.</h1><p>Tracciamento server-side, Consent Mode, automazioni, integrazioni CRM. Lavoro white label: il cliente resta tuo, io non lo contatto mai.</p></header>
+  <section><h2>Il problema che conosci</h2><p>Il cliente ti scrive che Meta dice 40 conversioni e il suo gestionale ne dice 90. Tu sai che è il tracciamento. Ma sistemare un container server-side, la Consent Mode e le Conversions API non è il lavoro per cui hai assunto il tuo team.</p><p>Così la conversazione si ripete ogni mese, e ogni mese il cliente si fida un po' meno dei numeri che gli porti.</p></section>
+  <section><h2>Come funziona</h2><p><strong>1. Mi giri il problema.</strong> Una call di trenta minuti con te, senza il cliente.</p><p><strong>2. Ti dico tempi e prezzo.</strong> Fisso, non a ore.</p><p><strong>3. Lavoro.</strong> Con i tuoi accessi o con quelli del cliente, come preferisci.</p><p><strong>4. Ti consegno.</strong> Documentazione inclusa, così il tuo team capisce cosa c'è.</p><p>Se serve, sto in call col cliente presentato come tuo tecnico. Se preferisci che non compaia, non compaio.</p></section>
+  <section><h2>La garanzia che conta</h2><p><strong>Non contatto i tuoi clienti. Non li aggiungo su LinkedIn. Non li ricontatto quando il progetto finisce.</strong> Se vuoi, lo mettiamo per scritto.</p><p>So che il rischio che ti preoccupa non è il costo: è che il fornitore tecnico diventi il tuo concorrente. Non è il mio modello — io vivo di lavoro tecnico, non di gestione clienti.</p></section>
+  <section><h2>Cosa faccio</h2><ul><li><strong>Tracciamento server-side</strong> — container, Consent Mode v2, Conversions API, Enhanced Conversions. Da 1.500 €, circa una giornata per siti non-ecommerce.</li><li><strong>Audit tracciamento</strong> — 490 €, 3-5 giorni. Utile da rivendere al cliente come primo passo.</li><li><strong>Automazioni e integrazioni</strong> — richieste inbound strutturate, follow-up, collegamenti CRM. Setup + canone.</li><li><strong>Siti e landing</strong> — quando serve il pezzo che manca.</li></ul></section>
+  <section><h2>Sul prezzo</h2><p>Non sono un freelance a basso costo, e probabilmente non ti serve. Il mio prezzo è pensato perché tu lo ricarichi: se rivendi un setup a 2.500 € e il tuo costo è 1.500 €, hai marginato mille euro su un lavoro che non sapevi fare.</p></section>
+  <section><h2>Chi sono</h2><p>Sebastiano, Reggio Emilia. Vengo dal marketing — l'ho studiato e l'ho fatto per anni — e sono tecnico. È una combinazione poco comune, ed è il motivo per cui capisco cosa ti serve senza che debba spiegarmelo due volte.</p><p>Lavoro già con un'agenzia in questo modo: ore prepagate più progetti a prezzo fisso.</p><a href="https://calendar.notion.so/meet/sebastianor/tg3rl4yct">Prenota trenta minuti</a> · <a href="mailto:sebastiano@q4.studio">Scrivimi</a></section>`;
+  return generateBaseHtml({ title: 'Partner tecnico white label per agenzie | Q4 Studio', description: 'Tracciamento server-side, Consent Mode, automazioni e integrazioni CRM in white label per agenzie.', canonical: `${siteUrl}/partner-tecnico`, noIndex: true, bodyContent: staticPage(body) });
+}
+
+function generateMetaAdvertisingHtml(): string {
+  const body = `<header><p>Meta Advertising · B2B</p><h1 class="text-6xl font-bold">Meta Ads B2B, con il tracciamento fatto bene a monte.</h1><p>Le campagne Meta per il B2B funzionano quando l'obiettivo non è il costo per contatto ma la probabilità che quel contatto diventi cliente. Perché questo succeda, l'algoritmo deve ricevere segnali corretti: ed è la parte che quasi nessuno sistema prima di aumentare il budget.</p><p>Seguiamo un numero limitato di progetti Meta B2B, di norma per aziende con cui lavoriamo già sul lato tecnico.</p></header>
+  <section><p>Metodo</p><h2>Consulenza B2B Lead Generation su Meta</h2><p>La B2B Lead Generation su Meta è un sistema di acquisizione contatti pensato per trasformare Facebook e Instagram in canali di crescita misurabile anche per aziende con cicli di vendita complessi. Il nostro ruolo non è comportarci da agenzia che esegue campagne a volume, ma da consulenti che affiancano marketing e sales nella costruzione di un funnel più leggibile, tracciabile e sostenibile.</p><p>Partiamo dall'analisi del processo commerciale: chi è il cliente giusto, proposta di valore, segmentazione, creatività, domande qualificanti, instradamento al CRM e tempi di risposta ai contatti. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del contatto e probabilità di diventare cliente, non solo per costo per contatto.</p><article><h3>Diagnosi prima delle campagne</h3><p>Audit di funnel, audience, offerta e gestione lead prima di aumentare budget o test creativi.</p></article><article><h3>Sistema, non singola ads</h3><p>Campagne, CRM e follow-up vengono progettati insieme per ridurre dispersione e tempi morti.</p></article><article><h3>Governance dei KPI</h3><p>Misuriamo contatti che diventano davvero clienti, appuntamenti e opportunità generate, non solo il costo per contatto e numeri di facciata.</p></article></section>
+  <section><p>Meta Ads Advisory</p><h2>Meta Ads orientate alla qualità</h2><p>Lavoriamo come consulenti operativi sulle campagne Meta B2B: audit account, architettura delle campagne, piano test creativo, tracking server-side e lettura dei dati commerciali. L'obiettivo è aiutare il team a capire cosa sta generando opportunità reali e cosa sta solo gonfiando il volume dei lead.</p><p>L'algoritmo Andromeda dà valore ai segnali di conversione ad alta intenzione. Per questo allineiamo campagne e CRM su eventi come completamento di domande qualificanti, risposta del prospect e progressione nello stage commerciale.</p></section>
+  <section><p>AI Process Consulting</p><h2>Agenti AI sul processo sales</h2><p>Gli Agenti AI non sono chatbot generici. Li disegniamo insieme al team, partendo da regole operative, tono di voce, CRM e punti di frizione nel processo commerciale. Il risultato è un supporto che qualifica, prioritizza e prepara il lavoro umano invece di sostituirlo.</p><p>Nei progetti più maturi, l'integrazione Meta Ads + Agenti AI riduce i tempi di prima risposta, aumenta la precisione nel routing e rende il funnel meno dipendente da interventi manuali ripetitivi.</p></section>
+  <section><p>Misurazione</p><h2>Risultati misurabili, leggibili dal team</h2><p>Ogni attività viene valutata su metriche operative e metriche di business. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.</p><p>Nei progetti B2B monitoriamo nel tempo quanti contatti diventano davvero clienti e confrontiamo i dati prima e dopo integrazione CRM, instradamento e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.</p></section>
+  <section><h2>Il tracciamento viene prima delle campagne. Parti dall'audit.</h2><a href="/tracciamento-server-side">Vedi il tracciamento e i prezzi</a></section>`;
+  return generateBaseHtml({ title: 'Meta Ads B2B e Lead Generation su Facebook e Instagram | Q4 Studio', description: 'Consulenza Meta Advertising per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali dal CRM.', canonical: `${siteUrl}/meta-advertising-b2b`, bodyContent: staticPage(body) });
+}
+
+function generateRestyledHomeBodyContent(): string {
+  const logos = ['MES Connettori', 'RR Auto', 'Senza Stress Ristrutturare', 'Trenove', 'GP Meccatronica', 'STC', 'Candiani'];
+  const logoHtml = logos.map((name) => '<span>' + escapeHtml(name) + '</span>').join(' · ');
+  return [
+    "<div class='home-static'>",
+    "<nav aria-label='Principale'><a href='/tracciamento-server-side'>Tracciamento</a> · <a href='/agenti-ai'>Agenti AI</a> · <a href='/casi-studio'>Casi studio</a> · <a href='/blog'>Blog</a> · <a href='/risorse'>Risorse</a> · <a href='#contatti'>Contatti</a></nav>",
+    "<header><p>TRACCIAMENTO · AUTOMAZIONI · AGENTI AI</p><h1>Le tue campagne ottimizzano sui dati sbagliati.</h1><p>Browser e ad blocker bloccano una parte importante dei segnali di conversione. Con il tracciamento server-side li recuperiamo: su Candiani Denim, oltre un milione di segnali in 90 giorni. Poi automatizziamo quello che viene dopo il click.</p><a href='/tracciamento-server-side'>Vedi il tracciamento e i prezzi</a> <a href='/casi-studio/candiani-denim-tracking-server-side'>Leggi il caso studio</a><p>TRACCIAMENTO SERVER-SIDE · CONSENT MODE · AUTOMAZIONI CRM · WHATSAPP · AGENTI AI · META ADS · DIGITAL ANALYTICS</p></header>",
+    "<section><p>Il punto di partenza</p><h2>Prima dei dati giusti, nessuna ottimizzazione funziona.</h2><p>Il browser blocca gli script. L'ad blocker blocca i pixel. Il consenso limita quello che puoi raccogliere. Risultato: le piattaforme vedono una frazione delle conversioni reali, e ottimizzano su quella frazione.</p><p>Il tracciamento server-side sposta la raccolta dati dal browser a un server che controlliamo noi. I segnali arrivano completi, conformi, e utilizzabili dall'algoritmo.</p><p>Cosa comprende</p><ul><li>Container server-side e infrastruttura dedicata</li><li>Consent Mode v2 configurato correttamente</li><li>Conversions API per Meta, Enhanced Conversions per Google</li><li>Segnali dal CRM alle campagne, non solo l'invio del form</li><li>Documentazione di eventi e naming, che resta all'azienda</li></ul><a href='/tracciamento-server-side'>Vedi i pacchetti e i prezzi</a></section>",
+    "<section><p>Q4 Studio è uno studio tecnico. Sistemiamo la raccolta dei dati, colleghiamo gli strumenti che usi già, e automatizziamo il lavoro ripetitivo che oggi fa una persona a mano.</p></section>",
+    "<section><h2>Dal click al cliente. In automatico.</h2><p>Il nostro sistema di lead generation collega Meta, CRM e WhatsApp: ogni lead viene arricchito, contattato e seguito, dal primo click alla firma.</p><article><p>META ADS · T+0 s</p><h3>Il lead entra dal feed.</h3><p>Campagne Meta progettate sul profilo del cliente giusto e sull'offerta. Il form qualifica già in partenza: chi compila è davvero in target.</p></article><article><p>CRM · T+2 s</p><h3>Nel CRM prima che tu lo veda.</h3><p>Assegnato al commerciale giusto, con fonte, campagna e contesto già pronti.</p></article><article><p>WHATSAPP · T+60 s</p><h3>Primo contatto in 60 secondi.</h3><p>Un messaggio personalizzato parte mentre il lead è ancora sul telefono. La velocità di risposta è la prima leva di conversione: un lead contattato entro un minuto vale molto più di uno contattato dopo quattro ore.</p></article><article><p>ENRICHMENT · T+90 s</p><h3>Il lead diventa un dossier.</h3><p>Dati aziendali arricchiti da fonti pubbliche: dimensione, settore, segnali di priorità. Il commerciale sa con chi parla prima di chiamare.</p></article><article><p>FOLLOW-UP · GIORNI 1–7</p><h3>Ogni lead viene seguito. Sempre.</h3><p>Sequenze automatiche su più canali finché il lead risponde. Il sistema insiste, il team vende.</p></article></section>",
+    "<section><h2>Automazioni che partono in due settimane, non in sei mesi.</h2><p>Non progetti da mesi di analisi. Automazioni concrete su problemi precisi: la richiesta che arriva su WhatsApp e finisce nel CRM già strutturata, il follow-up che parte da solo, il dato che smette di essere ridigitato a mano.</p><p>Ogni automazione parte da un setup contenuto e da un canone mensile chiaro. Se non risolve un problema che ci puoi raccontare in una frase, non la costruiamo.</p><p>WhatsApp · Email / PEC · Gestionale / ERP · CRM · Excel / Sheets · Calendario</p><a href='/agenti-ai'>Vedi le automazioni</a></section>",
+    "<section id='services'><p>Servizi tecnici</p><h2>Due leve. Un unico sistema.</h2><p>Prima rendiamo affidabili i dati. Poi automatizziamo il lavoro che quei dati devono far partire.</p><article><h3>Tracciamento e dati</h3><p>Il pezzo tecnico che quasi nessuna agenzia sa fare. Server-side, Consent Mode, segnali dal CRM alle campagne. Dati completi e conformi, che l'algoritmo può davvero usare.</p><ul><li>Container server-side su infrastruttura dedicata</li><li>Consent Mode v2 e conformità</li><li>Conversions API e Enhanced Conversions</li><li>Documentazione di eventi e naming</li></ul><a href='/tracciamento-server-side'>Audit da 490 € · Setup da 1.500 €</a></article><article><h3>Automazioni e agenti AI</h3><p>Automazioni su problemi precisi, con setup e canone chiari. Richieste inbound strutturate, follow-up automatici, dati che non si ridigitano più.</p><ul><li>Estrazione strutturata da WhatsApp ed email</li><li>Follow-up automatici multicanale</li><li>Integrazione con CRM e gestionale</li><li>Revisione umana dove il dato è incerto</li></ul><a href='/agenti-ai'>Setup da 490 € · Canone da 59 €/mese</a></article><article><h3>Meta Advertising</h3><p>Campagne B2B su Meta, gestite da chi sa anche sistemare il tracciamento a monte. Servizio disponibile per clienti già seguiti sul tecnico.</p><a href='/meta-advertising-b2b'>Approfondisci</a></article>",
+    "<div><p>1.032.695</p><p>segnali di conversione recuperati in 90 giorni — Candiani Denim</p><p>963.652</p><p>bloccati dalla tracking prevention del browser — Candiani Denim</p><p>≤ 60 s</p><p>tempo di primo contatto nel nostro sistema di lead generation</p><p>8 h</p><p>tempo tipico di setup del tracciamento server-side</p></div>",
+    "<div><article><p>01</p><h3>Audit</h3><p>Guardiamo cosa succede oggi ai tuoi dati. Prezzo fisso, 3-5 giorni, consegna un documento che resta tuo anche se ci fermiamo qui.</p></article><article><p>02</p><h3>Setup</h3><p>Implementiamo. Tempi noti, prezzo noto, nessuna sorpresa.</p></article><article><p>03</p><h3>Manutenzione</h3><p>L'infrastruttura resta monitorata e i dati leggibili. Canone mensile, disdetta libera.</p></article></div></section>",
+    "<section><h2>Aziende che ci hanno già scelto</h2>" + logoHtml + "</section>",
+    "<section id='faq'><p>FAQ</p><h2>Domande frequenti</h2><p>Risposte chiare su tracciamento server-side, automazioni e campagne B2B.</p><h3>Cos'è il tracciamento server-side, in parole semplici?</h3><p>Normalmente i dati sulle conversioni vengono raccolti dal browser del visitatore, che però blocca gli script, e dagli ad blocker, che bloccano i pixel. Il tracciamento server-side sposta la raccolta su un server dedicato: i dati arrivano completi e le piattaforme pubblicitarie possono ottimizzare su informazioni reali.</p><h3>Quanto costa e quanto tempo serve?</h3><p>L'audit parte da 490 €. Il setup completo da 1.500 € per un sito non-ecommerce, con tempi di circa una giornata di lavoro. Per gli ecommerce il tempo dipende da piattaforma e numero di prodotti: da una a tre giornate. Il canone di infrastruttura e monitoraggio parte da 100 €/mese.</p><h3>Il tracciamento server-side è conforme al GDPR?</h3><p>È lo strumento che rende la conformità più gestibile, non meno: il consenso viene rispettato a monte tramite Consent Mode v2 e i dati passano da un’infrastruttura che controlliamo. Non siamo consulenti legali e non forniamo pareri: implementiamo quello che il tuo DPO o consulente privacy definisce.</p><h3>In pratica, cos'è la B2B Lead Generation su Meta?</h3><p>È l'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate sul profilo del cliente giusto, messaggio, form, CRM e segnali di qualità.</p><h3>Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?</h3><p>Sì, se l'obiettivo non è solo il costo per lead.</p><h3>Cosa sono gli Agenti AI personalizzati?</h3><p>Sono sistemi costruiti sul processo commerciale dell'azienda per qualificare lead, rispondere più velocemente, assegnare contatti e automatizzare attività ripetitive.</p><h3>Perché collegare Meta Ads, CRM e automazioni?</h3><p>Perché il CRM restituisce segnali più utili dell'invio form. Quando questi dati rientrano nel modello di ottimizzazione, le campagne possono cercare contatti più vicini al valore commerciale reale.</p></section>",
+    "<section><h2>Costruiamo il tuo vantaggio.</h2><p>Raccontaci la tua sfida: ti mostriamo come trasformarla in un sistema che cresce.</p><a href='/tracciamento-server-side'>Vedi il tracciamento e i prezzi</a></section>",
+    "<section id='contatti'><h2>Contatti</h2></section></div>",
+  ].join('');
+}
+
+
 function generateSitemap(blogPosts: any[] = []): string {
   const buildDate = new Date().toISOString().split('T')[0];
 
   const urls = [
     { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly', lastmod: buildDate },
     { loc: `${siteUrl}/agenti-ai`, priority: '0.95', changefreq: 'weekly', lastmod: buildDate },
+    { loc: `${siteUrl}/tracciamento-server-side`, priority: '0.95', changefreq: 'weekly', lastmod: buildDate },
+    { loc: `${siteUrl}/meta-advertising-b2b`, priority: '0.8', changefreq: 'monthly', lastmod: buildDate },
     { loc: `${siteUrl}${caseStudiesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: buildDate },
     { loc: `${siteUrl}${resourcesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: buildDate },
     { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'weekly', lastmod: buildDate },
@@ -1374,7 +1021,7 @@ ${urlEntries}
     if (builtIndexHtml.includes('<div id="root"></div>')) {
       const withHomeContent = builtIndexHtml.replace(
         '<div id="root"></div>',
-        `<div id="root">${generateHomeBodyContent()}</div>`
+        `<div id="root">${generateRestyledHomeBodyContent()}</div>`
       );
       writeFileSync(rootIndexPath, withHomeContent, 'utf-8');
       console.log('✅ Injected static home content into dist/index.html');
@@ -1436,11 +1083,23 @@ ${urlEntries}
   // Generate AI Agents page
   const aiAgentsPath = join(distDir, 'agenti-ai');
   ensureDir(aiAgentsPath);
-  const aiAgentsHtml = generateAIAgentsHtml();
+  const aiAgentsHtml = generateRestyledAIAgentsHtml();
   const aiAgentsStream = createWriteStream(join(aiAgentsPath, 'index.html'));
   aiAgentsStream.write(aiAgentsHtml);
   aiAgentsStream.end();
   console.log('✅ Generated /agenti-ai/index.html');
+
+  const standalonePages = [
+    { path: 'tracciamento-server-side', html: generateServerSideTrackingHtml() },
+    { path: 'partner-tecnico', html: generateTechnicalPartnerHtml() },
+    { path: 'meta-advertising-b2b', html: generateMetaAdvertisingHtml() },
+  ];
+  for (const page of standalonePages) {
+    const pageDir = join(distDir, page.path);
+    ensureDir(pageDir);
+    writeFileSync(join(pageDir, 'index.html'), page.html, 'utf-8');
+    console.log(`✅ Generated /${page.path}/index.html`);
+  }
 
   // Generate individual blog articles
   for (const post of blogPosts) {

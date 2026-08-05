@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowDownRight, ArrowUpRight, Bot, Target, Database, MessageCircle, BarChart3, Zap } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, Bot, Database, MessageCircle, BarChart3, Zap, Server, ShieldCheck } from 'lucide-react';
 import MagneticButton from '../MagneticButton';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -80,11 +80,12 @@ const HeroBackgroundVideo: React.FC = () => {
 /* ------------------------------------------------------------------ */
 
 const tickerItems = [
-  { label: 'LEAD GENERATION B2B', icon: <Target className="w-3.5 h-3.5" /> },
+  { label: 'TRACCIAMENTO SERVER-SIDE', icon: <Server className="w-3.5 h-3.5" /> },
+  { label: 'CONSENT MODE', icon: <ShieldCheck className="w-3.5 h-3.5" /> },
+  { label: 'AUTOMAZIONI CRM', icon: <Database className="w-3.5 h-3.5" /> },
+  { label: 'WHATSAPP', icon: <MessageCircle className="w-3.5 h-3.5" /> },
   { label: 'AGENTI AI', icon: <Bot className="w-3.5 h-3.5" /> },
   { label: 'META ADS', icon: <Zap className="w-3.5 h-3.5" /> },
-  { label: 'CRM AUTOMATION', icon: <Database className="w-3.5 h-3.5" /> },
-  { label: 'WHATSAPP FOLLOW-UP', icon: <MessageCircle className="w-3.5 h-3.5" /> },
   { label: 'DIGITAL ANALYTICS', icon: <BarChart3 className="w-3.5 h-3.5" /> },
 ];
 
@@ -213,12 +214,8 @@ const Hero2: React.FC = () => {
     return () => ctx.revert();
   }, []);
 
-  const scrollToForm = () => {
-    document.querySelector('section:has(form)')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  };
-
-  const goToAgents = () => {
-    window.history.pushState(null, '', '/agenti-ai');
+  const goTo = (path: string) => {
+    window.history.pushState(null, '', path);
     window.dispatchEvent(new Event('popstate'));
   };
 
@@ -254,17 +251,17 @@ const Hero2: React.FC = () => {
           ref={kickerRef}
           className="mb-4 md:mb-5 uppercase tracking-[0.08em] text-[11px] text-indigo-300/70"
         >
-          Bring AI&Tech to Marketing
+          TRACCIAMENTO · AUTOMAZIONI · AGENTI AI
         </p>
 
         <h1
-          className="font-bold tracking-tighter leading-[0.95] text-white max-w-[8.5ch] md:max-w-none text-[clamp(44px,12.8vw,52px)] md:text-[clamp(56px,7.5vw,108px)]"
+          className="max-w-[15ch] font-bold tracking-tighter leading-[0.95] text-white text-[clamp(42px,11vw,60px)] md:text-[clamp(56px,7vw,96px)]"
           style={{
             perspective: '800px',
             textShadow: '0 2px 24px rgba(0,0,0,0.55)',
           }}
         >
-          <span ref={line1Ref} className="block">Il tuo AI</span>
+          <span ref={line1Ref} className="block">Le tue campagne ottimizzano</span>
           {/* pb + margin-bottom negativo: allargano l'area di paint del
               background (bg-clip-text) oltre la line-box stretta (leading-0.95)
               così il discendente della "g" non resta fuori dal gradiente, senza
@@ -273,7 +270,7 @@ const Hero2: React.FC = () => {
             ref={line2Ref}
             className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 pb-[0.2em] -mb-[0.2em]"
           >
-            Marketing Partner.
+            sui dati sbagliati.
           </span>
         </h1>
 
@@ -282,19 +279,19 @@ const Hero2: React.FC = () => {
           className="mt-8 text-lg md:text-xl text-gray-300 max-w-xl mx-auto leading-relaxed"
           style={{ textShadow: '0 1px 12px rgba(0,0,0,0.6)' }}
         >
-          Lo studio di consulenza che porta AI e le ultime tecnologie nel tuo marketing.
+          Browser e ad blocker bloccano una parte importante dei segnali di conversione. Con il tracciamento server-side li recuperiamo: su Candiani Denim, oltre un milione di segnali in 90 giorni. Poi automatizziamo quello che viene dopo il click.
         </p>
 
         <div ref={ctaRef} className="mt-10 flex flex-wrap items-center justify-center gap-5">
-          <MagneticButton onClick={scrollToForm} className="text-white">
-            Inizia il percorso
+          <MagneticButton onClick={() => goTo('/tracciamento-server-side')} className="text-white">
+            Vedi il tracciamento e i prezzi
             <ArrowUpRight className="w-5 h-5" />
           </MagneticButton>
           <button
-            onClick={goToAgents}
+            onClick={() => goTo('/casi-studio/candiani-denim-tracking-server-side')}
             className="group flex items-center gap-2 text-sm tracking-[0.08em] text-gray-400 hover:text-indigo-300 transition-colors cursor-pointer bg-transparent border-0 uppercase"
           >
-            Scopri gli Agenti AI
+            Leggi il caso studio
             <ArrowDownRight className="w-4 h-4 -rotate-90 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>

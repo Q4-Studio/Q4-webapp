@@ -9,9 +9,11 @@ gsap.registerPlugin(ScrollTrigger);
 interface ContactFormProps {
   /** Mostra l'intestazione "Iniziamo a Crescere" sopra il form (default true). */
   showHeader?: boolean;
+  /** Contesto opzionale mostrato nel form e inviato al webhook. */
+  subject?: string;
 }
 
-const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true }) => {
+const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({
@@ -77,13 +79,19 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true }) => {
     try {
       // Get webhook URL from environment variable or use placeholder
       const webhookUrl = import.meta.env.VITE_WEBHOOK_URL || '';
+      const submissionPayload = {
+        ...formData,
+        ...(subject ? { subject } : {}),
+        timestamp: new Date().toISOString(),
+        source: 'Q4 Studio Website'
+      };
 
       if (!webhookUrl) {
-        console.warn('VITE_WEBHOOK_URL not configured. Form data:', formData);
+        console.warn('VITE_WEBHOOK_URL not configured. Form data:', submissionPayload);
         // Simulate success for demo purposes
         await new Promise(resolve => setTimeout(resolve, 1000));
         setSubmitStatus('success');
-        setFormData({ name: '', email: '', company: '', message: '' });
+        setFormData({ name: '', email: '', phone: '', company: '', message: '' });
         return;
       }
 
@@ -92,11 +100,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          timestamp: new Date().toISOString(),
-          source: 'Q4 Studio Website'
-        })
+        body: JSON.stringify(submissionPayload)
       });
 
       if (response.ok) {
@@ -133,6 +137,13 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true }) => {
         <form ref={formRef} onSubmit={handleSubmit} className="relative bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 md:p-12">
           {/* Background glow */}
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-3xl -z-10" />
+
+          {subject && (
+            <div className="mb-8 rounded-2xl border border-cyan-400/20 bg-cyan-400/[0.06] px-5 py-4">
+              <span className="block text-[11px] uppercase tracking-[0.08em] text-cyan-300">Richiesta</span>
+              <strong className="mt-1 block text-lg text-white">{subject}</strong>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>

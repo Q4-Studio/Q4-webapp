@@ -26,8 +26,11 @@ const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
 const AIAgents = lazy(() => import('./components/AIAgents'));
 const CaseStudiesIndex = lazy(() => import('./components/CaseStudiesIndex'));
 const CaseStudyPage = lazy(() => import('./components/CaseStudyPage'));
+const ServerSideTracking = lazy(() => import('./components/ServerSideTracking'));
+const TechnicalPartner = lazy(() => import('./components/TechnicalPartner'));
+const MetaAdvertisingB2B = lazy(() => import('./components/MetaAdvertisingB2B'));
 
-type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | 'case-studies' | 'case-study' | '404';
+type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | 'tracking' | 'technical-partner' | 'meta-advertising' | 'case-studies' | 'case-study' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -55,7 +58,7 @@ const App: React.FC = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    const query = window.matchMedia('(min-width: 768px)');
+    const query = window.matchMedia('(min-width: 1024px)');
     const onChange = () => {
       if (query.matches) setMobileMenuOpen(false);
     };
@@ -99,7 +102,13 @@ const App: React.FC = () => {
       const hash = window.location.hash.slice(1); // Remove #
       const route = `${path}#${hash}`;
 
-      if (path === '/agenti-ai') {
+      if (path === '/tracciamento-server-side') {
+        setCurrentPage('tracking');
+      } else if (path === '/partner-tecnico') {
+        setCurrentPage('technical-partner');
+      } else if (path === '/meta-advertising-b2b') {
+        setCurrentPage('meta-advertising');
+      } else if (path === '/agenti-ai') {
         setCurrentPage('agenti-ai');
         setCurrentSeoSlug('');
       } else if (path === caseStudiesPath) {
@@ -196,6 +205,10 @@ const App: React.FC = () => {
       window.history.pushState(null, '', '/agenti-ai');
       setCurrentPage('agenti-ai');
       window.scrollTo({ top: 0 });
+    } else if (page === 'tracking') {
+      window.history.pushState(null, '', '/tracciamento-server-side');
+      setCurrentPage('tracking');
+      window.scrollTo({ top: 0 });
     } else {
       if (window.location.pathname !== '/') {
         window.history.pushState(null, '', '/');
@@ -260,49 +273,36 @@ const App: React.FC = () => {
 
         {/* Pillola centrale flottante con le voci di menu (solo desktop), centrata
             in assoluto sulla nav indipendentemente dalla larghezza di logo/CTA */}
-        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 rounded-full border border-white/30 bg-white/20 backdrop-blur-md px-3 py-2.5">
-          {currentPage !== 'home' && (
-            <button
-              onClick={() => navigateTo('home')}
-              className="text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer border-0 bg-transparent text-white/80 hover:bg-white/20 hover:text-white"
-            >
-              HOME
-            </button>
-          )}
+        <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 rounded-full border border-white/30 bg-white/20 backdrop-blur-md px-3 py-2.5">
+          <button onClick={() => navigateTo('tracking')} className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${currentPage === 'tracking' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'}`}>TRACCIAMENTO</button>
           <button
             onClick={() => navigateTo('agenti-ai')}
-            className={`text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${
+              className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${
               currentPage === 'agenti-ai' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
             }`}
           >
             AGENTI AI
           </button>
-          <button
-            onClick={() => navigateTo('blog')}
-            className={`text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${
-              currentPage === 'blog' || currentPage === 'blog-article' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
-            }`}
-          >
-            BLOG
-          </button>
           {/* Link reale ai casi studio: vale anche come link interno per i crawler */}
           <a
             href={caseStudiesPath}
-            className={`text-base font-medium px-5 py-2.5 rounded-full transition-colors cursor-pointer ${
+            className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer ${
               currentPage === 'case-studies' || currentPage === 'case-study' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
             }`}
           >
             CASI STUDIO
           </a>
+          <button onClick={() => navigateTo('blog')} className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${currentPage === 'blog' || currentPage === 'blog-article' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'}`}>BLOG</button>
+          <a href="/risorse" className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors ${currentPage === 'directory' || currentPage === 'seo-page' ? 'bg-white text-gray-900' : 'text-white/80 hover:bg-white/20 hover:text-white'}`}>RISORSE</a>
         </div>
 
         <div className="flex items-center gap-3">
           {/* CTA "Scrivici": pillola bianca piena, visibile da md in su */}
           <button
             onClick={scrollToContact}
-            className="hidden md:inline-flex text-base font-semibold px-7 py-3 rounded-full bg-white text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer border-0"
+            className="hidden lg:inline-flex text-base font-semibold px-7 py-3 rounded-full bg-white text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer border-0"
           >
-            Scrivici
+            Contatti
           </button>
 
           {/* Hamburger mobile: stessa area del logo, area di tap >= 44x44px */}
@@ -313,7 +313,7 @@ const App: React.FC = () => {
             aria-label={mobileMenuOpen ? 'Chiudi menu' : 'Apri menu'}
             aria-expanded={mobileMenuOpen}
             aria-controls={MOBILE_MENU_PANEL_ID}
-            className="md:hidden flex h-11 w-11 items-center justify-center cursor-pointer bg-transparent border-0"
+            className="lg:hidden flex h-11 w-11 items-center justify-center cursor-pointer bg-transparent border-0"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -395,6 +395,16 @@ const App: React.FC = () => {
               <ContactForm />
               <Footer />
             </>
+          )}
+
+          {currentPage === 'tracking' && (
+            <><ServerSideTracking /><ContactForm subject="Audit tracciamento" /><Footer /></>
+          )}
+
+          {currentPage === 'technical-partner' && <TechnicalPartner />}
+
+          {currentPage === 'meta-advertising' && (
+            <><MetaAdvertisingB2B /><Footer /></>
           )}
 
           {currentPage === 'seo-page' && currentSeoPage && (

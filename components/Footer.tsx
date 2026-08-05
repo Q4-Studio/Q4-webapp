@@ -27,19 +27,6 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
     setEmail(decode(OBFUSCATED.email));
   }, []);
 
-  const scrollHomeSection = (sectionId: string) => {
-    if (window.location.pathname !== '/' || (window.location.hash && window.location.hash !== '#' && window.location.hash !== '#home')) {
-      window.history.pushState(null, '', '/');
-      window.dispatchEvent(new Event('popstate'));
-      setTimeout(() => {
-        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
-      return;
-    }
-
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  };
-
   useEffect(() => {
     if (!footerRef.current) return;
 
@@ -140,7 +127,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                   className="h-8 md:h-10 w-auto mb-4 mx-auto md:mx-0"
                 />
                 <p className="max-w-xs mb-4 mx-auto md:mx-0">
-                    Studio di consulenza per crescita B2B, Meta Ads e Agenti AI.
+                    Studio tecnico per tracciamento server-side, automazioni e agenti AI.
                 </p>
                 <div className="flex flex-col gap-2 mt-4 mb-4">
                   {phone && (
@@ -178,12 +165,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
             <div>
                 <h4 className="text-white font-bold text-lg mb-4">Servizi</h4>
                 <ul className="space-y-2">
-                    <li
-                        className="hover:text-indigo-400 cursor-pointer transition-colors"
-                        onClick={() => scrollHomeSection('services')}
-                    >
-                        B2B Lead Generation
-                    </li>
+                    <li><a href="/tracciamento-server-side" className="hover:text-indigo-400 transition-colors">Tracciamento server-side</a></li>
                     <li
                         className="hover:text-indigo-400 cursor-pointer transition-colors"
                         onClick={() => {
@@ -198,16 +180,21 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                             Casi Studio
                         </a>
                     </li>
+                    <li><a href="/meta-advertising-b2b" className="hover:text-indigo-400 transition-colors">Meta Advertising B2B</a></li>
                 </ul>
             </div>
             <div>
-                 <h4 className="text-white font-bold text-lg mb-4">Legale</h4>
+                <h4 className="text-white font-bold text-lg mb-4">Esplora</h4>
                 <ul className="space-y-2">
+                    <li>
+                        <a href="/blog" className="hover:text-indigo-400 transition-colors">Blog</a>
+                    </li>
                     <li>
                         <a href="/risorse" className="hover:text-indigo-400 transition-colors">
                             Risorse
                         </a>
                     </li>
+                    <li className="pt-2 text-gray-500">Legale</li>
                     <li
                         className="hover:text-indigo-400 cursor-pointer transition-colors"
                         onClick={() => {
