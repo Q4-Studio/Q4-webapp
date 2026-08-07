@@ -58,7 +58,50 @@ Sito web ufficiale di **Q4 Studio**, agenzia specializzata in Meta Advertising, 
    npm run dev
    ```
 
-   L'app sarà disponibile su `http://localhost:5173`
+   L'app sarà disponibile su `http://127.0.0.1:3000`.
+
+### Anteprima privata delle bozze
+
+L'anteprima è disponibile **solo con il server Vite di sviluppo**. Non è una
+route React e non viene inclusa nella build di produzione. È strettamente in
+sola lettura: non espone comandi o endpoint di scrittura. Creazione, modifica e
+pubblicazione degli articoli vengono eseguite da Codex con operazioni
+controllate lato server, usando la chiave segreta disponibile solo nella
+sessione locale autorizzata.
+
+1. Copia le variabili di esempio da `.env.example` nel file ignorato
+   `.env.local`. Imposta `BLOG_PREVIEW_HOST` sull'origine HTTPS esatta esposta
+   da Tailscale, per esempio `https://host.tailnet-name.ts.net`. Le variabili
+   `SUPABASE_SECRET_KEY`, `BLOG_PREVIEW_KEY` e
+   `BLOG_PREVIEW_SESSION_SECRET` devono restare senza prefisso `VITE_` e non
+   devono essere configurate su Vercel.
+2. Genera chiavi casuali locali:
+   ```bash
+   openssl rand -base64 24  # BLOG_PREVIEW_KEY
+   openssl rand -base64 48  # BLOG_PREVIEW_SESSION_SECRET
+   ```
+3. Avvia il listener locale:
+   ```bash
+   npm run dev:blog-preview
+   ```
+4. In un secondo terminale, esponi il listener nel tailnet tramite HTTPS:
+   ```bash
+   tailscale serve --bg http://127.0.0.1:3000
+   ```
+5. Apri `<BLOG_PREVIEW_HOST>/__draft-preview/` e inserisci la chiave. Limita
+   inoltre l'accesso al dispositivo e agli utenti necessari tramite ACL
+   Tailscale.
+
+Il cookie firmato dura 30 minuti, è `HttpOnly`, `Secure` e `SameSite=Strict`.
+Le pagine hanno `no-store`, `noindex` e una CSP restrittiva. Cambiare
+`BLOG_PREVIEW_HOST` richiede il riavvio di Vite. Il body del login è limitato a
+4 KiB. Il rate limit usa `Tailscale-User-Login` soltanto quando la connessione
+arriva dal proxy loopback di Tailscale Serve; il valore viene trasformato in un
+digest e non viene registrato. Le richieste loopback senza quell'header
+(incluse quelle da dispositivi Tailscale con tag) condividono volutamente un
+unico bucket globale. Gli header di forwarding non sono mai considerati quando
+il peer TCP non è loopback. Questo segue il comportamento documentato degli
+[identity header di Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve#identity-headers).
 
 ## Build per Produzione
 
@@ -98,14 +141,23 @@ Per dettagli completi sull'architettura, vedi [ARCHITECTURE.md](./ARCHITECTURE.m
 
 ## Gestione Blog
 
-Gli articoli del blog sono gestiti tramite Supabase. Per aggiungere/modificare articoli:
+Gli articoli risiedono nella tabella Supabase `blog_posts`, ma il sito non
+espone una dashboard, un editor o API di scrittura. Per creare o modificare un
+articolo, chiedi a Codex di eseguire l'operazione controllata lato server con la
+chiave segreta locale. Il contenuto supporta Markdown.
 
-1. Accedi al dashboard Supabase
-2. Vai nella tabella `blog_posts`
-3. Inserisci/modifica articoli
-4. Il contenuto supporta Markdown
+Il flusso editoriale è:
 
-Le funzioni helper sono disponibili in `lib/supabase.ts`.
+1. Codex crea o aggiorna la riga mantenendo `published = false`.
+2. La bozza viene verificata tramite l'anteprima privata in sola lettura.
+3. Dopo approvazione esplicita, Codex imposta `published = true` lato server.
+4. Si esegue build e deploy affinché HTML prerenderizzato e sitemap riflettano
+   la nuova versione pubblica.
+
+Il client browser in `lib/supabase.ts` espone esclusivamente letture dei post
+pubblicati con la chiave anon. Per le bozze usa l'anteprima privata descritta
+sopra; la chiave Supabase segreta resta nei processi server-side locali
+autorizzati e non entra mai nel browser.
 
 ## Deploy
 
