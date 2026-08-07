@@ -7,10 +7,6 @@ Allow: /risorse
 Allow: /risorse/
 Allow: /casi-studio
 Allow: /casi-studio/
-Disallow: /dashq4login
-Disallow: /dashboard
-Disallow: /#dashq4login
-Disallow: /#dashboard
 
 # Sitemap
 Sitemap: https://www.q4.studio/sitemap.xml

@@ -197,8 +197,6 @@ D:\-- MAIN\- Progetti\Q4\Web Q4\
 - `home`: Homepage (HomeV2 — `components/home2/HomeV2.tsx`)
 - `blog`: Lista articoli
 - `blog-article`: Singolo articolo
-- `dashq4login`: Login dashboard (mascherato per sicurezza)
-- `dashboard`: Gestione articoli blog (richiede autenticazione)
 - `404`: Not found
 
 ### 2. components/home2/HomeV2.tsx
@@ -291,11 +289,6 @@ getBlogPostBySlug(slug: string): Promise<BlogPost | null>
 
 // Fetch per categoria
 getBlogPostsByCategory(category: string): Promise<BlogPost[]>
-
-// CRUD (require auth)
-createBlogPost(post: Omit<BlogPost, 'id'>): Promise<BlogPost>
-updateBlogPost(slug: string, updates: Partial<BlogPost>): Promise<BlogPost>
-deleteBlogPost(slug: string): Promise<void>
 ```
 
 ### BlogPost Type
@@ -320,200 +313,42 @@ interface BlogPost {
 
 ---
 
-## Dashboard System
+## Anteprima privata delle bozze
 
-Sistema di gestione articoli per collaboratori. Permette a più utenti autenticati di creare, modificare ed eliminare articoli blog in autonomia.
+La precedente dashboard React con autenticazione e CRUD è stata rimossa dalla
+build pubblica. Creazione, modifica e pubblicazione degli articoli vengono
+eseguite da Codex tramite operazioni controllate lato server con la chiave
+segreta locale. Il client browser conserva soltanto le query anonime sui post
+con `published = true`.
 
-### Architettura
+In sviluppo, `server/draftPreviewPlugin.ts` registra middleware Vite con
+`apply: 'serve'` sotto `/__draft-preview/`. Il middleware:
 
-**Route Mascherata**: `/#dashq4login` (non `/#admin` per evitare bot)
+- ascolta solo tramite Vite su `127.0.0.1` ed è pensato per Tailscale Serve;
+- valida Host e Origin rispetto a `BLOG_PREVIEW_HOST`;
+- riceve `BLOG_PREVIEW_KEY` solo in un body POST e usa un confronto timing-safe;
+- limita il body del login a 4 KiB e smette subito di conservarne i byte oltre
+  il limite;
+- emette un cookie firmato di 30 minuti, `HttpOnly`, `Secure` e
+  `SameSite=Strict`;
+- applica rate limiting per `Tailscale-User-Login` solo dietro peer loopback;
+  richieste loopback senza identità condividono un bucket globale e peer non
+  loopback non possono influenzare l'identità tramite header;
+- applica `no-store`, `noindex`, CSP e frame denial;
+- usa `SUPABASE_SECRET_KEY` solo nel processo Vite locale per leggere righe
+  con `published = false`;
+- espone esclusivamente lista e dettaglio, senza mutation o endpoint di
+  pubblicazione.
 
-**Flow**:
-```
-1. Utente visita /#dashq4login
-2. DashboardLogin → Form email/password
-3. Login Success → Redirect a /#dashboard
-4. Dashboard → DashboardArticles (lista) o DashboardEditor (CRUD)
-5. Logout → Torna a /#dashq4login
-```
+Il flusso editoriale mantiene la riga su `published = false`, usa questa
+anteprima per la revisione e richiede approvazione esplicita prima che Codex
+imposti `published = true` lato server. La pubblicazione richiede poi build e
+deploy per aggiornare HTML prerenderizzato e sitemap. Non esiste un comando CLI
+o endpoint di scrittura incluso nell'applicazione.
 
-### Componenti Dashboard
-
-#### 1. DashboardLogin.tsx (/#dashq4login)
-**Responsabilità**: Pagina di login mascherata
-
-**Features**:
-- Form email/password con validazione
-- Toggle visibilità password
-- Error handling con messaggi user-friendly
-- Loading state durante autenticazione
-- GSAP animations per UI fluida
-- Design coerente con resto del sito
-
-**Props**:
-```typescript
-interface DashboardLoginProps {
-  onLoginSuccess: () => void;  // Callback per redirect a dashboard
-}
-```
-
-#### 2. Dashboard.tsx (/#dashboard)
-**Responsabilità**: Container con auth guard
-
-**Features**:
-- Verifica sessione Supabase al mount
-- Auth listener per session changes
-- Redirect automatico a login se non autenticato
-- Loading state durante check auth
-- Gestione view switching (list ↔ editor)
-
-**Props**:
-```typescript
-interface DashboardProps {
-  onLogout: () => void;  // Callback per logout
-}
-```
-
-**Views**:
-- `list`: Mostra DashboardArticles
-- `create`: Mostra DashboardEditor vuoto
-- `edit`: Mostra DashboardEditor con post esistente
-
-#### 3. DashboardArticles.tsx
-**Responsabilità**: Lista articoli con azioni CRUD
-
-**Features**:
-- Fetch TUTTI gli articoli (published e draft)
-- Grid view con thumbnail cover image
-- Azioni per ogni articolo:
-  - ✏️ Modifica (apre editor)
-  - 🗑️ Elimina (con conferma)
-- Pulsante "Nuovo Articolo"
-- Logout button
-- Loading/error states
-- Empty state quando nessun articolo
-
-**Props**:
-```typescript
-interface DashboardArticlesProps {
-  onCreateNew: () => void;
-  onEdit: (post: BlogPost) => void;
-  onLogout: () => void;
-}
-```
-
-#### 4. DashboardEditor.tsx
-**Responsabilità**: Editor markdown per articoli
-
-**Features**:
-- **Form completo** con tutti i campi:
-  - Titolo
-  - Slug (auto-generato da titolo)
-  - Categoria (dropdown)
-  - Estratto (textarea)
-  - Contenuto (markdown editor)
-  - Cover image URL
-  - Tempo lettura
-  - Autore (dropdown team)
-- **Toggle Preview/Edit**: Anteprima live del markdown
-- **Markdown Support**: H1, H2, H3, grassetto, liste
-- **Auto-save slug**: Genera slug SEO-friendly da titolo
-- **Auto-set author image**: Seleziona foto in base all'autore
-- **Validazione**: Tutti i campi obbligatori
-- **Error handling**: Messaggi chiari in caso di errore
-
-**Props**:
-```typescript
-interface DashboardEditorProps {
-  post: BlogPost | null;  // null = create, BlogPost = edit
-  onBack: () => void;     // Torna a lista
-  onSave: () => void;     // Callback dopo save success
-}
-```
-
-### Autenticazione
-
-**Sistema**: Supabase Auth con email/password
-
-**Auth Helper Functions** (lib/supabase.ts):
-```typescript
-// Login
-signIn(email: string, password: string): Promise<AuthData>
-
-// Logout
-signOut(): Promise<void>
-
-// Get session corrente
-getSession(): Promise<Session | null>
-
-// Get utente corrente
-getCurrentUser(): Promise<User | null>
-
-// Listen auth changes
-onAuthStateChange(callback: (session: Session) => void)
-```
-
-### Setup Autenticazione
-
-**Step 1: Abilita Email Auth su Supabase**
-1. Dashboard Supabase → Authentication → Providers
-2. Abilita "Email" provider
-3. Disabilita "Confirm email" (per testing)
-
-**Step 2: Crea Utenti per Collaboratori**
-1. Dashboard Supabase → Authentication → Users
-2. Click "Invite user" o "Add user"
-3. Inserisci email collaboratore
-4. Setta password temporanea
-5. Invia credenziali al collaboratore
-
-**Step 3: Collaboratori Accedono**
-1. Visita `yoursite.com/#dashq4login`
-2. Login con email/password fornite
-3. Accesso a dashboard completo
-
-### Security
-
-**Row Level Security (RLS)**:
-```sql
--- Policy read: pubblico può leggere articoli pubblicati
-CREATE POLICY "Allow public read access to published posts"
-  ON blog_posts FOR SELECT
-  USING (published = true);
-
--- Policy write: solo autenticati possono scrivere
-CREATE POLICY "Allow authenticated users full access"
-  ON blog_posts FOR ALL
-  USING (auth.role() = 'authenticated');
-```
-
-**Best Practices**:
-- ✅ Route login mascherata (`dashq4login` non `admin`)
-- ✅ Session persistente con Supabase Auth
-- ✅ RLS policies per proteggere DB
-- ✅ Solo chiave `anon` nel browser (mai `service_role`)
-- ✅ Redirect automatico se non autenticato
-- ✅ Logout sicuro con cleanup session
-
-### Workflow Creazione Articolo
-
-```
-1. Utente fa login su /#dashq4login
-2. Redirect automatico a /#dashboard
-3. Click "Nuovo Articolo"
-4. Compila form editor:
-   - Scrive titolo → Slug auto-generato
-   - Seleziona categoria
-   - Scrive estratto
-   - Scrive contenuto in markdown
-   - Inserisce URL cover image
-   - Seleziona autore → Immagine auto-settata
-5. Click "Anteprima" per vedere rendering
-6. Click "Salva" → Validazione
-7. Se OK → Salvataggio su Supabase
-8. Redirect a lista articoli
-9. Articolo appare sul blog pubblico immediatamente
-```
+Le variabili segrete non hanno prefisso `VITE_`, non sono importate dal codice
+client e non vanno configurate su Vercel. Setup e comandi operativi sono in
+`README.md` e `.env.example`.
 
 ---
 
@@ -595,7 +430,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 npm install
 npm run dev
 ```
-- Server: http://localhost:5173
+- Server: http://127.0.0.1:3000
 - Hot Module Replacement attivo
 
 ### Production Build
@@ -721,7 +556,7 @@ useEffect(() => {
 - [ ] Paginazione blog (se > 20 articoli)
 - [ ] Filtri per categoria
 - [ ] Search bar per articoli
-- [✅] Admin panel per gestione blog
+- [✅] Dashboard blog rimossa dalla build pubblica; manutenzione controllata via Codex lato server
 - [ ] Preview mode per bozze
 - [ ] Newsletter signup
 - [ ] Analytics integration
