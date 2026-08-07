@@ -11,9 +11,12 @@ interface ContactFormProps {
   showHeader?: boolean;
   /** Contesto opzionale mostrato nel form e inviato al webhook. */
   subject?: string;
+  /** Testi opzionali per contestualizzare l'intestazione su una pagina servizio. */
+  headerTitle?: string;
+  headerDescription?: string;
 }
 
-const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject }) => {
+const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, headerTitle, headerDescription }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({
@@ -126,10 +129,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject })
           <div className="text-center mb-16">
             <span className="text-indigo-500 text-sm tracking-[0.08em] mb-5 block">CONTATTACI</span>
             <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">
-              Iniziamo a <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Crescere</span>
+              {headerTitle ?? <>Iniziamo a <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Crescere</span></>}
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Raccontaci la tua sfida. Ti mostreremo come automatizzare la crescita del tuo business B2B.
+              {headerDescription ?? 'Raccontaci la tua sfida. Ti mostreremo come automatizzare la crescita del tuo business B2B.'}
             </p>
           </div>
         )}

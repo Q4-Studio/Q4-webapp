@@ -233,7 +233,7 @@ export const caseStudies: CaseStudy[] = [
       heading: 'Pronto a crescere? Parla con un esperto',
       body: 'Raccontaci la tua sfida.',
       label: 'Pronto a crescere? Parla con un esperto',
-      href: '/#contatti'
+      href: '/siti-web-ai'
     },
     services: ['Rebranding', 'Web design', 'Sviluppo sito web', 'Art direction', 'Motion design', 'Asset AI', 'SEO']
   }

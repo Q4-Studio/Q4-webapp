@@ -92,7 +92,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/((?!risorse|casi-studio|blog|tracciamento-server-side|partner-tecnico|meta-advertising-b2b|sitemap.xml|robots.txt|llms.txt).+)",
+      "source": "/((?!risorse|casi-studio|blog|tracciamento-server-side|siti-web-ai|partner-tecnico|meta-advertising-b2b|sitemap.xml|robots.txt|llms.txt).+)",
       "destination": "/index.html"
     }
   ],

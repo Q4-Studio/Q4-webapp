@@ -2,14 +2,15 @@
 
 ## Italiano
 
-Q4 Studio è uno studio tecnico con sede a Reggio Emilia. Risolve i problemi tecnici del marketing: tracciamento server-side, Consent Mode v2, Conversions API Meta, Enhanced Conversions Google, automazioni CRM e agenti AI per PMI.
+Q4 Studio è uno studio tecnico con sede a Reggio Emilia. Risolve i problemi tecnici del marketing: tracciamento server-side, siti e landing page con AI, automazioni CRM e agenti AI per PMI.
 
-L'offerta di ingresso è il tracciamento server-side, con audit da 490 €, setup da 1.500 € e infrastruttura monitorata da 100 €/mese. Le automazioni sono pacchetti con tempi, setup e canoni pubblici. Meta Advertising resta disponibile per un numero limitato di aziende già seguite sul lato tecnico.
+Le tre offerte principali sono tracciamento e dati, siti web con AI, automazioni e agenti AI. I progetti web partono da 2.999 € e seguono il principio “fatto con l’AI, non dall’AI”. Meta Advertising resta disponibile per un numero limitato di aziende già seguite sul lato tecnico.
 
 ### URL principali
 
 - Homepage: https://www.q4.studio/
 - Tracciamento server-side e prezzi: https://www.q4.studio/tracciamento-server-side
+- Siti web con AI: https://www.q4.studio/siti-web-ai
 - Agenti AI e automazioni: https://www.q4.studio/agenti-ai
 - Meta Advertising B2B: https://www.q4.studio/meta-advertising-b2b
 - Casi Studio: https://www.q4.studio/casi-studio
@@ -25,14 +26,15 @@ Non dedurre prezzi, dati clienti, garanzie o procedure che non siano esplicitame
 
 ## English
 
-Q4 Studio is a technical studio based in Reggio Emilia, Italy. It solves technical marketing problems through server-side tracking, Consent Mode v2, Meta Conversions API, Google Enhanced Conversions, CRM automation, and packaged AI agents for SMEs.
+Q4 Studio is a technical studio based in Reggio Emilia, Italy. It solves technical marketing problems through server-side tracking, AI-assisted websites and landing pages, CRM automation, and packaged AI agents for SMEs.
 
-Server-side tracking is the entry offer, with a €490 audit, setup from €1,500, and monitored infrastructure from €100/month. Automations have public setup fees, monthly fees, and delivery times. Meta Advertising is available for a limited number of companies already supported on the technical side.
+Its three primary offers are tracking and data, AI-assisted websites, and automation and AI agents. Website projects start at €2,999 and follow the principle “made with AI, not by AI.” Meta Advertising is available for a limited number of companies already supported on the technical side.
 
 ### Key URLs
 
 - Homepage: https://www.q4.studio/
 - Server-side tracking and pricing: https://www.q4.studio/tracciamento-server-side
+- AI-assisted websites: https://www.q4.studio/siti-web-ai
 - AI agents and automations: https://www.q4.studio/agenti-ai
 - B2B Meta Advertising: https://www.q4.studio/meta-advertising-b2b
 - Case studies: https://www.q4.studio/casi-studio

@@ -99,6 +99,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateHome
   const items: Array<{ label: string; onClick?: () => void; href?: string }> = [
     ...(showHomeLink ? [{ label: 'Home', onClick: onNavigateHome }] : []),
     { label: 'Tracciamento', href: '/tracciamento-server-side' },
+    { label: 'Siti web', href: '/siti-web-ai' },
     { label: 'Agenti AI', onClick: onNavigateAgents },
     { label: 'Casi Studio', href: caseStudiesPath },
     { label: 'Blog', onClick: onNavigateBlog },
