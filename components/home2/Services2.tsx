@@ -16,7 +16,7 @@ const services = [
     title: 'Automazioni e agenti AI',
     desc: 'Automazioni su problemi precisi, con setup e canone chiari. Richieste inbound strutturate, follow-up automatici, dati che non si ridigitano più.',
     points: ['Estrazione strutturata da WhatsApp ed email', 'Follow-up automatici multicanale', 'Integrazione con CRM e gestionale', 'Revisione umana dove il dato è incerto'],
-    price: 'Setup da 490 € · Canone da 59 €/mese',
+    price: 'Setup da 490 € · Canone da 59 a 200 €/mese',
     href: '/agenti-ai',
     accent: 'purple',
   },
@@ -30,9 +30,9 @@ const stats = [
 ];
 
 const method = [
-  { n: '01', title: 'Audit', desc: 'Guardiamo cosa succede oggi ai tuoi dati. Prezzo fisso, 3-5 giorni, consegna un documento che resta tuo anche se ci fermiamo qui.' },
-  { n: '02', title: 'Setup', desc: 'Implementiamo. Tempi noti, prezzo noto, nessuna sorpresa.' },
-  { n: '03', title: 'Manutenzione', desc: "L'infrastruttura resta monitorata e i dati leggibili. Canone mensile, disdetta libera." },
+  { n: '01', title: 'Audit', desc: 'Guardiamo come funziona oggi il pezzo che non funziona. Prezzo fisso, 3-5 giorni, e il documento resta tuo anche se ci fermiamo qui.' },
+  { n: '02', title: 'Implementazione', desc: 'Tempi noti, prezzo noto, nessuna sorpresa a metà progetto.' },
+  { n: '03', title: 'Manutenzione', desc: 'Quello che costruiamo resta monitorato e funzionante. Canone mensile, disdetta libera.' },
 ];
 
 const Services2: React.FC = () => (
@@ -40,8 +40,8 @@ const Services2: React.FC = () => (
     <div className="mx-auto max-w-7xl">
       <div className="mb-16 max-w-3xl md:mb-20">
         <p className="mb-5 text-sm uppercase tracking-[0.08em] text-indigo-300">Servizi tecnici</p>
-        <h2 className="mb-6 text-[clamp(32px,5vw,64px)] font-bold leading-[1.08] tracking-[-0.035em]">Due leve. Un unico sistema.</h2>
-        <p className="text-lg leading-relaxed text-gray-400 md:text-xl">Prima rendiamo affidabili i dati. Poi automatizziamo il lavoro che quei dati devono far partire.</p>
+        <h2 className="mb-6 text-[clamp(32px,5vw,64px)] font-bold leading-[1.08] tracking-[-0.035em]">Tre servizi, un unico sistema.</h2>
+        <p className="text-lg leading-relaxed text-gray-400 md:text-xl">Prima rendiamo affidabili i dati. Poi automatizziamo il lavoro che quei dati devono far partire. E se serve, gestiamo anche le campagne che li generano.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

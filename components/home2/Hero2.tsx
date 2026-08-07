@@ -76,7 +76,7 @@ const HeroBackgroundVideo: React.FC = () => {
 };
 
 /* ------------------------------------------------------------------ */
-/* Ticker di parole chiave in fondo all'hero                           */
+/* Ticker di parole chiave, mostrato tra manifesto e tracciamento      */
 /* ------------------------------------------------------------------ */
 
 const tickerItems = [
@@ -89,7 +89,7 @@ const tickerItems = [
   { label: 'DIGITAL ANALYTICS', icon: <BarChart3 className="w-3.5 h-3.5" /> },
 ];
 
-const HeroTicker: React.FC = () => {
+export const HeroTicker: React.FC = () => {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -103,7 +103,7 @@ const HeroTicker: React.FC = () => {
   }, []);
 
   return (
-    <div className="absolute bottom-0 left-0 w-full border-t border-white/5 py-4 overflow-hidden bg-[#050505]/60 backdrop-blur-sm">
+    <div className="relative w-full overflow-hidden border-y border-white/5 bg-[#050505]/80 py-4 backdrop-blur-sm">
       <div ref={trackRef} className="flex whitespace-nowrap items-center gap-10 text-[11px] tracking-[0.08em] text-gray-500">
         {[...tickerItems, ...tickerItems, ...tickerItems].map((item, i) => (
           <span key={i} className="flex items-center gap-3 flex-shrink-0">
@@ -261,7 +261,7 @@ const Hero2: React.FC = () => {
             textShadow: '0 2px 24px rgba(0,0,0,0.55)',
           }}
         >
-          <span ref={line1Ref} className="block">Le tue campagne ottimizzano</span>
+          <span ref={line1Ref} className="block">Il tuo marketing funziona a metà,</span>
           {/* pb + margin-bottom negativo: allargano l'area di paint del
               background (bg-clip-text) oltre la line-box stretta (leading-0.95)
               così il discendente della "g" non resta fuori dal gradiente, senza
@@ -270,7 +270,7 @@ const Hero2: React.FC = () => {
             ref={line2Ref}
             className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 pb-[0.2em] -mb-[0.2em]"
           >
-            sui dati sbagliati.
+            e il problema è tecnico.
           </span>
         </h1>
 
@@ -279,7 +279,7 @@ const Hero2: React.FC = () => {
           className="mt-8 text-lg md:text-xl text-gray-300 max-w-xl mx-auto leading-relaxed"
           style={{ textShadow: '0 1px 12px rgba(0,0,0,0.6)' }}
         >
-          Browser e ad blocker bloccano una parte importante dei segnali di conversione. Con il tracciamento server-side li recuperiamo: su Candiani Denim, oltre un milione di segnali in 90 giorni. Poi automatizziamo quello che viene dopo il click.
+          Conversioni che non vengono tracciate. Lead che aspettano ore prima di una risposta. Dati ridigitati a mano da qualcuno che potrebbe fare altro. Sistemiamo lo strato tecnico che sta sotto al marketing: tracciamento server-side, automazioni, agenti AI.
         </p>
 
         <div ref={ctaRef} className="mt-10 flex flex-wrap items-center justify-center gap-5">
@@ -296,8 +296,6 @@ const Hero2: React.FC = () => {
           </button>
         </div>
       </div>
-
-      <HeroTicker />
     </div>
   );
 };

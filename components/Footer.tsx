@@ -104,8 +104,8 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                 <MagneticButton
                   className="group text-lg md:text-xl px-8 py-4 md:px-10 md:py-5 font-semibold hover:shadow-[0_0_60px_-15px_rgba(99,102,241,0.6)] transition-shadow duration-500 border border-white/10 hover:border-white/30"
                   onClick={() => {
-                    const contactForm = document.querySelector('section:has(form)');
-                    contactForm?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    window.history.pushState(null, '', '/#contatti');
+                    window.dispatchEvent(new PopStateEvent('popstate'));
                   }}
                 >
                     <span className="mr-3">Parla con un esperto</span>

@@ -174,7 +174,19 @@ const App: React.FC = () => {
       // un aggiornamento dati riporterebbe l'utente in cima mentre legge.
       if (previousRouteRef.current !== route) {
         previousRouteRef.current = route;
-        window.scrollTo({ top: 0 });
+        if (path === '/' && hash === 'contatti') {
+          const scrollWhenReady = (attemptsLeft: number) => {
+            const contactSection = document.getElementById('contatti');
+            if (contactSection) {
+              contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else if (attemptsLeft > 0) {
+              setTimeout(() => scrollWhenReady(attemptsLeft - 1), 100);
+            }
+          };
+          setTimeout(() => scrollWhenReady(20), 100);
+        } else {
+          window.scrollTo({ top: 0 });
+        }
       }
     };
 
@@ -223,7 +235,7 @@ const App: React.FC = () => {
   // abbia finito di montarsi, perdendo lo scroll.
   const scrollToContact = () => {
     const trySmoothScroll = (attemptsLeft: number) => {
-      const contactForm = document.querySelector('section:has(form)');
+      const contactForm = document.getElementById('contatti');
       if (contactForm) {
         contactForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } else if (attemptsLeft > 0) {
@@ -232,9 +244,13 @@ const App: React.FC = () => {
     };
 
     if (currentPage !== 'home') {
-      navigateTo('home');
+      window.history.pushState(null, '', '/#contatti');
+      setCurrentPage('home');
       setTimeout(() => trySmoothScroll(20), 100);
     } else {
+      if (window.location.hash !== '#contatti') {
+        window.history.pushState(null, '', '/#contatti');
+      }
       trySmoothScroll(20);
     }
   };
@@ -274,6 +290,7 @@ const App: React.FC = () => {
         {/* Pillola centrale flottante con le voci di menu (solo desktop), centrata
             in assoluto sulla nav indipendentemente dalla larghezza di logo/CTA */}
         <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 rounded-full border border-white/30 bg-white/20 backdrop-blur-md px-3 py-2.5">
+          {currentPage !== 'home' && <button onClick={() => navigateTo('home')} className="text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 bg-transparent text-white/80 hover:bg-white/20 hover:text-white">HOME</button>}
           <button onClick={() => navigateTo('tracking')} className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${currentPage === 'tracking' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'}`}>TRACCIAMENTO</button>
           <button
             onClick={() => navigateTo('agenti-ai')}
@@ -293,17 +310,17 @@ const App: React.FC = () => {
             CASI STUDIO
           </a>
           <button onClick={() => navigateTo('blog')} className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${currentPage === 'blog' || currentPage === 'blog-article' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'}`}>BLOG</button>
-          <a href="/risorse" className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors ${currentPage === 'directory' || currentPage === 'seo-page' ? 'bg-white text-gray-900' : 'text-white/80 hover:bg-white/20 hover:text-white'}`}>RISORSE</a>
         </div>
 
         <div className="flex items-center gap-3">
           {/* CTA "Scrivici": pillola bianca piena, visibile da md in su */}
-          <button
-            onClick={scrollToContact}
+          <a
+            href="/#contatti"
+            onClick={(event) => { event.preventDefault(); scrollToContact(); }}
             className="hidden lg:inline-flex text-base font-semibold px-7 py-3 rounded-full bg-white text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer border-0"
           >
             Contatti
-          </button>
+          </a>
 
           {/* Hamburger mobile: stessa area del logo, area di tap >= 44x44px */}
           <button

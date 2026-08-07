@@ -3,9 +3,25 @@ import { ArrowRight, BarChart3, GitBranch, Target } from 'lucide-react';
 import SEOHead from './SEOHead';
 import { siteUrl } from '../data/seoPages';
 
-const MetaAdvertisingB2B: React.FC = () => (
-  <article className="relative overflow-hidden bg-[#050505] px-6 pb-28 pt-40 text-white">
+export const metaAdvertisingFaqs = [
+  { question: "In pratica, cos'è la B2B Lead Generation su Meta?", answer: "È l'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate sul profilo del cliente giusto, messaggio, form, CRM e segnali di qualità." },
+  { question: 'Perché collegare Meta Ads, CRM e automazioni?', answer: "Perché il CRM restituisce segnali più utili dell'invio form. Quando questi dati rientrano nel modello di ottimizzazione, le campagne possono cercare contatti più vicini al valore commerciale reale." },
+];
+
+const MetaAdvertisingB2B: React.FC = () => {
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: metaAdvertisingFaqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  };
+
+  return <article className="relative overflow-hidden bg-[#050505] px-6 pb-28 pt-40 text-white">
     <SEOHead title="Meta Ads B2B e Lead Generation su Facebook e Instagram | Q4 Studio" description="Consulenza Meta Advertising per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali dal CRM." url={`${siteUrl}/meta-advertising-b2b`} />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
     <div className="mx-auto max-w-6xl">
       <header className="mb-24 max-w-5xl"><p className="mb-5 text-sm uppercase tracking-[0.08em] text-blue-300">Meta Advertising · B2B</p><h1 className="mb-8 text-[clamp(44px,7vw,88px)] font-bold leading-[0.98] tracking-[-0.045em]">Meta Ads B2B, con il tracciamento fatto bene a monte.</h1><div className="max-w-3xl space-y-5 text-lg leading-relaxed text-gray-300 md:text-xl"><p>Le campagne Meta per il B2B funzionano quando l&apos;obiettivo non è il costo per contatto ma la probabilità che quel contatto diventi cliente. Perché questo succeda, l&apos;algoritmo deve ricevere segnali corretti: ed è la parte che quasi nessuno sistema prima di aumentare il budget.</p><p>Seguiamo un numero limitato di progetti Meta B2B, di norma per aziende con cui lavoriamo già sul lato tecnico.</p></div></header>
 
@@ -15,9 +31,11 @@ const MetaAdvertisingB2B: React.FC = () => (
 
       <section className="mt-6 rounded-[2rem] border border-white/10 bg-white/[0.025] p-7 md:p-10"><p className="mb-5 text-sm uppercase tracking-[0.08em] text-cyan-300">Misurazione</p><h2 className="mb-6 text-[clamp(32px,5vw,58px)] font-bold tracking-[-0.035em]">Risultati misurabili, leggibili dal team</h2><div className="max-w-4xl space-y-5 text-lg leading-relaxed text-gray-300"><p>Ogni attività viene valutata su metriche operative e metriche di business. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.</p><p>Nei progetti B2B monitoriamo nel tempo quanti contatti diventano davvero clienti e confrontiamo i dati prima e dopo integrazione CRM, instradamento e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.</p></div></section>
 
+      <section className="mt-16"><p className="mb-5 text-sm uppercase tracking-[0.08em] text-blue-300">FAQ</p><h2 className="mb-9 text-[clamp(32px,5vw,58px)] font-bold tracking-[-0.035em]">Domande frequenti su Meta Ads B2B</h2><div className="space-y-4">{metaAdvertisingFaqs.map((faq) => <details key={faq.question} className="rounded-3xl border border-white/10 bg-white/[0.025] p-6"><summary className="cursor-pointer text-xl font-semibold">{faq.question}</summary><p className="mt-4 max-w-3xl leading-relaxed text-gray-300">{faq.answer}</p></details>)}</div></section>
+
       <section className="mt-16 rounded-[2.5rem] border border-blue-400/20 bg-blue-400/[0.05] p-8 text-center md:p-14"><h2 className="mb-7 text-[clamp(32px,5vw,58px)] font-bold tracking-[-0.035em]">Il tracciamento viene prima delle campagne. Parti dall&apos;audit.</h2><a href="/tracciamento-server-side" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-[#050505]">Vedi il tracciamento e i prezzi <ArrowRight className="h-4 w-4" /></a></section>
     </div>
-  </article>
-);
+  </article>;
+};
 
 export default MetaAdvertisingB2B;
