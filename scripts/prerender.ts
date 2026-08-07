@@ -731,7 +731,41 @@ async function fetchBlogPosts() {
   }
 }
 
-// Simple markdown renderer matching BlogArticle.tsx logic
+function safeArticleLink(href: string): { href: string; external: boolean } | null {
+  const value = href.trim();
+  if ((value.startsWith('/') && !value.startsWith('//')) || /^#[a-z0-9][a-z0-9_-]*$/i.test(value)) {
+    return { href: value, external: false };
+  }
+  if (value.startsWith('https://') || value.startsWith('mailto:')) {
+    return { href: value, external: value.startsWith('https://') };
+  }
+  return null;
+}
+
+function renderArticleInline(value: string): string {
+  return value
+    .split(/(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g)
+    .filter(Boolean)
+    .map((token) => {
+      if (token.startsWith('**') && token.endsWith('**')) {
+        return `<strong class="font-semibold text-white">${escapeHtml(token.slice(2, -2))}</strong>`;
+      }
+      if (token.startsWith('`') && token.endsWith('`')) {
+        return `<code>${escapeHtml(token.slice(1, -1))}</code>`;
+      }
+      const link = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (link) {
+        const destination = safeArticleLink(link[2]);
+        if (!destination) return escapeHtml(link[1]);
+        const externalAttributes = destination.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+        return `<a href="${escapeHtml(destination.href)}"${externalAttributes} class="font-medium text-indigo-300 underline underline-offset-4">${escapeHtml(link[1])}</a>`;
+      }
+      return escapeHtml(token);
+    })
+    .join('');
+}
+
+// Safe markdown renderer matching BlogArticle.tsx link rules.
 function renderMarkdown(content: string): string {
   const lines = content.trim().split('\n');
   const elements: string[] = [];
@@ -739,7 +773,7 @@ function renderMarkdown(content: string): string {
 
   const flushList = () => {
     if (currentList.length > 0) {
-      elements.push(`<ol class="list-decimal list-inside space-y-2 mb-6 text-gray-300">${currentList.map((item) => `<li class="leading-relaxed">${item}</li>`).join('')}</ol>`);
+      elements.push(`<ol class="list-decimal list-inside space-y-2 mb-6 text-gray-300">${currentList.map((item) => `<li class="leading-relaxed">${renderArticleInline(item)}</li>`).join('')}</ol>`);
       currentList = [];
     }
   };
@@ -747,22 +781,21 @@ function renderMarkdown(content: string): string {
   lines.forEach((line) => {
     if (line.startsWith('# ')) {
       flushList();
-      elements.push(`<h1 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6 mt-8">${escapeHtml(line.replace('# ', ''))}</h1>`);
+      elements.push(`<h1 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6 mt-8">${renderArticleInline(line.replace('# ', ''))}</h1>`);
     } else if (line.startsWith('## ')) {
       flushList();
-      elements.push(`<h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4 mt-8 text-indigo-300">${escapeHtml(line.replace('## ', ''))}</h2>`);
+      elements.push(`<h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4 mt-8 text-indigo-300">${renderArticleInline(line.replace('## ', ''))}</h2>`);
     } else if (line.startsWith('### ')) {
       flushList();
-      elements.push(`<h3 class="text-lg md:text-xl font-bold leading-[1.5] mb-3 mt-6 text-purple-300">${escapeHtml(line.replace('### ', ''))}</h3>`);
+      elements.push(`<h3 class="text-lg md:text-xl font-bold leading-[1.5] mb-3 mt-6 text-purple-300">${renderArticleInline(line.replace('### ', ''))}</h3>`);
     } else if (/^\d+\.\s/.test(line)) {
-      const text = line.replace(/^\d+\.\s/, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      const text = line.replace(/^\d+\.\s/, '');
       currentList.push(text);
     } else if (line.trim() === '') {
       flushList();
     } else if (line.trim() !== '') {
       flushList();
-      const html = line.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
-      elements.push(`<p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-4">${html}</p>`);
+      elements.push(`<p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-4">${renderArticleInline(line)}</p>`);
     }
   });
 
