@@ -950,19 +950,63 @@ function generateMetaAdvertisingHtml(): string {
   return generateBaseHtml({ title: 'Meta Ads B2B e Lead Generation su Facebook e Instagram | Q4 Studio', description: 'Consulenza Meta Advertising per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali dal CRM.', canonical: `${siteUrl}/meta-advertising-b2b`, schema: [faqSchema], bodyContent: staticPage(body) });
 }
 
+const sitesWebAiFaqs = [
+  { question: 'Il sito viene generato automaticamente dall’AI?', answer: 'No. L’AI accelera parti della produzione, ma direzione, struttura, messaggio, scelte visive e controllo finale restano umani. È fatto con l’AI, non dall’AI.' },
+  { question: 'Quanto costa un sito web con Q4 Studio?', answer: 'I progetti partono da 2.999 €. Il preventivo dipende dal tipo di sito, dai contenuti e dalla produzione necessaria: definiamo il progetto prima di iniziare, senza trasformarlo in un elenco rigido di moduli.' },
+  { question: 'Quanto tempo serve per una landing page?', answer: 'Una landing page può essere pronta in una settimana. Per siti più articolati, tempi e fasi vengono definiti sul progetto.' },
+  { question: 'Potete occuparvi anche di foto e video reali?', answer: 'Sì. Quando il progetto lo richiede, la produzione di foto e video reali può rientrare nella realizzazione del sito, insieme ad asset creati con l’AI, video animati e sezioni con animazioni allo scroll.' },
+];
+
+function generateSitesWebAiHtml(): string {
+  const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Siti web con AI per aziende B2B',
+    description: 'Progettazione e sviluppo di siti e landing page B2B con direzione umana e strumenti AI.',
+    provider: { '@type': 'Organization', name: 'Q4 Studio', url: siteUrl },
+    areaServed: 'IT',
+    url: `${siteUrl}/siti-web-ai`,
+    offers: { '@type': 'Offer', priceCurrency: 'EUR', price: '2999', description: 'Prezzo di partenza' },
+  };
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: sitesWebAiFaqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  };
+  const faqHtml = sitesWebAiFaqs.map((faq) => `<details><summary>${escapeHtml(faq.question)}</summary><p>${escapeHtml(faq.answer)}</p></details>`).join('');
+  const body = `<header><p>Siti web · direzione umana · strumenti AI</p><h1>Fatto con l’AI, non dall’AI.</h1><p>Progettiamo siti e landing page con una direzione precisa. L’AI ci permette di produrre immagini, movimento e varianti più velocemente; non decide cosa dire, cosa mostrare o perché.</p><a href="#contatti">Parlaci del tuo sito</a><p>Progetti da <strong>2.999 €</strong></p></header>
+  <section><p>Una distinzione importante</p><h2>L’AI abbassa il costo della produzione. Non il livello delle scelte.</h2><p>Un sito non diventa efficace perché una macchina ha generato una pagina. Serve capire cosa deve far ricordare, quale percorso deve costruire e dove deve portare chi lo visita.</p><p>Usiamo l’AI nel processo creativo e tecnico, sotto direzione umana. Il risultato non è “un sito AI”: è un sito riconoscibile, costruito con più possibilità a disposizione.</p></section>
+  <section><p>Più linguaggi, nello stesso progetto</p><h2>Il sito può fare più che mettere testo sopra una foto.</h2><article><h3>Asset che non arrivano da una banca immagini</h3><p>Creiamo visual, texture e composizioni su misura con strumenti AI, poi li dirigiamo e rifiniamo dentro un’identità coerente.</p></article><article><h3>Il movimento fa parte del racconto</h3><p>Video animati e sezioni che reagiscono allo scroll possono guidare la lettura, spiegare un servizio e rendere il sito riconoscibile.</p></article><article><h3>Quando serve, la produzione è reale</h3><p>Foto e video originali possono entrare nello stesso progetto. AI e produzione sul campo non sono alternative: sono strumenti diversi della stessa direzione.</p></article></section>
+  <section><p>Landing page</p><h2>Una pagina può essere pronta in una settimana.</h2><p>Quando serve portare online un’offerta o una campagna senza aspettare un sito completo, concentriamo direzione, contenuto e sviluppo in una singola esperienza.</p><p><strong>Siti web da 2.999 €.</strong> Forma, tempi e produzione vengono definiti sul progetto.</p></section>
+  <section><p>Caso studio</p><h2>GP Meccatronica, dal rebranding al sito in movimento.</h2><p>Una direzione visiva scura e tecnica, motion design e asset generati con l’AI per accompagnare il traffico delle campagne ADV.</p><a href="/casi-studio/gp-meccatronica-sito-web">Leggi il caso studio</a></section>
+  <section><p>FAQ</p><h2>Domande prima di partire.</h2>${faqHtml}</section>
+  <section><h2>Il prossimo sito non deve sembrare il precedente.</h2><p>Raccontaci cosa deve fare, per chi e perché adesso. Partiamo da lì.</p><a href="#contatti">Parlaci del progetto</a></section><section id="contatti" aria-label="Contatti"><h2>Parliamo del tuo prossimo sito.</h2><p>Raccontaci cosa deve fare, per chi e perché adesso.</p></section>`;
+  return generateBaseHtml({
+    title: 'Siti web con AI per aziende B2B | Q4 Studio',
+    description: 'Siti e landing page B2B fatti con l’AI, non dall’AI: asset su misura, motion e produzione foto-video. Progetti da 2.999 €.',
+    canonical: `${siteUrl}/siti-web-ai`,
+    schema: [serviceSchema, faqSchema],
+    bodyContent: staticPage(body),
+  });
+}
+
 function generateRestyledHomeBodyContent(): string {
   const logos = ['MES Connettori', 'RR Auto', 'Senza Stress Ristrutturare', 'Trenove', 'GP Meccatronica', 'STC', 'Candiani'];
   const logoHtml = logos.map((name) => '<span>' + escapeHtml(name) + '</span>').join(' · ');
   return [
     "<div class='home-static'>",
-    "<nav aria-label='Principale'><a href='/tracciamento-server-side'>Tracciamento</a> · <a href='/agenti-ai'>Agenti AI</a> · <a href='/casi-studio'>Casi studio</a> · <a href='/blog'>Blog</a> · <a href='/#contatti'>Contatti</a></nav>",
+    "<nav aria-label='Principale'><a href='/tracciamento-server-side'>Tracciamento</a> · <a href='/siti-web-ai'>Siti</a> · <a href='/agenti-ai'>Agenti AI</a> · <a href='/casi-studio'>Casi studio</a> · <a href='/blog'>Blog</a> · <a href='/#contatti'>Contatti</a></nav>",
     "<header><p>TRACCIAMENTO · AUTOMAZIONI · AGENTI AI</p><h1>Il tuo marketing funziona a metà, e il problema è tecnico.</h1><p>Conversioni che non vengono tracciate. Lead che aspettano ore prima di una risposta. Dati ridigitati a mano da qualcuno che potrebbe fare altro. Sistemiamo lo strato tecnico che sta sotto al marketing: tracciamento server-side, automazioni, agenti AI.</p><a href='/tracciamento-server-side'>Vedi il tracciamento e i prezzi</a> <a href='/casi-studio/candiani-denim-tracking-server-side'>Leggi il caso studio</a></header>",
     "<section><p>Q4 Studio è uno studio tecnico. Sistemiamo la raccolta dei dati, colleghiamo gli strumenti che usi già, e automatizziamo il lavoro ripetitivo che oggi fa una persona a mano.</p></section>",
     "<div aria-label='Servizi'>TRACCIAMENTO SERVER-SIDE · CONSENT MODE · AUTOMAZIONI CRM · WHATSAPP · AGENTI AI · META ADS · DIGITAL ANALYTICS</div>",
     "<section><p>Il punto di partenza</p><h2>Prima dei dati giusti, nessuna ottimizzazione funziona.</h2><p>Il browser blocca gli script. L'ad blocker blocca i pixel. Il consenso limita quello che puoi raccogliere. Risultato: le piattaforme vedono una frazione delle conversioni reali, e ottimizzano su quella frazione.</p><p>Il tracciamento server-side sposta la raccolta dati dal browser a un server che controlliamo noi. I segnali arrivano completi, conformi, e utilizzabili dall'algoritmo.</p><p>Cosa comprende</p><ul><li>Container server-side e infrastruttura dedicata</li><li>Consent Mode v2 configurato correttamente</li><li>Conversions API per Meta, Enhanced Conversions per Google</li><li>Segnali dal CRM alle campagne, non solo l'invio del form</li><li>Documentazione di eventi e naming, che resta all'azienda</li></ul><a href='/tracciamento-server-side'>Vedi i pacchetti e i prezzi</a></section>",
     "<section><h2>Dal click al cliente. In automatico.</h2><p>Il nostro sistema di lead generation collega Meta, CRM e WhatsApp: ogni lead viene arricchito, contattato e seguito, dal primo click alla firma.</p><article><p>META ADS · T+0 s</p><h3>Il lead entra dal feed.</h3><p>Campagne Meta progettate sul profilo del cliente giusto e sull'offerta. Il form qualifica già in partenza: chi compila è davvero in target.</p></article><article><p>CRM · T+2 s</p><h3>Nel CRM prima che tu lo veda.</h3><p>Assegnato al commerciale giusto, con fonte, campagna e contesto già pronti.</p></article><article><p>WHATSAPP · T+60 s</p><h3>Primo contatto in 60 secondi.</h3><p>Un messaggio personalizzato parte mentre il lead è ancora sul telefono. La velocità di risposta è la prima leva di conversione: un lead contattato entro un minuto vale molto più di uno contattato dopo quattro ore.</p></article><article><p>ENRICHMENT · T+90 s</p><h3>Il lead diventa un dossier.</h3><p>Dati aziendali arricchiti da fonti pubbliche: dimensione, settore, segnali di priorità. Il commerciale sa con chi parla prima di chiamare.</p></article><article><p>FOLLOW-UP · GIORNI 1–7</p><h3>Ogni lead viene seguito. Sempre.</h3><p>Sequenze automatiche su più canali finché il lead risponde. Il sistema insiste, il team vende.</p></article></section>",
     "<section><h2>Automazioni che partono in due settimane, non in sei mesi.</h2><p>Non progetti da mesi di analisi. Automazioni concrete su problemi precisi: la richiesta che arriva su WhatsApp e finisce nel CRM già strutturata, il follow-up che parte da solo, il dato che smette di essere ridigitato a mano.</p><p>Ogni automazione parte da un setup contenuto e da un canone mensile chiaro. Se non risolve un problema che ci puoi raccontare in una frase, non la costruiamo.</p><p>WhatsApp · Email / PEC · Gestionale / ERP · CRM · Excel / Sheets · Calendario</p><a href='/agenti-ai'>Vedi le automazioni</a></section>",
-    "<section id='services'><p>Servizi tecnici</p><h2>Tre servizi, un unico sistema.</h2><p>Prima rendiamo affidabili i dati. Poi automatizziamo il lavoro che quei dati devono far partire. E se serve, gestiamo anche le campagne che li generano.</p><article><h3>Tracciamento e dati</h3><p>Il pezzo tecnico che quasi nessuna agenzia sa fare. Server-side, Consent Mode, segnali dal CRM alle campagne. Dati completi e conformi, che l'algoritmo può davvero usare.</p><ul><li>Container server-side su infrastruttura dedicata</li><li>Consent Mode v2 e conformità</li><li>Conversions API e Enhanced Conversions</li><li>Documentazione di eventi e naming</li></ul><a href='/tracciamento-server-side'>Audit da 490 € · Setup da 1.500 €</a></article><article><h3>Automazioni e agenti AI</h3><p>Automazioni su problemi precisi, con setup e canone chiari. Richieste inbound strutturate, follow-up automatici, dati che non si ridigitano più.</p><ul><li>Estrazione strutturata da WhatsApp ed email</li><li>Follow-up automatici multicanale</li><li>Integrazione con CRM e gestionale</li><li>Revisione umana dove il dato è incerto</li></ul><a href='/agenti-ai'>Setup da 490 € · Canone da 59 a 200 €/mese</a></article><article><h3>Meta Advertising</h3><p>Campagne B2B su Meta, gestite da chi sa anche sistemare il tracciamento a monte. Servizio disponibile per clienti già seguiti sul tecnico.</p><a href='/meta-advertising-b2b'>Approfondisci</a></article>",
+    "<section id='services'><p>Servizi tecnici</p><h2>Tre servizi, un unico sistema.</h2><p>Rendiamo affidabili i dati, costruiamo il punto di arrivo e automatizziamo il lavoro che viene dopo. Tre linee tecniche, progettate per funzionare insieme.</p><article><h3>Tracciamento e dati</h3><p>Il pezzo tecnico che quasi nessuna agenzia sa fare. Server-side, Consent Mode, segnali dal CRM alle campagne. Dati completi e conformi, che l'algoritmo può davvero usare.</p><ul><li>Container server-side su infrastruttura dedicata</li><li>Consent Mode v2 e conformità</li><li>Conversions API e Enhanced Conversions</li><li>Documentazione di eventi e naming</li></ul><a href='/tracciamento-server-side'>Audit da 490 € · Setup da 1.500 €</a></article><article><h3>Siti web con AI</h3><p>Siti e landing page con direzione umana e strumenti AI. Asset su misura, video e movimento quando servono a raccontare meglio il progetto.</p><ul><li>Sviluppo web con strumenti AI</li><li>Asset AI creati per il progetto</li><li>Video animati e sezioni con scroll animation</li><li>Produzione foto e video reali quando serve</li></ul><a href='/siti-web-ai'>Progetti da 2.999 €</a></article><article><h3>Automazioni e agenti AI</h3><p>Automazioni su problemi precisi, con setup e canone chiari. Richieste inbound strutturate, follow-up automatici, dati che non si ridigitano più.</p><ul><li>Estrazione strutturata da WhatsApp ed email</li><li>Follow-up automatici multicanale</li><li>Integrazione con CRM e gestionale</li><li>Revisione umana dove il dato è incerto</li></ul><a href='/agenti-ai'>Setup da 490 € · Canone da 59 a 200 €/mese</a></article><article><p>Servizio complementare</p><h3>Meta Advertising</h3><p>Campagne B2B su Meta, gestite da chi sa anche sistemare il tracciamento a monte. Servizio disponibile per clienti già seguiti sul tecnico.</p><a href='/meta-advertising-b2b'>Approfondisci</a></article>",
     "<div><p>1.032.695</p><p>segnali di conversione recuperati in 90 giorni — Candiani Denim</p><p>963.652</p><p>bloccati dalla tracking prevention del browser — Candiani Denim</p><p>≤ 60 s</p><p>tempo di primo contatto nel nostro sistema di lead generation</p><p>8 h</p><p>tempo tipico di setup del tracciamento server-side</p></div>",
     "<div><article><p>01</p><h3>Audit</h3><p>Guardiamo come funziona oggi il pezzo che non funziona. Prezzo fisso, 3-5 giorni, e il documento resta tuo anche se ci fermiamo qui.</p></article><article><p>02</p><h3>Implementazione</h3><p>Tempi noti, prezzo noto, nessuna sorpresa a metà progetto.</p></article><article><p>03</p><h3>Manutenzione</h3><p>Quello che costruiamo resta monitorato e funzionante. Canone mensile, disdetta libera.</p></article></div></section>",
     "<section><h2>Aziende che ci hanno già scelto</h2>" + logoHtml + "</section>",
@@ -980,6 +1024,7 @@ function generateSitemap(blogPosts: any[] = []): string {
     { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly', lastmod: buildDate },
     { loc: `${siteUrl}/agenti-ai`, priority: '0.95', changefreq: 'weekly', lastmod: buildDate },
     { loc: `${siteUrl}/tracciamento-server-side`, priority: '0.95', changefreq: 'weekly', lastmod: buildDate },
+    { loc: `${siteUrl}/siti-web-ai`, priority: '0.95', changefreq: 'weekly', lastmod: buildDate },
     { loc: `${siteUrl}/meta-advertising-b2b`, priority: '0.8', changefreq: 'monthly', lastmod: buildDate },
     { loc: `${siteUrl}${caseStudiesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: buildDate },
     { loc: `${siteUrl}${resourcesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: buildDate },
@@ -1108,6 +1153,7 @@ ${urlEntries}
 
   const standalonePages = [
     { path: 'tracciamento-server-side', html: generateServerSideTrackingHtml() },
+    { path: 'siti-web-ai', html: generateSitesWebAiHtml() },
     { path: 'partner-tecnico', html: generateTechnicalPartnerHtml() },
     { path: 'meta-advertising-b2b', html: generateMetaAdvertisingHtml() },
   ];

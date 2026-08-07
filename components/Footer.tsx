@@ -127,7 +127,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                   className="h-8 md:h-10 w-auto mb-4 mx-auto md:mx-0"
                 />
                 <p className="max-w-xs mb-4 mx-auto md:mx-0">
-                    Studio tecnico per tracciamento server-side, automazioni e agenti AI.
+                    Studio tecnico per tracciamento server-side, siti web, automazioni e agenti AI.
                 </p>
                 <div className="flex flex-col gap-2 mt-4 mb-4">
                   {phone && (
@@ -166,6 +166,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                 <h4 className="text-white font-bold text-lg mb-4">Servizi</h4>
                 <ul className="space-y-2">
                     <li><a href="/tracciamento-server-side" className="hover:text-indigo-400 transition-colors">Tracciamento server-side</a></li>
+                    <li><a href="/siti-web-ai" className="hover:text-indigo-400 transition-colors">Siti web con AI</a></li>
                     <li
                         className="hover:text-indigo-400 cursor-pointer transition-colors"
                         onClick={() => {

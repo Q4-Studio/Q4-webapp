@@ -29,8 +29,9 @@ const CaseStudyPage = lazy(() => import('./components/CaseStudyPage'));
 const ServerSideTracking = lazy(() => import('./components/ServerSideTracking'));
 const TechnicalPartner = lazy(() => import('./components/TechnicalPartner'));
 const MetaAdvertisingB2B = lazy(() => import('./components/MetaAdvertisingB2B'));
+const SitesWebAI = lazy(() => import('./components/SitesWebAI'));
 
-type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | 'tracking' | 'technical-partner' | 'meta-advertising' | 'case-studies' | 'case-study' | '404';
+type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | 'tracking' | 'sites' | 'technical-partner' | 'meta-advertising' | 'case-studies' | 'case-study' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -104,6 +105,8 @@ const App: React.FC = () => {
 
       if (path === '/tracciamento-server-side') {
         setCurrentPage('tracking');
+      } else if (path === '/siti-web-ai') {
+        setCurrentPage('sites');
       } else if (path === '/partner-tecnico') {
         setCurrentPage('technical-partner');
       } else if (path === '/meta-advertising-b2b') {
@@ -221,6 +224,10 @@ const App: React.FC = () => {
       window.history.pushState(null, '', '/tracciamento-server-side');
       setCurrentPage('tracking');
       window.scrollTo({ top: 0 });
+    } else if (page === 'sites') {
+      window.history.pushState(null, '', '/siti-web-ai');
+      setCurrentPage('sites');
+      window.scrollTo({ top: 0 });
     } else {
       if (window.location.pathname !== '/') {
         window.history.pushState(null, '', '/');
@@ -292,6 +299,7 @@ const App: React.FC = () => {
         <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 rounded-full border border-white/30 bg-white/20 backdrop-blur-md px-3 py-2.5">
           {currentPage !== 'home' && <button onClick={() => navigateTo('home')} className="text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 bg-transparent text-white/80 hover:bg-white/20 hover:text-white">HOME</button>}
           <button onClick={() => navigateTo('tracking')} className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${currentPage === 'tracking' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'}`}>TRACCIAMENTO</button>
+          <button onClick={() => navigateTo('sites')} className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${currentPage === 'sites' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'}`}>SITI</button>
           <button
             onClick={() => navigateTo('agenti-ai')}
               className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${
@@ -416,6 +424,10 @@ const App: React.FC = () => {
 
           {currentPage === 'tracking' && (
             <><ServerSideTracking /><ContactForm subject="Audit tracciamento" /><Footer /></>
+          )}
+
+          {currentPage === 'sites' && (
+            <><SitesWebAI /><ContactForm subject="Sito web AI" headerTitle="Parliamo del tuo prossimo sito." headerDescription="Raccontaci cosa deve fare, per chi e perché adesso." /><Footer /></>
           )}
 
           {currentPage === 'technical-partner' && <TechnicalPartner />}
