@@ -17,8 +17,6 @@ import { getCaseStudyBySlug, caseStudiesPath } from './data/caseStudies';
 const Blog = lazy(() => import('./components/Blog'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
 const NotFound = lazy(() => import('./components/NotFound'));
-const DashboardLogin = lazy(() => import('./components/DashboardLogin'));
-const Dashboard = lazy(() => import('./components/Dashboard'));
 const Privacy = lazy(() => import('./components/Privacy'));
 const AppSupport = lazy(() => import('./components/AppSupport'));
 const SeoDirectory = lazy(() => import('./components/SeoDirectory'));
@@ -31,7 +29,7 @@ const TechnicalPartner = lazy(() => import('./components/TechnicalPartner'));
 const MetaAdvertisingB2B = lazy(() => import('./components/MetaAdvertisingB2B'));
 const SitesWebAI = lazy(() => import('./components/SitesWebAI'));
 
-type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'dashq4login' | 'dashboard' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | 'tracking' | 'sites' | 'technical-partner' | 'meta-advertising' | 'case-studies' | 'case-study' | '404';
+type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | 'tracking' | 'sites' | 'technical-partner' | 'meta-advertising' | 'case-studies' | 'case-study' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -96,7 +94,7 @@ const App: React.FC = () => {
     return blogPosts.find(post => post.slug === slug);
   };
 
-  // Route public pages with real paths; keep hash routes only for legacy dashboard UI.
+  // Route public pages with real paths.
   useEffect(() => {
     const handleRouteChange = () => {
       const path = window.location.pathname.replace(/\/$/, '') || '/';
@@ -159,10 +157,6 @@ const App: React.FC = () => {
         setCurrentPage('privacy');
       } else if (hash === 'app-support') {
         setCurrentPage('app-support');
-      } else if (hash === 'dashq4login') {
-        setCurrentPage('dashq4login');
-      } else if (hash === 'dashboard') {
-        setCurrentPage('dashboard');
       } else if (hash === '404') {
         setCurrentPage('404');
       } else if (path === '/' && (hash === '' || hash === 'home')) {
@@ -455,18 +449,6 @@ const App: React.FC = () => {
               <CaseStudyPage study={currentCaseStudy} />
               <Footer />
             </>
-          )}
-
-          {currentPage === 'dashq4login' && (
-            <DashboardLogin
-              onLoginSuccess={() => navigateTo('dashboard')}
-            />
-          )}
-
-          {currentPage === 'dashboard' && (
-            <Dashboard
-              onLogout={() => navigateTo('dashq4login')}
-            />
           )}
 
           {currentPage === '404' && (

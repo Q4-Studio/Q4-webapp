@@ -82,7 +82,8 @@ Il blog usa **rotte reali** (`/blog` e `/blog/:slug`), non più hash routes.
 - `components/SeoDirectory.tsx`: renderizza `ItemList` schema e breadcrumb UI
 - `components/SeoLandingPage.tsx`: renderizza `Service`, `FAQPage` e `BreadcrumbList` schema per ogni pagina SEO
 - `public/sitemap.xml`: generato dinamicamente in build da `scripts/prerender.ts`
-- `public/robots.txt`: allow `/directory`, `/seo/`, `/blog/`; disallow dashboard/login
+- `public/robots.txt`: consente la scansione delle route pubbliche. L'anteprima
+  bozze è middleware dev-only, non esiste nella build e invia anche `noindex`.
 - `vercel.json`: rewrites SPA fallback per rotte non statiche
 
 ## Schema.org in uso

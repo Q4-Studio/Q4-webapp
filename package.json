@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:blog-preview": "vite --host 127.0.0.1 --port 3000",
     "build": "vite build && tsx scripts/prerender.ts && node scripts/verify-gtm-output.mjs",
     "preview": "vite preview",
     "optimize:images": "node scripts/optimize-images.mjs"
