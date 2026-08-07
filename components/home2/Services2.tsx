@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Bot, Check, Server, Target } from 'lucide-react';
+import { ArrowRight, Bot, Check, PanelsTopLeft, Server, Target } from 'lucide-react';
 
 const services = [
   {
@@ -10,6 +10,15 @@ const services = [
     price: 'Audit da 490 € · Setup da 1.500 €',
     href: '/tracciamento-server-side',
     accent: 'cyan',
+  },
+  {
+    icon: <PanelsTopLeft className="h-9 w-9 text-emerald-300" />,
+    title: 'Siti web con AI',
+    desc: 'Siti e landing page con direzione umana e strumenti AI. Asset su misura, video e movimento quando servono a raccontare meglio il progetto.',
+    points: ['Sviluppo web con strumenti AI', 'Asset AI creati per il progetto', 'Video animati e sezioni con scroll animation', 'Produzione foto e video reali quando serve'],
+    price: 'Progetti da 2.999 €',
+    href: '/siti-web-ai',
+    accent: 'emerald',
   },
   {
     icon: <Bot className="h-9 w-9 text-purple-300" />,
@@ -41,10 +50,10 @@ const Services2: React.FC = () => (
       <div className="mb-16 max-w-3xl md:mb-20">
         <p className="mb-5 text-sm uppercase tracking-[0.08em] text-indigo-300">Servizi tecnici</p>
         <h2 className="mb-6 text-[clamp(32px,5vw,64px)] font-bold leading-[1.08] tracking-[-0.035em]">Tre servizi, un unico sistema.</h2>
-        <p className="text-lg leading-relaxed text-gray-400 md:text-xl">Prima rendiamo affidabili i dati. Poi automatizziamo il lavoro che quei dati devono far partire. E se serve, gestiamo anche le campagne che li generano.</p>
+        <p className="text-lg leading-relaxed text-gray-400 md:text-xl">Rendiamo affidabili i dati, costruiamo il punto di arrivo e automatizziamo il lavoro che viene dopo. Tre linee tecniche, progettate per funzionare insieme.</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {services.map((service) => (
           <article key={service.title} className="group rounded-[2rem] border border-white/10 bg-[#0A0A0A] p-7 transition-colors hover:border-indigo-400/30 md:p-10">
             <div className="mb-7">{service.icon}</div>
@@ -61,7 +70,7 @@ const Services2: React.FC = () => (
       <article className="mt-6 flex flex-col gap-6 rounded-[2rem] border border-white/10 bg-white/[0.025] p-7 md:flex-row md:items-center md:justify-between md:p-9">
         <div className="flex max-w-3xl items-start gap-5">
           <Target className="mt-1 h-8 w-8 flex-shrink-0 text-blue-300" />
-          <div><h3 className="mb-2 text-2xl font-bold">Meta Advertising</h3><p className="leading-relaxed text-gray-400">Campagne B2B su Meta, gestite da chi sa anche sistemare il tracciamento a monte. Servizio disponibile per clienti già seguiti sul tecnico.</p></div>
+          <div><p className="mb-2 text-xs uppercase tracking-[0.12em] text-blue-300">Servizio complementare</p><h3 className="mb-2 text-2xl font-bold">Meta Advertising</h3><p className="leading-relaxed text-gray-400">Campagne B2B su Meta, gestite da chi sa anche sistemare il tracciamento a monte. Servizio disponibile per clienti già seguiti sul tecnico.</p></div>
         </div>
         <a href="/meta-advertising-b2b" className="inline-flex flex-shrink-0 items-center gap-2 font-semibold text-blue-200 hover:text-white">Approfondisci <ArrowRight className="h-4 w-4" /></a>
       </article>

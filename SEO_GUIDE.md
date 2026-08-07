@@ -148,4 +148,25 @@ Prima di aggiungere una pagina, verifica:
 
 Prima di aggiungerle, definisci intento di ricerca, angolo pagina e proof point unici per ciascuna, mantenendo l'angolo tech/AI del nuovo posizionamento invece di quello sulla lead generation.
 
+### Cluster G — Siti web con AI (roadmap)
+
+- **Articolo 20**
+  - Titolo: Quanto costa un sito web animato e curato nel 2026 (e perché è cambiato)
+  - Keyword target: quanto costa un sito web per azienda
+  - Cluster: G
+  - Funnel: BOFU
+  - Nota: Prezzo esplicito da 3.000€; angolo "cosa è cambiato" — stesso schema del tracking (225€/ora vs 70€/ora di mercato)
+- **Articolo 21**
+  - Titolo: Sito fatto dall'AI o sito fatto con l'AI: non è la stessa cosa
+  - Keyword target: siti web con intelligenza artificiale
+  - Cluster: G
+  - Funnel: TOFU/MOFU
+  - Nota: Articolo cardine del cluster: differenzia il prompt generico (risultato commodity, uguale per tutti) dall'AI come moltiplicatore del lavoro tecnico (asset custom, animazioni, direzione umana)
+- **Articolo 22**
+  - Titolo: Caso studio: il sito di GP Meccatronica, dal brief alla pubblicazione (con prezzi)
+  - Keyword target: sviluppo siti web pmi (+ geo)
+  - Cluster: G
+  - Funnel: BOFU
+  - Nota: Case study con prezzo reale as-is, CTA verso /siti-web-ai
+
 **Nota cannibalizzazione**: il tema "CRM con automazioni WhatsApp" non ha una pagina dedicata. L'intento si sovrappone a `/risorse/whatsapp-automation-lead-b2b` (automazioni WhatsApp collegate ai sistemi aziendali) e a `/risorse/crm-automation-meta-ads` (integrazione dati tra sistemi). Si è scelto di rafforzare `whatsapp-automation-lead-b2b` (cluster e FAQ dedicati all'aggiornamento automatico del CRM dalla conversazione) invece di creare una terza pagina che avrebbe competuto sulla stessa query.
