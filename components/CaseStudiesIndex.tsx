@@ -67,7 +67,7 @@ const CaseStudiesIndex: React.FC = () => {
                 className="w-full aspect-video object-cover border-b border-white/10"
               />
               <div className="p-6">
-                <span className="text-[11px] uppercase tracking-[0.08em] text-indigo-300">{study.kicker}</span>
+                <span className="text-[11px] uppercase tracking-[0.08em] text-indigo-300">{study.category}</span>
                 <h2 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mt-4 mb-3 group-hover:text-indigo-200 transition-colors">{study.client}</h2>
                 <p className="text-gray-400 leading-relaxed mb-6">{study.subheadline}</p>
                 <span className="inline-flex items-center gap-2 text-indigo-300 font-medium">

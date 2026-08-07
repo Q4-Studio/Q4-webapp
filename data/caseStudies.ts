@@ -41,6 +41,8 @@ export interface CaseStudy {
   datePublished: string;
   metaTitle: string;
   description: string;
+  /** Categoria editoriale visibile nell'indice dei casi studio. */
+  category: 'Tracciamento e dati' | 'Automazioni' | 'Siti e sviluppo';
   kicker: string;
   title: string;
   subheadline: string;
@@ -94,6 +96,7 @@ export const caseStudies: CaseStudy[] = [
     datePublished: '2026-08-01',
     metaTitle: 'Candiani Denim: tracking server-side per Meta Ads | Q4 Studio',
     description: 'Come abbiamo potenziato il tracciamento Meta di Candiani Denim con Meta Conversion API, deduplicazione eventi e server-side tagging Stape, recuperando oltre un milione di segnali in 90 giorni.',
+    category: 'Tracciamento e dati',
     kicker: 'Caso studio · Tracking server-side',
     title: 'Candiani Denim',
     subheadline: 'Prima di aumentare il budget, abbiamo sistemato il tracciamento.',
@@ -165,6 +168,7 @@ export const caseStudies: CaseStudy[] = [
     datePublished: '2026-08-01',
     metaTitle: 'GP Meccatronica: sito web e rebranding | Q4 Studio',
     description: 'Il rebranding e il nuovo sito di GP Meccatronica: motion design e asset AI per un’azienda B2B di assistenza autobus, officina e mezzi pesanti a Campogalliano (MO).',
+    category: 'Siti e sviluppo',
     kicker: 'Caso studio · Sito web e rebranding',
     title: 'GP Meccatronica',
     subheadline: 'Con le campagne ADV in arrivo, il sito doveva farsi notare, non solo elencare i servizi.',
@@ -224,6 +228,12 @@ export const caseStudies: CaseStudy[] = [
         'Fino a qualche anno fa, un livello di motion design e animazioni come questo richiedeva un team dedicato e un investimento pesante. Con gli strumenti AI quella soglia si è abbassata: resta un lavoro serio, non il sito da poche centinaia di euro, ma il budget a cinque cifre di un tempo non serve più.',
         'Per un’azienda B2B che sta anche investendo in ADV, questo conta: il sito è spesso il primo punto di contatto reale con chi non conosce ancora GP Meccatronica, ed è lì che si decide se un visitatore se lo ricorda o lo dimentica subito dopo.'
       ]
+    },
+    cta: {
+      heading: 'Pronto a crescere? Parla con un esperto',
+      body: 'Raccontaci la tua sfida.',
+      label: 'Pronto a crescere? Parla con un esperto',
+      href: '/#contatti'
     },
     services: ['Rebranding', 'Web design', 'Sviluppo sito web', 'Art direction', 'Motion design', 'Asset AI', 'SEO']
   }

@@ -6,7 +6,7 @@ import Marquee from '../Marquee';
 import ContactForm from '../ContactForm';
 import Footer from '../Footer';
 import HomeSeoContent from '../HomeSeoContent';
-import Hero2 from './Hero2';
+import Hero2, { HeroTicker } from './Hero2';
 import TrackingIntro from './TrackingIntro';
 import Manifesto2 from './Manifesto2';
 import Pipeline2 from './Pipeline2';
@@ -301,8 +301,9 @@ const HomeV2: React.FC = () => {
       />
 
       <Hero2 />
-      <TrackingIntro />
       <Manifesto2 />
+      <HeroTicker />
+      <TrackingIntro />
       <Pipeline2 />
       <Agents2 />
       <Services2 />

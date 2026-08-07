@@ -120,7 +120,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject })
   };
 
   return (
-    <section ref={sectionRef} className={`${showHeader ? 'py-32' : 'pt-4 pb-32'} px-6 bg-[#050505] text-white`}>
+    <section id="contatti" ref={sectionRef} className={`${showHeader ? 'py-32' : 'pt-4 pb-32'} scroll-mt-28 px-6 bg-[#050505] text-white`}>
       <div className="max-w-4xl mx-auto">
         {showHeader && (
           <div className="text-center mb-16">

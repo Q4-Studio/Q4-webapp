@@ -102,7 +102,6 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateHome
     { label: 'Agenti AI', onClick: onNavigateAgents },
     { label: 'Casi Studio', href: caseStudiesPath },
     { label: 'Blog', onClick: onNavigateBlog },
-    { label: 'Risorse', href: '/risorse' },
   ];
 
   return (
@@ -176,16 +175,17 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateHome
         </nav>
 
         {/* CTA "Scrivici": pillola bianca evidenziata, in fondo alle voci */}
-        <button
-          type="button"
-          onClick={() => {
+        <a
+          href="/#contatti"
+          onClick={(event) => {
+            event.preventDefault();
             onContact();
             onClose();
           }}
           className="mt-8 w-full rounded-full bg-white px-6 py-4 text-center text-base uppercase tracking-normal text-[#050505] transition-colors hover:bg-gray-200 cursor-pointer border-0"
         >
           Contatti
-        </button>
+        </a>
 
         <p className="mt-10 text-[11px] uppercase tracking-[0.08em] text-gray-600">
           Q4 Studio · Reggio Emilia
