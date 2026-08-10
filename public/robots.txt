@@ -11,5 +11,7 @@ Allow: /casi-studio/
 # Sitemap
 Sitemap: https://www.q4.studio/sitemap.xml
 
+# IndexNow key: https://www.q4.studio/aaa6052477661f9542db6021c269f0e8.txt
+
 # AI crawler guidance
 # llms.txt: https://www.q4.studio/llms.txt

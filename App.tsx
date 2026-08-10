@@ -315,11 +315,12 @@ const App: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* CTA "Scrivici": pillola bianca piena, visibile da md in su */}
+          {/* CTA "Contatti": sempre visibile, anche su mobile — prima era
+              hidden sotto lg e raggiungibile solo aprendo il menu hamburger. */}
           <a
             href="/#contatti"
             onClick={(event) => { event.preventDefault(); scrollToContact(); }}
-            className="hidden lg:inline-flex text-base font-semibold px-7 py-3 rounded-full bg-white text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer border-0"
+            className="inline-flex text-sm md:text-base font-semibold px-4 py-2.5 md:px-7 md:py-3 rounded-full bg-white text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer border-0 whitespace-nowrap"
           >
             Contatti
           </a>

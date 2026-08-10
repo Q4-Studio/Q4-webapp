@@ -94,54 +94,60 @@ const CookieBanner: React.FC = () => {
 
   return (
     <>
-      {/* Overlay */}
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9998]" />
+      {/* Overlay: solo per il pannello impostazioni (più complesso, merita focus
+          modale). Il banner base resta una barra compatta senza scurire il
+          resto della pagina, per non coprire l'above-the-fold su mobile. */}
+      {showSettings && <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9998]" />}
 
       {/* Banner */}
-      <div className="fixed bottom-0 left-0 right-0 z-[9999] p-4 md:p-6">
-        <div className="max-w-6xl mx-auto bg-[#0A0A0A] border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-[9999] p-3 md:p-6">
+        <div className="max-w-6xl mx-auto max-h-[25vh] overflow-y-auto bg-[#0A0A0A] border border-white/10 rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden">
           {!showSettings ? (
-            // Main Banner
-            <div className="p-6 md:p-8">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center">
-                  <Cookie className="w-6 h-6 text-indigo-400" />
+            // Main Banner: compatto su mobile (icona/heading/testo ridotti,
+            // paragrafo esteso solo da md in su) per restare entro ~25vh.
+            <div className="p-4 md:p-8">
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="hidden sm:flex flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-full bg-indigo-500/20 items-center justify-center">
+                  <Cookie className="w-5 h-5 md:w-6 md:h-6 text-indigo-400" />
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] text-white mb-2">
+                  <h3 className="text-base md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] text-white mb-1 md:mb-2">
                     Questo sito utilizza cookie
                   </h3>
-                  <p className="text-gray-400 text-base mb-6 leading-relaxed">
+                  <p className="hidden md:block text-gray-400 text-base mb-6 leading-relaxed">
                     Utilizziamo cookie tecnici, analytics (Google Analytics 4) e di marketing (Meta Pixel) per migliorare la tua esperienza
                     e mostrarti contenuti personalizzati. Puoi scegliere quali cookie accettare.
                   </p>
+                  <p className="md:hidden text-gray-400 text-xs mb-3 leading-relaxed">
+                    Usiamo cookie tecnici, analytics e marketing. Scegli quali accettare.
+                  </p>
 
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2 md:gap-3">
                     <button
                       onClick={acceptAll}
-                      className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold text-white hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all duration-300"
+                      className="px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold text-white hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all duration-300"
                     >
                       Accetta tutto
                     </button>
 
                     <button
                       onClick={acceptNecessaryOnly}
-                      className="px-6 py-3 bg-white/5 border border-white/10 rounded-full font-semibold text-white hover:bg-white/10 transition-all duration-300"
+                      className="px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-white/5 border border-white/10 rounded-full font-semibold text-white hover:bg-white/10 transition-all duration-300"
                     >
                       Solo necessari
                     </button>
 
                     <button
                       onClick={() => setShowSettings(true)}
-                      className="px-6 py-3 bg-white/5 border border-white/10 rounded-full font-semibold text-white hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
+                      className="px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-white/5 border border-white/10 rounded-full font-semibold text-white hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
                     >
                       <Settings className="w-4 h-4" />
-                      Personalizza
+                      <span className="hidden sm:inline">Personalizza</span>
                     </button>
                   </div>
 
-                  <p className="text-gray-500 text-[11px] mt-4">
+                  <p className="hidden md:block text-gray-500 text-[11px] mt-4">
                     Cliccando "Accetta tutto" acconsenti all'uso di tutti i cookie. Leggi la nostra{' '}
                     <a
                       href="/#privacy"
@@ -151,6 +157,13 @@ const CookieBanner: React.FC = () => {
                       Privacy & Cookie Policy
                     </a>
                   </p>
+                  <a
+                    href="/#privacy"
+                    className="md:hidden mt-2 inline-block text-indigo-400 text-[11px] underline"
+                    onClick={() => setShowBanner(false)}
+                  >
+                    Privacy & Cookie Policy
+                  </a>
                 </div>
               </div>
             </div>
