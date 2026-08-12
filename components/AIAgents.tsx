@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight, Bot, CheckCircle2, Clock, MessageCircle, RefreshCw } from 'lucide-react';
 import SEOHead from './SEOHead';
 import { siteUrl } from '../data/seoPages';
+import { trackCtaClick } from '../utils/dataLayer';
 
 const packages = [
   {
@@ -25,7 +26,7 @@ const packages = [
     icon: <MessageCircle className="h-7 w-7" />,
     title: 'Richieste WhatsApp che arrivano già compilate',
     problem: 'I clienti ti scrivono su WhatsApp in tre messaggi disordinati, e qualcuno deve leggere, capire e ridigitare tutto a mano. Nel frattempo passano ore, e il lead ha già chiesto un preventivo a qualcun altro.',
-    description: "Legge i messaggi in arrivo, estrae le informazioni che ti servono per rispondere — nel caso di un preventivo: cosa, dove, quando, quanto — le scrive nel CRM e manda una prima risposta in meno di un minuto. Se manca un'informazione, la chiede. Quando il dato non è certo, segnala invece di inventare.",
+    description: "Legge i messaggi in arrivo, estrae le informazioni che ti servono per rispondere (nel caso di un preventivo: cosa, dove, quando, quanto), le scrive nel CRM e manda una prima risposta in meno di un minuto. Se manca un'informazione, la chiede. Quando il dato non è certo, segnala invece di inventare.",
     requirements: ['Un numero WhatsApp collegabile alla piattaforma. Se oggi rispondi dal tuo cellulare con WhatsApp Business, serve un numero dedicato: te lo spieghiamo prima di partire, non dopo.', 'L’elenco delle informazioni che ti servono per rispondere a una richiesta', 'Una persona che valida i primi giorni di funzionamento'],
     timing: "4-6 settimane dall'avvio",
     price: 'Setup 990 € · canone 200 €/mese',
@@ -78,7 +79,10 @@ const faqs = [
 
 const AIAgents: React.FC = () => {
   const scrollToPackages = () => document.getElementById('pacchetti-automazioni')?.scrollIntoView({ behavior: 'smooth' });
-  const scrollToContact = () => document.querySelector('section:has(form)')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const scrollToContact = () => {
+    trackCtaClick({ cta_location: 'agenti_ai_page', cta_label: 'Scrivici' });
+    document.querySelector('section:has(form)')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
 
   return <article className="relative overflow-hidden bg-[#050505] px-6 pb-24 pt-40 text-white">
     <SEOHead title="Agenti AI e Automazioni per PMI | Q4 Studio" description="Automazioni WhatsApp, CRM e assistenti virtuali con tempi, setup e canoni pubblici. Soluzioni concrete per le attività ripetitive delle PMI." url={`${siteUrl}/agenti-ai`} />

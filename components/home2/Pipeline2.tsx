@@ -108,12 +108,12 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
             </div>
             <div>
               <p className="text-sm font-semibold text-white">Mario Rossi</p>
-              <p className="text-sm text-gray-400">Direttore Commerciale — Meccanica Estense Srl</p>
+              <p className="text-sm text-gray-400">Direttore Commerciale, Meccanica Estense Srl</p>
             </div>
           </div>
           <div className="pipe-stagger mt-4 flex flex-wrap gap-2">
             <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] text-gray-400">
-              Campagna: B2B — Preventivo
+              Campagna: B2B · Preventivo
             </span>
             <span className="px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-[11px] text-blue-300">
               Nuovo lead
@@ -137,7 +137,7 @@ const StepVisual: React.FC<{ step: Step }> = ({ step }) => {
             ))}
           </div>
           <div className="pipe-stagger space-y-2 text-sm text-gray-400">
-            <p><span className="text-gray-600">fonte:</span> Meta Ads — Lead Form</p>
+            <p><span className="text-gray-600">fonte:</span> Meta Ads · Lead Form</p>
             <p><span className="text-gray-600">assegnato a:</span> <span className="text-white">Riccardo (Sales)</span></p>
             <p><span className="text-gray-600">priorità:</span> <span className="text-indigo-300">alta</span></p>
           </div>

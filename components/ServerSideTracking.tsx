@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import SEOHead from './SEOHead';
 import { siteUrl } from '../data/seoPages';
+import { trackCtaClick } from '../utils/dataLayer';
 
 const packages = [
   { title: 'Audit tracciamento', price: '490 €', timing: '3-5 giorni lavorativi', items: ['Verifica di cosa viene tracciato e cosa si perde oggi', 'Confronto tra dati piattaforma e dati reali', 'Analisi del Consent Mode e della configurazione attuale', 'Documento con le priorità di intervento'], note: 'Il documento resta tuo. Se decidi di non procedere, hai comunque una mappa di cosa sistemare.' },
@@ -52,7 +53,10 @@ const breadcrumbSchema = {
 };
 
 const ServerSideTracking: React.FC = () => {
-  const requestAudit = () => document.querySelector('section:has(form)')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const requestAudit = () => {
+    trackCtaClick({ cta_location: 'server_side_tracking_page', cta_label: "Richiedi l'audit" });
+    document.querySelector('section:has(form)')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
   return <article className="relative overflow-hidden bg-[#050505] px-6 pb-24 pt-40 text-white">
     <SEOHead title="Tracciamento Server-Side per Meta e Google | Q4 Studio" description="Recuperiamo i segnali di conversione che browser e ad blocker bloccano. Setup server-side, Consent Mode v2, Conversions API. Audit da 490 €." url={`${siteUrl}/tracciamento-server-side`} />
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />

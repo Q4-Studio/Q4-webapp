@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SEOHead from './SEOHead';
 import { siteUrl } from '../data/seoPages';
+import { trackCtaClick } from '../utils/dataLayer';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -92,6 +93,7 @@ const SitesWebAI: React.FC = () => {
   const pageRef = useRef<HTMLElement>(null);
   const scrollToContact = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
+    trackCtaClick({ cta_location: 'sites_web_ai_page', cta_label: event.currentTarget.textContent?.trim() || 'CTA', cta_destination: '#contatti' });
     document.getElementById('contatti')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
@@ -173,7 +175,7 @@ const SitesWebAI: React.FC = () => {
         <section className="py-28 md:py-36">
           <div className="sites-reveal grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
             <div><p className="mb-5 text-xs uppercase tracking-[0.16em] text-indigo-300">Caso studio</p><h2 className="mb-6 text-[clamp(36px,5vw,64px)] font-bold leading-[1.02] tracking-[-0.04em]">GP Meccatronica, dal rebranding al sito in movimento.</h2><p className="mb-8 text-lg leading-relaxed text-gray-300">Una direzione visiva scura e tecnica, motion design e asset generati con l’AI per accompagnare il traffico delle campagne ADV.</p><a href="/casi-studio/gp-meccatronica-sito-web" className="inline-flex items-center gap-2 font-semibold text-cyan-200 hover:text-white">Leggi il caso studio <ArrowRight className="h-4 w-4" /></a></div>
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/10"><img src="/case-studies/gp-meccatronica-hero.webp" srcSet="/case-studies/gp-meccatronica-hero-836w.webp 836w, /case-studies/gp-meccatronica-hero.webp 1672w" sizes="(min-width: 1024px) 55vw, 100vw" alt="GP Meccatronica — autobus scuro con fari accesi, overlay di dati tecnici blu" width="1672" height="941" loading="lazy" decoding="async" className="aspect-video h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" /></div>
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/10"><img src="/case-studies/gp-meccatronica-hero.webp" srcSet="/case-studies/gp-meccatronica-hero-836w.webp 836w, /case-studies/gp-meccatronica-hero.webp 1672w" sizes="(min-width: 1024px) 55vw, 100vw" alt="GP Meccatronica: autobus scuro con fari accesi, overlay di dati tecnici blu" width="1672" height="941" loading="lazy" decoding="async" className="aspect-video h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" /></div>
           </div>
         </section>
 
