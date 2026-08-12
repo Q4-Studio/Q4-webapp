@@ -29,7 +29,7 @@ const scenarios: Scenario[] = [
   {
     name: 'q4-agent · preventivi',
     lines: [
-      { kind: 'in', text: 'Nuova email da info@ — richiesta preventivo con disegno allegato' },
+      { kind: 'in', text: 'Nuova email da info@: richiesta preventivo con disegno allegato' },
       { kind: 'ok', text: "Specifiche estratte dall'allegato" },
       { kind: 'ok', text: 'Listini e offerte simili recuperati dallo storico' },
       { kind: 'ok', text: 'Bozza offerta compilata sul template aziendale' },

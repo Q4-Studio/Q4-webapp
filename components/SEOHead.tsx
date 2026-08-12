@@ -25,7 +25,7 @@ const DEFAULT_OG_IMAGE = 'https://www.q4.studio/og-image.jpg';
 const DEFAULT_OG_IMAGE_WIDTH = '1200';
 const DEFAULT_OG_IMAGE_HEIGHT = '630';
 const DEFAULT_OG_IMAGE_TYPE = 'image/jpeg';
-const DEFAULT_OG_IMAGE_ALT = 'Q4 Studio — Tracciamento Server-Side e Automazioni AI';
+const DEFAULT_OG_IMAGE_ALT = 'Q4 Studio: Tracciamento Server-Side e Automazioni AI';
 
 /**
  * Component to dynamically update meta tags for SEO

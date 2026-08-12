@@ -32,8 +32,8 @@ const services = [
 ];
 
 const stats = [
-  { value: '1.032.695', label: 'segnali di conversione recuperati in 90 giorni — Candiani Denim' },
-  { value: '963.652', label: 'bloccati dalla tracking prevention del browser — Candiani Denim' },
+  { value: '1.032.695', label: 'segnali di conversione recuperati in 90 giorni (Candiani Denim)' },
+  { value: '963.652', label: 'bloccati dalla tracking prevention del browser (Candiani Denim)' },
   { value: '≤ 60 s', label: 'tempo di primo contatto nel nostro sistema di lead generation' },
   { value: '8 h', label: 'tempo tipico di setup del tracciamento server-side' },
 ];
