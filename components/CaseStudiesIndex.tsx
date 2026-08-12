@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { caseStudies, caseStudiesPath, siteUrl } from '../data/caseStudies';
 import SEOHead from './SEOHead';
+import { trackCaseStudyClick } from '../utils/dataLayer';
 
 const CaseStudiesIndex: React.FC = () => {
   const pageUrl = `${siteUrl}${caseStudiesPath}`;
@@ -53,6 +54,7 @@ const CaseStudiesIndex: React.FC = () => {
             <a
               key={study.slug}
               href={`${caseStudiesPath}/${study.slug}`}
+              onClick={() => trackCaseStudyClick({ case_study_slug: study.slug, case_study_client: study.client, cta_location: 'case_studies_index' })}
               className="group rounded-3xl border border-white/10 bg-white/[0.03] overflow-hidden hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300"
             >
               <img

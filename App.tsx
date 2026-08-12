@@ -13,6 +13,8 @@ import { BlogPost } from './types/blog';
 import { getBlogPosts, isSupabaseConfigured } from './lib/supabase';
 import { getSeoPageBySlug, resourcesPath } from './data/seoPages';
 import { getCaseStudyBySlug, caseStudiesPath } from './data/caseStudies';
+import { captureAttribution } from './utils/attribution';
+import { trackCtaClick } from './utils/dataLayer';
 
 const Blog = lazy(() => import('./components/Blog'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
@@ -63,6 +65,11 @@ const App: React.FC = () => {
     };
     query.addEventListener('change', onChange);
     return () => query.removeEventListener('change', onChange);
+  }, []);
+
+  // Cattura UTM/click id/landing page/referrer per il contact form (vedi utils/attribution.ts).
+  useEffect(() => {
+    captureAttribution();
   }, []);
 
   // Fetch blog posts from Supabase on mount
@@ -256,6 +263,11 @@ const App: React.FC = () => {
     }
   };
 
+  const handleContactCtaClick = (location: string, label: string) => {
+    trackCtaClick({ cta_location: location, cta_label: label, cta_destination: '#contatti' });
+    scrollToContact();
+  };
+
   const currentArticle = currentArticleSlug ? getBlogPostBySlug(currentArticleSlug) : null;
   const currentSeoPage = currentSeoSlug ? getSeoPageBySlug(currentSeoSlug) : null;
   const currentCaseStudy = currentCaseStudySlug ? getCaseStudyBySlug(currentCaseStudySlug) : null;
@@ -318,7 +330,7 @@ const App: React.FC = () => {
           {/* CTA "Scrivici": pillola bianca piena, visibile da md in su */}
           <a
             href="/#contatti"
-            onClick={(event) => { event.preventDefault(); scrollToContact(); }}
+            onClick={(event) => { event.preventDefault(); handleContactCtaClick('header_nav', 'Contatti'); }}
             className="hidden lg:inline-flex text-base font-semibold px-7 py-3 rounded-full bg-white text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer border-0"
           >
             Contatti
@@ -347,7 +359,7 @@ const App: React.FC = () => {
         onNavigateHome={() => navigateTo('home')}
         onNavigateAgents={() => navigateTo('agenti-ai')}
         onNavigateBlog={() => navigateTo('blog')}
-        onContact={scrollToContact}
+        onContact={() => handleContactCtaClick('mobile_menu', 'Contatti')}
         showHomeLink={currentPage !== 'home'}
       />
 

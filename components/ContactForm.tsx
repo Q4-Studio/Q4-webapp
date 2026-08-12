@@ -3,6 +3,8 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { OBFUSCATED, decode } from '../utils/obfuscate';
+import { getAttribution, getGaClientId, getGaSessionId } from '../utils/attribution';
+import { pushDataLayerEvent } from '../utils/dataLayer';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,6 +81,26 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
+    // Un solo event_id per il lead, condiviso tra il webhook CRM e il dataLayer:
+    // permette di far quadrare la riga nel CRM con l'evento GA4 (e in futuro con
+    // una eventuale Conversions API) senza mandare dati personali a Google.
+    const eventId = typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const attribution = getAttribution();
+    const gaClientId = getGaClientId();
+    const gaSessionId = getGaSessionId();
+
+    const notifyGa4 = () => {
+      pushDataLayerEvent('generate_lead', {
+        event_id: eventId,
+        form_name: subject ? 'contact_form_context' : 'contact_form',
+        lead_company: formData.company,
+        page_url: window.location.href,
+        ...attribution
+      });
+    };
+
     try {
       // Get webhook URL from environment variable or use placeholder
       const webhookUrl = import.meta.env.VITE_WEBHOOK_URL || '';
@@ -86,7 +108,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
         ...formData,
         ...(subject ? { subject } : {}),
         timestamp: new Date().toISOString(),
-        source: 'Q4 Studio Website'
+        source: 'Q4 Studio Website',
+        event_id: eventId,
+        page_url: window.location.href,
+        ...attribution,
+        ...(gaClientId ? { ga_client_id: gaClientId } : {}),
+        ...(gaSessionId ? { ga_session_id: gaSessionId } : {})
       };
 
       if (!webhookUrl) {
@@ -95,6 +122,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
         await new Promise(resolve => setTimeout(resolve, 1000));
         setSubmitStatus('success');
         setFormData({ name: '', email: '', phone: '', company: '', message: '' });
+        notifyGa4();
         return;
       }
 
@@ -109,6 +137,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
       if (response.ok) {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', phone: '', company: '', message: '' });
+        notifyGa4();
       } else {
         setSubmitStatus('error');
       }
