@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight, BarChart3, GitBranch, Target } from 'lucide-react';
 import SEOHead from './SEOHead';
 import { siteUrl } from '../data/seoPages';
+import { trackCtaClick } from '../utils/dataLayer';
 
 export const metaAdvertisingFaqs = [
   { question: "In pratica, cos'è la B2B Lead Generation su Meta?", answer: "È l'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate sul profilo del cliente giusto, messaggio, form, CRM e segnali di qualità." },
@@ -33,7 +34,7 @@ const MetaAdvertisingB2B: React.FC = () => {
 
       <section className="mt-16"><p className="mb-5 text-sm uppercase tracking-[0.08em] text-blue-300">FAQ</p><h2 className="mb-9 text-[clamp(32px,5vw,58px)] font-bold tracking-[-0.035em]">Domande frequenti su Meta Ads B2B</h2><div className="space-y-4">{metaAdvertisingFaqs.map((faq) => <details key={faq.question} className="rounded-3xl border border-white/10 bg-white/[0.025] p-6"><summary className="cursor-pointer text-xl font-semibold">{faq.question}</summary><p className="mt-4 max-w-3xl leading-relaxed text-gray-300">{faq.answer}</p></details>)}</div></section>
 
-      <section className="mt-16 rounded-[2.5rem] border border-blue-400/20 bg-blue-400/[0.05] p-8 text-center md:p-14"><h2 className="mb-7 text-[clamp(32px,5vw,58px)] font-bold tracking-[-0.035em]">Il tracciamento viene prima delle campagne. Parti dall&apos;audit.</h2><a href="/tracciamento-server-side" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-[#050505]">Vedi il tracciamento e i prezzi <ArrowRight className="h-4 w-4" /></a></section>
+      <section className="mt-16 rounded-[2.5rem] border border-blue-400/20 bg-blue-400/[0.05] p-8 text-center md:p-14"><h2 className="mb-7 text-[clamp(32px,5vw,58px)] font-bold tracking-[-0.035em]">Il tracciamento viene prima delle campagne. Parti dall&apos;audit.</h2><a href="/tracciamento-server-side" onClick={() => trackCtaClick({ cta_location: 'meta_advertising_b2b_page', cta_label: 'Vedi il tracciamento e i prezzi', cta_destination: '/tracciamento-server-side' })} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-[#050505]">Vedi il tracciamento e i prezzi <ArrowRight className="h-4 w-4" /></a></section>
     </div>
   </article>;
 };

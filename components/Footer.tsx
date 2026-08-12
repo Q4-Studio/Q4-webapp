@@ -5,6 +5,7 @@ import { ArrowUpRight, Instagram, Linkedin, Phone, Mail } from 'lucide-react';
 import MagneticButton from './MagneticButton';
 import { OBFUSCATED, decode } from '../utils/obfuscate';
 import { caseStudiesPath } from '../data/caseStudies';
+import { trackCtaClick } from '../utils/dataLayer';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -104,6 +105,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                 <MagneticButton
                   className="group text-lg md:text-xl px-8 py-4 md:px-10 md:py-5 font-semibold hover:shadow-[0_0_60px_-15px_rgba(99,102,241,0.6)] transition-shadow duration-500 border border-white/10 hover:border-white/30"
                   onClick={() => {
+                    trackCtaClick({ cta_location: 'footer', cta_label: 'Parla con un esperto', cta_destination: '/#contatti' });
                     window.history.pushState(null, '', '/#contatti');
                     window.dispatchEvent(new PopStateEvent('popstate'));
                   }}

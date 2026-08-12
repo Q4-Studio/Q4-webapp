@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { CaseStudy, CaseStudyDemoVideo, caseStudiesPath, siteUrl } from '../data/caseStudies';
 import SEOHead from './SEOHead';
+import { trackCtaClick } from '../utils/dataLayer';
 
 interface CaseStudyPageProps {
   study: CaseStudy;
@@ -244,7 +245,11 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
           <section className="mb-16 rounded-[2rem] border border-cyan-400/20 bg-cyan-400/[0.05] p-8 md:p-12">
             <h2 className="mb-4 text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em]">{study.cta.heading}</h2>
             <p className="mb-7 max-w-3xl text-lg leading-relaxed text-gray-300">{study.cta.body}</p>
-            <a href={study.cta.href} className="inline-flex rounded-full bg-white px-6 py-3.5 font-semibold text-[#050505]">{study.cta.label}</a>
+            <a
+              href={study.cta.href}
+              onClick={() => trackCtaClick({ cta_location: 'case_study_detail', cta_label: study.cta!.label, cta_destination: study.cta!.href, case_study_slug: study.slug })}
+              className="inline-flex rounded-full bg-white px-6 py-3.5 font-semibold text-[#050505]"
+            >{study.cta.label}</a>
           </section>
         )}
 

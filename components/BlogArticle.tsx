@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowUpRight, Calendar, Clock, ListTree } from 'lucide-react
 import { BlogPost } from '../types/blog';
 import BlogSchema from './BlogSchema';
 import SEOHead from './SEOHead';
+import { trackCtaClick } from '../utils/dataLayer';
 
 interface BlogArticleProps {
   post: BlogPost;
@@ -183,6 +184,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
   const navigateToContact = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
+    trackCtaClick({ cta_location: 'blog_article', cta_label: event.currentTarget.textContent?.trim() || 'Contattaci', cta_destination: '/#contatti' });
     window.history.pushState(null, '', '/#contatti');
     window.dispatchEvent(new PopStateEvent('popstate'));
   };

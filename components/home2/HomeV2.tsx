@@ -13,6 +13,7 @@ import Pipeline2 from './Pipeline2';
 import Agents2 from './Agents2';
 import Services2 from './Services2';
 import ScrollRevealText from './ScrollRevealText';
+import { trackCtaClick } from '../../utils/dataLayer';
 import { siteUrl } from '../../data/seoPages';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -204,7 +205,7 @@ const FinalCTA: React.FC = () => {
           WebkitTextStroke: '1px rgba(129, 140, 248, 0.06)',
         }}
       >
-        FUTURE-READY — FUTURE-READY —
+        FUTURE-READY · FUTURE-READY ·
       </div>
 
       <div className="max-w-5xl mx-auto text-center relative z-10">
@@ -222,6 +223,7 @@ const FinalCTA: React.FC = () => {
         />
         <a
           href="/tracciamento-server-side"
+          onClick={() => trackCtaClick({ cta_location: 'home_mid_cta', cta_label: 'Vedi il tracciamento e i prezzi', cta_destination: '/tracciamento-server-side' })}
           className="cta-reveal inline-flex items-center justify-center rounded-full bg-white px-7 py-4 font-semibold text-[#050505] transition-colors hover:bg-cyan-100"
         >
           Vedi il tracciamento e i prezzi
