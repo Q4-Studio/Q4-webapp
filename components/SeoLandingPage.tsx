@@ -1,6 +1,6 @@
 import React from 'react';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
-import { resourcesPath, SeoPage, seoPages, siteUrl } from '../data/seoPages';
+import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { clusterHub, resourcesPath, SeoPage, seoPages, siteUrl } from '../data/seoPages';
 import SEOHead from './SEOHead';
 
 interface SeoLandingPageProps {
@@ -9,7 +9,15 @@ interface SeoLandingPageProps {
 
 const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
   const pageUrl = `${siteUrl}${resourcesPath}/${page.slug}`;
-  const relatedPages = seoPages.filter((relatedPage) => relatedPage.slug !== page.slug).slice(0, 3);
+  const hub = clusterHub[page.cluster];
+  // "Pagine correlate" preferisce lo stesso cluster tematico (stesso hub di
+  // riferimento) invece di pescare a caso tra le 10 pagine: prima le altre
+  // pagine dello stesso cluster, poi riempie con le rimanenti solo se non
+  // bastano a fare 3.
+  const otherPages = seoPages.filter((relatedPage) => relatedPage.slug !== page.slug);
+  const sameCluster = otherPages.filter((relatedPage) => relatedPage.cluster === page.cluster);
+  const otherCluster = otherPages.filter((relatedPage) => relatedPage.cluster !== page.cluster);
+  const relatedPages = [...sameCluster, ...otherCluster].slice(0, 3);
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -77,6 +85,13 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
           <h2 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Risposta diretta</h2>
           <p className="text-lg md:text-xl text-gray-200 leading-relaxed">{page.directAnswer}</p>
         </section>
+
+        {/* Link mandatorio spoke→hub: questa pagina informativa collega
+            sempre alla pagina di offerta bespoke del suo cluster. */}
+        <a href={hub.path} className="mb-16 flex items-center justify-between gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-indigo-400/50">
+          <span className="text-gray-200">Vuoi vedere prezzi e pacchetti? <strong className="text-white">{hub.label}</strong></span>
+          <ArrowRight className="h-5 w-5 flex-shrink-0 text-indigo-300" />
+        </a>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-16">
           <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">

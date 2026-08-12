@@ -18,6 +18,40 @@ const faqs = [
   ['Lavori anche con la mia agenzia?', 'Sì. Molte agenzie non hanno un tecnico interno per questa parte: possiamo lavorare direttamente con loro.'],
 ];
 
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Tracciamento Server-Side per Meta e Google',
+  description: 'Container server-side, Consent Mode v2, Conversions API e Enhanced Conversions per recuperare i segnali di conversione persi da browser e ad blocker.',
+  provider: { '@type': 'Organization', name: 'Q4 Studio', url: siteUrl },
+  areaServed: 'IT',
+  url: `${siteUrl}/tracciamento-server-side`,
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Pacchetti tracciamento server-side',
+    itemListElement: packages.map((pack) => ({ '@type': 'Offer', name: pack.title, price: pack.price })),
+  },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(([question, answer]) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: { '@type': 'Answer', text: answer },
+  })),
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Tracciamento Server-Side', item: `${siteUrl}/tracciamento-server-side` },
+  ],
+};
+
 const ServerSideTracking: React.FC = () => {
   const requestAudit = () => {
     trackCtaClick({ cta_location: 'server_side_tracking_page', cta_label: "Richiedi l'audit" });
@@ -25,6 +59,9 @@ const ServerSideTracking: React.FC = () => {
   };
   return <article className="relative overflow-hidden bg-[#050505] px-6 pb-24 pt-40 text-white">
     <SEOHead title="Tracciamento Server-Side per Meta e Google | Q4 Studio" description="Recuperiamo i segnali di conversione che browser e ad blocker bloccano. Setup server-side, Consent Mode v2, Conversions API. Audit da 490 €." url={`${siteUrl}/tracciamento-server-side`} />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
     <div className="pointer-events-none absolute right-[-15%] top-20 h-[700px] w-[700px] rounded-full bg-cyan-900/15 blur-[170px]" />
     <div className="relative z-10 mx-auto max-w-6xl">
       <header className="mb-24 max-w-5xl">
@@ -41,6 +78,8 @@ const ServerSideTracking: React.FC = () => {
       <section className="grid gap-12 border-t border-white/10 py-20 lg:grid-cols-[1fr_0.8fr] lg:gap-20"><div><p className="mb-5 text-sm uppercase tracking-[0.08em] text-cyan-300">Un caso reale</p><h2 className="mb-6 text-[clamp(32px,5vw,58px)] font-bold tracking-[-0.035em]">Oltre un milione di segnali recuperati.</h2><p className="text-lg leading-relaxed text-gray-300">Su Candiani Denim abbiamo recuperato oltre un milione di segnali di conversione in 90 giorni, di cui 963.652 bloccati dai sistemi di tracking prevention dei browser e 69.043 dagli ad blocker.</p></div><a href="/casi-studio/candiani-denim-tracking-server-side" className="self-end rounded-3xl border border-white/10 bg-white/[0.03] p-7 text-xl font-semibold text-indigo-200 hover:border-indigo-400/40">Leggi il caso studio completo <ArrowRight className="ml-2 inline h-5 w-5" /></a></section>
 
       <section className="border-t border-white/10 py-20"><h2 className="mb-10 text-[clamp(32px,5vw,58px)] font-bold tracking-[-0.035em]">Domande frequenti</h2><div className="space-y-4">{faqs.map(([q,a]) => <details key={q} className="rounded-3xl border border-white/10 bg-white/[0.025] p-6"><summary className="cursor-pointer text-xl font-semibold">{q}</summary><p className="mt-4 max-w-3xl leading-relaxed text-gray-300">{a}</p></details>)}</div></section>
+
+      <section className="border-t border-white/10 py-20"><h2 className="mb-8 text-2xl font-bold">Approfondisci</h2><div className="grid gap-4 md:grid-cols-2"><a href="/risorse/tracking-server-side-deduplicazione-eventi" className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-gray-300 hover:border-cyan-400/40 hover:text-white">Tracking server-side e deduplicazione degli eventi <ArrowRight className="ml-1 inline h-4 w-4" /></a><a href="/agenti-ai" className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-gray-300 hover:border-cyan-400/40 hover:text-white">Dopo il tracciamento: agenti AI e automazioni <ArrowRight className="ml-1 inline h-4 w-4" /></a></div></section>
 
       <section className="rounded-[2.5rem] border border-cyan-400/20 bg-cyan-400/[0.05] p-8 text-center md:p-14"><h2 className="mb-5 text-[clamp(32px,5vw,58px)] font-bold tracking-[-0.035em]">Non sai se il tuo tracciamento è a posto?</h2><p className="mx-auto mb-8 max-w-2xl text-lg text-gray-300">L&apos;audit da 490 € ti dà una risposta documentata in cinque giorni.</p><button onClick={requestAudit} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-[#050505]">Richiedi l&apos;audit <ArrowRight className="h-4 w-4" /></button></section>
     </div>

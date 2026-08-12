@@ -1,6 +1,7 @@
 import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { draftPreviewPlugin } from './server/draftPreviewPlugin';
 
 export default defineConfig(({ mode }) => {
@@ -20,7 +21,7 @@ export default defineConfig(({ mode }) => {
         host: '127.0.0.1',
         allowedHosts: [allowedHost],
       },
-      plugins: [draftPreviewPlugin(env), react()],
+      plugins: [draftPreviewPlugin(env), tailwindcss(), react()],
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '.'),

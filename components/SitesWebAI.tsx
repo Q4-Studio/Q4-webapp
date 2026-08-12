@@ -77,6 +77,18 @@ const BrowserStudy: React.FC = () => (
   </div>
 );
 
+const process = [
+  { n: '01', title: 'Direzione', copy: 'Una call per capire cosa deve fare il sito, per chi, e cosa deve far ricordare a chi lo visita. Da qui esce una struttura, non un elenco di pagine.' },
+  { n: '02', title: 'Produzione', copy: 'Testo, asset visivi, motion e sviluppo. L’AI accelera le parti dove ha senso; la direzione, il gusto e le scelte di fondo restano nostre, non della macchina.' },
+  { n: '03', title: 'Consegna', copy: 'Sito pubblicato, ottimizzato e documentato: sai cosa c’è dentro e chi lo aggiorna dopo, senza dipendere da noi per ogni piccola modifica.' },
+];
+
+const requirements = [
+  'Un obiettivo chiaro: cosa deve far fare il sito a chi lo visita, non solo "un sito nuovo"',
+  'Materiale esistente se c’è (logo, foto, testi, brand guideline) — altrimenti lo produciamo insieme',
+  'Un referente unico che validi le scelte di direzione, per non rincorrere pareri diversi durante il progetto',
+];
+
 const SitesWebAI: React.FC = () => {
   const pageRef = useRef<HTMLElement>(null);
   const scrollToContact = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -112,11 +124,20 @@ const SitesWebAI: React.FC = () => {
     '@type': 'FAQPage',
     mainEntity: faqs.map((faq) => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })),
   };
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Siti Web AI', item: `${siteUrl}/siti-web-ai` },
+    ],
+  };
 
   return (
     <article ref={pageRef} className="relative overflow-hidden bg-[#050505] px-6 pb-24 pt-36 text-white md:pt-44">
       <SEOHead title="Siti web con AI per aziende B2B | Q4 Studio" description="Siti e landing page B2B fatti con l’AI, non dall’AI: asset su misura, motion e produzione foto-video. Progetti da 2.999 €." url={`${siteUrl}/siti-web-ai`} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       <div className="pointer-events-none absolute left-1/2 top-0 h-[760px] w-[min(1100px,150vw)] -translate-x-1/2 rounded-full bg-cyan-900/10 blur-[170px]" />
@@ -156,6 +177,18 @@ const SitesWebAI: React.FC = () => {
             <div><p className="mb-5 text-xs uppercase tracking-[0.16em] text-indigo-300">Caso studio</p><h2 className="mb-6 text-[clamp(36px,5vw,64px)] font-bold leading-[1.02] tracking-[-0.04em]">GP Meccatronica, dal rebranding al sito in movimento.</h2><p className="mb-8 text-lg leading-relaxed text-gray-300">Una direzione visiva scura e tecnica, motion design e asset generati con l’AI per accompagnare il traffico delle campagne ADV.</p><a href="/casi-studio/gp-meccatronica-sito-web" className="inline-flex items-center gap-2 font-semibold text-cyan-200 hover:text-white">Leggi il caso studio <ArrowRight className="h-4 w-4" /></a></div>
             <div className="relative overflow-hidden rounded-[2rem] border border-white/10"><img src="/case-studies/gp-meccatronica-hero.webp" srcSet="/case-studies/gp-meccatronica-hero-836w.webp 836w, /case-studies/gp-meccatronica-hero.webp 1672w" sizes="(min-width: 1024px) 55vw, 100vw" alt="GP Meccatronica: autobus scuro con fari accesi, overlay di dati tecnici blu" width="1672" height="941" loading="lazy" decoding="async" className="aspect-video h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" /></div>
           </div>
+        </section>
+
+        <section className="sites-reveal border-t border-white/10 py-24">
+          <div className="mb-14 max-w-3xl"><p className="mb-5 text-xs uppercase tracking-[0.16em] text-cyan-300">Come lavoriamo</p><h2 className="text-[clamp(36px,5vw,64px)] font-bold leading-[1.02] tracking-[-0.04em]">Tre fasi, non un modulo da compilare.</h2></div>
+          <div className="grid gap-8 md:grid-cols-3">
+            {process.map((step) => <div key={step.n} className="border-t border-white/10 pt-7"><span className="text-sm text-cyan-400">{step.n}</span><h3 className="mb-3 mt-3 text-2xl font-bold">{step.title}</h3><p className="leading-relaxed text-gray-400">{step.copy}</p></div>)}
+          </div>
+        </section>
+
+        <section className="sites-reveal grid gap-10 border-t border-white/10 py-24 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+          <div><p className="mb-5 text-xs uppercase tracking-[0.16em] text-indigo-300">Prima di iniziare</p><h2 className="text-[clamp(32px,4.8vw,56px)] font-bold leading-[1.05] tracking-[-0.04em]">Cosa serve da te</h2></div>
+          <ul className="space-y-4">{requirements.map((item) => <li key={item} className="flex gap-3 text-lg leading-relaxed text-gray-300"><span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-cyan-300" />{item}</li>)}</ul>
         </section>
 
         <section className="sites-reveal border-t border-white/10 py-24"><div className="mb-12 max-w-3xl"><p className="mb-5 text-xs uppercase tracking-[0.16em] text-indigo-300">FAQ</p><h2 className="text-[clamp(36px,5vw,64px)] font-bold tracking-[-0.04em]">Domande prima di partire.</h2></div><div className="grid gap-4 lg:grid-cols-2">{faqs.map((faq) => <details key={faq.question} className="group rounded-3xl border border-white/10 bg-white/[0.025] p-6 open:border-cyan-300/25"><summary className="flex cursor-pointer list-none items-start justify-between gap-5 text-xl font-semibold"><span>{faq.question}</span><span className="text-cyan-300 transition-transform group-open:rotate-45">+</span></summary><p className="mt-5 leading-relaxed text-gray-300">{faq.answer}</p></details>)}</div></section>

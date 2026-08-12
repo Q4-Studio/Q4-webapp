@@ -1,5 +1,24 @@
+// Cluster keyword da SEO_GUIDE.md: A = tracciamento server-side (hub
+// /tracciamento-server-side), C/D = automazioni CRM/WhatsApp e agenti AI
+// (hub /agenti-ai, venduti insieme come "automazioni e agenti AI" sullo
+// stesso cliente). Usato per link "Pagine correlate" cluster-aware e per il
+// link mandatorio spoke→hub, invece di scegliere pagine a caso.
+export type SeoCluster = 'A' | 'C' | 'D';
+
+export const clusterHub: Record<SeoCluster, { path: string; label: string }> = {
+  A: { path: '/tracciamento-server-side', label: 'Tracciamento server-side' },
+  C: { path: '/agenti-ai', label: 'Agenti AI e automazioni' },
+  D: { path: '/agenti-ai', label: 'Agenti AI e automazioni' },
+};
+
 export interface SeoPage {
   slug: string;
+  cluster: SeoCluster;
+  // Data reale dell'ultima modifica di contenuto di questa pagina, per il
+  // <lastmod> della sitemap. Aggiornare a mano quando si cambia il testo di
+  // questa pagina — NON usare la data di build, che si resetta ad ogni
+  // deploy anche se il contenuto non è cambiato (finding SEO audit 2026-08).
+  lastModified: string;
   title: string;
   metaTitle: string;
   description: string;
@@ -27,12 +46,30 @@ export interface SeoPage {
   }>;
 }
 
+// Data reale di ultima modifica per le pagine bespoke/indice (home, offerta,
+// indici). Aggiornare a mano quando si cambia il contenuto della pagina
+// corrispondente — non usare la data di build in scripts/prerender.ts, che
+// si resetta ad ogni deploy anche a contenuto invariato.
+export const pageLastModified: Record<string, string> = {
+  '/': '2026-08-09',
+  '/agenti-ai': '2026-08-09',
+  '/tracciamento-server-side': '2026-08-09',
+  '/siti-web-ai': '2026-08-09',
+  '/meta-advertising-b2b': '2026-08-07',
+  '/partner-tecnico': '2026-08-07',
+  '/casi-studio': '2026-08-05',
+  '/risorse': '2026-08-09',
+  '/blog': '2026-08-07',
+};
+
 export const siteUrl = 'https://www.q4.studio';
 export const resourcesPath = '/risorse';
 
 export const seoPages: SeoPage[] = [
   {
     slug: 'agenti-ai-per-lead-generation',
+    cluster: 'D',
+    lastModified: '2026-08-09',
     title: 'Agenti AI per i Processi Commerciali e Operativi',
     metaTitle: 'Agenti AI per Processi Commerciali | Q4 Studio',
     description: 'Agenti AI che qualificano le richieste, preparano una prima risposta e aggiornano i sistemi aziendali, per alleggerire il lavoro ripetitivo di commerciali e back office.',
@@ -102,6 +139,8 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'agente-vocale-ai-aziende',
+    cluster: 'D',
+    lastModified: '2026-08-09',
     title: 'Agente Vocale AI per Aziende',
     metaTitle: 'Agente Vocale AI per aziende | Q4 Studio',
     description: 'Agenti vocali AI per qualificare richieste, rispondere al telefono, fissare appuntamenti e supportare team commerciali e customer care.',
@@ -138,6 +177,8 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'centralino-ai',
+    cluster: 'D',
+    lastModified: '2026-08-09',
     title: 'Centralino AI per Aziende',
     metaTitle: 'Centralino AI per aziende | Q4 Studio',
     description: 'Centralino AI per rispondere, classificare chiamate, raccogliere dati e smistare richieste verso team commerciali, customer care o back office.',
@@ -174,6 +215,8 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'riattivazione-database-clienti-ai',
+    cluster: 'C',
+    lastModified: '2026-08-09',
     title: 'Riattivazione del Database Clienti con l\'AI',
     metaTitle: 'Riattivazione Database Clienti con AI | Q4 Studio',
     description: 'Usiamo l\'AI sui dati già presenti in azienda per far ripartire relazioni commerciali ferme, con segmentazione, messaggi mirati e automazioni di contatto.',
@@ -210,6 +253,8 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'chatbot-cliniche-studi-medici',
+    cluster: 'D',
+    lastModified: '2026-08-09',
     title: 'Chatbot AI per Cliniche e Studi Medici',
     metaTitle: 'Chatbot AI per cliniche e studi medici | Q4 Studio',
     description: 'Chatbot AI per cliniche e studi medici: risposte informative, triage amministrativo, prenotazioni e gestione richieste con escalation umana.',
@@ -246,6 +291,8 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'crm-automation-meta-ads',
+    cluster: 'C',
+    lastModified: '2026-08-09',
     title: 'Integrazione e Automazione dei Dati Aziendali',
     metaTitle: 'Integrazione Dati e Automazione CRM | Q4 Studio',
     description: 'Colleghiamo CRM, gestionale, advertising e altri sistemi aziendali per avere dati coerenti e processi automatizzati, senza lavoro manuale duplicato.',
@@ -314,6 +361,8 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'whatsapp-automation-lead-b2b',
+    cluster: 'C',
+    lastModified: '2026-08-09',
     title: 'Automazione WhatsApp nei Processi Aziendali',
     metaTitle: 'Automazione WhatsApp per Aziende | Q4 Studio',
     description: 'Automazioni WhatsApp collegate ai sistemi aziendali per gestire richieste, ordini, assistenza e smistamento senza perdere tempo prezioso.',
@@ -382,6 +431,8 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'tracking-server-side-deduplicazione-eventi',
+    cluster: 'A',
+    lastModified: '2026-08-09',
     title: 'Tracking Server-Side e Deduplicazione degli Eventi',
     metaTitle: 'Tracking Server-Side e Deduplicazione Eventi | Q4 Studio',
     description: 'Come funziona il tracking server-side, perché senza deduplicazione degli eventi i numeri di conversione si gonfiano. Q4 Studio è Stape Partner.',
@@ -423,6 +474,8 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'reminder-automatici-appuntamenti-no-show',
+    cluster: 'C',
+    lastModified: '2026-08-09',
     title: 'Reminder Automatici per Ridurre i Mancati Appuntamenti',
     metaTitle: 'Reminder Automatici contro i No-Show | Q4 Studio',
     description: 'Sequenze di reminder automatici su WhatsApp, email e SMS collegate a calendario e gestionale, con conferma e disdetta gestite senza intervento manuale.',
@@ -464,6 +517,8 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'second-brain-aziendale-agente-ai',
+    cluster: 'D',
+    lastModified: '2026-08-09',
     title: 'Second Brain Aziendale: un Agente AI per la Conoscenza dell\'Azienda',
     metaTitle: 'Second Brain Aziendale con Agenti AI | Q4 Studio',
     description: 'Un agente AI che indicizza documenti, email, offerte e procedure aziendali e risponde al team citando la fonte, senza dipendere dalla memoria delle persone.',

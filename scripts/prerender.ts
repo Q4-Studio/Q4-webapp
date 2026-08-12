@@ -1,4 +1,4 @@
-import { seoPages, siteUrl, resourcesPath } from '../data/seoPages.ts';
+import { seoPages, siteUrl, resourcesPath, clusterHub, pageLastModified } from '../data/seoPages.ts';
 import { caseStudies, caseStudiesPath, CaseStudy } from '../data/caseStudies.ts';
 import { createClient } from '@supabase/supabase-js';
 import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync, writeFileSync } from 'fs';
@@ -59,6 +59,24 @@ function getAppScripts(): string {
 }
 
 const appScripts = getAppScripts();
+
+// Extract the hashed stylesheet link Vite injects for the compiled Tailwind
+// CSS, so prerendered pages get real production CSS instead of the removed
+// cdn.tailwindcss.com runtime script.
+function getAppStyles(): string {
+  const builtIndexPath = join(distDir, 'index.html');
+  if (existsSync(builtIndexPath)) {
+    const builtHtml = readFileSync(builtIndexPath, 'utf-8');
+    const styleMatch = builtHtml.match(/<link rel="stylesheet"[^>]*href="[^"]+\.css"[^>]*>/);
+    if (styleMatch) {
+      return styleMatch[0];
+    }
+  }
+  console.warn('⚠️  dist/index.html not found or has no compiled stylesheet link');
+  return '';
+}
+
+const appStyles = getAppStyles();
 
 function ensureDir(dir: string) {
   if (!existsSync(dir)) {
@@ -157,9 +175,8 @@ ${GTM_HEAD}
   <link rel="shortcut icon" href="/favicon/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://esm.sh">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com" defer></script>
+  ${appStyles}
   <style>
     html, body { max-width: 100%; overflow-x: hidden; overscroll-behavior-x: none; }
     body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
@@ -180,7 +197,13 @@ ${GTM_HEAD}
 
 function generateLandingPageHtml(page: typeof seoPages[0]): string {
   const pageUrl = `${siteUrl}${resourcesPath}/${page.slug}`;
-  const relatedPages = seoPages.filter((p) => p.slug !== page.slug).slice(0, 3);
+  const hub = clusterHub[page.cluster];
+  // Mirror di components/SeoLandingPage.tsx: "Pagine correlate" preferisce lo
+  // stesso cluster tematico invece di pescare a caso tra le 10 pagine.
+  const otherPages = seoPages.filter((p) => p.slug !== page.slug);
+  const sameCluster = otherPages.filter((p) => p.cluster === page.cluster);
+  const otherCluster = otherPages.filter((p) => p.cluster !== page.cluster);
+  const relatedPages = [...sameCluster, ...otherCluster].slice(0, 3);
 
   const serviceSchema = {
     '@context': 'https://schema.org',
@@ -282,6 +305,11 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
           <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Risposta diretta</h2>
           <p class="text-lg md:text-xl text-gray-200 leading-relaxed">${escapeHtml(page.directAnswer)}</p>
         </section>
+
+        <a href="${hub.path}" class="mb-16 flex items-center justify-between gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 transition-colors">
+          <span class="text-gray-200">Vuoi vedere prezzi e pacchetti? <strong class="text-white">${escapeHtml(hub.label)}</strong></span>
+          <svg class="h-5 w-5 flex-shrink-0 text-indigo-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-16">
           <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
@@ -774,37 +802,48 @@ function renderArticleInline(value: string): string {
 function renderMarkdown(content: string): string {
   const lines = content.trim().split('\n');
   const elements: string[] = [];
-  let currentList: string[] = [];
+  let currentOrderedList: string[] = [];
+  let currentUnorderedList: string[] = [];
 
-  const flushList = () => {
-    if (currentList.length > 0) {
-      elements.push(`<ol class="list-decimal list-inside space-y-2 mb-6 text-gray-300">${currentList.map((item) => `<li class="leading-relaxed">${renderArticleInline(item)}</li>`).join('')}</ol>`);
-      currentList = [];
+  // Mirrors parseArticle() in components/BlogArticle.tsx: ordered and
+  // unordered lists are tracked separately, and switching list type flushes
+  // whichever list was open.
+  const flushLists = () => {
+    if (currentOrderedList.length > 0) {
+      elements.push(`<ol class="list-decimal list-inside space-y-2 mb-6 text-gray-300">${currentOrderedList.map((item) => `<li class="leading-relaxed">${renderArticleInline(item)}</li>`).join('')}</ol>`);
+      currentOrderedList = [];
+    }
+    if (currentUnorderedList.length > 0) {
+      elements.push(`<ul class="list-disc list-inside space-y-2 mb-6 text-gray-300">${currentUnorderedList.map((item) => `<li class="leading-relaxed">${renderArticleInline(item)}</li>`).join('')}</ul>`);
+      currentUnorderedList = [];
     }
   };
 
   lines.forEach((line) => {
     if (line.startsWith('# ')) {
-      flushList();
+      flushLists();
       elements.push(`<h1 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6 mt-8">${renderArticleInline(line.replace('# ', ''))}</h1>`);
     } else if (line.startsWith('## ')) {
-      flushList();
+      flushLists();
       elements.push(`<h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4 mt-8 text-indigo-300">${renderArticleInline(line.replace('## ', ''))}</h2>`);
     } else if (line.startsWith('### ')) {
-      flushList();
+      flushLists();
       elements.push(`<h3 class="text-lg md:text-xl font-bold leading-[1.5] mb-3 mt-6 text-purple-300">${renderArticleInline(line.replace('### ', ''))}</h3>`);
     } else if (/^\d+\.\s/.test(line)) {
-      const text = line.replace(/^\d+\.\s/, '');
-      currentList.push(text);
+      if (currentUnorderedList.length > 0) flushLists();
+      currentOrderedList.push(line.replace(/^\d+\.\s/, ''));
+    } else if (/^[-*]\s/.test(line)) {
+      if (currentOrderedList.length > 0) flushLists();
+      currentUnorderedList.push(line.replace(/^[-*]\s/, ''));
     } else if (line.trim() === '') {
-      flushList();
+      flushLists();
     } else if (line.trim() !== '') {
-      flushList();
+      flushLists();
       elements.push(`<p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-4">${renderArticleInline(line)}</p>`);
     }
   });
 
-  flushList();
+  flushLists();
   return elements.join('\n');
 }
 
@@ -813,6 +852,15 @@ function generateBlogArticleHtml(post: any): string {
   const publishedDate = new Date(post.date).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
   const renderedContent = renderMarkdown(post.content);
 
+  // Dati aggiuntivi per il Person schema, per autore noto. Mirror di
+  // AUTHOR_INFO in components/BlogSchema.tsx — solo dati reali e
+  // verificabili, nessun profilo personale inventato per autori non noti.
+  const authorInfo: Record<string, { jobTitle: string; sameAs: string[] }> = {
+    'Sebastiano Riva': {
+      jobTitle: 'Fondatore, Q4 Studio',
+      sameAs: ['https://www.linkedin.com/company/q4studio/about/'],
+    },
+  };
   const blogSchema = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -825,6 +873,7 @@ function generateBlogArticleHtml(post: any): string {
       '@type': 'Person',
       name: post.author.name,
       image: post.author.image,
+      ...(authorInfo[post.author.name] || {}),
     },
     publisher: {
       '@type': 'Organization',
@@ -839,7 +888,7 @@ function generateBlogArticleHtml(post: any): string {
       '@id': pageUrl,
     },
     articleSection: post.category,
-    keywords: ['meta advertising', 'lead generation', 'b2b marketing', 'agenti ai', post.category.toLowerCase()],
+    keywords: ['tracciamento server-side', 'automazioni ai', 'agenti ai', post.category.toLowerCase()],
     inLanguage: 'it-IT',
     timeRequired: post.readTime,
   };
@@ -937,7 +986,41 @@ function generateRestyledAIAgentsHtml(): string {
     { title: 'Richieste WhatsApp che arrivano già compilate', problem: 'I clienti ti scrivono su WhatsApp in tre messaggi disordinati, e qualcuno deve leggere, capire e ridigitare tutto a mano. Nel frattempo passano ore, e il lead ha già chiesto un preventivo a qualcun altro.', description: "Legge i messaggi in arrivo, estrae le informazioni che ti servono per rispondere (nel caso di un preventivo: cosa, dove, quando, quanto), le scrive nel CRM e manda una prima risposta in meno di un minuto. Se manca un'informazione, la chiede. Quando il dato non è certo, segnala invece di inventare.", requirements: ['Un numero WhatsApp collegabile alla piattaforma. Se oggi rispondi dal tuo cellulare con WhatsApp Business, serve un numero dedicato: te lo spieghiamo prima di partire, non dopo.', 'L’elenco delle informazioni che ti servono per rispondere a una richiesta', 'Una persona che valida i primi giorni di funzionamento'], timing: "4-6 settimane dall'avvio", price: 'Setup 990 € · canone 200 €/mese', pilot: 'Per i primi due clienti: setup 490 € invece di 990 €, in cambio del diritto di raccontare il progetto come caso studio e di una call di feedback dopo il primo mese.' },
   ];
   const cards = packages.map((pack) => `<article class="rounded-3xl border border-white/10 p-8"><h3 class="text-3xl font-bold mb-5">${escapeHtml(pack.title)}</h3><p><strong>Il problema:</strong> ${escapeHtml(pack.problem)}</p>${pack.description ? `<p class="mt-4"><strong>Cosa fa:</strong> ${escapeHtml(pack.description)}</p>` : ''}${pack.actions ? `<p class="mt-4"><strong>Cosa fa</strong></p><ul>${pack.actions.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}<p class="mt-4"><strong>Cosa serve da te</strong></p><ul>${pack.requirements.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul><p class="mt-4"><strong>Tempi:</strong> ${escapeHtml(pack.timing)}</p><p class="mt-4 text-xl font-bold">${escapeHtml(pack.price)}</p>${pack.pilot ? `<p><strong>Pilot pubblico.</strong> ${escapeHtml(pack.pilot)}</p>` : ''}</article>`).join('');
-  return generateBaseHtml({ title: 'Agenti AI e Automazioni per PMI | Q4 Studio', description: 'Automazioni WhatsApp, CRM e assistenti virtuali con tempi, setup e canoni pubblici. Soluzioni concrete per le attività ripetitive delle PMI.', canonical: `${siteUrl}/agenti-ai`, bodyContent: staticPage(`<header><p>Automazioni · setup e canone chiari</p><h1 class="text-6xl font-bold">Automazioni concrete, su problemi che racconti in una frase.</h1><p>Assistenti sul sito, follow-up nel CRM e richieste WhatsApp già strutturate. Sai prima cosa serve, quanto tempo richiede e quanto costa.</p><a href="#pacchetti-automazioni">Vedi i pacchetti</a></header><section id="pacchetti-automazioni"><p>Tre punti di partenza</p><h2>Scegli il lavoro ripetitivo da togliere al team.</h2><div class="grid gap-6">${cards}</div></section><section><h2>Quale attività stai ancora facendo a mano?</h2><p>Raccontala in una frase. Ti diciamo se uno di questi pacchetti è il punto di partenza giusto.</p><a href="#contatti">Scrivici</a></section><section id="contatti" aria-label="Contatti"></section>`) });
+  const aiAgentsServiceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Agenti AI e Automazioni per PMI',
+    description: 'Automazioni WhatsApp, CRM e assistenti virtuali con setup e canone pubblici per attività ripetitive B2B.',
+    provider: { '@type': 'Organization', name: 'Q4 Studio', url: siteUrl },
+    areaServed: 'IT',
+    url: `${siteUrl}/agenti-ai`,
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Pacchetti automazioni AI',
+      itemListElement: packages.map((pack) => ({ '@type': 'Offer', name: pack.title, price: pack.price })),
+    },
+  };
+  const aiAgentsBreadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Agenti AI', item: `${siteUrl}/agenti-ai` },
+    ],
+  };
+  const aiAgentsFaqs = [
+    { question: 'Cosa succede se il mio problema non rientra in uno di questi tre pacchetti?', answer: "Te lo diciamo subito, prima di prendere un impegno. Non costruiamo pacchetti su misura solo per vendere qualcosa: se non è un buon caso d'uso per l'automazione, meglio saperlo in anticipo." },
+    { question: 'Serve già un CRM per iniziare?', answer: "Per l'assistente virtuale no. Per le automazioni CRM e follow-up serve un CRM esistente, oppure lo includiamo nel setup: dipende da cosa usi già in azienda." },
+    { question: 'Posso disdire il canone quando voglio?', answer: 'Sì, nessun vincolo pluriennale. Il canone copre monitoraggio e aggiornamenti quando le piattaforme (WhatsApp, CRM, i modelli AI sottostanti) cambiano le regole.' },
+    { question: 'Quanto dura davvero il setup?', answer: "Varia per pacchetto: 2 settimane per l'assistente sul sito, 2-3 per le automazioni CRM, 4-6 per le richieste WhatsApp strutturate. Sono tempi reali, non stime commerciali: dipendono dalla complessità del processo che colleghiamo." },
+  ];
+  const aiAgentsFaqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: aiAgentsFaqs.map((faq) => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })),
+  };
+  const aiAgentsFaqHtml = aiAgentsFaqs.map((faq) => `<h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p>`).join('');
+  return generateBaseHtml({ title: 'Agenti AI e Automazioni per PMI | Q4 Studio', description: 'Automazioni WhatsApp, CRM e assistenti virtuali con tempi, setup e canoni pubblici. Soluzioni concrete per le attività ripetitive delle PMI.', canonical: `${siteUrl}/agenti-ai`, schema: [aiAgentsServiceSchema, aiAgentsBreadcrumbSchema, aiAgentsFaqSchema], bodyContent: staticPage(`<header><p>Automazioni · setup e canone chiari</p><h1 class="text-6xl font-bold">Automazioni concrete, su problemi che racconti in una frase.</h1><p>Assistenti sul sito, follow-up nel CRM e richieste WhatsApp già strutturate. Sai prima cosa serve, quanto tempo richiede e quanto costa.</p><a href="#pacchetti-automazioni">Vedi i pacchetti</a></header><section><h2>Non trasformazione digitale. Un problema alla volta.</h2><p>Non vendiamo progetti di "digital transformation" con output vago e tempi lunghi. Ogni pacchetto qui sotto risolve un'attività specifica che oggi fa una persona a mano, con un prezzo di setup e un canone dichiarati prima di iniziare.</p><p>Se il problema che ci racconti non rientra in uno di questi tre, te lo diciamo subito: non costruiamo un pacchetto su misura solo per vendere qualcosa. Automazioni e agenti AI vengono dopo il tracciamento, non prima: senza dati affidabili su cosa funziona, automatizzare un processo rotto lo rende solo più veloce a rompersi.</p></section><section><p>Come lavoriamo</p><h2>Tre passaggi, non un progetto a tempo indeterminato.</h2><div class="grid gap-8 md:grid-cols-3"><article><span>01</span><h3>Racconto del problema</h3><p>Ci descrivi l'attività che oggi fa una persona a mano. Se non rientra in un pacchetto chiaro, te lo diciamo prima di iniziare, non a metà progetto.</p></article><article><span>02</span><h3>Setup</h3><p>Colleghiamo i sistemi che già usi (CRM, gestionale, WhatsApp) e configuriamo l'automazione sul processo reale, non su un caso generico.</p></article><article><span>03</span><h3>Canone e assistenza</h3><p>Un canone mensile copre monitoraggio e aggiornamenti quando le piattaforme cambiano le regole. Disdetta libera, nessun vincolo pluriennale.</p></article></div></section><section id="pacchetti-automazioni"><p>Tre punti di partenza</p><h2>Scegli il lavoro ripetitivo da togliere al team.</h2><div class="grid gap-6">${cards}</div></section><section><h2>Domande frequenti</h2>${aiAgentsFaqHtml}</section><section><h2>Approfondisci</h2><div class="grid gap-4 md:grid-cols-3"><a href="/tracciamento-server-side">Prima le automazioni: hai già il tracciamento a posto?</a><a href="/risorse/whatsapp-automation-lead-b2b">Automazione WhatsApp nei processi aziendali</a><a href="/risorse/second-brain-aziendale-agente-ai">Second Brain aziendale: un agente AI per la conoscenza</a></div></section><section><h2>Quale attività stai ancora facendo a mano?</h2><p>Raccontala in una frase. Ti diciamo se uno di questi pacchetti è il punto di partenza giusto.</p><a href="#contatti">Scrivici</a></section><section id="contatti" aria-label="Contatti"></section>`) });
 }
 
 function generateServerSideTrackingHtml(): string {
@@ -947,8 +1030,73 @@ function generateServerSideTrackingHtml(): string {
   <section id="services"><p>Prezzi pubblici</p><h2>I pacchetti</h2><article><p>3-5 giorni lavorativi</p><h3>Audit tracciamento</h3><p>490 €</p><ul><li>Verifica di cosa viene tracciato e cosa si perde oggi</li><li>Confronto tra dati piattaforma e dati reali</li><li>Analisi del Consent Mode e della configurazione attuale</li><li>Documento con le priorità di intervento</li></ul><p>Il documento resta tuo. Se decidi di non procedere, hai comunque una mappa di cosa sistemare.</p></article><article><p>circa una giornata di lavoro per siti non-ecommerce, 1-3 giornate per ecommerce</p><h3>Setup server-side</h3><p>da 1.500 €</p><ul><li>Container server-side su infrastruttura dedicata</li><li>Consent Mode v2 configurato e verificato</li><li>Conversions API Meta ed Enhanced Conversions Google</li><li>Eventi personalizzati sui passaggi che contano</li><li>Documentazione di eventi e naming, che resta all'azienda</li></ul></article><article><p>Disdetta libera. Nessun vincolo di durata.</p><h3>Infrastruttura e lettura dati</h3><p>da 100 €/mese</p><ul><li>Container monitorato, con alert se qualcosa si interrompe</li><li>Aggiornamenti quando le piattaforme cambiano le regole</li><li>Report mensile con la lettura dei dati, non solo i numeri</li></ul></article></section>
   <section><p>Un caso reale</p><h2>Oltre un milione di segnali recuperati.</h2><p>Su Candiani Denim abbiamo recuperato oltre un milione di segnali di conversione in 90 giorni, di cui 963.652 bloccati dai sistemi di tracking prevention dei browser e 69.043 dagli ad blocker.</p><a href="/casi-studio/candiani-denim-tracking-server-side">Leggi il caso studio completo</a></section>
   <section id="faq"><h2>Domande frequenti</h2><h3>Cos'è il tracciamento server-side, in parole semplici?</h3><p>Normalmente i dati sulle conversioni vengono raccolti dal browser del visitatore, che però blocca gli script, e dagli ad blocker, che bloccano i pixel. Il tracciamento server-side sposta la raccolta su un server dedicato: i dati arrivano completi e le piattaforme pubblicitarie possono ottimizzare su informazioni reali.</p><h3>Quanto costa e quanto tempo serve?</h3><p>L'audit parte da 490 €. Il setup completo da 1.500 € per un sito non-ecommerce, con tempi di circa una giornata di lavoro. Per gli ecommerce il tempo dipende da piattaforma e numero di prodotti: da una a tre giornate. Il canone di infrastruttura e monitoraggio parte da 100 €/mese.</p><h3>Il tracciamento server-side è conforme al GDPR?</h3><p>È lo strumento che rende la conformità più gestibile, non meno: il consenso viene rispettato a monte tramite Consent Mode v2 e i dati passano da un’infrastruttura che controlliamo. Non siamo consulenti legali e non forniamo pareri: implementiamo quello che il tuo DPO o consulente privacy definisce.</p><h3>Serve cambiare qualcosa sul mio sito?</h3><p>Nell'implementazione standard no: il container gira su un sottodominio del tuo sito e il codice esistente resta. In alcuni casi serve un intervento sul tema o sui template, e te lo diciamo dopo l'audit.</p><h3>Lavori anche con la mia agenzia?</h3><p>Sì. Molte agenzie non hanno un tecnico interno per questa parte: possiamo lavorare direttamente con loro.</p></section>
+  <section><h2>Approfondisci</h2><div class="grid gap-4 md:grid-cols-2"><a href="/risorse/tracking-server-side-deduplicazione-eventi">Tracking server-side e deduplicazione degli eventi</a><a href="/agenti-ai">Dopo il tracciamento: agenti AI e automazioni</a></div></section>
   <section><h2>Non sai se il tuo tracciamento è a posto?</h2><p>L'audit da 490 € ti dà una risposta documentata in cinque giorni.</p><a href="#contatti">Richiedi l'audit</a></section><section id="contatti" aria-label="Audit tracciamento"></section>`;
-  return generateBaseHtml({ title: 'Tracciamento Server-Side per Meta e Google | Q4 Studio', description: 'Recuperiamo i segnali di conversione che browser e ad blocker bloccano. Setup server-side, Consent Mode v2, Conversions API. Audit da 490 €.', canonical: `${siteUrl}/tracciamento-server-side`, bodyContent: staticPage(body) });
+  const trackingServiceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Tracciamento Server-Side per Meta e Google',
+    description: 'Container server-side, Consent Mode v2, Conversions API e Enhanced Conversions per recuperare i segnali di conversione persi da browser e ad blocker.',
+    provider: { '@type': 'Organization', name: 'Q4 Studio', url: siteUrl },
+    areaServed: 'IT',
+    url: `${siteUrl}/tracciamento-server-side`,
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Pacchetti tracciamento server-side',
+      itemListElement: [
+        { '@type': 'Offer', name: 'Audit tracciamento', price: '490 €' },
+        { '@type': 'Offer', name: 'Setup server-side', price: 'da 1.500 €' },
+        { '@type': 'Offer', name: 'Infrastruttura e lettura dati', price: 'da 100 €/mese' },
+      ],
+    },
+  };
+  const trackingFaqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      ["Cos'è il tracciamento server-side, in parole semplici?", 'Normalmente i dati sulle conversioni vengono raccolti dal browser del visitatore, che però blocca gli script, e dagli ad blocker, che bloccano i pixel. Il tracciamento server-side sposta la raccolta su un server dedicato: i dati arrivano completi e le piattaforme pubblicitarie possono ottimizzare su informazioni reali.'],
+      ['Quanto costa e quanto tempo serve?', "L'audit parte da 490 €. Il setup completo da 1.500 € per un sito non-ecommerce, con tempi di circa una giornata di lavoro. Per gli ecommerce il tempo dipende da piattaforma e numero di prodotti: da una a tre giornate. Il canone di infrastruttura e monitoraggio parte da 100 €/mese."],
+      ['Il tracciamento server-side è conforme al GDPR?', "È lo strumento che rende la conformità più gestibile, non meno: il consenso viene rispettato a monte tramite Consent Mode v2 e i dati passano da un'infrastruttura che controlliamo. Non siamo consulenti legali e non forniamo pareri: implementiamo quello che il tuo DPO o consulente privacy definisce."],
+      ['Serve cambiare qualcosa sul mio sito?', "Nell'implementazione standard no: il container gira su un sottodominio del tuo sito e il codice esistente resta. In alcuni casi serve un intervento sul tema o sui template, e te lo diciamo dopo l'audit."],
+      ['Lavori anche con la mia agenzia?', 'Sì. Molte agenzie non hanno un tecnico interno per questa parte: possiamo lavorare direttamente con loro.'],
+    ].map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })),
+  };
+  const trackingBreadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Tracciamento Server-Side', item: `${siteUrl}/tracciamento-server-side` },
+    ],
+  };
+  return generateBaseHtml({ title: 'Tracciamento Server-Side per Meta e Google | Q4 Studio', description: 'Recuperiamo i segnali di conversione che browser e ad blocker bloccano. Setup server-side, Consent Mode v2, Conversions API. Audit da 490 €.', canonical: `${siteUrl}/tracciamento-server-side`, schema: [trackingServiceSchema, trackingFaqSchema, trackingBreadcrumbSchema], bodyContent: staticPage(body) });
+}
+
+// Vercel serves this file with a real HTTP 404 status for any request that
+// matches no static file and no rewrite (see vercel.json — the old catch-all
+// rewrite used to intercept everything first and mask this with a 200; it's
+// been narrowed to just /blog/:slug so this can work). Body/copy mirrors
+// components/NotFound.tsx; appScripts still hydrates React so in-app
+// navigation from here behaves identically to the SPA's own 404 state.
+function generateNotFoundHtml(): string {
+  const body = `<div class="relative w-full min-h-screen bg-[#050505] text-white flex items-center justify-center overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-[150px] pointer-events-none"></div>
+    <div class="relative z-10 max-w-2xl mx-auto px-6 text-center">
+      <h1 class="text-[200px] md:text-[280px] font-bold leading-none tracking-tighter mb-8" style="background:linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(99,102,241,0.8) 50%, rgba(168,85,247,0.6) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">404</h1>
+      <p class="text-2xl md:text-3xl text-gray-300 mb-4 font-light">Pagina non trovata</p>
+      <p class="text-lg text-gray-500 mb-12 max-w-md mx-auto">La pagina che stai cercando non esiste o è stata spostata. Torna alla homepage per continuare a esplorare.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a href="/" class="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold">Torna alla Homepage</a>
+      </div>
+    </div>
+  </div>`;
+  return generateBaseHtml({
+    title: 'Pagina non trovata | Q4 Studio',
+    description: 'La pagina che stai cercando non esiste o è stata spostata.',
+    canonical: `${siteUrl}/404`,
+    noIndex: true,
+    bodyContent: body,
+  });
 }
 
 function generateTechnicalPartnerHtml(): string {
@@ -977,15 +1125,32 @@ function generateMetaAdvertisingHtml(): string {
       acceptedAnswer: { '@type': 'Answer', text: faq.answer },
     })),
   };
+  const metaAdvertisingServiceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Meta Advertising B2B Lead Generation',
+    description: 'Consulenza Meta Ads per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali CRM.',
+    provider: { '@type': 'Organization', name: 'Q4 Studio', url: siteUrl },
+    areaServed: 'IT',
+    url: `${siteUrl}/meta-advertising-b2b`,
+  };
+  const metaAdvertisingBreadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Meta Advertising B2B', item: `${siteUrl}/meta-advertising-b2b` },
+    ],
+  };
   const faqHtml = metaAdvertisingFaqs.map((faq) => `<h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p>`).join('');
   const body = `<header><p>Meta Advertising · B2B</p><h1 class="text-6xl font-bold">Meta Ads B2B, con il tracciamento fatto bene a monte.</h1><p>Le campagne Meta per il B2B funzionano quando l'obiettivo non è il costo per contatto ma la probabilità che quel contatto diventi cliente. Perché questo succeda, l'algoritmo deve ricevere segnali corretti: ed è la parte che quasi nessuno sistema prima di aumentare il budget.</p><p>Seguiamo un numero limitato di progetti Meta B2B, di norma per aziende con cui lavoriamo già sul lato tecnico.</p></header>
   <section><p>Metodo</p><h2>Consulenza B2B Lead Generation su Meta</h2><p>La B2B Lead Generation su Meta è un sistema di acquisizione contatti pensato per trasformare Facebook e Instagram in canali di crescita misurabile anche per aziende con cicli di vendita complessi. Il nostro ruolo non è comportarci da agenzia che esegue campagne a volume, ma da consulenti che affiancano marketing e sales nella costruzione di un funnel più leggibile, tracciabile e sostenibile.</p><p>Partiamo dall'analisi del processo commerciale: chi è il cliente giusto, proposta di valore, segmentazione, creatività, domande qualificanti, instradamento al CRM e tempi di risposta ai contatti. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del contatto e probabilità di diventare cliente, non solo per costo per contatto.</p><article><h3>Diagnosi prima delle campagne</h3><p>Audit di funnel, audience, offerta e gestione lead prima di aumentare budget o test creativi.</p></article><article><h3>Sistema, non singola ads</h3><p>Campagne, CRM e follow-up vengono progettati insieme per ridurre dispersione e tempi morti.</p></article><article><h3>Governance dei KPI</h3><p>Misuriamo contatti che diventano davvero clienti, appuntamenti e opportunità generate, non solo il costo per contatto e numeri di facciata.</p></article></section>
-  <section><p>Meta Ads Advisory</p><h2>Meta Ads orientate alla qualità</h2><p>Lavoriamo come consulenti operativi sulle campagne Meta B2B: audit account, architettura delle campagne, piano test creativo, tracking server-side e lettura dei dati commerciali. L'obiettivo è aiutare il team a capire cosa sta generando opportunità reali e cosa sta solo gonfiando il volume dei lead.</p><p>L'algoritmo Andromeda dà valore ai segnali di conversione ad alta intenzione. Per questo allineiamo campagne e CRM su eventi come completamento di domande qualificanti, risposta del prospect e progressione nello stage commerciale.</p></section>
+  <section><p>Meta Ads Advisory</p><h2>Meta Ads orientate alla qualità</h2><p>Lavoriamo come consulenti operativi sulle campagne Meta B2B: audit account, architettura delle campagne, piano test creativo, tracking server-side e lettura dei dati commerciali. L'obiettivo è aiutare il team a capire cosa sta generando opportunità reali e cosa sta solo gonfiando il volume dei lead.</p><p>L'algoritmo di Meta dà sempre più valore ai segnali di conversione ad alta intenzione. Per questo allineiamo campagne e CRM su eventi come completamento di domande qualificanti, risposta del prospect e progressione nello stage commerciale.</p></section>
   <section><p>AI Process Consulting</p><h2>Agenti AI sul processo sales</h2><p>Gli Agenti AI non sono chatbot generici. Li disegniamo insieme al team, partendo da regole operative, tono di voce, CRM e punti di frizione nel processo commerciale. Il risultato è un supporto che qualifica, prioritizza e prepara il lavoro umano invece di sostituirlo.</p><p>Nei progetti più maturi, l'integrazione Meta Ads + Agenti AI riduce i tempi di prima risposta, aumenta la precisione nel routing e rende il funnel meno dipendente da interventi manuali ripetitivi.</p></section>
   <section><p>Misurazione</p><h2>Risultati misurabili, leggibili dal team</h2><p>Ogni attività viene valutata su metriche operative e metriche di business. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.</p><p>Nei progetti B2B monitoriamo nel tempo quanti contatti diventano davvero clienti e confrontiamo i dati prima e dopo integrazione CRM, instradamento e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.</p></section>
   <section><p>FAQ</p><h2>Domande frequenti su Meta Ads B2B</h2>${faqHtml}</section>
   <section><h2>Il tracciamento viene prima delle campagne. Parti dall'audit.</h2><a href="/tracciamento-server-side">Vedi il tracciamento e i prezzi</a></section>`;
-  return generateBaseHtml({ title: 'Meta Ads B2B e Lead Generation su Facebook e Instagram | Q4 Studio', description: 'Consulenza Meta Advertising per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali dal CRM.', canonical: `${siteUrl}/meta-advertising-b2b`, schema: [faqSchema], bodyContent: staticPage(body) });
+  return generateBaseHtml({ title: 'Meta Ads B2B e Lead Generation su Facebook e Instagram | Q4 Studio', description: 'Consulenza Meta Advertising per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali dal CRM.', canonical: `${siteUrl}/meta-advertising-b2b`, schema: [faqSchema, metaAdvertisingServiceSchema, metaAdvertisingBreadcrumbSchema], bodyContent: staticPage(body) });
 }
 
 const sitesWebAiFaqs = [
@@ -1015,19 +1180,29 @@ function generateSitesWebAiHtml(): string {
       acceptedAnswer: { '@type': 'Answer', text: faq.answer },
     })),
   };
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Siti Web AI', item: `${siteUrl}/siti-web-ai` },
+    ],
+  };
   const faqHtml = sitesWebAiFaqs.map((faq) => `<details><summary>${escapeHtml(faq.question)}</summary><p>${escapeHtml(faq.answer)}</p></details>`).join('');
   const body = `<header><p>Siti web · direzione umana · strumenti AI</p><h1>Fatto con l’AI, non dall’AI.</h1><p>Progettiamo siti e landing page con una direzione precisa. L’AI ci permette di produrre immagini, movimento e varianti più velocemente; non decide cosa dire, cosa mostrare o perché.</p><a href="#contatti">Parlaci del tuo sito</a><p>Progetti da <strong>2.999 €</strong></p></header>
   <section><p>Una distinzione importante</p><h2>L’AI abbassa il costo della produzione. Non il livello delle scelte.</h2><p>Un sito non diventa efficace perché una macchina ha generato una pagina. Serve capire cosa deve far ricordare, quale percorso deve costruire e dove deve portare chi lo visita.</p><p>Usiamo l’AI nel processo creativo e tecnico, sotto direzione umana. Il risultato non è “un sito AI”: è un sito riconoscibile, costruito con più possibilità a disposizione.</p></section>
   <section><p>Più linguaggi, nello stesso progetto</p><h2>Il sito può fare più che mettere testo sopra una foto.</h2><article><h3>Asset che non arrivano da una banca immagini</h3><p>Creiamo visual, texture e composizioni su misura con strumenti AI, poi li dirigiamo e rifiniamo dentro un’identità coerente.</p></article><article><h3>Il movimento fa parte del racconto</h3><p>Video animati e sezioni che reagiscono allo scroll possono guidare la lettura, spiegare un servizio e rendere il sito riconoscibile.</p></article><article><h3>Quando serve, la produzione è reale</h3><p>Foto e video originali possono entrare nello stesso progetto. AI e produzione sul campo non sono alternative: sono strumenti diversi della stessa direzione.</p></article></section>
   <section><p>Landing page</p><h2>Una pagina può essere pronta in una settimana.</h2><p>Quando serve portare online un’offerta o una campagna senza aspettare un sito completo, concentriamo direzione, contenuto e sviluppo in una singola esperienza.</p><p><strong>Siti web da 2.999 €.</strong> Forma, tempi e produzione vengono definiti sul progetto.</p></section>
   <section><p>Caso studio</p><h2>GP Meccatronica, dal rebranding al sito in movimento.</h2><p>Una direzione visiva scura e tecnica, motion design e asset generati con l’AI per accompagnare il traffico delle campagne ADV.</p><a href="/casi-studio/gp-meccatronica-sito-web">Leggi il caso studio</a></section>
+  <section><p>Come lavoriamo</p><h2>Tre fasi, non un modulo da compilare.</h2><div class="grid gap-8 md:grid-cols-3"><article><span>01</span><h3>Direzione</h3><p>Una call per capire cosa deve fare il sito, per chi, e cosa deve far ricordare a chi lo visita. Da qui esce una struttura, non un elenco di pagine.</p></article><article><span>02</span><h3>Produzione</h3><p>Testo, asset visivi, motion e sviluppo. L'AI accelera le parti dove ha senso; la direzione, il gusto e le scelte di fondo restano nostre, non della macchina.</p></article><article><span>03</span><h3>Consegna</h3><p>Sito pubblicato, ottimizzato e documentato: sai cosa c'è dentro e chi lo aggiorna dopo, senza dipendere da noi per ogni piccola modifica.</p></article></div></section>
+  <section><p>Prima di iniziare</p><h2>Cosa serve da te</h2><ul><li>Un obiettivo chiaro: cosa deve far fare il sito a chi lo visita, non solo "un sito nuovo"</li><li>Materiale esistente se c'è (logo, foto, testi, brand guideline) — altrimenti lo produciamo insieme</li><li>Un referente unico che validi le scelte di direzione, per non rincorrere pareri diversi durante il progetto</li></ul></section>
   <section><p>FAQ</p><h2>Domande prima di partire.</h2>${faqHtml}</section>
   <section><h2>Il prossimo sito non deve sembrare il precedente.</h2><p>Raccontaci cosa deve fare, per chi e perché adesso. Partiamo da lì.</p><a href="#contatti">Parlaci del progetto</a></section><section id="contatti" aria-label="Contatti"><h2>Parliamo del tuo prossimo sito.</h2><p>Raccontaci cosa deve fare, per chi e perché adesso.</p></section>`;
   return generateBaseHtml({
     title: 'Siti web con AI per aziende B2B | Q4 Studio',
     description: 'Siti e landing page B2B fatti con l’AI, non dall’AI: asset su misura, motion e produzione foto-video. Progetti da 2.999 €.',
     canonical: `${siteUrl}/siti-web-ai`,
-    schema: [serviceSchema, faqSchema],
+    schema: [serviceSchema, faqSchema, breadcrumbSchema],
     bodyContent: staticPage(body),
   });
 }
@@ -1055,18 +1230,92 @@ function generateRestyledHomeBodyContent(): string {
 }
 
 
+// Generato a build time (invece del solo file statico in public/) così gli
+// URL delle singole pagine /risorse/<slug> e degli articoli blog pubblicati
+// restano sincronizzati con seoPages/blogPosts, senza bisogno di aggiornare
+// a mano un secondo elenco che andrebbe fuori sync con la sitemap.
+function generateLlmsTxt(blogPosts: any[] = []): string {
+  const risorseLinesIt = seoPages.map((page) => `- ${page.title}: ${siteUrl}${resourcesPath}/${page.slug}`).join('\n');
+  const risorseLinesEn = seoPages.map((page) => `- ${page.title}: ${siteUrl}${resourcesPath}/${page.slug}`).join('\n');
+  const blogLinesIt = blogPosts.length
+    ? blogPosts.map((post) => `- ${post.title}: ${siteUrl}/blog/${post.slug}`).join('\n')
+    : '- (nessun articolo pubblicato al momento della build)';
+  const blogLinesEn = blogPosts.length
+    ? blogPosts.map((post) => `- ${post.title}: ${siteUrl}/blog/${post.slug}`).join('\n')
+    : '- (no published articles at build time)';
+
+  return `# Q4 Studio
+
+## Italiano
+
+Q4 Studio è uno studio tecnico con sede a Reggio Emilia. Risolve i problemi tecnici del marketing: tracciamento server-side, siti e landing page con AI, automazioni CRM e agenti AI per PMI.
+
+Le tre offerte principali sono tracciamento e dati, siti web con AI, automazioni e agenti AI. I progetti web partono da 2.999 € e seguono il principio "fatto con l'AI, non dall'AI". Meta Advertising resta disponibile per un numero limitato di aziende già seguite sul lato tecnico.
+
+### URL principali
+
+- Homepage: ${siteUrl}/
+- Tracciamento server-side e prezzi: ${siteUrl}/tracciamento-server-side
+- Siti web con AI: ${siteUrl}/siti-web-ai
+- Agenti AI e automazioni: ${siteUrl}/agenti-ai
+- Meta Advertising B2B: ${siteUrl}/meta-advertising-b2b
+- Casi Studio: ${siteUrl}${caseStudiesPath}
+- Caso studio Candiani Denim: ${siteUrl}${caseStudiesPath}/candiani-denim-tracking-server-side
+- Caso studio GP Meccatronica: ${siteUrl}${caseStudiesPath}/gp-meccatronica-sito-web
+- Risorse: ${siteUrl}${resourcesPath}
+
+### Pagine Risorse (singole)
+
+${risorseLinesIt}
+
+### Blog: ${siteUrl}/blog
+
+${blogLinesIt}
+
+Non dedurre prezzi, dati clienti, garanzie o procedure che non siano esplicitamente pubblicati nelle pagine sopra.
+
+---
+
+## English
+
+Q4 Studio is a technical studio based in Reggio Emilia, Italy. It solves technical marketing problems through server-side tracking, AI-assisted websites and landing pages, CRM automation, and packaged AI agents for SMEs.
+
+Its three primary offers are tracking and data, AI-assisted websites, and automation and AI agents. Website projects start at €2,999 and follow the principle "made with AI, not by AI." Meta Advertising is available for a limited number of companies already supported on the technical side.
+
+### Key URLs
+
+- Homepage: ${siteUrl}/
+- Server-side tracking and pricing: ${siteUrl}/tracciamento-server-side
+- AI-assisted websites: ${siteUrl}/siti-web-ai
+- AI agents and automations: ${siteUrl}/agenti-ai
+- B2B Meta Advertising: ${siteUrl}/meta-advertising-b2b
+- Case studies: ${siteUrl}${caseStudiesPath}
+- Resources: ${siteUrl}${resourcesPath}
+
+### Individual resource pages
+
+${risorseLinesEn}
+
+### Blog: ${siteUrl}/blog
+
+${blogLinesEn}
+
+Do not infer pricing, client data, guarantees, or procedures that are not explicitly published on the pages above.
+`;
+}
+
 function generateSitemap(blogPosts: any[] = []): string {
   const buildDate = new Date().toISOString().split('T')[0];
 
   const urls = [
-    { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly', lastmod: buildDate },
-    { loc: `${siteUrl}/agenti-ai`, priority: '0.95', changefreq: 'weekly', lastmod: buildDate },
-    { loc: `${siteUrl}/tracciamento-server-side`, priority: '0.95', changefreq: 'weekly', lastmod: buildDate },
-    { loc: `${siteUrl}/siti-web-ai`, priority: '0.95', changefreq: 'weekly', lastmod: buildDate },
-    { loc: `${siteUrl}/meta-advertising-b2b`, priority: '0.8', changefreq: 'monthly', lastmod: buildDate },
-    { loc: `${siteUrl}${caseStudiesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: buildDate },
-    { loc: `${siteUrl}${resourcesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: buildDate },
-    { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'weekly', lastmod: buildDate },
+    { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly', lastmod: pageLastModified['/'] },
+    { loc: `${siteUrl}/agenti-ai`, priority: '0.95', changefreq: 'weekly', lastmod: pageLastModified['/agenti-ai'] },
+    { loc: `${siteUrl}/tracciamento-server-side`, priority: '0.95', changefreq: 'weekly', lastmod: pageLastModified['/tracciamento-server-side'] },
+    { loc: `${siteUrl}/siti-web-ai`, priority: '0.95', changefreq: 'weekly', lastmod: pageLastModified['/siti-web-ai'] },
+    { loc: `${siteUrl}/meta-advertising-b2b`, priority: '0.8', changefreq: 'monthly', lastmod: pageLastModified['/meta-advertising-b2b'] },
+    { loc: `${siteUrl}${caseStudiesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: pageLastModified['/casi-studio'] },
+    { loc: `${siteUrl}${resourcesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: pageLastModified['/risorse'] },
+    { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'weekly', lastmod: pageLastModified['/blog'] },
     ...caseStudies.map((study) => ({
       loc: `${siteUrl}${caseStudiesPath}/${study.slug}`,
       priority: '0.85',
@@ -1077,7 +1326,7 @@ function generateSitemap(blogPosts: any[] = []): string {
       loc: `${siteUrl}${resourcesPath}/${page.slug}`,
       priority: '0.8',
       changefreq: 'monthly',
-      lastmod: buildDate
+      lastmod: page.lastModified
     })),
     ...blogPosts.map((post) => ({
       loc: `${siteUrl}/blog/${post.slug}`,
@@ -1230,6 +1479,17 @@ ${urlEntries}
   sitemapStream.write(generateSitemap(blogPosts));
   sitemapStream.end();
   console.log('✅ Generated /sitemap.xml');
+
+  // Sovrascrive la copia statica di public/llms.txt (già copiata da Vite)
+  // con una versione che include i singoli URL /risorse e /blog, sempre
+  // sincronizzata con seoPages/blogPosts.
+  writeFileSync(join(distDir, 'llms.txt'), generateLlmsTxt(blogPosts), 'utf-8');
+  console.log('✅ Generated /llms.txt with individual resource/blog URLs');
+
+  // Real 404 page at the output root: Vercel serves this with an actual 404
+  // status for any path matching no static file and no rewrite.
+  writeFileSync(join(distDir, '404.html'), generateNotFoundHtml(), 'utf-8');
+  console.log('✅ Generated /404.html');
 
   // Copy robots.txt to dist if it exists in public
   const publicRobots = join(__dirname, '..', 'public', 'robots.txt');
