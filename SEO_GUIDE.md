@@ -191,9 +191,9 @@ Base: posizionamento "tecnico del marketing". Offerta di ingresso = tracciamento
 ### Roadmap articoli (22 totali) — stato
 
 1. Perché Google Ads e Meta non tracciano più tutte le conversioni — E, TOFU — **✅ pubblicato** (`/blog/perche-google-ads-non-traccia-tutte-le-conversioni`)
-2. Server-side tagging per PMI: cos'è e quanto costa — A, TOFU/MOFU — 🔧 bozza scritta, in revisione
-3. Client-side vs server-side tagging: la differenza che cambia il ROAS — E, MOFU — 🔧 bozza scritta, in revisione
-4. Consent Mode v2: guida pratica per chi fa ADV in Italia — A, MOFU
+2. Server-side tagging per PMI: cos'è e quanto costa — A, TOFU/MOFU — **✅ pubblicato** (`/blog/server-side-tagging-pmi`)
+3. Client-side vs server-side tagging: la differenza che cambia il ROAS — E, MOFU — **✅ pubblicato** (`/blog/client-side-vs-server-side-tagging-differenza-roas`)
+4. Consent Mode v2: guida pratica per chi fa ADV in Italia — A, MOFU — **✅ pubblicato** (`/blog/consent-mode-v2-adv-italia`)
 5. Conversions API Meta: come recuperare i segnali persi dai browser — A, MOFU (link caso Candiani)
 6. Enhanced Conversions su Google Ads: setup e primi risultati attesi — A, MOFU (quick win KD7)
 7. Quanto costa un audit di tracciamento — F, BOFU
@@ -213,7 +213,7 @@ Base: posizionamento "tecnico del marketing". Offerta di ingresso = tracciamento
 21. Sito fatto dall'AI o sito fatto con l'AI: non è la stessa cosa — G, TOFU/MOFU — articolo cardine del cluster: prompt generico (commodity) vs AI come moltiplicatore del lavoro tecnico (asset custom, direzione umana)
 22. Caso studio: il sito di GP Meccatronica, dal brief alla pubblicazione (con prezzi) — G, BOFU — case study con prezzo reale, CTA verso `/siti-web-ai`
 
-Articoli 1-3: scritti e verificati con le skill `blog`/`seo` (ricerca → scrittura → SEO-check → review 100 punti). Articolo 1 pubblicato (`published=true`); articolo 2 pronto come bozza (86/100); articolo 3 ancora in revisione. **Stato link incrociati (aggiornato dopo il de-link di sicurezza)**: l'articolo 1 al momento NON linka #2/#3 (rimossi temporaneamente perché non ancora live, per evitare link morti in produzione — vedi conversazione). Quando #2 e #3 saranno pubblicati, reinserire in #1 i link a `/blog/server-side-tagging-pmi` e `/blog/client-side-vs-server-side-tagging-differenza-roas`. **Prima di ogni audit SEO**: verificare lo stato reale dei link nel `content` di Supabase, non fidarsi solo di questa nota — può disallinearsi dal contenuto live.
+Articoli 1-4: scritti e verificati con le skill `blog`/`seo` (ricerca → scrittura → SEO-check → review 100 punti). Tutti e quattro sono pubblicati (`published=true`) al 18 agosto 2026. **Stato link incrociati (aggiornato dopo la pubblicazione di #2, #3, #4)**: il de-link di sicurezza è stato annullato — l'articolo 1 linka di nuovo `/blog/server-side-tagging-pmi` e `/blog/client-side-vs-server-side-tagging-differenza-roas`, ora entrambi live. Gli articoli #2, #3 e #4 linkano solo a pagine pubblicate: nessun link morto residuo nel cluster A. **Prima di ogni audit SEO**: verificare lo stato reale dei link nel `content` di Supabase, non fidarsi solo di questa nota — può disallinearsi dal contenuto live.
 
 **Vincolo cluster G**: prima degli articoli #20-22 va pubblicata la pagina `/siti-web-ai` (fatto, `SitesWebAI.tsx`). L'angolo "fatto dall'AI vs fatto con l'AI" va ripetuto in ogni contenuto del cluster, non solo nell'articolo #21.
 
