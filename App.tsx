@@ -6,6 +6,7 @@ import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import CookieBanner from './components/CookieBanner';
+import LazyPageErrorBoundary from './components/LazyPageErrorBoundary';
 import SEOHead from './components/SEOHead';
 import HomeV2 from './components/home2/HomeV2';
 import MobileMenu, { MOBILE_MENU_PANEL_ID } from './components/MobileMenu';
@@ -376,6 +377,7 @@ const App: React.FC = () => {
         {/* Page Routing */}
         {currentPage === 'home' && <HomeV2 />}
 
+        <LazyPageErrorBoundary>
         <Suspense fallback={null}>
           {currentPage === 'blog' && (
             <>
@@ -468,6 +470,7 @@ const App: React.FC = () => {
             <NotFound />
           )}
         </Suspense>
+        </LazyPageErrorBoundary>
       </div>
 
     </main>
