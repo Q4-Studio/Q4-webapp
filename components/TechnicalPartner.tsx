@@ -1,15 +1,32 @@
 import React from 'react';
 import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import SEOHead from './SEOHead';
+import HeroVisual, { HeroAmbient } from './HeroVisual';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
+import { useHeroReveal } from '../hooks/useHeroReveal';
 
-const TechnicalPartner: React.FC = () => (
-  <article className="relative overflow-hidden bg-[#050505] px-6 pb-28 pt-40 text-white">
+const TechnicalPartner: React.FC = () => {
+  // Ordine dello stagger d'ingresso: eyebrow, h1, sottotitolo, visual.
+  const reveal = useHeroReveal<HTMLElement>(4);
+
+  return (
+  <article className="relative overflow-hidden bg-[#050505] px-6 pb-28 pt-32 text-white md:pt-36">
     <SEOHead title="Partner tecnico white label per agenzie | Q4 Studio" description="Tracciamento server-side, Consent Mode, automazioni e integrazioni CRM in white label per agenzie." url={`${siteUrl}/partner-tecnico`} noIndex />
-    <div className="pointer-events-none absolute left-[-20%] top-10 h-[720px] w-[720px] rounded-full bg-indigo-900/15 blur-[170px]" />
     <div className="relative z-10 mx-auto max-w-5xl">
-      <header className="mb-24 max-w-4xl"><p className="mb-5 text-sm uppercase tracking-[0.08em] text-indigo-300">White label · per agenzie</p><h1 className="mb-7 text-[clamp(44px,7vw,88px)] font-bold leading-[0.98] tracking-[-0.045em]">Sono il tecnico che la tua agenzia non ha in casa.</h1><p className="text-xl leading-relaxed text-gray-300 md:text-2xl">Tracciamento server-side, Consent Mode, automazioni, integrazioni CRM. Lavoro white label: il cliente resta tuo, io non lo contatto mai.</p></header>
+      <header className="relative mb-16 md:mb-20">
+        <HeroAmbient variant="partner" side="left" />
+        <div className="relative z-10 grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          <div>
+            <p ref={reveal(0)} className="eyebrow mb-5 text-indigo-300">White label · per agenzie</p>
+            <h1 ref={reveal(1)} className="hero-h1 mb-6 font-bold">Sono il tecnico che la tua agenzia non ha in casa.</h1>
+            <p ref={reveal(2)} className="hero-subhead text-gray-300">Tracciamento server-side, Consent Mode, automazioni, integrazioni CRM. Lavoro white label: il cliente resta tuo, io non lo contatto mai.</p>
+          </div>
+          <div ref={reveal(3)}>
+            <HeroVisual variant="partner" />
+          </div>
+        </div>
+      </header>
 
       <section className="grid gap-10 border-t border-white/10 py-16 md:grid-cols-[0.7fr_1.3fr]"><h2 className="text-3xl font-bold">Il problema che conosci</h2><div className="space-y-5 text-lg leading-relaxed text-gray-300"><p>Il cliente ti scrive che Meta dice 40 conversioni e il suo gestionale ne dice 90. Tu sai che è il tracciamento. Ma sistemare un container server-side, la Consent Mode e le Conversions API non è il lavoro per cui hai assunto il tuo team.</p><p>Così la conversazione si ripete ogni mese, e ogni mese il cliente si fida un po&apos; meno dei numeri che gli porti.</p></div></section>
       <section className="border-t border-white/10 py-16"><h2 className="mb-9 text-3xl font-bold">Come funziona</h2><div className="grid gap-4 md:grid-cols-2">{[['1','Mi giri il problema.','Una call di trenta minuti con te, senza il cliente.'],['2','Ti dico tempi e prezzo.','Fisso, non a ore.'],['3','Lavoro.','Con i tuoi accessi o con quelli del cliente, come preferisci.'],['4','Ti consegno.','Documentazione inclusa, così il tuo team capisce cosa c’è.']].map(([n,t,d]) => <div key={n} className="rounded-3xl border border-white/10 bg-white/[0.025] p-6"><span className="text-indigo-300">0{n}</span><h3 className="mb-2 mt-3 text-xl font-bold">{t}</h3><p className="text-gray-400">{d}</p></div>)}</div><p className="mt-7 text-lg text-gray-300">Se serve, sto in call col cliente presentato come tuo tecnico. Se preferisci che non compaia, non compaio.</p></section>
@@ -19,6 +36,7 @@ const TechnicalPartner: React.FC = () => (
       <div className="flex flex-col gap-4 border-t border-white/10 pt-12 sm:flex-row"><a href="https://calendar.notion.so/meet/sebastianor/tg3rl4yct" target="_blank" rel="noopener noreferrer" onClick={() => trackCtaClick({ cta_location: 'technical_partner_page', cta_label: 'Prenota trenta minuti', cta_destination: 'https://calendar.notion.so/meet/sebastianor/tg3rl4yct' })} className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-[#050505]">Prenota trenta minuti <ArrowUpRight className="h-4 w-4" /></a><a href="mailto:sebastiano@q4.studio" onClick={() => trackCtaClick({ cta_location: 'technical_partner_page', cta_label: 'Scrivimi', cta_destination: 'mailto:sebastiano@q4.studio' })} className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-7 py-4 font-semibold">Scrivimi <ArrowUpRight className="h-4 w-4" /></a></div>
     </div>
   </article>
-);
+  );
+};
 
 export default TechnicalPartner;
