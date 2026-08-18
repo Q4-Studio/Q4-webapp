@@ -26,6 +26,34 @@ h1, h2, h3, h4, h5, h6 {
   scrollbar-width: none;
 }
 
+/* ------------------------------------------------------------------ */
+/* Scala tipografica condivisa per le hero delle pagine servizio.       */
+/* Sostituisce le taglie arbitrarie (clamp inline, 44-104px) con valori */
+/* coerenti su tutte le pagine che la adottano. Per ora applicata solo  */
+/* a ServerSideTracking, AIAgents, MetaAdvertisingB2B, TechnicalPartner */
+/* (rollout sul resto del sito rimandato volutamente).                  */
+/* ------------------------------------------------------------------ */
+@utility hero-h1 {
+  font-size: clamp(2rem, 3.4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+@utility section-h2 {
+  font-size: clamp(1.625rem, 2.6vw, 2.375rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+@utility hero-subhead {
+  font-size: clamp(1.0625rem, 1.15vw, 1.25rem);
+  line-height: 1.55;
+}
+@utility eyebrow {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+}
+
 /* Orbit fade animation for smooth appearance/disappearance */
 @keyframes orbit-fade {
   0% { opacity: 0; }
