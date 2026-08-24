@@ -197,17 +197,23 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                             Risorse
                         </a>
                     </li>
+                    <li>
+                        <a href="/about" className="hover:text-indigo-400 transition-colors">
+                            Chi siamo
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/contact" className="hover:text-indigo-400 transition-colors">
+                            Contatti
+                        </a>
+                    </li>
                     <li className="pt-2 text-gray-500">Legale</li>
-                    <li
-                        className="hover:text-indigo-400 cursor-pointer transition-colors"
-                        onClick={() => {
-                            if (window.location.pathname !== '/') {
-                                window.history.pushState(null, '', '/');
-                            }
-                            window.location.hash = 'privacy';
-                        }}
-                    >
-                        Privacy & Cookie Policy
+                    {/* Link reale alla pagina /privacy (prerenderata): i crawler
+                        senza JS la raggiungono dal footer, come le altre voci. */}
+                    <li>
+                        <a href="/privacy" className="hover:text-indigo-400 transition-colors">
+                            Privacy & Cookie Policy
+                        </a>
                     </li>
                 </ul>
             </div>
