@@ -101,10 +101,26 @@ const NotFound: React.FC = () => {
             onClick={() => window.history.back()}
             className="group flex items-center gap-3 px-8 py-4 border border-white/20 rounded-full font-semibold hover:border-indigo-500 hover:bg-indigo-500/10 transition-all duration-300"
           >
-            <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+            <ArrowLeft className="w-5 h-5" />
             Torna Indietro
           </button>
         </div>
+
+        {/* Recovery links: stessi puntatori della pagina 404 statica generata
+            in scripts/prerender.ts (generateNotFoundHtml), così anche chi
+            naviga via client routing ha un percorso per ripartire. */}
+        <section aria-label="Link utili" className="mt-16 pt-10 border-t border-white/10 text-left max-w-md mx-auto">
+          <h2 className="text-lg text-gray-400 mb-4">Link utili per ripartire</h2>
+          <ul className="space-y-2 text-sm text-gray-500">
+            <li><a href="/tracciamento-server-side" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4 transition-colors">Tracciamento server-side e prezzi</a></li>
+            <li><a href="/siti-web-ai" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4 transition-colors">Siti web con AI</a></li>
+            <li><a href="/agenti-ai" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4 transition-colors">Agenti AI e automazioni</a></li>
+            <li><a href="/casi-studio" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4 transition-colors">Casi studio</a></li>
+            <li><a href="/risorse" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4 transition-colors">Risorse</a></li>
+            <li><a href="/sitemap.xml" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4 transition-colors">sitemap.xml</a> — elenco completo degli URL pubblicati</li>
+            <li><a href="/llms.txt" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4 transition-colors">llms.txt</a> — guida al sito per agenti AI</li>
+          </ul>
+        </section>
       </div>
     </div>
   );

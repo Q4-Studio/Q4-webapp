@@ -21,6 +21,8 @@ const Blog = lazy(() => import('./components/Blog'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
 const NotFound = lazy(() => import('./components/NotFound'));
 const Privacy = lazy(() => import('./components/Privacy'));
+const AboutPage = lazy(() => import('./components/AboutPage'));
+const ContactPage = lazy(() => import('./components/ContactPage'));
 const AppSupport = lazy(() => import('./components/AppSupport'));
 const SeoDirectory = lazy(() => import('./components/SeoDirectory'));
 const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
@@ -32,7 +34,7 @@ const TechnicalPartner = lazy(() => import('./components/TechnicalPartner'));
 const MetaAdvertisingB2B = lazy(() => import('./components/MetaAdvertisingB2B'));
 const SitesWebAI = lazy(() => import('./components/SitesWebAI'));
 
-type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | 'tracking' | 'sites' | 'technical-partner' | 'meta-advertising' | 'case-studies' | 'case-study' | '404';
+type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'about' | 'contact' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | 'tracking' | 'sites' | 'technical-partner' | 'meta-advertising' | 'case-studies' | 'case-study' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -161,6 +163,14 @@ const App: React.FC = () => {
         }
       } else if (path === '/blog') {
         setCurrentPage('blog');
+      } else if (path === '/about') {
+        // Pagine "trust anchor" servite anche come HTML statico prerenderato:
+        // qui gestiamo solo la navigazione client-side (pushState).
+        setCurrentPage('about');
+      } else if (path === '/contact') {
+        setCurrentPage('contact');
+      } else if (path === '/privacy') {
+        setCurrentPage('privacy');
       } else if (hash === 'privacy') {
         setCurrentPage('privacy');
       } else if (hash === 'app-support') {
@@ -404,6 +414,20 @@ const App: React.FC = () => {
           {currentPage === 'privacy' && (
             <>
               <Privacy />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'about' && (
+            <>
+              <AboutPage />
+              <Footer />
+            </>
+          )}
+
+          {currentPage === 'contact' && (
+            <>
+              <ContactPage />
               <Footer />
             </>
           )}

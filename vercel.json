@@ -1,11 +1,94 @@
 {
   "redirects": [
     {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/index.md",
+      "permanent": false
+    },
+    {
+      "source": "/tracciamento-server-side",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/tracciamento-server-side.md",
+      "permanent": false
+    },
+    {
+      "source": "/siti-web-ai",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/siti-web-ai.md",
+      "permanent": false
+    },
+    {
+      "source": "/agenti-ai",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/agenti-ai.md",
+      "permanent": false
+    },
+    {
+      "source": "/meta-advertising-b2b",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/meta-advertising-b2b.md",
+      "permanent": false
+    },
+    {
+      "source": "/about",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/about.md",
+      "permanent": false
+    },
+    {
+      "source": "/contact",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/contact.md",
+      "permanent": false
+    },
+    {
+      "source": "/privacy",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/privacy.md",
+      "permanent": false
+    },
+    {
+      "source": "/casi-studio",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/casi-studio.md",
+      "permanent": false
+    },
+    {
+      "source": "/casi-studio/:slug",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/casi-studio/:slug.md",
+      "permanent": false
+    },
+    {
+      "source": "/risorse",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/risorse.md",
+      "permanent": false
+    },
+    {
+      "source": "/risorse/:slug",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/risorse/:slug.md",
+      "permanent": false
+    },
+    {
+      "source": "/blog",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/blog.md",
+      "permanent": false
+    },
+    {
+      "source": "/blog/:slug",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/blog/:slug.md",
+      "permanent": false
+    },
+    {
       "source": "/risorse/b2b-lead-generation-meta-ads",
       "destination": "/risorse",
       "permanent": true
-    },
-    {
+    },    {
       "source": "/risorse/meta-ads-b2b-verona",
       "destination": "/risorse",
       "permanent": true
@@ -99,6 +182,10 @@
         {
           "key": "X-Frame-Options",
           "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Vary",
+          "value": "Accept"
         },
         {
           "key": "X-Content-Type-Options",
