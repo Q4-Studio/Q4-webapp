@@ -5,6 +5,7 @@ import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { OBFUSCATED, decode } from '../utils/obfuscate';
 import { getAttribution, getGaClientId, getGaSessionId } from '../utils/attribution';
 import { pushDataLayerEvent } from '../utils/dataLayer';
+import posthog from '../lib/posthog';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -123,6 +124,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
         setSubmitStatus('success');
         setFormData({ name: '', email: '', phone: '', company: '', message: '' });
         notifyGa4();
+        posthog.capture('contact_form_submitted', {
+          form_context: subject ? 'service_inquiry' : 'general_inquiry',
+          submission_mode: 'demo',
+        });
         return;
       }
 
@@ -138,12 +143,24 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
         setSubmitStatus('success');
         setFormData({ name: '', email: '', phone: '', company: '', message: '' });
         notifyGa4();
+        posthog.capture('contact_form_submitted', {
+          form_context: subject ? 'service_inquiry' : 'general_inquiry',
+          submission_mode: 'webhook',
+        });
       } else {
         setSubmitStatus('error');
+        posthog.capture('contact_form_submission_failed', {
+          form_context: subject ? 'service_inquiry' : 'general_inquiry',
+          failure_type: 'http_error',
+        });
       }
     } catch (error) {
       console.error('Form submission error:', error);
       setSubmitStatus('error');
+      posthog.capture('contact_form_submission_failed', {
+        form_context: subject ? 'service_inquiry' : 'general_inquiry',
+        failure_type: 'network_error',
+      });
     } finally {
       setIsSubmitting(false);
       // Reset status after 5 seconds
