@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { Send, CheckCircle, AlertCircle, Smartphone, HelpCircle, MessageSquare, Mail } from 'lucide-react';
+import posthog from '../lib/posthog';
 
 const SUPPORT_WEBHOOK_URL = import.meta.env.VITE_APP_SUPPORT_WEBHOOK_URL || 'https://services.leadconnectorhq.com/hooks/YoRWq5tyW2U6PsMmbr5e/webhook-trigger/124c9122-ea5c-4be6-bdbd-64927a29e776';
 
@@ -76,12 +77,15 @@ const AppSupport: React.FC = () => {
       if (response.ok) {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+        posthog.capture('support_request_submitted');
       } else {
         setSubmitStatus('error');
+        posthog.capture('support_request_submission_failed', { failure_type: 'http_error' });
       }
     } catch (error) {
       console.error('Form submission error:', error);
       setSubmitStatus('error');
+      posthog.capture('support_request_submission_failed', { failure_type: 'network_error' });
     } finally {
       setIsSubmitting(false);
       setTimeout(() => setSubmitStatus('idle'), 5000);
