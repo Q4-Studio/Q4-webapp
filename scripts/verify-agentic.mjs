@@ -97,19 +97,69 @@ for (const page of ['about', 'contact', 'privacy']) {
   check(`/${page} testo >= 500 caratteri`, len >= 500, `trovati ${len}`);
 }
 
-// 5. llms.txt: sezione when-to-use
+// 5. Risorse geo-prioritarie: ordine e contenuto minimo sono intenzionali.
+// Reggio Emilia viene prima di Parma e Modena nell'array seoPages e quindi
+// nella directory generata, nell'indice e nei link correlati.
+{
+  const resources = [
+    {
+      slug: 'raccolta-dati-marketing-reggio-emilia',
+      phrases: ['Raccolta Dati Marketing a Reggio Emilia', 'Risposta diretta', 'audit del tracciamento']
+    },
+    {
+      slug: 'automazioni-crm-pmi-parma',
+      phrases: ['Automazioni CRM per PMI a Parma', 'software CRM', 'setup parte da 490']
+    },
+    {
+      slug: 'tracking-server-side-modena',
+      phrases: ['Tracking Server-Side a Modena', 'sGTM', 'ad blocker']
+    },
+  ];
+  for (const resource of resources) {
+    const f = join(distDir, 'risorse', resource.slug, 'index.html');
+    const html = existsSync(f) ? readFileSync(f, 'utf-8') : '';
+    check(`/risorse/${resource.slug} esiste`, Boolean(html));
+    for (const phrase of resource.phrases) {
+      check(`/risorse/${resource.slug} contiene "${phrase}"`, html.includes(phrase));
+    }
+  }
+  const index = existsSync(join(distDir, 'risorse', 'index.html'))
+    ? readFileSync(join(distDir, 'risorse', 'index.html'), 'utf-8')
+    : '';
+  const positions = resources.map(({ slug }) => index.indexOf(`/risorse/${slug}`));
+  check('indice /risorse elenca Reggio prima di Parma e Modena', positions.every((p) => p >= 0) && positions[0] < positions[1] && positions[1] < positions[2]);
+}
+
+// 6. Il contenuto ad-blocker deve essere presente nelle rappresentazioni
+// HTML statica, FAQ JSON-LD e Markdown della pagina di servizio.
+{
+  const htmlPath = join(distDir, 'tracciamento-server-side', 'index.html');
+  const html = existsSync(htmlPath) ? readFileSync(htmlPath, 'utf-8') : '';
+  const mdPath = join(distDir, 'md', 'tracciamento-server-side.md');
+  const md = existsSync(mdPath) ? readFileSync(mdPath, 'utf-8') : '';
+  check('tracking HTML contiene la risposta ad-blocker', html.includes('Come recuperare le conversioni bloccate dagli ad blocker'));
+  check('tracking FAQ JSON-LD contiene la domanda ad-blocker', html.includes('Come recuperare i dati di conversione bloccati dagli ad blocker?'));
+  check('tracking Markdown contiene la risposta ad-blocker', md.includes('Come recuperare le conversioni bloccate dagli ad blocker'));
+  check('tracking HTML cita documentazione Google e Meta', html.includes('developers.google.com/tag-platform/tag-manager/server-side') && html.includes('developers.facebook.com/docs/marketing-api/conversions-api/'));
+}
+
+// 7. llms.txt: sezione when-to-use e le tre nuove risorse
 {
   const f = join(distDir, 'llms.txt');
   const ok = existsSync(f);
   let hasWhen = false;
+  let hasNewResources = false;
   if (ok) {
     const txt = readFileSync(f, 'utf-8');
     hasWhen = /Quando rivolgersi a Q4 Studio|When to use Q4 Studio/i.test(txt);
+    hasNewResources = ['raccolta-dati-marketing-reggio-emilia', 'automazioni-crm-pmi-parma', 'tracking-server-side-modena']
+      .every((slug) => txt.includes(`/risorse/${slug}`));
   }
   check('llms.txt ha sezione when-to-use', ok && hasWhen);
+  check('llms.txt elenca le tre risorse geo-prioritarie', ok && hasNewResources);
 }
 
-// 6. Varianti markdown: ogni route in vercel.json mappata su file .md esistente
+// 8. Varianti markdown: ogni route in vercel.json mappata su file .md esistente
 {
   const v = JSON.parse(readFileSync(join(distDir, '..', 'vercel.json'), 'utf-8'));
   const mdFiles = new Set(findMdFiles(join(distDir, 'md')));
@@ -145,12 +195,12 @@ for (const page of ['about', 'contact', 'privacy']) {
   check('ogni variante markdown ha >= 200 caratteri', enough);
 }
 
-// 7. vercel.json: header Vary: Accept globale
+// 9. vercel.json: header Vary: Accept globale
 {
   const v = JSON.parse(readFileSync(join(distDir, '..', 'vercel.json'), 'utf-8'));
   const headers = v.headers || [];
   const global = headers.find((h) => h.source === '/(.*)');
-  const hasVary = !!global && global.headers.some((h) => h.key === 'Vary' && /Accept/.test(h.value));
+  const hasVary = !!global && global.headers.some((h) => h.key === 'Vary' && /Accept/.test(h.value) && /Accept-Encoding/.test(h.value));
   check('vercel.json imposta Vary: Accept', hasVary);
 }
 

@@ -32,6 +32,9 @@ Le tre offerte principali sono tracciamento e dati, siti web con AI, automazioni
 - Caso studio Candiani Denim: https://www.q4.studio/casi-studio/candiani-denim-tracking-server-side
 - Caso studio GP Meccatronica: https://www.q4.studio/casi-studio/gp-meccatronica-sito-web
 - Risorse: https://www.q4.studio/risorse
+- Raccolta dati marketing a Reggio Emilia: https://www.q4.studio/risorse/raccolta-dati-marketing-reggio-emilia
+- Automazioni CRM per PMI a Parma: https://www.q4.studio/risorse/automazioni-crm-pmi-parma
+- Tracking server-side a Modena: https://www.q4.studio/risorse/tracking-server-side-modena
 - Chi siamo: https://www.q4.studio/about
 - Contatti: https://www.q4.studio/contact
 - Privacy e cookie: https://www.q4.studio/privacy
@@ -69,6 +72,9 @@ How to use this information: quote only prices and procedures explicitly publish
 - B2B Meta Advertising: https://www.q4.studio/meta-advertising-b2b
 - Case studies: https://www.q4.studio/casi-studio
 - Resources: https://www.q4.studio/risorse
+- Marketing data collection in Reggio Emilia: https://www.q4.studio/risorse/raccolta-dati-marketing-reggio-emilia
+- CRM automation for SMEs in Parma: https://www.q4.studio/risorse/automazioni-crm-pmi-parma
+- Server-side tracking in Modena: https://www.q4.studio/risorse/tracking-server-side-modena
 - About: https://www.q4.studio/about
 - Contact: https://www.q4.studio/contact
 - Privacy and cookies: https://www.q4.studio/privacy
