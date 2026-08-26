@@ -1,7 +1,33 @@
 import posthog from 'posthog-js';
+import type { CaptureResult } from 'posthog-js';
 
 const posthogKey = import.meta.env.VITE_POSTHOG_KEY;
 const posthogHost = import.meta.env.VITE_POSTHOG_HOST;
+
+interface ExceptionFrame {
+  in_app?: boolean;
+}
+
+interface ExceptionItem {
+  stacktrace?: { frames?: ExceptionFrame[] };
+}
+
+// Drop exceptions that have no first-party stack frame. Scripts that the
+// browser or an in-app webview injects (for example the Facebook in-app
+// browser) throw on our page but carry no frame from our own code, so they
+// add noise to error tracking without pointing at a real bug in the site.
+function dropForeignExceptions(event: CaptureResult | null): CaptureResult | null {
+  if (!event || event.event !== '$exception') return event;
+
+  const exceptions = event.properties?.$exception_list as ExceptionItem[] | undefined;
+  if (!Array.isArray(exceptions)) return event;
+
+  const hasFirstPartyFrame = exceptions.some((exception) =>
+    exception?.stacktrace?.frames?.some((frame) => frame?.in_app === true),
+  );
+
+  return hasFirstPartyFrame ? event : null;
+}
 
 if (!posthogKey || !posthogHost) {
   if (import.meta.env.DEV) {
@@ -18,6 +44,7 @@ if (!posthogKey || !posthogHost) {
       capture_unhandled_rejections: true,
       capture_console_errors: false,
     },
+    before_send: dropForeignExceptions,
   });
 }
 
