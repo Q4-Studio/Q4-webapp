@@ -65,7 +65,214 @@ export const pageLastModified: Record<string, string> = {
 export const siteUrl = 'https://www.q4.studio';
 export const resourcesPath = '/risorse';
 
+type GeoCity = {
+  slug: string;
+  name: string;
+  localContext: string;
+  serviceArea: string;
+};
+
+type GeoTopic = {
+  key: string;
+  slug: string;
+  cluster: SeoCluster;
+  label: string;
+  keyword: string;
+  focus: string;
+  answer: string;
+  process: string;
+  limitation: string;
+};
+
+// La matrice geo copre gli intenti prioritari dell'audit in tutti e tre i
+// territori senza creare semplici copie con il nome della città sostituito.
+// Ogni variante aggiunge contesto locale, criteri di scelta e limiti espliciti.
+const geoCities: GeoCity[] = [
+  {
+    slug: 'reggio-emilia',
+    name: 'Reggio Emilia',
+    localContext: 'Q4 Studio ha sede a Reggio Emilia e lavora con PMI, aziende B2B e agenzie del territorio.',
+    serviceArea: 'Reggio Emilia, Modena e Parma'
+  },
+  {
+    slug: 'parma',
+    name: 'Parma',
+    localContext: 'Q4 Studio segue da remoto le PMI e le aziende B2B dell’area di Parma, collaborando con il referente interno o con l’agenzia marketing.',
+    serviceArea: 'Parma, Reggio Emilia e Modena'
+  },
+  {
+    slug: 'modena',
+    name: 'Modena',
+    localContext: 'Q4 Studio segue da remoto le aziende e le agenzie della zona di Modena e può lavorare in presenza quando il progetto lo richiede.',
+    serviceArea: 'Modena, Reggio Emilia e Parma'
+  }
+];
+
+const geoTopics: GeoTopic[] = [
+  {
+    key: 'data',
+    slug: 'raccolta-dati-marketing',
+    cluster: 'A',
+    label: 'Raccolta Dati Marketing',
+    keyword: 'raccolta dati marketing',
+    focus: 'confrontare piattaforme pubblicitarie, analytics, CRM e processo commerciale prima di cambiare campagne o budget',
+    answer: 'Quando la raccolta dati marketing non torna, il primo passo è seguire il dato dal browser fino al CRM: gli eventi possono mancare per blocchi tecnici, consenso, deduplicazione o sincronizzazioni incomplete.',
+    process: 'audit di eventi, consenso, parametri, passaggio al CRM e definizione delle conversioni che descrivono davvero il valore commerciale',
+    limitation: 'i numeri di Meta, Google Analytics e CRM non sono confrontabili senza considerare attribuzione, finestra temporale e definizione dell’evento'
+  },
+  {
+    key: 'crm',
+    slug: 'automazioni-crm-pmi',
+    cluster: 'C',
+    label: 'Automazioni CRM per PMI',
+    keyword: 'software automazioni CRM PMI',
+    focus: 'collegare lead, form, campagne, WhatsApp, email e gestionale senza copiare informazioni a mano',
+    answer: 'Per una PMI il software CRM è solo una parte della soluzione: l’automazione utile assegna il lead, conserva il contesto, prepara la prima risposta e aggiorna lo stato senza copia manuale.',
+    process: 'mappatura del processo, configurazione del CRM esistente, collegamento dei canali e automazione di un primo passaggio misurabile',
+    limitation: 'un CRM nuovo non risolve da solo un processo commerciale disordinato e non serve sostituire gli strumenti prima di capire cosa non funziona'
+  },
+  {
+    key: 'tracking',
+    slug: 'tracking-server-side',
+    cluster: 'A',
+    label: 'Tracking Server-Side',
+    keyword: 'strumenti tracking server-side zona',
+    focus: 'scegliere e collegare container server-side, sGTM, infrastruttura, Consent Mode, Meta CAPI e Google Enhanced Conversions',
+    answer: 'Gli strumenti per il tracking server-side includono container, infrastruttura, consenso e integrazioni API: nessuno strumento risolve da solo una mappa eventi assente o un processo commerciale non tracciato.',
+    process: 'audit dell’architettura esistente, configurazione del container, eventi condivisi tra client e server, integrazioni API e monitoraggio',
+    limitation: 'il server-side riduce alcune perdite tecniche ma non bypassa consenso, informativa, finalità o regole privacy'
+  },
+  {
+    key: 'adblock',
+    slug: 'conversioni-ad-blocker',
+    cluster: 'A',
+    label: 'Recuperare Conversioni Bloccate dagli Ad Blocker',
+    keyword: 'recuperare dati conversione ad blocker',
+    focus: 'distinguere gli eventi tecnicamente persi da quelli che non devono essere raccolti e inviare segnali affidabili alle piattaforme',
+    answer: 'Le conversioni bloccate dagli ad blocker si affrontano con una diagnosi degli eventi, una raccolta server-side compatibile con il consenso, integrazioni API e deduplicazione tra browser e server.',
+    process: 'confronto tra dati reali e report, configurazione server-side, verifica del consenso, event ID condivisi e test con eventi reali',
+    limitation: 'installare un altro pixel non recupera dati mancanti e il server-side non rende valido un dato privo di base giuridica'
+  },
+  {
+    key: 'integration',
+    slug: 'integrare-strumenti-marketing-server-side',
+    cluster: 'A',
+    label: 'Integrare gli Strumenti Marketing con il Server-Side Tracking',
+    keyword: 'integrare strumenti marketing server-side',
+    focus: 'collegare sito, analytics, advertising, CRM e gestionale in un percorso di dati coerente',
+    answer: 'Integrare gli strumenti marketing con il server-side tracking significa definire eventi e responsabilità, raccoglierli nel punto corretto, inviarli alle piattaforme e collegarli al valore reale nel CRM.',
+    process: 'inventario degli strumenti, mappa degli eventi, regole di consenso, deduplicazione, routing al CRM e documentazione del flusso',
+    limitation: 'collegare molte piattaforme senza una definizione condivisa degli eventi rende il sistema più complesso, non più affidabile'
+  },
+  {
+    key: 'lead',
+    slug: 'automazioni-lead-senza-team-tecnico',
+    cluster: 'C',
+    label: 'Automazioni Lead senza Team Tecnico',
+    keyword: 'automazione gestione lead senza personale tecnico interno',
+    focus: 'ridurre il tempo tra acquisizione, assegnazione, prima risposta e follow-up anche senza uno sviluppatore interno',
+    answer: 'Un’azienda senza personale tecnico interno può automatizzare la gestione dei lead partendo da un processo ristretto: acquisizione, assegnazione, notifica, prima risposta e follow-up con controllo umano.',
+    process: 'descrizione del lavoro manuale, scelta del primo flusso, collegamento degli strumenti esistenti, test e monitoraggio degli errori',
+    limitation: 'un’automazione non corregge un’offerta, un processo commerciale o dati di partenza non definiti'
+  }
+];
+
+function createGeoPage(topic: GeoTopic, city: GeoCity): SeoPage {
+  const title = `${topic.label} a ${city.name}`;
+  const slug = `${topic.slug}-${city.slug}`;
+  const pageKeyword = `${topic.keyword} ${city.name}`;
+  const localPageContext = `${city.localContext} Per i progetti che richiedono presenza, l’area di riferimento è ${city.serviceArea}.`;
+
+  return {
+    slug,
+    cluster: topic.cluster,
+    lastModified: '2026-08-26',
+    title,
+    metaTitle: `${title} | Q4 Studio`,
+    description: `${topic.label} per aziende e PMI di ${city.name}: ${topic.focus}. Audit e implementazione con prezzi pubblici.`,
+    keyword: pageKeyword,
+    audience: `PMI, aziende B2B e agenzie di ${city.name} che vogliono ${topic.focus}`,
+    pain: `dati, lead e attività commerciali ${topic.key === 'data' ? 'non coincidono tra piattaforme, analytics e CRM' : 'restano distribuiti tra strumenti diversi e richiedono interventi manuali'}`,
+    solution: `partiamo da ${topic.process}, poi implementiamo solo i passaggi che risolvono il problema descritto dall’azienda`,
+    proof: `${localPageContext} L’obiettivo è produrre un flusso documentato e verificabile, non promettere un risultato uguale per ogni azienda.`,
+    directAnswer: `${topic.answer} ${localPageContext}`,
+    clusters: [
+      {
+        keyword: `${topic.keyword} ${city.name}`,
+        heading: `${topic.label}: da dove partire a ${city.name}`,
+        content: `${topic.answer} In una PMI o in un’agenzia di ${city.name} conviene iniziare da un solo percorso, definire il dato o l’azione finale e verificare ogni passaggio prima di aggiungere altri canali.`
+      },
+      {
+        keyword: `${topic.key} processo aziende ${city.name}`,
+        heading: 'Il processo prima dello strumento',
+        content: `La scelta tecnica viene dopo la descrizione del lavoro reale: cosa entra, chi deve intervenire, quali dati servono, cosa può essere automatico e quando deve subentrare una persona. ${topic.limitation}.`
+      },
+      {
+        keyword: `${topic.key} crm marketing ${city.name}`,
+        heading: 'Collegare il dato al risultato commerciale',
+        content: `Il punto di arrivo non è un dashboard più affollato. È una informazione utilizzabile dal team: un lead assegnato, una conversione verificata, una richiesta strutturata o uno stato aggiornato nel CRM. Per questo l’analisi include advertising, sito, analytics e processo commerciale.`
+      },
+      {
+        keyword: `supporto tecnico ${city.name} ${topic.key}`,
+        heading: `Supporto alle aziende dell’area di ${city.name}`,
+        content: `${localPageContext} Il lavoro tecnico viene gestito da remoto con accessi e documentazione condivisi; la presenza viene valutata solo quando porta un vantaggio concreto al progetto.`
+      }
+    ],
+    comparisonTable: {
+      title: `Come valutare una soluzione per ${city.name}`,
+      headers: ['Domanda', 'Risposta utile', 'Segnale di rischio'],
+      rows: [
+        ['Quale problema risolve?', 'Un passaggio concreto e misurabile', 'Promessa generica di automazione'],
+        ['Quali dati usa?', 'Fonti e consenso definiti', 'Dati copiati senza origine chiara'],
+        ['Quando interviene una persona?', 'Regole di escalation esplicite', 'Sistema lasciato senza controllo'],
+        ['Come si verifica?', 'Test, documentazione e monitoraggio', 'Nessun criterio di qualità']
+      ]
+    },
+    dataPoints: [
+      `Audit del tracciamento: 490 € e 3-5 giorni lavorativi`,
+      `Setup server-side: da 1.500 € per siti non-ecommerce`,
+      `La prima automazione o integrazione dovrebbe partire da un solo processo reale dell’azienda`,
+      `${topic.limitation}.`
+    ],
+    services: [
+      topic.key === 'crm' || topic.key === 'lead' ? 'Mappatura del processo commerciale' : 'Audit di eventi e sistemi',
+      topic.key === 'tracking' || topic.key === 'adblock' || topic.key === 'integration' ? 'Server-side tracking e integrazioni API' : 'Integrazione CRM e canali',
+      'Regole di consenso e controllo umano',
+      'Documentazione e monitoraggio'
+    ],
+    faqs: [
+      {
+        question: `Qual è il primo passo per ${topic.label.toLowerCase()} a ${city.name}?`,
+        answer: `Il primo passo è descrivere il processo e verificare i dati o le attività già presenti. Q4 Studio può partire da un audit da 490 € e 3-5 giorni quando il problema riguarda il tracciamento; per un’automazione si definisce prima il flusso più piccolo da collegare.`
+      },
+      {
+        question: `Q4 Studio lavora con aziende solo a ${city.name}?`,
+        answer: `No. ${city.localContext} Il lavoro tecnico è principalmente da remoto e può seguire aziende in tutta Italia.`
+      },
+      {
+        question: 'Quali strumenti bisogna già avere?',
+        answer: `Dipende dal processo. ${topic.limitation} Valutiamo CRM, gestionale, form, WhatsApp, analytics e piattaforme advertising già in uso prima di proporre una sostituzione.`
+      },
+      {
+        question: 'L’automazione rispetta il controllo umano e la privacy?',
+        answer: 'Sì, il progetto deve definire quando una persona valida o prende in carico la richiesta. Consenso, informativa, finalità e conservazione devono essere concordati con il DPO o consulente privacy; Q4 Studio implementa tecnicamente le regole ricevute e non fornisce pareri legali.'
+      }
+    ]
+  };
+}
+
+const geoPageOrder = geoTopics.flatMap((topic) => geoCities.map((city) => `${topic.slug}-${city.slug}`));
+const existingGeoSlugs = new Set([
+  'raccolta-dati-marketing-reggio-emilia',
+  'automazioni-crm-pmi-parma',
+  'tracking-server-side-modena'
+]);
+const additionalGeoPages = geoTopics
+  .flatMap((topic) => geoCities.map((city) => createGeoPage(topic, city)))
+  .filter((page) => !existingGeoSlugs.has(page.slug));
+
 export const seoPages: SeoPage[] = [
+  ...additionalGeoPages,
   {
     slug: 'raccolta-dati-marketing-reggio-emilia',
     cluster: 'A',
@@ -800,5 +1007,13 @@ export const seoPages: SeoPage[] = [
     ]
   }
 ];
+
+const geoOrder = new Map(geoPageOrder.map((slug, index) => [slug, index]));
+seoPages.sort((a, b) => {
+  const aIndex = geoOrder.get(a.slug);
+  const bIndex = geoOrder.get(b.slug);
+  if (aIndex === undefined || bIndex === undefined) return 0;
+  return aIndex - bIndex;
+});
 
 export const getSeoPageBySlug = (slug: string) => seoPages.find((page) => page.slug === slug);

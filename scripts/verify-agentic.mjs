@@ -97,37 +97,37 @@ for (const page of ['about', 'contact', 'privacy']) {
   check(`/${page} testo >= 500 caratteri`, len >= 500, `trovati ${len}`);
 }
 
-// 5. Risorse geo-prioritarie: ordine e contenuto minimo sono intenzionali.
-// Reggio Emilia viene prima di Parma e Modena nell'array seoPages e quindi
-// nella directory generata, nell'indice e nei link correlati.
+// 5. Risorse geo-prioritarie: ogni intento ha tre varianti locali e l'ordine
+// è intenzionale: Reggio Emilia, poi Parma, poi Modena.
 {
-  const resources = [
-    {
-      slug: 'raccolta-dati-marketing-reggio-emilia',
-      phrases: ['Raccolta Dati Marketing a Reggio Emilia', 'Risposta diretta', 'audit del tracciamento']
-    },
-    {
-      slug: 'automazioni-crm-pmi-parma',
-      phrases: ['Automazioni CRM per PMI a Parma', 'software CRM', 'setup parte da 490']
-    },
-    {
-      slug: 'tracking-server-side-modena',
-      phrases: ['Tracking Server-Side a Modena', 'sGTM', 'ad blocker']
-    },
+  const topics = [
+    { slug: 'raccolta-dati-marketing', title: 'Raccolta Dati Marketing' },
+    { slug: 'automazioni-crm-pmi', title: 'Automazioni CRM per PMI' },
+    { slug: 'tracking-server-side', title: 'Tracking Server-Side' },
+    { slug: 'conversioni-ad-blocker', title: 'Recuperare Conversioni Bloccate dagli Ad Blocker' },
+    { slug: 'integrare-strumenti-marketing-server-side', title: 'Integrare gli Strumenti Marketing con il Server-Side Tracking' },
+    { slug: 'automazioni-lead-senza-team-tecnico', title: 'Automazioni Lead senza Team Tecnico' },
   ];
-  for (const resource of resources) {
-    const f = join(distDir, 'risorse', resource.slug, 'index.html');
-    const html = existsSync(f) ? readFileSync(f, 'utf-8') : '';
-    check(`/risorse/${resource.slug} esiste`, Boolean(html));
-    for (const phrase of resource.phrases) {
-      check(`/risorse/${resource.slug} contiene "${phrase}"`, html.includes(phrase));
+  const cities = ['reggio-emilia', 'parma', 'modena'];
+  const cityNames = ['Reggio Emilia', 'Parma', 'Modena'];
+  for (const topic of topics) {
+    for (let i = 0; i < cities.length; i += 1) {
+      const slug = `${topic.slug}-${cities[i]}`;
+      const f = join(distDir, 'risorse', slug, 'index.html');
+      const html = existsSync(f) ? readFileSync(f, 'utf-8') : '';
+      check(`/risorse/${slug} esiste`, Boolean(html));
+      for (const phrase of [`${topic.title} a ${cityNames[i]}`, cityNames[i], 'Risposta diretta']) {
+        check(`/risorse/${slug} contiene "${phrase}"`, html.includes(phrase));
+      }
     }
   }
   const index = existsSync(join(distDir, 'risorse', 'index.html'))
     ? readFileSync(join(distDir, 'risorse', 'index.html'), 'utf-8')
     : '';
-  const positions = resources.map(({ slug }) => index.indexOf(`/risorse/${slug}`));
-  check('indice /risorse elenca Reggio prima di Parma e Modena', positions.every((p) => p >= 0) && positions[0] < positions[1] && positions[1] < positions[2]);
+  for (const topic of topics) {
+    const positions = cities.map((city) => index.indexOf(`/risorse/${topic.slug}-${city}`));
+    check(`indice /risorse ordina ${topic.slug}: Reggio, Parma, Modena`, positions.every((p) => p >= 0) && positions[0] < positions[1] && positions[1] < positions[2]);
+  }
 }
 
 // 6. Il contenuto ad-blocker deve essere presente nelle rappresentazioni
@@ -152,11 +152,20 @@ for (const page of ['about', 'contact', 'privacy']) {
   if (ok) {
     const txt = readFileSync(f, 'utf-8');
     hasWhen = /Quando rivolgersi a Q4 Studio|When to use Q4 Studio/i.test(txt);
-    hasNewResources = ['raccolta-dati-marketing-reggio-emilia', 'automazioni-crm-pmi-parma', 'tracking-server-side-modena']
+    const topics = [
+      'raccolta-dati-marketing',
+      'automazioni-crm-pmi',
+      'tracking-server-side',
+      'conversioni-ad-blocker',
+      'integrare-strumenti-marketing-server-side',
+      'automazioni-lead-senza-team-tecnico',
+    ];
+    const cities = ['reggio-emilia', 'parma', 'modena'];
+    hasNewResources = topics.flatMap((topic) => cities.map((city) => `${topic}-${city}`))
       .every((slug) => txt.includes(`/risorse/${slug}`));
   }
   check('llms.txt ha sezione when-to-use', ok && hasWhen);
-  check('llms.txt elenca le tre risorse geo-prioritarie', ok && hasNewResources);
+  check('llms.txt elenca la matrice completa delle risorse geo', ok && hasNewResources);
 }
 
 // 8. Varianti markdown: ogni route in vercel.json mappata su file .md esistente

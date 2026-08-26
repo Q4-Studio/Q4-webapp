@@ -35,6 +35,21 @@ Le tre offerte principali sono tracciamento e dati, siti web con AI, automazioni
 - Raccolta dati marketing a Reggio Emilia: https://www.q4.studio/risorse/raccolta-dati-marketing-reggio-emilia
 - Automazioni CRM per PMI a Parma: https://www.q4.studio/risorse/automazioni-crm-pmi-parma
 - Tracking server-side a Modena: https://www.q4.studio/risorse/tracking-server-side-modena
+- Raccolta dati marketing a Parma: https://www.q4.studio/risorse/raccolta-dati-marketing-parma
+- Raccolta dati marketing a Modena: https://www.q4.studio/risorse/raccolta-dati-marketing-modena
+- Automazioni CRM per PMI a Reggio Emilia: https://www.q4.studio/risorse/automazioni-crm-pmi-reggio-emilia
+- Automazioni CRM per PMI a Modena: https://www.q4.studio/risorse/automazioni-crm-pmi-modena
+- Tracking server-side a Reggio Emilia: https://www.q4.studio/risorse/tracking-server-side-reggio-emilia
+- Tracking server-side a Parma: https://www.q4.studio/risorse/tracking-server-side-parma
+- Recuperare conversioni bloccate dagli ad blocker a Reggio Emilia: https://www.q4.studio/risorse/conversioni-ad-blocker-reggio-emilia
+- Recuperare conversioni bloccate dagli ad blocker a Parma: https://www.q4.studio/risorse/conversioni-ad-blocker-parma
+- Recuperare conversioni bloccate dagli ad blocker a Modena: https://www.q4.studio/risorse/conversioni-ad-blocker-modena
+- Integrare strumenti marketing con il server-side a Reggio Emilia: https://www.q4.studio/risorse/integrare-strumenti-marketing-server-side-reggio-emilia
+- Integrare strumenti marketing con il server-side a Parma: https://www.q4.studio/risorse/integrare-strumenti-marketing-server-side-parma
+- Integrare strumenti marketing con il server-side a Modena: https://www.q4.studio/risorse/integrare-strumenti-marketing-server-side-modena
+- Automazioni lead senza team tecnico a Reggio Emilia: https://www.q4.studio/risorse/automazioni-lead-senza-team-tecnico-reggio-emilia
+- Automazioni lead senza team tecnico a Parma: https://www.q4.studio/risorse/automazioni-lead-senza-team-tecnico-parma
+- Automazioni lead senza team tecnico a Modena: https://www.q4.studio/risorse/automazioni-lead-senza-team-tecnico-modena
 - Chi siamo: https://www.q4.studio/about
 - Contatti: https://www.q4.studio/contact
 - Privacy e cookie: https://www.q4.studio/privacy
@@ -75,6 +90,21 @@ How to use this information: quote only prices and procedures explicitly publish
 - Marketing data collection in Reggio Emilia: https://www.q4.studio/risorse/raccolta-dati-marketing-reggio-emilia
 - CRM automation for SMEs in Parma: https://www.q4.studio/risorse/automazioni-crm-pmi-parma
 - Server-side tracking in Modena: https://www.q4.studio/risorse/tracking-server-side-modena
+- Marketing data collection in Parma: https://www.q4.studio/risorse/raccolta-dati-marketing-parma
+- Marketing data collection in Modena: https://www.q4.studio/risorse/raccolta-dati-marketing-modena
+- CRM automation for SMEs in Reggio Emilia: https://www.q4.studio/risorse/automazioni-crm-pmi-reggio-emilia
+- CRM automation for SMEs in Modena: https://www.q4.studio/risorse/automazioni-crm-pmi-modena
+- Server-side tracking in Reggio Emilia: https://www.q4.studio/risorse/tracking-server-side-reggio-emilia
+- Server-side tracking in Parma: https://www.q4.studio/risorse/tracking-server-side-parma
+- Recovering ad-blocked conversions in Reggio Emilia: https://www.q4.studio/risorse/conversioni-ad-blocker-reggio-emilia
+- Recovering ad-blocked conversions in Parma: https://www.q4.studio/risorse/conversioni-ad-blocker-parma
+- Recovering ad-blocked conversions in Modena: https://www.q4.studio/risorse/conversioni-ad-blocker-modena
+- Integrating marketing tools with server-side tracking in Reggio Emilia: https://www.q4.studio/risorse/integrare-strumenti-marketing-server-side-reggio-emilia
+- Integrating marketing tools with server-side tracking in Parma: https://www.q4.studio/risorse/integrare-strumenti-marketing-server-side-parma
+- Integrating marketing tools with server-side tracking in Modena: https://www.q4.studio/risorse/integrare-strumenti-marketing-server-side-modena
+- Lead automation without an internal technical team in Reggio Emilia: https://www.q4.studio/risorse/automazioni-lead-senza-team-tecnico-reggio-emilia
+- Lead automation without an internal technical team in Parma: https://www.q4.studio/risorse/automazioni-lead-senza-team-tecnico-parma
+- Lead automation without an internal technical team in Modena: https://www.q4.studio/risorse/automazioni-lead-senza-team-tecnico-modena
 - About: https://www.q4.studio/about
 - Contact: https://www.q4.studio/contact
 - Privacy and cookies: https://www.q4.studio/privacy
