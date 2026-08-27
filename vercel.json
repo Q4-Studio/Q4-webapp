@@ -185,7 +185,7 @@
         },
         {
           "key": "Vary",
-          "value": "Accept"
+          "value": "Accept, Accept-Encoding"
         },
         {
           "key": "X-Content-Type-Options",

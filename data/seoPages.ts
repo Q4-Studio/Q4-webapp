@@ -53,19 +53,467 @@ export interface SeoPage {
 export const pageLastModified: Record<string, string> = {
   '/': '2026-08-09',
   '/agenti-ai': '2026-08-09',
-  '/tracciamento-server-side': '2026-08-09',
+  '/tracciamento-server-side': '2026-08-26',
   '/siti-web-ai': '2026-08-09',
   '/meta-advertising-b2b': '2026-08-07',
   '/partner-tecnico': '2026-08-07',
   '/casi-studio': '2026-08-05',
-  '/risorse': '2026-08-09',
+  '/risorse': '2026-08-26',
   '/blog': '2026-08-07',
 };
 
 export const siteUrl = 'https://www.q4.studio';
 export const resourcesPath = '/risorse';
 
+type GeoCity = {
+  slug: string;
+  name: string;
+  localContext: string;
+  serviceArea: string;
+};
+
+type GeoTopic = {
+  key: string;
+  slug: string;
+  cluster: SeoCluster;
+  label: string;
+  keyword: string;
+  focus: string;
+  answer: string;
+  process: string;
+  limitation: string;
+};
+
+// La matrice geo copre gli intenti prioritari dell'audit in tutti e tre i
+// territori senza creare semplici copie con il nome della città sostituito.
+// Ogni variante aggiunge contesto locale, criteri di scelta e limiti espliciti.
+const geoCities: GeoCity[] = [
+  {
+    slug: 'reggio-emilia',
+    name: 'Reggio Emilia',
+    localContext: 'Q4 Studio ha sede a Reggio Emilia e lavora con PMI, aziende B2B e agenzie del territorio.',
+    serviceArea: 'Reggio Emilia, Modena e Parma'
+  },
+  {
+    slug: 'parma',
+    name: 'Parma',
+    localContext: 'Q4 Studio segue da remoto le PMI e le aziende B2B dell’area di Parma, collaborando con il referente interno o con l’agenzia marketing.',
+    serviceArea: 'Parma, Reggio Emilia e Modena'
+  },
+  {
+    slug: 'modena',
+    name: 'Modena',
+    localContext: 'Q4 Studio segue da remoto le aziende e le agenzie della zona di Modena e può lavorare in presenza quando il progetto lo richiede.',
+    serviceArea: 'Modena, Reggio Emilia e Parma'
+  }
+];
+
+const geoTopics: GeoTopic[] = [
+  {
+    key: 'data',
+    slug: 'raccolta-dati-marketing',
+    cluster: 'A',
+    label: 'Raccolta Dati Marketing',
+    keyword: 'raccolta dati marketing',
+    focus: 'confrontare piattaforme pubblicitarie, analytics, CRM e processo commerciale prima di cambiare campagne o budget',
+    answer: 'Quando la raccolta dati marketing non torna, il primo passo è seguire il dato dal browser fino al CRM: gli eventi possono mancare per blocchi tecnici, consenso, deduplicazione o sincronizzazioni incomplete.',
+    process: 'audit di eventi, consenso, parametri, passaggio al CRM e definizione delle conversioni che descrivono davvero il valore commerciale',
+    limitation: 'i numeri di Meta, Google Analytics e CRM non sono confrontabili senza considerare attribuzione, finestra temporale e definizione dell’evento'
+  },
+  {
+    key: 'crm',
+    slug: 'automazioni-crm-pmi',
+    cluster: 'C',
+    label: 'Automazioni CRM per PMI',
+    keyword: 'software automazioni CRM PMI',
+    focus: 'collegare lead, form, campagne, WhatsApp, email e gestionale senza copiare informazioni a mano',
+    answer: 'Per una PMI il software CRM è solo una parte della soluzione: l’automazione utile assegna il lead, conserva il contesto, prepara la prima risposta e aggiorna lo stato senza copia manuale.',
+    process: 'mappatura del processo, configurazione del CRM esistente, collegamento dei canali e automazione di un primo passaggio misurabile',
+    limitation: 'un CRM nuovo non risolve da solo un processo commerciale disordinato e non serve sostituire gli strumenti prima di capire cosa non funziona'
+  },
+  {
+    key: 'tracking',
+    slug: 'tracking-server-side',
+    cluster: 'A',
+    label: 'Tracking Server-Side',
+    keyword: 'strumenti tracking server-side zona',
+    focus: 'scegliere e collegare container server-side, sGTM, infrastruttura, Consent Mode, Meta CAPI e Google Enhanced Conversions',
+    answer: 'Gli strumenti per il tracking server-side includono container, infrastruttura, consenso e integrazioni API: nessuno strumento risolve da solo una mappa eventi assente o un processo commerciale non tracciato.',
+    process: 'audit dell’architettura esistente, configurazione del container, eventi condivisi tra client e server, integrazioni API e monitoraggio',
+    limitation: 'il server-side riduce alcune perdite tecniche ma non bypassa consenso, informativa, finalità o regole privacy'
+  },
+  {
+    key: 'adblock',
+    slug: 'conversioni-ad-blocker',
+    cluster: 'A',
+    label: 'Recuperare Conversioni Bloccate dagli Ad Blocker',
+    keyword: 'recuperare dati conversione ad blocker',
+    focus: 'distinguere gli eventi tecnicamente persi da quelli che non devono essere raccolti e inviare segnali affidabili alle piattaforme',
+    answer: 'Le conversioni bloccate dagli ad blocker si affrontano con una diagnosi degli eventi, una raccolta server-side compatibile con il consenso, integrazioni API e deduplicazione tra browser e server.',
+    process: 'confronto tra dati reali e report, configurazione server-side, verifica del consenso, event ID condivisi e test con eventi reali',
+    limitation: 'installare un altro pixel non recupera dati mancanti e il server-side non rende valido un dato privo di base giuridica'
+  },
+  {
+    key: 'integration',
+    slug: 'integrare-strumenti-marketing-server-side',
+    cluster: 'A',
+    label: 'Integrare gli Strumenti Marketing con il Server-Side Tracking',
+    keyword: 'integrare strumenti marketing server-side',
+    focus: 'collegare sito, analytics, advertising, CRM e gestionale in un percorso di dati coerente',
+    answer: 'Integrare gli strumenti marketing con il server-side tracking significa definire eventi e responsabilità, raccoglierli nel punto corretto, inviarli alle piattaforme e collegarli al valore reale nel CRM.',
+    process: 'inventario degli strumenti, mappa degli eventi, regole di consenso, deduplicazione, routing al CRM e documentazione del flusso',
+    limitation: 'collegare molte piattaforme senza una definizione condivisa degli eventi rende il sistema più complesso, non più affidabile'
+  },
+  {
+    key: 'lead',
+    slug: 'automazioni-lead-senza-team-tecnico',
+    cluster: 'C',
+    label: 'Automazioni Lead senza Team Tecnico',
+    keyword: 'automazione gestione lead senza personale tecnico interno',
+    focus: 'ridurre il tempo tra acquisizione, assegnazione, prima risposta e follow-up anche senza uno sviluppatore interno',
+    answer: 'Un’azienda senza personale tecnico interno può automatizzare la gestione dei lead partendo da un processo ristretto: acquisizione, assegnazione, notifica, prima risposta e follow-up con controllo umano.',
+    process: 'descrizione del lavoro manuale, scelta del primo flusso, collegamento degli strumenti esistenti, test e monitoraggio degli errori',
+    limitation: 'un’automazione non corregge un’offerta, un processo commerciale o dati di partenza non definiti'
+  }
+];
+
+function createGeoPage(topic: GeoTopic, city: GeoCity): SeoPage {
+  const title = `${topic.label} a ${city.name}`;
+  const slug = `${topic.slug}-${city.slug}`;
+  const pageKeyword = `${topic.keyword} ${city.name}`;
+  const localPageContext = `${city.localContext} Per i progetti che richiedono presenza, l’area di riferimento è ${city.serviceArea}.`;
+
+  return {
+    slug,
+    cluster: topic.cluster,
+    lastModified: '2026-08-26',
+    title,
+    metaTitle: `${title} | Q4 Studio`,
+    description: `${topic.label} per aziende e PMI di ${city.name}: ${topic.focus}. Audit e implementazione con prezzi pubblici.`,
+    keyword: pageKeyword,
+    audience: `PMI, aziende B2B e agenzie di ${city.name} che vogliono ${topic.focus}`,
+    pain: `dati, lead e attività commerciali ${topic.key === 'data' ? 'non coincidono tra piattaforme, analytics e CRM' : 'restano distribuiti tra strumenti diversi e richiedono interventi manuali'}`,
+    solution: `partiamo da ${topic.process}, poi implementiamo solo i passaggi che risolvono il problema descritto dall’azienda`,
+    proof: `${localPageContext} L’obiettivo è produrre un flusso documentato e verificabile, non promettere un risultato uguale per ogni azienda.`,
+    directAnswer: `${topic.answer} ${localPageContext}`,
+    clusters: [
+      {
+        keyword: `${topic.keyword} ${city.name}`,
+        heading: `${topic.label}: da dove partire a ${city.name}`,
+        content: `${topic.answer} In una PMI o in un’agenzia di ${city.name} conviene iniziare da un solo percorso, definire il dato o l’azione finale e verificare ogni passaggio prima di aggiungere altri canali.`
+      },
+      {
+        keyword: `${topic.key} processo aziende ${city.name}`,
+        heading: 'Il processo prima dello strumento',
+        content: `La scelta tecnica viene dopo la descrizione del lavoro reale: cosa entra, chi deve intervenire, quali dati servono, cosa può essere automatico e quando deve subentrare una persona. ${topic.limitation}.`
+      },
+      {
+        keyword: `${topic.key} crm marketing ${city.name}`,
+        heading: 'Collegare il dato al risultato commerciale',
+        content: `Il punto di arrivo non è un dashboard più affollato. È una informazione utilizzabile dal team: un lead assegnato, una conversione verificata, una richiesta strutturata o uno stato aggiornato nel CRM. Per questo l’analisi include advertising, sito, analytics e processo commerciale.`
+      },
+      {
+        keyword: `supporto tecnico ${city.name} ${topic.key}`,
+        heading: `Supporto alle aziende dell’area di ${city.name}`,
+        content: `${localPageContext} Il lavoro tecnico viene gestito da remoto con accessi e documentazione condivisi; la presenza viene valutata solo quando porta un vantaggio concreto al progetto.`
+      }
+    ],
+    comparisonTable: {
+      title: `Come valutare una soluzione per ${city.name}`,
+      headers: ['Domanda', 'Risposta utile', 'Segnale di rischio'],
+      rows: [
+        ['Quale problema risolve?', 'Un passaggio concreto e misurabile', 'Promessa generica di automazione'],
+        ['Quali dati usa?', 'Fonti e consenso definiti', 'Dati copiati senza origine chiara'],
+        ['Quando interviene una persona?', 'Regole di escalation esplicite', 'Sistema lasciato senza controllo'],
+        ['Come si verifica?', 'Test, documentazione e monitoraggio', 'Nessun criterio di qualità']
+      ]
+    },
+    dataPoints: [
+      `Audit del tracciamento: 490 € e 3-5 giorni lavorativi`,
+      `Setup server-side: da 1.500 € per siti non-ecommerce`,
+      `La prima automazione o integrazione dovrebbe partire da un solo processo reale dell’azienda`,
+      `${topic.limitation}.`
+    ],
+    services: [
+      topic.key === 'crm' || topic.key === 'lead' ? 'Mappatura del processo commerciale' : 'Audit di eventi e sistemi',
+      topic.key === 'tracking' || topic.key === 'adblock' || topic.key === 'integration' ? 'Server-side tracking e integrazioni API' : 'Integrazione CRM e canali',
+      'Regole di consenso e controllo umano',
+      'Documentazione e monitoraggio'
+    ],
+    faqs: [
+      {
+        question: `Qual è il primo passo per ${topic.label.toLowerCase()} a ${city.name}?`,
+        answer: `Il primo passo è descrivere il processo e verificare i dati o le attività già presenti. Q4 Studio può partire da un audit da 490 € e 3-5 giorni quando il problema riguarda il tracciamento; per un’automazione si definisce prima il flusso più piccolo da collegare.`
+      },
+      {
+        question: `Q4 Studio lavora con aziende solo a ${city.name}?`,
+        answer: `No. ${city.localContext} Il lavoro tecnico è principalmente da remoto e può seguire aziende in tutta Italia.`
+      },
+      {
+        question: 'Quali strumenti bisogna già avere?',
+        answer: `Dipende dal processo. ${topic.limitation} Valutiamo CRM, gestionale, form, WhatsApp, analytics e piattaforme advertising già in uso prima di proporre una sostituzione.`
+      },
+      {
+        question: 'L’automazione rispetta il controllo umano e la privacy?',
+        answer: 'Sì, il progetto deve definire quando una persona valida o prende in carico la richiesta. Consenso, informativa, finalità e conservazione devono essere concordati con il DPO o consulente privacy; Q4 Studio implementa tecnicamente le regole ricevute e non fornisce pareri legali.'
+      }
+    ]
+  };
+}
+
+const geoPageOrder = geoTopics.flatMap((topic) => geoCities.map((city) => `${topic.slug}-${city.slug}`));
+const existingGeoSlugs = new Set([
+  'raccolta-dati-marketing-reggio-emilia',
+  'automazioni-crm-pmi-parma',
+  'tracking-server-side-modena'
+]);
+const additionalGeoPages = geoTopics
+  .flatMap((topic) => geoCities.map((city) => createGeoPage(topic, city)))
+  .filter((page) => !existingGeoSlugs.has(page.slug));
+
 export const seoPages: SeoPage[] = [
+  ...additionalGeoPages,
+  {
+    slug: 'raccolta-dati-marketing-reggio-emilia',
+    cluster: 'A',
+    lastModified: '2026-08-26',
+    title: 'Raccolta Dati Marketing a Reggio Emilia',
+    metaTitle: 'Problemi di Raccolta Dati Marketing a Reggio Emilia | Q4 Studio',
+    description: 'Problemi di raccolta dati marketing a Reggio Emilia? Diagnosi di tracking, Consent Mode e CRM per capire quali conversioni mancano e perché.',
+    keyword: 'raccolta dati marketing Reggio Emilia',
+    audience: 'PMI, aziende B2B e agenzie di Reggio Emilia che investono in marketing ma non riescono a collegare campagne, conversioni e dati commerciali',
+    pain: 'conversioni diverse tra Meta, Google Analytics e CRM, lead persi tra form e commerciale e dati copiati a mano impediscono di capire quali attività generano davvero opportunità',
+    solution: 'partiamo da un audit documentato del tracciamento, verifichiamo consenso, eventi e passaggio dei dati al CRM, poi interveniamo con server-side tracking e automazioni solo dove risolvono un problema reale',
+    proof: 'l’audit iniziale costa 490 € e dura 3-5 giorni: produce una mappa delle perdite e delle priorità, anche se l’azienda decide di non procedere con l’implementazione',
+    directAnswer: 'Quando la raccolta dati marketing non torna a Reggio Emilia, il primo passo è confrontare dati delle piattaforme, dati del CRM e processo commerciale: spesso mancano eventi perché browser e ad blocker bloccano script, perché il consenso limita la raccolta o perché il lead non viene registrato correttamente. Q4 Studio analizza il problema, documenta cosa si perde e propone solo gli interventi necessari.',
+    clusters: [
+      {
+        keyword: 'problemi tracking marketing reggio emilia',
+        heading: 'I problemi più comuni nella raccolta dati marketing',
+        content: 'Un account pubblicitario può mostrare meno conversioni di quelle presenti nel gestionale: Safari e Firefox limitano cookie e script, gli ad blocker bloccano i pixel e il consenso può ridurre i segnali disponibili. Il problema può anche essere operativo: un form arriva, ma non viene assegnato al commerciale o non raggiunge il CRM. Prima di cambiare campagne o budget bisogna capire in quale passaggio il dato si interrompe.'
+      },
+      {
+        keyword: 'differenza conversioni meta crm reggio emilia',
+        heading: 'Quando Meta, Google e CRM mostrano numeri diversi',
+        content: 'I numeri non devono essere confrontati senza considerare attribuzione, finestra temporale e definizione di conversione. Il confronto utile parte da un evento condiviso e segue il percorso completo: invio del form, qualificazione, risposta del prospect, opportunità e cliente nel CRM. Se l’account dice 40 conversioni e il gestionale ne registra 90, non basta scegliere il numero più alto: bisogna documentare quali eventi sono arrivati, quali sono stati bloccati e quali sono stati contati due volte.'
+      },
+      {
+        keyword: 'audit tracciamento aziende reggio emilia',
+        heading: 'L’audit prima di modificare il tracciamento',
+        content: 'Un audit utile non si limita a controllare se il pixel è installato. Verifica eventi, parametri, consenso, deduplicazione tra client e server, collegamento con CRM o gestionale e coerenza con il processo commerciale. Q4 Studio propone un audit da 490 € in 3-5 giorni lavorativi: il documento finale resta all’azienda e indica le priorità tecniche senza vincolare a un progetto successivo.'
+      },
+      {
+        keyword: 'consent mode e raccolta dati emilia romagna',
+        heading: 'Consent Mode e dati di marketing',
+        content: 'Il server-side tracking non elimina gli obblighi privacy e non trasforma automaticamente un dato non consentito in un dato utilizzabile. Consent Mode, informativa, finalità e conservazione devono essere definite con il DPO o il consulente privacy dell’azienda. Q4 Studio implementa tecnicamente le regole concordate, senza fornire pareri legali.'
+      },
+      {
+        keyword: 'tecnico marketing reggio emilia modena parma',
+        heading: 'Supporto locale, lavoro tecnico da remoto',
+        content: 'Q4 Studio ha sede a Reggio Emilia e lavora da remoto con aziende in tutta Italia. Per i progetti che richiedono presenza segue soprattutto il territorio tra Reggio Emilia, Modena e Parma. La vicinanza serve a capire il processo dell’azienda e a collaborare con marketing, sales o agenzia; la parte tecnica viene gestita online con accessi e documentazione condivisi.'
+      }
+    ],
+    comparisonTable: {
+      title: 'Dove può interrompersi il dato marketing',
+      headers: ['Punto del percorso', 'Problema tipico', 'Cosa verificare'],
+      rows: [
+        ['Browser e pixel', 'Script o cookie bloccati', 'Eventi persi e consenso'],
+        ['Form e sito', 'Evento incompleto o duplicato', 'Parametri, event ID e deduplicazione'],
+        ['CRM o gestionale', 'Lead non assegnato o non sincronizzato', 'Webhook, API e stati commerciali'],
+        ['Report', 'Numeri non confrontabili', 'Definizione evento e finestra temporale']
+      ]
+    },
+    dataPoints: [
+      'Audit del tracciamento: 490 € e 3-5 giorni lavorativi',
+      'Setup server-side: da 1.500 € per siti non-ecommerce',
+      'Nel caso studio Candiani Denim Q4 Studio documenta 1.032.695 segnali recuperati in 90 giorni, di cui 963.652 bloccati dalla tracking prevention dei browser e 69.043 dagli ad blocker',
+      'La diagnosi confronta piattaforme pubblicitarie, analytics, CRM e processo commerciale, non solo il codice del sito'
+    ],
+    services: ['Audit tracking e consenso', 'Server-side tracking', 'Integrazione CRM e advertising', 'Documentazione di eventi e naming'],
+    faqs: [
+      {
+        question: 'Perché la raccolta dati marketing non torna a Reggio Emilia?',
+        answer: 'Le cause più comuni sono script e cookie bloccati da browser o ad blocker, consenso non configurato correttamente, eventi duplicati o lead che non vengono sincronizzati con il CRM. Prima di cambiare campagne bisogna seguire il dato dal sito fino al processo commerciale.'
+      },
+      {
+        question: 'Q4 Studio lavora con aziende solo a Reggio Emilia?',
+        answer: 'No. Il lavoro tecnico è principalmente da remoto e segue aziende in tutta Italia. Per i progetti che richiedono presenza lavoriamo soprattutto tra Reggio Emilia, Modena e Parma.'
+      },
+      {
+        question: 'Da dove si comincia se non so quale dato manca?',
+        answer: 'Dall’audit del tracciamento: costa 490 €, dura 3-5 giorni lavorativi e produce un documento con cosa viene raccolto, cosa si perde e quali interventi hanno priorità.'
+      },
+      {
+        question: 'Il server-side tracking risolve anche la conformità GDPR?',
+        answer: 'No. Sposta parte della raccolta su un server e riduce alcune perdite tecniche, ma consenso, informativa, finalità e conservazione restano da definire con il DPO o consulente privacy. Q4 Studio implementa tecnicamente le regole concordate.'
+      },
+      {
+        question: 'Lavorate anche con l’agenzia marketing dell’azienda?',
+        answer: 'Sì. Q4 Studio può lavorare direttamente con l’agenzia o in white label, occupandosi del pezzo tecnico di tracking, dati e integrazioni senza contattare il cliente finale se questo è l’accordo.'
+      }
+    ]
+  },
+  {
+    slug: 'automazioni-crm-pmi-parma',
+    cluster: 'C',
+    lastModified: '2026-08-26',
+    title: 'Automazioni CRM per PMI a Parma',
+    metaTitle: 'Automazioni CRM per PMI a Parma | Q4 Studio',
+    description: 'Software e automazioni CRM per PMI a Parma: come collegare lead, WhatsApp, email e commerciale senza duplicare dati a mano.',
+    keyword: 'software automazioni CRM PMI Parma',
+    audience: 'PMI e aziende B2B dell’area di Parma che usano un CRM o un gestionale ma lasciano lead, richieste e follow-up in fogli, email e chat separate',
+    pain: 'i lead arrivano ma restano senza risposta, il commerciale copia informazioni tra form, email, WhatsApp e CRM e nessuno sa con certezza quale opportunità sia stata già gestita',
+    solution: 'mappiamo il processo attuale, colleghiamo gli strumenti che l’azienda usa già e automatizziamo solo i passaggi ripetitivi: acquisizione, assegnazione, prima risposta, aggiornamento CRM e promemoria',
+    proof: 'non vendiamo un CRM proprietario né consigliamo un software uguale per tutti: il punto è scegliere il livello di automazione adatto al processo e al budget della PMI',
+    directAnswer: 'Per una PMI a Parma il software CRM è solo una parte della soluzione: l’automazione utile collega form, campagne, email, WhatsApp e gestionale, assegna il lead al commerciale giusto, prepara la prima risposta e aggiorna lo stato senza copia manuale. Q4 Studio parte dagli strumenti già presenti e verifica prima se vanno integrati o sostituiti.',
+    clusters: [
+      {
+        keyword: 'software crm pmi parma',
+        heading: 'Software CRM o automazione del processo?',
+        content: 'Un CRM conserva contatti e opportunità, ma non risolve da solo un processo disordinato. Per scegliere un software per una PMI di Parma bisogna verificare come entrano i lead, chi li prende in carico, quali informazioni servono al commerciale e cosa succede dopo una risposta. In alcuni casi basta configurare meglio il CRM esistente; in altri serve collegarlo a form, email, WhatsApp, advertising o gestionale.'
+      },
+      {
+        keyword: 'alternative economiche automazioni crm parma',
+        heading: 'Alternative sostenibili per una PMI',
+        content: 'Un’alternativa economica non è automaticamente un software con meno funzioni: può essere un’integrazione più piccola e ben definita. Prima si può automatizzare un solo passaggio, come l’assegnazione dei lead o il promemoria di follow-up, e misurare se il lavoro manuale diminuisce. Q4 Studio dichiara setup e canoni prima di iniziare: per le automazioni CRM il setup parte da 490 € e il canone da 150 €/mese, in base al progetto.'
+      },
+      {
+        keyword: 'crm whatsapp lead pmi parma',
+        heading: 'Lead da form, WhatsApp e campagne nello stesso CRM',
+        content: 'Il problema non è avere un altro canale, ma perdere il contesto quando il lead cambia canale. Un flusso ben progettato riceve il lead da form, campagne o LinkedIn, lo assegna al commerciale corretto e conserva fonte, campagna, messaggi e stato nella stessa scheda. Se una richiesta arriva su WhatsApp, l’automazione può estrarre le informazioni utili, chiedere ciò che manca e passare alla persona quando il caso richiede giudizio.'
+      },
+      {
+        keyword: 'automazione follow up commerciale parma',
+        heading: 'Follow-up automatico senza messaggi fuori contesto',
+        content: 'Il follow-up automatico deve partire da uno stato reale del CRM, non da una sequenza uguale per tutti. Un contatto appena acquisito, un preventivo fermo e un cliente inattivo richiedono messaggi diversi e tempi diversi. Le regole devono prevedere anche quando fermarsi, quando chiedere una revisione umana e come registrare la risposta.'
+      },
+      {
+        keyword: 'consulente crm parma automazioni',
+        heading: 'Un supporto tecnico per aziende dell’area di Parma',
+        content: 'Q4 Studio lavora da remoto con aziende italiane e può seguire PMI dell’area di Parma nella mappatura e nell’integrazione dei processi. Il referente aziendale non deve conoscere le API: deve conoscere il lavoro reale che oggi viene fatto a mano, gli strumenti già in uso e le eccezioni che l’automazione non deve gestire da sola.'
+      }
+    ],
+    comparisonTable: {
+      title: 'Quale livello di automazione serve alla PMI',
+      headers: ['Approccio', 'Cosa risolve', 'Limite'],
+      rows: [
+        ['Foglio e gestione manuale', 'Costo iniziale basso', 'Errori, ritardi e poca visibilità'],
+        ['CRM configurato', 'Contatti e opportunità ordinati', 'Non collega sempre i canali'],
+        ['CRM integrato', 'Lead, stati e follow-up sincronizzati', 'Richiede mappatura iniziale'],
+        ['Agente AI sul processo', 'Legge richieste e prepara azioni', 'Richiede regole e controllo umano']
+      ]
+    },
+    dataPoints: [
+      'Automazioni CRM: setup da 490 € e canone da 150 €/mese, in base a sistemi e processo',
+      'Il primo intervento può limitarsi a un singolo passaggio: assegnazione, prima risposta o follow-up',
+      'Un lead dovrebbe arrivare al commerciale con fonte, campagna e contesto già disponibili',
+      'Le automazioni non devono inventare dati: quando una richiesta è ambigua, la passano a una persona'
+    ],
+    services: ['Mappatura del processo commerciale', 'Integrazione CRM, form e campagne', 'Automazioni WhatsApp ed email', 'Follow-up e controllo umano'],
+    faqs: [
+      {
+        question: 'Qual è il software CRM migliore per una PMI a Parma?',
+        answer: 'Non esiste un CRM migliore per tutte le PMI. La scelta dipende da processo commerciale, canali, dati già presenti, integrazioni necessarie e budget. Prima verifichiamo se il CRM esistente può essere configurato o integrato.'
+      },
+      {
+        question: 'Q4 Studio vende un software CRM?',
+        answer: 'No. Q4 Studio progetta e implementa automazioni sui sistemi che l’azienda usa già o su una piattaforma scelta per il caso specifico. Il valore è nel collegamento con il processo, non nella vendita di un software proprietario.'
+      },
+      {
+        question: 'Quanto costa automatizzare il CRM?',
+        answer: 'Per le automazioni CRM pubblicate da Q4 Studio il setup parte da 490 € e il canone da 150 €/mese. Il prezzo effettivo dipende da CRM, canali, numero di flussi e integrazioni necessarie.'
+      },
+      {
+        question: 'Si possono collegare WhatsApp e CRM?',
+        answer: 'Sì, quando il canale e il CRM permettono un’integrazione corretta. Il flusso deve rispettare consenso e regole sui dati, raccogliere le informazioni utili e prevedere il passaggio a una persona.'
+      },
+      {
+        question: 'Serve un tecnico interno per iniziare?',
+        answer: 'No. Serve un referente che conosca il processo e possa validare le prime automazioni. Q4 Studio segue la parte tecnica, documenta il flusso e indica i limiti dell’integrazione.'
+      }
+    ]
+  },
+  {
+    slug: 'tracking-server-side-modena',
+    cluster: 'A',
+    lastModified: '2026-08-26',
+    title: 'Tracking Server-Side a Modena',
+    metaTitle: 'Tracking Server-Side a Modena: Strumenti e Setup | Q4 Studio',
+    description: 'Strumenti e setup per tracking server-side a Modena: sGTM, Consent Mode, Meta CAPI e dati CRM, con audit e implementazione tecnica.',
+    keyword: 'strumenti tracking server-side zona Modena',
+    audience: 'aziende e agenzie della zona di Modena che vedono discrepanze tra conversioni pubblicitarie, analytics e dati reali del CRM',
+    pain: 'pixel bloccati, cookie limitati e configurazioni duplicate fanno perdere segnali oppure gonfiano i report quando client-side e server-side non sono deduplicati',
+    solution: 'verifichiamo l’architettura esistente, scegliamo gli strumenti adatti, configuriamo container server-side, Consent Mode, Meta CAPI o Enhanced Conversions e documentiamo gli eventi',
+    proof: 'Q4 Studio è Stape Partner e lavora soprattutto tra Reggio Emilia, Modena e Parma per i progetti che richiedono presenza; l’audit separa il problema tecnico dal problema di attribuzione',
+    directAnswer: 'Gli strumenti per il tracking server-side a Modena includono un container server-side, spesso con sGTM e un’infrastruttura come Stape, più Consent Mode v2, Meta Conversions API, Enhanced Conversions Google e un collegamento ai dati CRM. Lo strumento da solo non basta: bisogna definire gli eventi, rispettare il consenso e deduplicare gli invii client-side e server-side.',
+    clusters: [
+      {
+        keyword: 'quali strumenti tracking server-side modena',
+        heading: 'Quali strumenti servono davvero',
+        content: 'Il setup tipico combina Google Tag Manager server-side, un’infrastruttura su cui eseguire il container, Consent Mode v2 e le destinazioni advertising o analytics. Meta può ricevere eventi tramite Conversions API e Google tramite Enhanced Conversions, ma la scelta dipende dal sito, dal CRM, dalle piattaforme usate e dagli eventi che l’azienda vuole misurare. Aggiungere strumenti senza una mappa degli eventi crea solo un sistema più complesso.'
+      },
+      {
+        keyword: 'sgtm stape modena server-side tagging',
+        heading: 'sGTM, Stape e implementazione tecnica',
+        content: 'sGTM è il container server-side che riceve ed elabora gli eventi; Stape è una delle infrastrutture disponibili per eseguirlo e mantenerlo. Sono componenti tecnici, non una strategia di misurazione completa. Q4 Studio è Stape Partner e può occuparsi della configurazione, del collegamento al dominio e del monitoraggio, mantenendo la documentazione degli eventi all’azienda.'
+      },
+      {
+        keyword: 'ad blocker conversioni tracking modena',
+        heading: 'Recuperare segnali bloccati dagli ad blocker',
+        content: 'Gli ad blocker e i browser orientati alla privacy possono impedire al client-side di inviare pixel e cookie. Il server-side riduce la dipendenza da alcuni blocchi tecnici perché l’elaborazione passa da un server controllato, ma non recupera un consenso mancante e non rende valido qualsiasi dato. La diagnosi deve distinguere gli eventi tecnicamente persi dagli eventi che non devono essere raccolti.'
+      },
+      {
+        keyword: 'deduplicazione eventi server-side modena',
+        heading: 'Deduplicare prima di leggere i risultati',
+        content: 'Se lo stesso acquisto o lead arriva sia dal browser sia dal server, la piattaforma deve riconoscere che si tratta dello stesso evento. Un event ID condiviso permette la deduplicazione. Senza questo passaggio i risultati possono essere sovrastimati e l’azienda rischia di aumentare budget sulla base di conversioni duplicate.'
+      },
+      {
+        keyword: 'consulente tracking server-side modena reggio emilia',
+        heading: 'Un supporto tecnico tra Modena e Reggio Emilia',
+        content: 'Q4 Studio ha sede a Reggio Emilia e lavora da remoto in tutta Italia. Per i progetti che richiedono presenza segue soprattutto aziende tra Reggio Emilia, Modena e Parma. Può collaborare con il team marketing o con l’agenzia che gestisce le campagne, senza sostituire il consulente privacy dell’azienda.'
+      }
+    ],
+    comparisonTable: {
+      title: 'Componenti di un setup server-side',
+      headers: ['Componente', 'Funzione', 'Rischio se manca'],
+      rows: [
+        ['Container server-side', 'Riceve ed elabora gli eventi', 'Nessun punto centrale di gestione'],
+        ['Consent Mode', 'Applica i segnali di consenso', 'Raccolta non coerente con le regole'],
+        ['CAPI / Enhanced Conversions', 'Invia segnali alle piattaforme', 'Conversioni perse o incomplete'],
+        ['Event ID e deduplicazione', 'Evita il doppio conteggio', 'Report gonfiati'],
+        ['CRM e documentazione', 'Collega il dato al valore reale', 'Ottimizzazione su lead non qualificati']
+      ]
+    },
+    dataPoints: [
+      'Audit tracciamento: 490 € e 3-5 giorni lavorativi',
+      'Setup server-side: da 1.500 € per siti non-ecommerce',
+      'Meta Conversions API ed Enhanced Conversions Google possono lavorare insieme al client-side con deduplicazione corretta',
+      'Q4 Studio è Stape Partner e segue soprattutto il territorio Reggio Emilia, Modena e Parma per i progetti con presenza'
+    ],
+    services: ['Audit eventi e consenso', 'Container sGTM e infrastruttura', 'Meta CAPI e Enhanced Conversions', 'Deduplicazione e monitoraggio'],
+    faqs: [
+      {
+        question: 'Quali strumenti servono per il tracking server-side a Modena?',
+        answer: 'In genere servono un container server-side, un’infrastruttura per eseguirlo, Consent Mode v2, le integrazioni con Meta o Google e una mappa degli eventi. sGTM e Stape sono componenti possibili, ma la scelta dipende dall’architettura esistente.'
+      },
+      {
+        question: 'Il tracking server-side elimina gli ad blocker?',
+        answer: 'No. Riduce la perdita di alcuni segnali tecnici spostando l’elaborazione su un server, ma non bypassa consenso, regole privacy o blocchi applicati a ogni fase. Va verificato cosa viene perso e perché.'
+      },
+      {
+        question: 'Come si evita di contare due volte una conversione?',
+        answer: 'Client-side e server-side devono inviare lo stesso identificativo univoco dell’evento. La piattaforma può così deduplicare gli invii e contare una sola conversione.'
+      },
+      {
+        question: 'Q4 Studio lavora a Modena?',
+        answer: 'Sì. Q4 Studio ha sede a Reggio Emilia, lavora da remoto in tutta Italia e segue soprattutto Reggio Emilia, Modena e Parma quando un progetto richiede presenza.'
+      },
+      {
+        question: 'Il server-side tracking rende il dato conforme al GDPR?',
+        answer: 'No. La conformità dipende da consenso, informativa, finalità, minimizzazione e conservazione. Q4 Studio implementa tecnicamente le indicazioni del DPO o consulente privacy dell’azienda e non fornisce pareri legali.'
+      }
+    ]
+  },
   {
     slug: 'agenti-ai-per-lead-generation',
     cluster: 'D',
@@ -559,5 +1007,13 @@ export const seoPages: SeoPage[] = [
     ]
   }
 ];
+
+const geoOrder = new Map(geoPageOrder.map((slug, index) => [slug, index]));
+seoPages.sort((a, b) => {
+  const aIndex = geoOrder.get(a.slug);
+  const bIndex = geoOrder.get(b.slug);
+  if (aIndex === undefined || bIndex === undefined) return 0;
+  return aIndex - bIndex;
+});
 
 export const getSeoPageBySlug = (slug: string) => seoPages.find((page) => page.slug === slug);
