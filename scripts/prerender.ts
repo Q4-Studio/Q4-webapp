@@ -19,8 +19,11 @@ const distDir = join(__dirname, '..', 'dist');
 // root Vite document.
 const GTM_HEAD = `  <!-- Google Tag Manager -->
   <script>
-    window.addEventListener('load', function () {
-      const loadGtm = function () {
+    (function () {
+      var started = false;
+      var loadGtm = function () {
+        if (started) return;
+        started = true;
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -28,12 +31,20 @@ const GTM_HEAD = `  <!-- Google Tag Manager -->
         })(window,document,'script','dataLayer','GTM-TS9PFGLR');
       };
 
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadGtm, { timeout: 2500 });
-      } else {
-        setTimeout(loadGtm, 0);
-      }
-    });
+      // Percorso normale: aspettiamo l'evento load e poi un momento di
+      // inattività, così il container non compete con l'LCP. Nelle webview
+      // in-app (Facebook su Android) load però non arriva mai — basta una
+      // richiesta che resta pendente — e senza rete di sicurezza il
+      // tracciamento resta spento per tutta la sessione.
+      window.addEventListener('load', function () {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadGtm, { timeout: 2500 });
+        } else {
+          setTimeout(loadGtm, 0);
+        }
+      });
+      setTimeout(loadGtm, 3500);
+    })();
   </script>
   <!-- End Google Tag Manager -->`;
 

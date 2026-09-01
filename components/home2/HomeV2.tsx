@@ -53,50 +53,72 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
       return;
     }
 
-    const words = wordsRef.current.filter(Boolean) as HTMLSpanElement[];
-    const counter = { v: 0 };
-    // Tempo totale volutamente breve: il preloader sta davanti al contenuto,
-    // quindi ogni decimo in piu` pesa su rimbalzo e LCP.
-    const total = 1.3; // durata del conteggio, le parole si distribuiscono qui dentro
-    const slot = total / PRELOADER_WORDS.length;
+    // Rete di sicurezza armata PRIMA di costruire la timeline: il preloader
+    // copre tutta la pagina con z-[9999], quindi non deve mai poter restare
+    // bloccato (rAF sospeso nelle webview in-app, tab in background, o un
+    // errore in una qualsiasi delle chiamate GSAP qui sotto). Se il timer
+    // fosse registrato in fondo, un throw durante la costruzione lascerebbe il
+    // sipario a schermo senza alcun modo di toglierlo.
+    let tl: gsap.core.Timeline | null = null;
 
-    const tl = gsap.timeline({ onComplete: () => onDoneRef.current() });
-
-    // Contatore 000 → 100 e riga di avanzamento, in parallelo
-    tl.to(counter, {
-      v: 100,
-      duration: total,
-      ease: 'power1.inOut',
-      onUpdate: () => {
-        if (counterRef.current) counterRef.current.innerText = String(Math.round(counter.v)).padStart(3, '0');
-      },
-    }, 0);
-    tl.fromTo(barRef.current, { scaleX: 0 }, { scaleX: 1, duration: total, ease: 'power1.inOut' }, 0);
-
-    // Ogni parola entra dal basso, resta, ed esce verso l'alto
-    words.forEach((word, i) => {
-      const at = i * slot;
-      tl.fromTo(
-        word,
-        { yPercent: 110, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 0.38, ease: 'power3.out' },
-        at
-      );
-      // L'ultima parola resta finché non parte il sipario
-      if (i < words.length - 1) {
-        tl.to(word, { yPercent: -110, opacity: 0, duration: 0.3, ease: 'power3.in' }, at + slot - 0.3);
-      }
-    });
-
-    tl.to(overlayRef.current, { yPercent: -100, duration: 0.6, ease: 'power4.inOut' }, total + 0.05);
-
-    // Rete di sicurezza: il preloader copre tutta la pagina, quindi non deve mai
-    // poter restare bloccato (rAF sospeso, GSAP che non parte, tab in background).
     const failSafe = window.setTimeout(() => onDoneRef.current(), 3000);
+
+    // Se dopo mezzo secondo la timeline non è avanzata di un tick, il ticker di
+    // GSAP è fermo (rAF sospeso) e il conteggio non partirà mai: inutile tenere
+    // il sipario per i 3 secondi pieni con il contatore bloccato sul 000 del
+    // markup, si va subito al contenuto.
+    const stallCheck = window.setTimeout(() => {
+      if (!tl || tl.totalTime() === 0) onDoneRef.current();
+    }, 500);
+
+    try {
+      const words = wordsRef.current.filter(Boolean) as HTMLSpanElement[];
+      const counter = { v: 0 };
+      // Tempo totale volutamente breve: il preloader sta davanti al contenuto,
+      // quindi ogni decimo in piu` pesa su rimbalzo e LCP.
+      const total = 1.3; // durata del conteggio, le parole si distribuiscono qui dentro
+      const slot = total / PRELOADER_WORDS.length;
+
+      const timeline = gsap.timeline({ onComplete: () => onDoneRef.current() });
+      tl = timeline;
+
+      // Contatore 000 → 100 e riga di avanzamento, in parallelo
+      timeline.to(counter, {
+        v: 100,
+        duration: total,
+        ease: 'power1.inOut',
+        onUpdate: () => {
+          if (counterRef.current) counterRef.current.innerText = String(Math.round(counter.v)).padStart(3, '0');
+        },
+      }, 0);
+      timeline.fromTo(barRef.current, { scaleX: 0 }, { scaleX: 1, duration: total, ease: 'power1.inOut' }, 0);
+
+      // Ogni parola entra dal basso, resta, ed esce verso l'alto
+      words.forEach((word, i) => {
+        const at = i * slot;
+        timeline.fromTo(
+          word,
+          { yPercent: 110, opacity: 0 },
+          { yPercent: 0, opacity: 1, duration: 0.38, ease: 'power3.out' },
+          at
+        );
+        // L'ultima parola resta finché non parte il sipario
+        if (i < words.length - 1) {
+          timeline.to(word, { yPercent: -110, opacity: 0, duration: 0.3, ease: 'power3.in' }, at + slot - 0.3);
+        }
+      });
+
+      timeline.to(overlayRef.current, { yPercent: -100, duration: 0.6, ease: 'power4.inOut' }, total + 0.05);
+    } catch {
+      // Senza animazione il sipario non ha più motivo di restare: si va dritti
+      // al contenuto invece di aspettare i 3 secondi della rete di sicurezza.
+      onDoneRef.current();
+    }
 
     return () => {
       window.clearTimeout(failSafe);
-      tl.kill();
+      window.clearTimeout(stallCheck);
+      tl?.kill();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- di proposito: la
     // timeline deve montarsi una sola volta, `onDone` è letta dalla ref sopra.
@@ -268,8 +290,16 @@ const HomeV2: React.FC = () => {
     if (typeof document !== 'undefined' && 'fonts' in document) {
       document.fonts.ready.then(refresh).catch(() => {});
     }
+    // `load` non arriva mai in alcune webview in-app (Facebook su Android):
+    // basta una richiesta che resta pendente e l'evento non scatta più. Senza
+    // una rete di sicurezza a tempo, trigger misurati troppo presto restano
+    // storti per tutta la sessione.
     window.addEventListener('load', refresh);
-    return () => window.removeEventListener('load', refresh);
+    const fallback = window.setTimeout(refresh, 3000);
+    return () => {
+      window.removeEventListener('load', refresh);
+      window.clearTimeout(fallback);
+    };
   }, []);
 
   return (
