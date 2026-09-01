@@ -134,8 +134,26 @@ const Hero2: React.FC = () => {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const ctx = gsap.context(() => {
-      // Split manuale dei titoli in caratteri (word-safe)
+    let tl: gsap.core.Timeline | null = null;
+
+    // Rete di sicurezza armata PRIMA di qualsiasi chiamata a GSAP. Nelle
+    // webview in-app (Facebook su Android) requestAnimationFrame può restare
+    // sospeso: il ticker di GSAP non avanza mai, la timeline resta ferma sul
+    // suo stato iniziale e l'hero — alto 100svh — è una schermata nera. I
+    // timer invece continuano a scattare, quindi se dopo un secondo la
+    // timeline non è avanzata di un tick la portiamo direttamente allo stato
+    // finale, che è "tutto visibile".
+    const failSafe = window.setTimeout(() => {
+      if (tl && tl.totalTime() === 0) tl.progress(1);
+    }, 1000);
+
+    const ctx = gsap.context(() => {}, containerRef);
+
+    const build = () => {
+      // Split manuale dei titoli in caratteri (word-safe). I caratteri non
+      // vengono più nascosti qui: lo stato iniziale lo imposta la tween qui
+      // sotto, così il titolo resta leggibile anche se la timeline non viene
+      // mai costruita.
       const splitChars = (el: HTMLElement | null) => {
         const targets: HTMLElement[] = [];
         if (!el) return targets;
@@ -149,7 +167,6 @@ const Hero2: React.FC = () => {
             const c = document.createElement('span');
             c.innerText = char;
             c.style.display = 'inline-block';
-            c.style.opacity = '0';
             wordSpan.appendChild(c);
             targets.push(c);
           });
@@ -161,13 +178,14 @@ const Hero2: React.FC = () => {
 
       const chars1 = splitChars(line1Ref.current);
 
-      const tl = gsap.timeline({ delay: 0.15 });
-      tl.to(containerRef.current, { opacity: 1, duration: 0.4 })
-        .fromTo(
+      // Il contenitore non viene più animato in opacità (e non parte più da
+      // `opacity-0` in CSS): entrano i singoli elementi. Così una timeline che
+      // non parte lascia l'hero visibile invece di una schermata nera.
+      tl = gsap.timeline({ delay: 0.15 });
+      tl.fromTo(
           kickerRef.current,
           { y: 14, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' },
-          '-=0.2'
+          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
         )
         .fromTo(
           chars1,
@@ -209,9 +227,22 @@ const Hero2: React.FC = () => {
         ease: 'none',
         scrollTrigger: { trigger: containerRef.current, start: 'top top', end: '75% top', scrub: true },
       });
-    }, containerRef);
+    };
 
-    return () => ctx.revert();
+    try {
+      ctx.add(build);
+    } catch {
+      // Se la costruzione fallisce a metà, alcuni elementi hanno già lo stato
+      // iniziale (opacity 0) senza una tween che li riaccenda: annulliamo
+      // tutto. Meglio nessuna animazione che un hero invisibile.
+      ctx.revert();
+      tl = null;
+    }
+
+    return () => {
+      window.clearTimeout(failSafe);
+      ctx.revert();
+    };
   }, []);
 
   const goTo = (path: string) => {
@@ -220,7 +251,7 @@ const Hero2: React.FC = () => {
   };
 
   return (
-    <div ref={containerRef} className="relative w-full h-[100svh] min-h-[640px] overflow-hidden bg-[#050505] opacity-0">
+    <div ref={containerRef} className="relative w-full h-[100svh] min-h-[640px] overflow-hidden bg-[#050505]">
       {/* Video di sfondo: copre tutta l'area dell'hero. La leggibilità del
           titolo è affidata all'opacità ridotta del video stesso (HERO_VIDEO_OPACITY),
           non a un overlay/scrim sopra. */}

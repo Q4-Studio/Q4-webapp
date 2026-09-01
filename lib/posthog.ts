@@ -2,7 +2,7 @@ import posthog from 'posthog-js';
 import type { CaptureResult } from 'posthog-js';
 
 const posthogKey = import.meta.env.VITE_POSTHOG_KEY;
-const posthogHost = import.meta.env.VITE_POSTHOG_HOST;
+const posthogHost = 'https://t.q4.studio';
 
 interface ExceptionFrame {
   in_app?: boolean;
@@ -29,9 +29,9 @@ function dropForeignExceptions(event: CaptureResult | null): CaptureResult | nul
   return hasFirstPartyFrame ? event : null;
 }
 
-if (!posthogKey || !posthogHost) {
+if (!posthogKey) {
   if (import.meta.env.DEV) {
-    const missingVariable = !posthogKey ? 'VITE_POSTHOG_KEY' : 'VITE_POSTHOG_HOST';
+    const missingVariable = 'VITE_POSTHOG_KEY';
     throw new Error(`${missingVariable} variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once ${missingVariable} is configured`);
   }
 } else {
