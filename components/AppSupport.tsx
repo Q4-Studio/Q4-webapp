@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { Send, CheckCircle, AlertCircle, Smartphone, HelpCircle, MessageSquare, Mail } from 'lucide-react';
 import posthog from '../lib/posthog';
+import { Sentry } from '../lib/sentry';
 
 const SUPPORT_WEBHOOK_URL = import.meta.env.VITE_APP_SUPPORT_WEBHOOK_URL || 'https://services.leadconnectorhq.com/hooks/YoRWq5tyW2U6PsMmbr5e/webhook-trigger/124c9122-ea5c-4be6-bdbd-64927a29e776';
 
@@ -81,11 +82,17 @@ const AppSupport: React.FC = () => {
       } else {
         setSubmitStatus('error');
         posthog.capture('support_request_submission_failed', { failure_type: 'http_error' });
+        Sentry.captureMessage('support_request_submission_failed', {
+          level: 'error',
+          tags: { form: 'app_support', failure_type: 'http_error' },
+          extra: { status: response.status },
+        });
       }
     } catch (error) {
       console.error('Form submission error:', error);
       setSubmitStatus('error');
       posthog.capture('support_request_submission_failed', { failure_type: 'network_error' });
+      Sentry.captureException(error, { tags: { form: 'app_support', failure_type: 'network_error' } });
     } finally {
       setIsSubmitting(false);
       setTimeout(() => setSubmitStatus('idle'), 5000);

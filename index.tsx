@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 import './lib/posthog';
+import './lib/sentry';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
