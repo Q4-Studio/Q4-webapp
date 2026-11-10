@@ -1,4 +1,5 @@
 import React from 'react';
+import { Sentry } from '../lib/sentry';
 
 interface LazyPageErrorBoundaryProps {
   children: React.ReactNode;
@@ -19,8 +20,9 @@ class LazyPageErrorBoundary extends React.Component<LazyPageErrorBoundaryProps, 
     return { hasError: true };
   }
 
-  componentDidCatch(error: unknown) {
+  componentDidCatch(error: unknown, info: React.ErrorInfo) {
     console.error('Errore nel caricamento della pagina:', error);
+    Sentry.captureException(error, { extra: { componentStack: info.componentStack } });
   }
 
   render() {
