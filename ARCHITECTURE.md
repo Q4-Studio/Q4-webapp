@@ -19,11 +19,13 @@
 
 ## Scala Tipografica
 
-> **Home chiara (2026-11).** La homepage (`components/home2/*`) segue un sistema
-> proprio, scopato sotto `.home-light` in `index.css`: fondo bianco/carta,
-> font Hanken Grotesk, titoli `.h-xl`/`.h-l`, bottoni `.btn-*`, card `.bc`.
-> Spec: `docs/specs/homepage-light-restyle.md`. La scala qui sotto resta
-> valida per tutte le altre pagine.
+> **Sistema chiaro (2026-11).** Tutto il sito è su fondo bianco/carta con
+> Hanken Grotesk: token, bottoni `.btn-*`, card `.bc` e FAQ stanno nel blocco
+> `.home-light` di `index.css`, applicato al `<main>` di `App.tsx`. Le pagine
+> servizio tengono un hero scuro (`id="hero"`, che governa i colori della nav).
+> Spec: `docs/specs/homepage-light-restyle.md` e `docs/specs/site-light-pages.md`.
+> Le dimensioni della scala qui sotto restano valide; i riferimenti a Space
+> Grotesk e ai componenti `*2` della vecchia home sono storici.
 
 Scala unica per tutti i `font-size` del sito (solo dimensione: interlinea, tracking e
 spaziature sono fuori scope e vengono gestiti separatamente). 7 gradini, rapporto ~1.15-1.35

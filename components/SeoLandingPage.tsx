@@ -55,56 +55,56 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
   };
 
   return (
-    <article className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
+    <article className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-white text-[#0a0a0a] min-h-screen overflow-hidden">
       <SEOHead title={page.metaTitle} description={page.description} url={pageUrl} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[min(900px,180vw)] h-[min(900px,180vw)] bg-purple-900/10 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[min(900px,180vw)] h-[min(900px,180vw)] bg-purple-200/40 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-5xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" className="mb-10">
-          <ol className="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" className="hover:text-indigo-300 transition-colors">Home</a></li>
+          <ol className="flex items-center gap-2 text-sm text-gray-500">
+            <li><a href="/" className="hover:text-purple-700 transition-colors">Home</a></li>
             <li>/</li>
-            <li><a href={resourcesPath} className="hover:text-indigo-300 transition-colors">Risorse</a></li>
+            <li><a href={resourcesPath} className="hover:text-purple-700 transition-colors">Risorse</a></li>
             <li>/</li>
-            <li className="text-gray-300">{page.title}</li>
+            <li className="text-[#0a0a0a]">{page.title}</li>
           </ol>
         </nav>
 
         <header className="mb-14">
-          <p className="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">{page.keyword}</p>
+          <p className="text-purple-700 text-sm tracking-[0.08em] uppercase mb-5">{page.keyword}</p>
           <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">{page.title}</h1>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">{page.description}</p>
+          <p className="text-lg md:text-xl text-[#4b5563] leading-relaxed max-w-3xl">{page.description}</p>
         </header>
 
         {/* Direct Answer for GEO */}
-        <section className="mb-16 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
+        <section className="mb-16 rounded-3xl border border-purple-200 bg-gradient-to-br from-[#f7f5fb] to-[#ecdffb] p-8">
           <h2 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Risposta diretta</h2>
-          <p className="text-lg md:text-xl text-gray-200 leading-relaxed">{page.directAnswer}</p>
+          <p className="text-lg md:text-xl text-[#0a0a0a] leading-relaxed">{page.directAnswer}</p>
         </section>
 
         {/* Link mandatorio spoke→hub: questa pagina informativa collega
             sempre alla pagina di offerta bespoke del suo cluster. */}
-        <a href={hub.path} className="mb-16 flex items-center justify-between gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-indigo-400/50">
-          <span className="text-gray-200">Vuoi vedere prezzi e pacchetti? <strong className="text-white">{hub.label}</strong></span>
-          <ArrowRight className="h-5 w-5 flex-shrink-0 text-indigo-300" />
+        <a href={hub.path} className="mb-16 flex items-center justify-between gap-4 rounded-3xl border border-black/5 bg-[#f7f5fb] p-6 transition-colors hover:border-purple-300">
+          <span className="text-[#4b5563]">Vuoi vedere prezzi e pacchetti? <strong className="text-[#0a0a0a]">{hub.label}</strong></span>
+          <ArrowRight className="h-5 w-5 flex-shrink-0 text-purple-700" />
         </a>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-16">
-          <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+          <section className="rounded-3xl border border-black/5 bg-[#f7f5fb] p-6">
             <h2 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Per chi</h2>
-            <p className="text-gray-400 leading-relaxed">{page.audience}.</p>
+            <p className="text-[#4b5563] leading-relaxed">{page.audience}.</p>
           </section>
-          <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+          <section className="rounded-3xl border border-black/5 bg-[#f7f5fb] p-6">
             <h2 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Problema</h2>
-            <p className="text-gray-400 leading-relaxed">{page.pain}.</p>
+            <p className="text-[#4b5563] leading-relaxed">{page.pain}.</p>
           </section>
-          <section className="rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-6">
+          <section className="rounded-3xl border border-purple-200 bg-gradient-to-br from-[#f7f5fb] to-[#ecdffb] p-6">
             <h2 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Risultato</h2>
-            <p className="text-gray-300 leading-relaxed">{page.proof}.</p>
+            <p className="text-[#4b5563] leading-relaxed">{page.proof}.</p>
           </section>
         </div>
 
@@ -113,9 +113,9 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
           <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Dati e risultati</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {page.dataPoints.map((point, i) => (
-              <div key={i} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                <CheckCircle2 className="w-5 h-5 text-cyan-300 mt-1 flex-shrink-0" />
-                <span className="text-gray-200">{point}</span>
+              <div key={i} className="flex items-start gap-3 rounded-2xl border border-black/5 bg-[#f7f5fb] p-5">
+                <CheckCircle2 className="w-5 h-5 text-purple-700 mt-1 flex-shrink-0" />
+                <span className="text-[#0a0a0a]">{point}</span>
               </div>
             ))}
           </div>
@@ -126,9 +126,9 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
           <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Argomenti correlati</h2>
           <div className="space-y-6">
             {page.clusters.map((cluster) => (
-              <section key={cluster.keyword} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-4 text-indigo-200">{cluster.heading}</h3>
-                <p className="text-gray-400 leading-relaxed">{cluster.content}</p>
+              <section key={cluster.keyword} className="rounded-2xl border border-black/5 bg-[#f7f5fb] p-6">
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-4 text-purple-800">{cluster.heading}</h3>
+                <p className="text-[#4b5563] leading-relaxed">{cluster.content}</p>
               </section>
             ))}
           </div>
@@ -141,17 +141,17 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-white/20">
+                  <tr className="border-b border-black/20">
                     {page.comparisonTable.headers.map((header) => (
-                      <th key={header} className="p-4 text-indigo-300 font-semibold">{header}</th>
+                      <th key={header} className="p-4 text-purple-700 font-semibold">{header}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {page.comparisonTable.rows.map((row, i) => (
-                    <tr key={i} className="border-b border-white/10 hover:bg-white/[0.02]">
+                    <tr key={i} className="border-b border-black/10 hover:bg-black/[0.02]">
                       {row.map((cell, j) => (
-                        <td key={j} className="p-4 text-gray-300">{cell}</td>
+                        <td key={j} className="p-4 text-[#4b5563]">{cell}</td>
                       ))}
                     </tr>
                   ))}
@@ -163,12 +163,12 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
 
         <section className="mb-16">
           <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Come interveniamo</h2>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">{page.solution}.</p>
+          <p className="text-lg md:text-xl text-[#4b5563] leading-relaxed mb-8">{page.solution}.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {page.services.map((service) => (
-              <div key={service} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                <CheckCircle2 className="w-5 h-5 text-indigo-300 mt-1 flex-shrink-0" />
-                <span className="text-gray-200">{service}</span>
+              <div key={service} className="flex items-start gap-3 rounded-2xl border border-black/5 bg-[#f7f5fb] p-5">
+                <CheckCircle2 className="w-5 h-5 text-purple-700 mt-1 flex-shrink-0" />
+                <span className="text-[#0a0a0a]">{service}</span>
               </div>
             ))}
           </div>
@@ -178,9 +178,9 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
           <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">FAQ</h2>
           <div className="space-y-4">
             {page.faqs.map((faq) => (
-              <div key={faq.question} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+              <div key={faq.question} className="rounded-2xl border border-black/5 bg-[#f7f5fb] p-6">
                 <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3">{faq.question}</h3>
-                <p className="text-gray-400 leading-relaxed">{faq.answer}</p>
+                <p className="text-[#4b5563] leading-relaxed">{faq.answer}</p>
               </div>
             ))}
           </div>
@@ -190,7 +190,7 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
           <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Pagine correlate</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {relatedPages.map((relatedPage) => (
-              <a key={relatedPage.slug} href={`${resourcesPath}/${relatedPage.slug}`} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors">
+              <a key={relatedPage.slug} href={`${resourcesPath}/${relatedPage.slug}`} className="rounded-2xl border border-black/5 bg-[#f7f5fb] p-5 text-[#4b5563] hover:text-[#0a0a0a] hover:border-purple-300 transition-colors">
                 {relatedPage.title}
               </a>
             ))}

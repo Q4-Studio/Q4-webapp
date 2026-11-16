@@ -101,46 +101,46 @@ const CookieBanner: React.FC = () => {
 
       {/* Banner */}
       <div className="fixed bottom-0 left-0 right-0 z-[9999] p-3 md:p-6">
-        <div className="max-w-6xl mx-auto max-h-[25vh] overflow-y-auto bg-[#0A0A0A] border border-white/10 rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden">
+        <div className="max-w-6xl mx-auto max-h-[25vh] overflow-y-auto bg-white border border-black/10 rounded-2xl md:rounded-3xl shadow-[0_30px_70px_-30px_rgba(76,29,149,0.35)] overflow-hidden">
           {!showSettings ? (
             // Main Banner: compatto su mobile (icona/heading/testo ridotti,
             // paragrafo esteso solo da md in su) per restare entro ~25vh.
             <div className="p-4 md:p-8">
               <div className="flex items-start gap-3 md:gap-4">
-                <div className="hidden sm:flex flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-full bg-indigo-500/20 items-center justify-center">
-                  <Cookie className="w-5 h-5 md:w-6 md:h-6 text-indigo-400" />
+                <div className="hidden sm:flex flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-full bg-purple-100 items-center justify-center">
+                  <Cookie className="w-5 h-5 md:w-6 md:h-6 text-purple-700" />
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="text-base md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] text-white mb-1 md:mb-2">
+                  <h3 className="text-base md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] text-[#0a0a0a] mb-1 md:mb-2">
                     Questo sito utilizza cookie
                   </h3>
-                  <p className="hidden md:block text-gray-400 text-base mb-6 leading-relaxed">
+                  <p className="hidden md:block text-[#4b5563] text-base mb-6 leading-relaxed">
                     Utilizziamo cookie tecnici, analytics (Google Analytics 4) e di marketing (Meta Pixel) per migliorare la tua esperienza
                     e mostrarti contenuti personalizzati. Puoi scegliere quali cookie accettare.
                   </p>
-                  <p className="md:hidden text-gray-400 text-xs mb-3 leading-relaxed">
+                  <p className="md:hidden text-[#4b5563] text-xs mb-3 leading-relaxed">
                     Usiamo cookie tecnici, analytics e marketing. Scegli quali accettare.
                   </p>
 
                   <div className="flex flex-wrap gap-2 md:gap-3">
                     <button
                       onClick={acceptAll}
-                      className="px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold text-white hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all duration-300"
+                      className="px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-[#0a0a0a] rounded-full font-semibold text-white hover:bg-purple-700 transition-colors duration-300"
                     >
                       Accetta tutto
                     </button>
 
                     <button
                       onClick={acceptNecessaryOnly}
-                      className="px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-white/5 border border-white/10 rounded-full font-semibold text-white hover:bg-white/10 transition-all duration-300"
+                      className="px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-white border border-black/10 rounded-full font-semibold text-[#0a0a0a] hover:bg-black/5 transition-colors duration-300"
                     >
                       Solo necessari
                     </button>
 
                     <button
                       onClick={() => setShowSettings(true)}
-                      className="px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-white/5 border border-white/10 rounded-full font-semibold text-white hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
+                      className="px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-white border border-black/10 rounded-full font-semibold text-[#0a0a0a] hover:bg-black/5 transition-colors duration-300 flex items-center gap-2"
                     >
                       <Settings className="w-4 h-4" />
                       <span className="hidden sm:inline">Personalizza</span>
@@ -151,7 +151,7 @@ const CookieBanner: React.FC = () => {
                     Cliccando "Accetta tutto" acconsenti all'uso di tutti i cookie. Leggi la nostra{' '}
                     <a
                       href="/#privacy"
-                      className="text-indigo-400 hover:underline"
+                      className="text-purple-700 hover:underline"
                       onClick={() => setShowBanner(false)}
                     >
                       Privacy & Cookie Policy
@@ -159,7 +159,7 @@ const CookieBanner: React.FC = () => {
                   </p>
                   <a
                     href="/#privacy"
-                    className="md:hidden mt-2 inline-block text-indigo-400 text-[11px] underline"
+                    className="md:hidden mt-2 inline-block text-purple-700 text-[11px] underline"
                     onClick={() => setShowBanner(false)}
                   >
                     Privacy & Cookie Policy
@@ -171,38 +171,38 @@ const CookieBanner: React.FC = () => {
             // Settings Panel
             <div className="p-6 md:p-8">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] text-white">
+                <h3 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] text-[#0a0a0a]">
                   Preferenze Cookie
                 </h3>
                 <button
                   onClick={() => setShowSettings(false)}
-                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center transition-colors"
                 >
-                  <X className="w-5 h-5 text-gray-400" />
+                  <X className="w-5 h-5 text-[#0a0a0a]" />
                 </button>
               </div>
 
               <div className="space-y-4 mb-6">
                 {/* Necessary Cookies */}
-                <div className="flex items-start justify-between p-4 bg-white/5 rounded-xl border border-white/5">
+                <div className="flex items-start justify-between p-4 bg-[#f7f5fb] rounded-xl border border-black/5">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-lg text-white mb-1">Cookie Necessari</h4>
-                    <p className="text-sm text-gray-400">
+                    <h4 className="font-semibold text-lg text-[#0a0a0a] mb-1">Cookie Necessari</h4>
+                    <p className="text-sm text-[#4b5563]">
                       Essenziali per il funzionamento del sito. Non possono essere disabilitati.
                     </p>
                   </div>
                   <div className="ml-4">
-                    <div className="w-12 h-6 bg-indigo-600 rounded-full flex items-center px-1">
+                    <div className="w-12 h-6 bg-purple-700 rounded-full flex items-center px-1">
                       <div className="w-4 h-4 bg-white rounded-full ml-auto" />
                     </div>
                   </div>
                 </div>
 
                 {/* Analytics Cookies */}
-                <div className="flex items-start justify-between p-4 bg-white/5 rounded-xl border border-white/5">
+                <div className="flex items-start justify-between p-4 bg-[#f7f5fb] rounded-xl border border-black/5">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-lg text-white mb-1">Cookie Analytics</h4>
-                    <p className="text-sm text-gray-400">
+                    <h4 className="font-semibold text-lg text-[#0a0a0a] mb-1">Cookie Analytics</h4>
+                    <p className="text-sm text-[#4b5563]">
                       Google Analytics 4 per statistiche anonime di utilizzo del sito.
                     </p>
                   </div>
@@ -210,7 +210,7 @@ const CookieBanner: React.FC = () => {
                     <button
                       onClick={() => setPreferences(p => ({ ...p, analytics: !p.analytics }))}
                       className={`w-12 h-6 rounded-full flex items-center px-1 transition-colors ${
-                        preferences.analytics ? 'bg-indigo-600' : 'bg-gray-600'
+                        preferences.analytics ? 'bg-purple-700' : 'bg-gray-300'
                       }`}
                     >
                       <div className={`w-4 h-4 bg-white rounded-full transition-transform ${
@@ -221,10 +221,10 @@ const CookieBanner: React.FC = () => {
                 </div>
 
                 {/* Marketing Cookies */}
-                <div className="flex items-start justify-between p-4 bg-white/5 rounded-xl border border-white/5">
+                <div className="flex items-start justify-between p-4 bg-[#f7f5fb] rounded-xl border border-black/5">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-lg text-white mb-1">Cookie di Marketing</h4>
-                    <p className="text-sm text-gray-400">
+                    <h4 className="font-semibold text-lg text-[#0a0a0a] mb-1">Cookie di Marketing</h4>
+                    <p className="text-sm text-[#4b5563]">
                       Meta Pixel per tracciamento conversioni e remarketing su Facebook/Instagram.
                     </p>
                   </div>
@@ -232,7 +232,7 @@ const CookieBanner: React.FC = () => {
                     <button
                       onClick={() => setPreferences(p => ({ ...p, marketing: !p.marketing }))}
                       className={`w-12 h-6 rounded-full flex items-center px-1 transition-colors ${
-                        preferences.marketing ? 'bg-indigo-600' : 'bg-gray-600'
+                        preferences.marketing ? 'bg-purple-700' : 'bg-gray-300'
                       }`}
                     >
                       <div className={`w-4 h-4 bg-white rounded-full transition-transform ${
@@ -246,14 +246,14 @@ const CookieBanner: React.FC = () => {
               <div className="flex flex-wrap gap-3">
                 <button
                   onClick={saveCustom}
-                  className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold text-white hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all duration-300"
+                  className="px-6 py-3 bg-[#0a0a0a] rounded-full font-semibold text-white hover:bg-purple-700 transition-colors duration-300"
                 >
                   Salva preferenze
                 </button>
 
                 <button
                   onClick={() => setShowSettings(false)}
-                  className="px-6 py-3 bg-white/5 border border-white/10 rounded-full font-semibold text-white hover:bg-white/10 transition-all duration-300"
+                  className="px-6 py-3 bg-white border border-black/10 rounded-full font-semibold text-[#0a0a0a] hover:bg-black/5 transition-colors duration-300"
                 >
                   Annulla
                 </button>
@@ -263,7 +263,7 @@ const CookieBanner: React.FC = () => {
                 Per maggiori informazioni consulta la nostra{' '}
                 <a
                   href="/#privacy"
-                  className="text-indigo-400 hover:underline"
+                  className="text-purple-700 hover:underline"
                   onClick={() => setShowBanner(false)}
                 >
                   Privacy & Cookie Policy

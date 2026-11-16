@@ -105,10 +105,10 @@ const renderInline = (value: string, keyPrefix: string): React.ReactNode[] => {
   return tokens.filter(Boolean).map((token, index) => {
     const key = `${keyPrefix}-${index}`;
     if (token.startsWith('**') && token.endsWith('**')) {
-      return <strong key={key} className="font-semibold text-white">{token.slice(2, -2)}</strong>;
+      return <strong key={key} className="font-semibold text-[#0a0a0a]">{token.slice(2, -2)}</strong>;
     }
     if (token.startsWith('`') && token.endsWith('`')) {
-      return <code key={key} className="rounded bg-white/10 px-1.5 py-0.5 text-[0.92em] text-indigo-100">{token.slice(1, -1)}</code>;
+      return <code key={key} className="rounded border border-black/10 bg-[#f7f5fb] px-1.5 py-0.5 text-[0.92em] text-[#0a0a0a]">{token.slice(1, -1)}</code>;
     }
 
     const link = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
@@ -120,7 +120,7 @@ const renderInline = (value: string, keyPrefix: string): React.ReactNode[] => {
           key={key}
           href={destination.href}
           {...(destination.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-          className="font-medium text-indigo-300 underline decoration-indigo-400/40 underline-offset-4 transition-colors hover:text-indigo-200 focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-300"
+          className="font-medium text-purple-700 underline decoration-purple-400/50 underline-offset-4 transition-colors hover:text-purple-900 focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-purple-500"
         >
           {link[1]}
         </a>
@@ -193,20 +193,20 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
     if (block.type === 'heading') {
       const shared = { id: block.id, tabIndex: block.id ? -1 : undefined };
       if (block.level === 1) {
-        return <h1 key={index} className="mb-5 mt-12 text-[clamp(1.8rem,4vw,2.75rem)] font-bold leading-[1.12] tracking-[-0.025em]">{renderInline(block.text, `h1-${index}`)}</h1>;
+        return <h1 key={index} className="mb-5 mt-12 text-[clamp(1.8rem,4vw,2.75rem)] font-bold leading-[1.12] tracking-[-0.025em] text-[#0a0a0a]">{renderInline(block.text, `h1-${index}`)}</h1>;
       }
       if (block.level === 2) {
-        return <h2 key={index} {...shared} className="scroll-mt-28 mb-5 mt-14 text-[clamp(1.65rem,3.5vw,2.25rem)] font-bold leading-[1.18] tracking-[-0.02em] text-indigo-200 outline-none">{renderInline(block.text, `h2-${index}`)}</h2>;
+        return <h2 key={index} {...shared} className="scroll-mt-28 mb-5 mt-14 text-[clamp(1.65rem,3.5vw,2.25rem)] font-bold leading-[1.18] tracking-[-0.02em] text-[#0a0a0a] outline-none">{renderInline(block.text, `h2-${index}`)}</h2>;
       }
-      return <h3 key={index} {...shared} className="scroll-mt-28 mb-4 mt-9 text-[clamp(1.25rem,2.5vw,1.55rem)] font-bold leading-[1.3] text-purple-200 outline-none">{renderInline(block.text, `h3-${index}`)}</h3>;
+      return <h3 key={index} {...shared} className="scroll-mt-28 mb-4 mt-9 text-[clamp(1.25rem,2.5vw,1.55rem)] font-bold leading-[1.3] text-purple-800 outline-none">{renderInline(block.text, `h3-${index}`)}</h3>;
     }
 
     if (block.type === 'list') {
       const ListTag = block.ordered ? 'ol' : 'ul';
       return (
-        <ListTag key={index} className={`${block.ordered ? 'list-decimal' : 'list-disc'} mb-7 ml-6 space-y-3 marker:text-indigo-400`}>
+        <ListTag key={index} className={`${block.ordered ? 'list-decimal' : 'list-disc'} mb-7 ml-6 space-y-3 marker:text-purple-600`}>
           {block.items.map((item, itemIndex) => (
-            <li key={itemIndex} className="pl-2 text-[1.0625rem] leading-[1.72] text-gray-300 md:text-lg">
+            <li key={itemIndex} className="pl-2 text-[1.0625rem] leading-[1.72] text-[#4b5563] md:text-lg">
               {renderInline(item, `list-${index}-${itemIndex}`)}
             </li>
           ))}
@@ -215,14 +215,14 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
     }
 
     return (
-      <p key={index} className="mb-6 text-[1.0625rem] leading-[1.72] text-gray-300 md:text-lg">
+      <p key={index} className="mb-6 text-[1.0625rem] leading-[1.72] text-[#4b5563] md:text-lg">
         {renderInline(block.text, `p-${index}`)}
       </p>
     );
   };
 
   return (
-    <article ref={articleRef} className="relative min-h-screen overflow-hidden bg-[#050505] px-6 pb-24 pt-36 text-white md:pb-32 md:pt-44">
+    <article ref={articleRef} className="relative min-h-screen overflow-hidden bg-white px-6 pb-24 pt-36 text-[#0a0a0a] md:pb-32 md:pt-44">
       <BlogSchema post={post} />
       <SEOHead
         title={`${post.title} | Q4 Studio Blog`}
@@ -233,24 +233,24 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
         article={{ publishedTime: post.date, author: post.author.name, section: post.category }}
       />
 
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[min(800px,160vw)] w-[min(800px,160vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-900/10 blur-[150px]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[min(800px,160vw)] w-[min(800px,160vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-200/40 blur-[150px]" />
 
       <div className="relative z-10 mx-auto max-w-6xl">
         <div className="mx-auto max-w-4xl">
-          <button onClick={onBack} className="group mb-8 flex items-center gap-2 text-gray-400 transition-colors hover:text-indigo-300">
+          <button onClick={onBack} className="group mb-8 flex items-center gap-2 text-gray-500 transition-colors hover:text-purple-700">
             <ArrowLeft className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
             <span>Torna al Blog</span>
           </button>
 
           <div ref={headerRef}>
-            <div className="mb-6 inline-block rounded-full border border-indigo-500/30 bg-indigo-500/20 px-4 py-1">
-              <span className="text-sm font-medium text-indigo-300">{post.category}</span>
+            <div className="mb-6 inline-block rounded-full border border-black/10 bg-[#f7f5fb] px-4 py-1">
+              <span className="text-sm font-medium text-purple-700">{post.category}</span>
             </div>
             <h1 className="mb-7 max-w-4xl text-[clamp(2.35rem,5.5vw,4rem)] font-bold leading-[1.04] tracking-[-0.035em]">
               {post.title}
             </h1>
 
-            <div className="mb-8 flex flex-wrap items-center gap-6 border-b border-white/10 pb-8 text-gray-400">
+            <div className="mb-8 flex flex-wrap items-center gap-6 border-b border-black/10 pb-8 text-gray-500">
               <div className="flex items-center gap-3">
                 <img
                   src={post.author.image}
@@ -263,7 +263,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
                   }}
                 />
                 <div>
-                  <p className="font-medium text-white">{post.author.name}</p>
+                  <p className="font-medium text-[#0a0a0a]">{post.author.name}</p>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
                     <span className="flex items-center gap-1"><Calendar className="h-4 w-4" />{new Date(post.date).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                     <span className="flex items-center gap-1"><Clock className="h-4 w-4" />{post.readTime} di lettura</span>
@@ -274,26 +274,26 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
 
             <div className="relative mb-14 h-[clamp(260px,48vw,460px)] overflow-hidden rounded-3xl">
               <img src={post.coverImage} alt={post.title} loading="eager" fetchPriority="high" className="h-full w-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
             </div>
           </div>
         </div>
 
         <div ref={contentRef} className="grid items-start gap-10 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-8">
           <aside>
-            <nav aria-labelledby="article-toc-title" className="rounded-2xl border border-white/10 bg-white/[0.035] p-5 lg:sticky lg:top-28">
-              <div className="mb-4 flex items-center gap-2 text-indigo-200">
+            <nav aria-labelledby="article-toc-title" className="rounded-2xl border border-black/5 bg-[#f7f5fb] p-5 lg:sticky lg:top-28">
+              <div className="mb-4 flex items-center gap-2 text-purple-700">
                 <ListTree className="h-4 w-4" aria-hidden="true" />
                 <h2 id="article-toc-title" className="text-sm font-semibold uppercase tracking-[0.12em]">In questa pagina</h2>
               </div>
               {parsedArticle.toc.length ? (
-                <ol className="space-y-2 border-l border-white/10 pl-4">
+                <ol className="space-y-2 border-l border-black/10 pl-4">
                   {parsedArticle.toc.map((item) => (
                     <li key={item.id} className={item.level === 3 ? 'pl-3' : ''}>
                       <a
                         href={`#${item.id}`}
                         onClick={(event) => scrollToHeading(event, item.id)}
-                        className="block py-1 text-sm leading-snug text-gray-400 transition-colors hover:text-white focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-300"
+                        className="block py-1 text-sm leading-snug text-[#4b5563] transition-colors hover:text-[#0a0a0a] focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500"
                       >
                         {item.label}
                       </a>
@@ -309,7 +309,7 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
           </div>
         </div>
 
-        <div className="mx-auto mt-16 max-w-4xl rounded-3xl border border-white/10 bg-gradient-to-br from-indigo-950/30 to-purple-950/30 p-8 md:mt-20">
+        <div className="mx-auto mt-16 max-w-4xl rounded-3xl border border-black/5 bg-gradient-to-br from-[#f7f5fb] to-[#ecdffb] p-8 md:mt-20">
           <div className="flex flex-col items-center gap-6 md:flex-row">
             <img
               src={post.author.image}
@@ -322,13 +322,13 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, onBack }) => {
               }}
             />
             <div className="flex-1 text-center md:text-left">
-              <h2 className="mb-2 text-2xl font-bold leading-tight">{post.author.name}</h2>
-              <p className="leading-relaxed text-gray-400">Vuoi applicare questi principi al tuo progetto? Raccontaci dove oggi perdi dati, tempo o opportunità.</p>
+              <h2 className="mb-2 text-2xl font-bold leading-tight text-[#0a0a0a]">{post.author.name}</h2>
+              <p className="leading-relaxed text-[#4b5563]">Vuoi applicare questi principi al tuo progetto? Raccontaci dove oggi perdi dati, tempo o opportunità.</p>
             </div>
             <a
               href="/#contatti"
               onClick={navigateToContact}
-              className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-4 font-semibold transition-shadow duration-300 hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-300"
+              className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-[#0a0a0a] px-8 py-4 font-semibold text-white transition-colors duration-300 hover:bg-purple-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-purple-500"
             >
               Contattaci <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </a>

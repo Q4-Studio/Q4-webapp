@@ -194,7 +194,7 @@ function generateBaseHtml(options: {
     : '';
 
   return `<!DOCTYPE html>
-<html lang="it" class="bg-[#050505]">
+<html lang="it" class="bg-white">
 <head>
 ${GTM_HEAD}
 
@@ -219,7 +219,7 @@ ${GTM_HEAD}
   <meta name="twitter:description" content="${escapeHtml(description)}" />
   <meta name="twitter:image" content="${resolvedOgImage}" />
   <meta name="twitter:image:alt" content="${escapeHtml(resolvedOgImageAlt)}" />
-  <meta name="theme-color" content="#050505" />
+  <meta name="theme-color" content="#ffffff" />
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
@@ -227,12 +227,12 @@ ${GTM_HEAD}
   <link rel="shortcut icon" href="/favicon/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   ${appStyles}
   <style>
     html, body { max-width: 100%; overflow-x: hidden; overscroll-behavior-x: none; }
-    body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
-    h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
+    body { font-family: 'Hanken Grotesk', 'Inter', Arial, sans-serif; background-color: #ffffff; color: #4b5563; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Hanken Grotesk', 'Inter', Arial, sans-serif; color: #0a0a0a; }
   </style>
   ${schemaScripts}
 </head>
@@ -296,15 +296,15 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
   };
 
   const servicesHtml = page.services
-    .map((s) => `<div class="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5"><svg class="w-5 h-5 text-indigo-300 mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg><span class="text-gray-200">${escapeHtml(s)}</span></div>`)
+    .map((s) => `<div class="flex items-start gap-3 rounded-2xl border border-black/10 bg-[#f7f5fb] p-5"><svg class="w-5 h-5 text-purple-700 mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg><span class="text-[#4b5563]">${escapeHtml(s)}</span></div>`)
     .join('\n              ');
 
   const dataPointsHtml = page.dataPoints
-    .map((point) => `<div class="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5"><svg class="w-5 h-5 text-cyan-300 mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg><span class="text-gray-200">${escapeHtml(point)}</span></div>`)
+    .map((point) => `<div class="flex items-start gap-3 rounded-2xl border border-black/10 bg-[#f7f5fb] p-5"><svg class="w-5 h-5 text-purple-700 mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg><span class="text-[#4b5563]">${escapeHtml(point)}</span></div>`)
     .join('\n              ');
 
   const clustersHtml = page.clusters
-    .map((cluster) => `<section class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3 text-indigo-200">${escapeHtml(cluster.heading)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(cluster.content)}</p></section>`)
+    .map((cluster) => `<section class="rounded-2xl border border-black/10 bg-[#f7f5fb] p-6"><h3 class="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3 text-[#0a0a0a]">${escapeHtml(cluster.heading)}</h3><p class="text-[#4b5563] leading-relaxed">${escapeHtml(cluster.content)}</p></section>`)
     .join('\n            ');
 
   const comparisonTableHtml = page.comparisonTable ? `
@@ -313,12 +313,12 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="border-b border-white/20">
-              ${page.comparisonTable.headers.map((h) => `<th class="p-4 text-indigo-300 font-semibold">${escapeHtml(h)}</th>`).join('')}
+            <tr class="border-b border-black/10">
+              ${page.comparisonTable.headers.map((h) => `<th class="p-4 text-purple-700 font-semibold">${escapeHtml(h)}</th>`).join('')}
             </tr>
           </thead>
           <tbody>
-            ${page.comparisonTable.rows.map((row) => `<tr class="border-b border-white/10 hover:bg-white/[0.02]">${row.map((cell) => `<td class="p-4 text-gray-300">${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}
+            ${page.comparisonTable.rows.map((row) => `<tr class="border-b border-black/10 hover:bg-black/[0.02]">${row.map((cell) => `<td class="p-4 text-[#4b5563]">${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}
           </tbody>
         </table>
       </div>
@@ -326,55 +326,55 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
   ` : '';
 
   const faqsHtml = page.faqs
-    .map((faq) => `<div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3">${escapeHtml(faq.question)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(faq.answer)}</p></div>`)
+    .map((faq) => `<div class="rounded-2xl border border-black/10 bg-[#f7f5fb] p-6"><h3 class="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3">${escapeHtml(faq.question)}</h3><p class="text-[#4b5563] leading-relaxed">${escapeHtml(faq.answer)}</p></div>`)
     .join('\n            ');
 
   const relatedHtml = relatedPages
-    .map((p) => `<a href="${resourcesPath}/${p.slug}" class="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors">${escapeHtml(p.title)}</a>`)
+    .map((p) => `<a href="${resourcesPath}/${p.slug}" class="rounded-2xl border border-black/10 bg-[#f7f5fb] p-5 text-[#4b5563] hover:text-[#0a0a0a] hover:border-purple-400 transition-colors">${escapeHtml(p.title)}</a>`)
     .join('\n            ');
 
   const bodyContent = `
-    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
+    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-white text-[#0a0a0a] min-h-screen">
       <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-purple-900/10 rounded-full blur-[160px] pointer-events-none"></div>
       <div class="max-w-5xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
-          <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
+          <ol class="flex items-center gap-2 text-sm text-[#4b5563]">
+            <li><a href="/" class="hover:text-purple-700 transition-colors">Home</a></li>
             <li>/</li>
-            <li><a href="${resourcesPath}" class="hover:text-indigo-300 transition-colors">Risorse</a></li>
+            <li><a href="${resourcesPath}" class="hover:text-purple-700 transition-colors">Risorse</a></li>
             <li>/</li>
-            <li class="text-gray-300">${escapeHtml(page.title)}</li>
+            <li class="text-[#4b5563]">${escapeHtml(page.title)}</li>
           </ol>
         </nav>
 
         <header class="mb-14">
-          <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">${escapeHtml(page.keyword)}</p>
+          <p class="text-purple-700 text-sm tracking-[0.08em] uppercase mb-5">${escapeHtml(page.keyword)}</p>
           <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">${escapeHtml(page.title)}</h1>
-          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">${escapeHtml(page.description)}</p>
+          <p class="text-lg md:text-xl text-[#4b5563] leading-relaxed max-w-3xl">${escapeHtml(page.description)}</p>
         </header>
 
-        <section class="mb-16 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
+        <section class="mb-16 rounded-3xl border border-purple-300 bg-[#f3e8ff] p-8">
           <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Risposta diretta</h2>
-          <p class="text-lg md:text-xl text-gray-200 leading-relaxed">${escapeHtml(page.directAnswer)}</p>
+          <p class="text-lg md:text-xl text-[#4b5563] leading-relaxed">${escapeHtml(page.directAnswer)}</p>
         </section>
 
-        <a href="${hub.path}" class="mb-16 flex items-center justify-between gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 transition-colors">
-          <span class="text-gray-200">Vuoi vedere prezzi e pacchetti? <strong class="text-white">${escapeHtml(hub.label)}</strong></span>
-          <svg class="h-5 w-5 flex-shrink-0 text-indigo-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        <a href="${hub.path}" class="mb-16 flex items-center justify-between gap-4 rounded-3xl border border-black/10 bg-[#f7f5fb] p-6 hover:border-purple-400 transition-colors">
+          <span class="text-[#4b5563]">Vuoi vedere prezzi e pacchetti? <strong class="text-[#0a0a0a]">${escapeHtml(hub.label)}</strong></span>
+          <svg class="h-5 w-5 flex-shrink-0 text-purple-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
         </a>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-16">
-          <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+          <section class="rounded-3xl border border-black/10 bg-[#f7f5fb] p-6">
             <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Per chi</h2>
-            <p class="text-gray-400 leading-relaxed">${escapeHtml(page.audience)}.</p>
+            <p class="text-[#4b5563] leading-relaxed">${escapeHtml(page.audience)}.</p>
           </section>
-          <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+          <section class="rounded-3xl border border-black/10 bg-[#f7f5fb] p-6">
             <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Problema</h2>
-            <p class="text-gray-400 leading-relaxed">${escapeHtml(page.pain)}.</p>
+            <p class="text-[#4b5563] leading-relaxed">${escapeHtml(page.pain)}.</p>
           </section>
-          <section class="rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-6">
+          <section class="rounded-3xl border border-purple-300 bg-[#f3e8ff] p-6">
             <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Risultato</h2>
-            <p class="text-gray-300 leading-relaxed">${escapeHtml(page.proof)}.</p>
+            <p class="text-[#4b5563] leading-relaxed">${escapeHtml(page.proof)}.</p>
           </section>
         </div>
 
@@ -396,7 +396,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
 
         <section class="mb-16">
           <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-5">Come interveniamo</h2>
-          <p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">${escapeHtml(page.solution)}.</p>
+          <p class="text-lg md:text-xl text-[#4b5563] leading-relaxed mb-8">${escapeHtml(page.solution)}.</p>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             ${servicesHtml}
           </div>
@@ -453,30 +453,29 @@ function generateResourcesHtml(): string {
 
   const pagesHtml = seoPages
     .map((page) => `
-      <a href="${resourcesPath}/${page.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
-        <span class="text-[11px] uppercase tracking-[0.08em] text-indigo-300">${escapeHtml(page.keyword)}</span>
-        <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mt-4 mb-3 group-hover:text-indigo-200 transition-colors">${escapeHtml(page.title)}</h2>
-        <p class="text-gray-400 leading-relaxed mb-6">${escapeHtml(page.description)}</p>
-        <span class="inline-flex items-center gap-2 text-indigo-300 font-medium">Apri pagina <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
+      <a href="${resourcesPath}/${page.slug}" class="group rounded-3xl border border-black/10 bg-[#f7f5fb] p-6 hover:border-purple-400 hover:bg-[#f3e8ff] transition-all duration-300">
+        <span class="text-[11px] uppercase tracking-[0.08em] text-purple-700">${escapeHtml(page.keyword)}</span>
+        <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mt-4 mb-3 group-hover:text-purple-700 transition-colors">${escapeHtml(page.title)}</h2>
+        <p class="text-[#4b5563] leading-relaxed mb-6">${escapeHtml(page.description)}</p>
+        <span class="inline-flex items-center gap-2 text-purple-700 font-medium">Apri pagina <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
       </a>
     `)
     .join('\n          ');
 
   const bodyContent = `
-    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
+    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-white text-[#0a0a0a] min-h-screen">
       <div class="max-w-6xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
-          <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
+          <ol class="flex items-center gap-2 text-sm text-[#4b5563]">
+            <li><a href="/" class="hover:text-purple-700 transition-colors">Home</a></li>
             <li>/</li>
-            <li class="text-gray-300">Risorse</li>
+            <li class="text-[#4b5563]">Risorse</li>
           </ol>
         </nav>
 
-        <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">Risorse</p>
+        <p class="text-purple-700 text-sm tracking-[0.08em] uppercase mb-5">Risorse</p>
         <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] max-w-4xl mb-6">Risorse su Agenti AI, Automazioni e Tecnologia per Aziende B2B</h1>
-        <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
+        <p class="text-lg md:text-xl text-[#4b5563] leading-relaxed max-w-3xl mb-14">
           Questa directory raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico e collega servizi, problemi, soluzioni e FAQ.
         </p>
 
@@ -522,33 +521,32 @@ function generateCaseStudiesIndexHtml(): string {
 
   const cardsHtml = caseStudies
     .map((study) => `
-      <a href="${caseStudiesPath}/${study.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] overflow-hidden hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
-        <img src="${study.coverImageMobile}" srcset="${study.coverImageMobile} 836w, ${study.coverImage} 1672w" sizes="(min-width: 768px) 50vw, 100vw" alt="${escapeHtml(study.coverImageAlt)}" width="${study.coverImageWidth}" height="${study.coverImageHeight}" loading="lazy" decoding="async" class="w-full aspect-video object-cover border-b border-white/10" />
+      <a href="${caseStudiesPath}/${study.slug}" class="group rounded-3xl border border-black/10 bg-[#f7f5fb] overflow-hidden hover:border-purple-400 hover:bg-[#f3e8ff] transition-all duration-300">
+        <img src="${study.coverImageMobile}" srcset="${study.coverImageMobile} 836w, ${study.coverImage} 1672w" sizes="(min-width: 768px) 50vw, 100vw" alt="${escapeHtml(study.coverImageAlt)}" width="${study.coverImageWidth}" height="${study.coverImageHeight}" loading="lazy" decoding="async" class="w-full aspect-video object-cover border-b border-black/10" />
         <div class="p-6">
-          <span class="text-[11px] uppercase tracking-[0.08em] text-indigo-300">${escapeHtml(study.category)}</span>
-          <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mt-4 mb-3 group-hover:text-indigo-200 transition-colors">${escapeHtml(study.client)}</h2>
-          <p class="text-gray-400 leading-relaxed mb-6">${escapeHtml(study.subheadline)}</p>
-          <span class="inline-flex items-center gap-2 text-indigo-300 font-medium">Leggi il caso studio <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
+          <span class="text-[11px] uppercase tracking-[0.08em] text-purple-700">${escapeHtml(study.category)}</span>
+          <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mt-4 mb-3 group-hover:text-purple-700 transition-colors">${escapeHtml(study.client)}</h2>
+          <p class="text-[#4b5563] leading-relaxed mb-6">${escapeHtml(study.subheadline)}</p>
+          <span class="inline-flex items-center gap-2 text-purple-700 font-medium">Leggi il caso studio <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
         </div>
       </a>
     `)
     .join('\n          ');
 
   const bodyContent = `
-    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
+    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-white text-[#0a0a0a] min-h-screen">
       <div class="max-w-6xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
-          <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
+          <ol class="flex items-center gap-2 text-sm text-[#4b5563]">
+            <li><a href="/" class="hover:text-purple-700 transition-colors">Home</a></li>
             <li>/</li>
-            <li class="text-gray-300">Casi Studio</li>
+            <li class="text-[#4b5563]">Casi Studio</li>
           </ol>
         </nav>
 
-        <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">Casi Studio</p>
+        <p class="text-purple-700 text-sm tracking-[0.08em] uppercase mb-5">Casi Studio</p>
         <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] max-w-4xl mb-6">Progetti reali, dati reali.</h1>
-        <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
+        <p class="text-lg md:text-xl text-[#4b5563] leading-relaxed max-w-3xl mb-14">
           Come lavoriamo con i clienti Q4 Studio: cosa abbiamo trovato, cosa abbiamo costruito e cosa è cambiato, con i numeri veri di ogni progetto.
         </p>
 
@@ -616,68 +614,67 @@ function generateCaseStudyDetailHtml(study: CaseStudy): string {
   };
 
   const introHtml = study.intro
-    .map((block) => `<p class="text-gray-300 leading-relaxed">${escapeHtml(block.paragraph)}${block.link ? ` <a href="${block.link.href}" target="_blank" rel="noopener noreferrer" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4 decoration-indigo-400/40 transition-colors">${escapeHtml(block.link.label)}</a>` : ''}</p>`)
+    .map((block) => `<p class="text-[#4b5563] leading-relaxed">${escapeHtml(block.paragraph)}${block.link ? ` <a href="${block.link.href}" target="_blank" rel="noopener noreferrer" class="text-purple-700 hover:text-purple-900 underline underline-offset-4 decoration-purple-400/40 transition-colors">${escapeHtml(block.link.label)}</a>` : ''}</p>`)
     .join('\n          ');
 
   const challengeHtml = study.challenge.paragraphs
-    .map((p) => `<p class="text-lg md:text-xl text-gray-300 leading-relaxed">${escapeHtml(p)}</p>`)
+    .map((p) => `<p class="text-lg md:text-xl text-[#4b5563] leading-relaxed">${escapeHtml(p)}</p>`)
     .join('\n            ');
 
   const workItemsHtml = study.work.items
-    .map((item) => `<div class="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5"><svg class="w-5 h-5 text-indigo-300 mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg><span class="text-gray-200">${escapeHtml(item)}</span></div>`)
+    .map((item) => `<div class="flex items-start gap-3 rounded-2xl border border-black/10 bg-[#f7f5fb] p-5"><svg class="w-5 h-5 text-purple-700 mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg><span class="text-[#4b5563]">${escapeHtml(item)}</span></div>`)
     .join('\n            ');
 
   const statsHtml = (study.results.stats ?? [])
-    .map((stat) => `<div class="bg-[#070707] p-8 md:p-10 text-center flex flex-col items-center gap-3"><p class="tabular-nums text-[clamp(28px,4.5vw,48px)] font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300" style="font-family: 'Space Grotesk', sans-serif;">${escapeHtml(stat.value)}</p><p class="text-sm text-gray-400 leading-relaxed">${escapeHtml(stat.label)}</p></div>`)
+    .map((stat) => `<div class="bg-[#f7f5fb] p-8 md:p-10 text-center flex flex-col items-center gap-3"><p class="tabular-nums text-[clamp(28px,4.5vw,48px)] font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-700" style="font-family: 'Hanken Grotesk', 'Inter', sans-serif;">${escapeHtml(stat.value)}</p><p class="text-sm text-[#4b5563] leading-relaxed">${escapeHtml(stat.label)}</p></div>`)
     .join('\n            ');
 
   const demoVideoHtml = study.demoVideo
     ? `
         <section class="mb-16">
           <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.demoVideo.heading)}</h2>
-          <div class="relative rounded-3xl overflow-hidden mb-6 border border-white/10">
+          <div class="relative rounded-3xl overflow-hidden mb-6 border border-black/10">
             <video autoplay muted loop playsinline preload="metadata" poster="${study.demoVideo.poster}" width="${study.demoVideo.width}" height="${study.demoVideo.height}" aria-label="${escapeHtml(study.demoVideo.alt)}" class="w-full h-auto aspect-video object-cover">
               <source src="${study.demoVideo.webmSrc}" type="video/webm" />
               <source src="${study.demoVideo.mp4Src}" type="video/mp4" />
             </video>
           </div>
-          <p class="text-gray-400 leading-relaxed max-w-3xl">${escapeHtml(study.demoVideo.caption)}</p>
+          <p class="text-[#4b5563] leading-relaxed max-w-3xl">${escapeHtml(study.demoVideo.caption)}</p>
         </section>`
     : '';
 
   const whyItMattersHtml = study.whyItMatters.paragraphs
-    .map((p) => `<p class="text-lg md:text-xl text-gray-300 leading-relaxed">${escapeHtml(p)}</p>`)
+    .map((p) => `<p class="text-lg md:text-xl text-[#4b5563] leading-relaxed">${escapeHtml(p)}</p>`)
     .join('\n            ');
 
   const servicesHtml = study.services
-    .map((service) => `<span class="text-[11px] uppercase tracking-[0.08em] text-gray-400 rounded-full border border-white/10 px-3 py-1.5">${escapeHtml(service)}</span>`)
+    .map((service) => `<span class="text-[11px] uppercase tracking-[0.08em] text-[#4b5563] rounded-full border border-black/10 px-3 py-1.5">${escapeHtml(service)}</span>`)
     .join('\n          ');
 
   const ctaHtml = study.cta
-    ? `<section class="mb-16 rounded-3xl border border-cyan-400/20 bg-cyan-400/[0.05] p-8"><h2 class="text-3xl font-bold mb-4">${escapeHtml(study.cta.heading)}</h2><p class="text-gray-300 mb-6">${escapeHtml(study.cta.body)}</p><a href="${study.cta.href}" class="inline-flex rounded-full bg-white px-6 py-3 text-black font-semibold">${escapeHtml(study.cta.label)}</a></section>`
+    ? `<section class="mb-16 rounded-3xl border border-purple-300 bg-[#f3e8ff] p-8"><h2 class="text-3xl font-bold mb-4">${escapeHtml(study.cta.heading)}</h2><p class="text-[#4b5563] mb-6">${escapeHtml(study.cta.body)}</p><a href="${study.cta.href}" class="inline-flex rounded-full bg-white px-6 py-3 text-black font-semibold">${escapeHtml(study.cta.label)}</a></section>`
     : '';
 
   const bodyContent = `
-    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
+    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-white text-[#0a0a0a] min-h-screen">
       <div class="max-w-4xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-10">
-          <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
+          <ol class="flex items-center gap-2 text-sm text-[#4b5563]">
+            <li><a href="/" class="hover:text-purple-700 transition-colors">Home</a></li>
             <li>/</li>
-            <li><a href="${caseStudiesPath}" class="hover:text-indigo-300 transition-colors">Casi Studio</a></li>
+            <li><a href="${caseStudiesPath}" class="hover:text-purple-700 transition-colors">Casi Studio</a></li>
             <li>/</li>
-            <li class="text-gray-300">${escapeHtml(study.client)}</li>
+            <li class="text-[#4b5563]">${escapeHtml(study.client)}</li>
           </ol>
         </nav>
 
         <header class="mb-12">
-          <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">${escapeHtml(study.kicker)}</p>
+          <p class="text-purple-700 text-sm tracking-[0.08em] uppercase mb-5">${escapeHtml(study.kicker)}</p>
           <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">${escapeHtml(study.title)}</h1>
-          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">${escapeHtml(study.subheadline)}</p>
+          <p class="text-lg md:text-xl text-[#4b5563] leading-relaxed max-w-3xl">${escapeHtml(study.subheadline)}</p>
         </header>
 
-        <div class="relative rounded-3xl overflow-hidden mb-14 md:mb-16 border border-white/10">
+        <div class="relative rounded-3xl overflow-hidden mb-14 md:mb-16 border border-black/10">
           <img src="${study.coverImage}" srcset="${study.coverImageMobile} 836w, ${study.coverImage} 1672w" sizes="(min-width: 896px) 896px, 100vw" alt="${escapeHtml(study.coverImageAlt)}" width="${study.coverImageWidth}" height="${study.coverImageHeight}" loading="eager" fetchpriority="high" decoding="async" class="w-full h-auto object-cover" />
         </div>
 
@@ -694,7 +691,7 @@ function generateCaseStudyDetailHtml(study: CaseStudy): string {
 
         <section class="mb-16">
           <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.work.heading)}</h2>
-          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-8">${escapeHtml(study.work.intro)}</p>
+          <p class="text-lg md:text-xl text-[#4b5563] leading-relaxed max-w-3xl mb-8">${escapeHtml(study.work.intro)}</p>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             ${workItemsHtml}
           </div>
@@ -702,11 +699,11 @@ function generateCaseStudyDetailHtml(study: CaseStudy): string {
 ${demoVideoHtml}
         <section class="mb-16">
           <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.results.heading)}</h2>
-          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-8">${escapeHtml(study.results.intro)}</p>
-          ${statsHtml ? `<div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/5 rounded-3xl overflow-hidden border border-white/5 mb-8">
+          <p class="text-lg md:text-xl text-[#4b5563] leading-relaxed max-w-3xl mb-8">${escapeHtml(study.results.intro)}</p>
+          ${statsHtml ? `<div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-black/5 rounded-3xl overflow-hidden border border-black/5 mb-8">
             ${statsHtml}
           </div>` : ''}
-          <p class="text-gray-400 leading-relaxed max-w-3xl">${escapeHtml(study.results.note)}</p>
+          <p class="text-[#4b5563] leading-relaxed max-w-3xl">${escapeHtml(study.results.note)}</p>
         </section>
 
         <section class="mb-16">
@@ -718,7 +715,7 @@ ${demoVideoHtml}
 
         ${ctaHtml}
 
-        <div class="flex flex-wrap gap-3 pt-8 border-t border-white/10">
+        <div class="flex flex-wrap gap-3 pt-8 border-t border-black/10">
           ${servicesHtml}
         </div>
       </div>
@@ -741,18 +738,17 @@ ${demoVideoHtml}
 
 function generateBlogIndexHtml(): string {
   const bodyContent = `
-    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none"></div>
+    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-white text-[#0a0a0a] min-h-screen">
       <div class="max-w-7xl mx-auto relative z-10">
         <div class="text-center mb-20">
-          <span class="text-indigo-500 tracking-[0.08em] mb-5 block text-sm uppercase">Insights & Strategie</span>
-          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">Il nostro <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span></h1>
-          <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          <span class="text-purple-700 tracking-[0.08em] mb-5 block text-sm uppercase">Insights & Strategie</span>
+          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">Il nostro <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-700">Blog</span></h1>
+          <p class="text-lg md:text-xl text-[#4b5563] max-w-2xl mx-auto leading-relaxed">
             Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Agenti AI.
           </p>
         </div>
         <div class="flex items-center justify-center py-20">
-          <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+          <div class="w-12 h-12 border-4 border-purple-700 border-t-transparent rounded-full animate-spin"></div>
         </div>
       </div>
     </section>
@@ -833,7 +829,7 @@ function renderArticleInline(value: string): string {
     .filter(Boolean)
     .map((token) => {
       if (token.startsWith('**') && token.endsWith('**')) {
-        return `<strong class="font-semibold text-white">${escapeHtml(token.slice(2, -2))}</strong>`;
+        return `<strong class="font-semibold text-[#0a0a0a]">${escapeHtml(token.slice(2, -2))}</strong>`;
       }
       if (token.startsWith('`') && token.endsWith('`')) {
         return `<code>${escapeHtml(token.slice(1, -1))}</code>`;
@@ -843,7 +839,7 @@ function renderArticleInline(value: string): string {
         const destination = safeArticleLink(link[2]);
         if (!destination) return escapeHtml(link[1]);
         const externalAttributes = destination.external ? ' target="_blank" rel="noopener noreferrer"' : '';
-        return `<a href="${escapeHtml(destination.href)}"${externalAttributes} class="font-medium text-indigo-300 underline underline-offset-4">${escapeHtml(link[1])}</a>`;
+        return `<a href="${escapeHtml(destination.href)}"${externalAttributes} class="font-medium text-purple-700 underline underline-offset-4">${escapeHtml(link[1])}</a>`;
       }
       return escapeHtml(token);
     })
@@ -862,11 +858,11 @@ function renderMarkdown(content: string): string {
   // whichever list was open.
   const flushLists = () => {
     if (currentOrderedList.length > 0) {
-      elements.push(`<ol class="list-decimal list-inside space-y-2 mb-6 text-gray-300">${currentOrderedList.map((item) => `<li class="leading-relaxed">${renderArticleInline(item)}</li>`).join('')}</ol>`);
+      elements.push(`<ol class="list-decimal list-inside space-y-2 mb-6 text-[#4b5563]">${currentOrderedList.map((item) => `<li class="leading-relaxed">${renderArticleInline(item)}</li>`).join('')}</ol>`);
       currentOrderedList = [];
     }
     if (currentUnorderedList.length > 0) {
-      elements.push(`<ul class="list-disc list-inside space-y-2 mb-6 text-gray-300">${currentUnorderedList.map((item) => `<li class="leading-relaxed">${renderArticleInline(item)}</li>`).join('')}</ul>`);
+      elements.push(`<ul class="list-disc list-inside space-y-2 mb-6 text-[#4b5563]">${currentUnorderedList.map((item) => `<li class="leading-relaxed">${renderArticleInline(item)}</li>`).join('')}</ul>`);
       currentUnorderedList = [];
     }
   };
@@ -877,7 +873,7 @@ function renderMarkdown(content: string): string {
       elements.push(`<h1 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6 mt-8">${renderArticleInline(line.replace('# ', ''))}</h1>`);
     } else if (line.startsWith('## ')) {
       flushLists();
-      elements.push(`<h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4 mt-8 text-indigo-300">${renderArticleInline(line.replace('## ', ''))}</h2>`);
+      elements.push(`<h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4 mt-8 text-purple-700">${renderArticleInline(line.replace('## ', ''))}</h2>`);
     } else if (line.startsWith('### ')) {
       flushLists();
       elements.push(`<h3 class="text-lg md:text-xl font-bold leading-[1.5] mb-3 mt-6 text-purple-300">${renderArticleInline(line.replace('### ', ''))}</h3>`);
@@ -891,7 +887,7 @@ function renderMarkdown(content: string): string {
       flushLists();
     } else if (line.trim() !== '') {
       flushLists();
-      elements.push(`<p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-4">${renderArticleInline(line)}</p>`);
+      elements.push(`<p class="text-lg md:text-xl text-[#4b5563] leading-relaxed mb-4">${renderArticleInline(line)}</p>`);
     }
   });
 
@@ -956,31 +952,30 @@ function generateBlogArticleHtml(post: any): string {
   };
 
   const bodyContent = `
-    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none"></div>
+    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-white text-[#0a0a0a] min-h-screen">
       <div class="max-w-4xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" class="mb-8">
-          <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
+          <ol class="flex items-center gap-2 text-sm text-[#4b5563]">
+            <li><a href="/" class="hover:text-purple-700 transition-colors">Home</a></li>
             <li>/</li>
-            <li><a href="/blog" class="hover:text-indigo-300 transition-colors">Blog</a></li>
+            <li><a href="/blog" class="hover:text-purple-700 transition-colors">Blog</a></li>
             <li>/</li>
-            <li class="text-gray-300">${escapeHtml(post.title)}</li>
+            <li class="text-[#4b5563]">${escapeHtml(post.title)}</li>
           </ol>
         </nav>
 
         <div>
-          <div class="inline-block px-4 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/30 mb-6">
-            <span class="text-indigo-300 text-sm font-medium">${escapeHtml(post.category)}</span>
+          <div class="inline-block px-4 py-1 rounded-full bg-purple-100 border border-purple-200 mb-6">
+            <span class="text-purple-700 text-sm font-medium">${escapeHtml(post.category)}</span>
           </div>
 
           <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">${escapeHtml(post.title)}</h1>
 
-          <div class="flex flex-wrap items-center gap-6 text-gray-400 mb-8 pb-8 border-b border-white/10">
+          <div class="flex flex-wrap items-center gap-6 text-[#4b5563] mb-8 pb-8 border-b border-black/10">
             <div class="flex items-center gap-3">
               <img src="${post.author.image}" alt="${escapeHtml(post.author.name)}" loading="lazy" decoding="async" class="w-12 h-12 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=96'" />
               <div>
-                <p class="text-white font-medium">${escapeHtml(post.author.name)}</p>
+                <p class="text-[#0a0a0a] font-medium">${escapeHtml(post.author.name)}</p>
                 <div class="flex items-center gap-4 text-sm">
                   <span>${publishedDate}</span>
                   <span>${post.readTime} di lettura</span>
@@ -991,7 +986,7 @@ function generateBlogArticleHtml(post: any): string {
 
           <div class="relative h-[400px] rounded-3xl overflow-hidden mb-12">
             <img src="${post.coverImage}" alt="${escapeHtml(post.title)}" loading="eager" fetchpriority="high" class="w-full h-full object-cover" />
-            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
           </div>
         </div>
 
@@ -999,14 +994,14 @@ function generateBlogArticleHtml(post: any): string {
           ${renderedContent}
         </div>
 
-        <div class="mt-16 p-8 rounded-3xl bg-gradient-to-br from-indigo-950/30 to-purple-950/30 border border-white/10">
+        <div class="mt-16 p-8 rounded-3xl bg-gradient-to-br from-[#f7f5fb] to-[#ecdffb] border border-black/10">
           <div class="flex flex-col md:flex-row items-center gap-6">
             <img src="${post.author.image}" alt="${escapeHtml(post.author.name)}" loading="lazy" decoding="async" class="w-20 h-20 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=160'" />
             <div class="flex-1 text-center md:text-left">
               <h3 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-2">${escapeHtml(post.author.name)}</h3>
-              <p class="text-gray-400">Vuoi approfondire queste strategie per il tuo business? Contattaci per una consulenza personalizzata.</p>
+              <p class="text-[#4b5563]">Vuoi approfondire queste strategie per il tuo business? Contattaci per una consulenza personalizzata.</p>
             </div>
-            <a href="/" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all duration-300 whitespace-nowrap">Contattaci</a>
+            <a href="/" class="px-8 py-4 bg-[#0a0a0a] text-white rounded-full font-semibold hover:bg-purple-700 transition-colors duration-300 whitespace-nowrap">Contattaci</a>
           </div>
         </div>
       </div>
@@ -1029,7 +1024,7 @@ function generateBlogArticleHtml(post: any): string {
   });
 }
 
-const staticPage = (content: string) => `<main class="min-h-screen bg-[#050505] text-white px-6 pt-36 pb-24"><div class="max-w-6xl mx-auto space-y-16">${content}</div></main>`;
+const staticPage = (content: string) => `<main class="min-h-screen bg-white text-[#0a0a0a] px-6 pt-36 pb-24"><div class="max-w-6xl mx-auto space-y-16">${content}</div></main>`;
 
 function generateRestyledAIAgentsHtml(): string {
   const packages = [
@@ -1037,7 +1032,7 @@ function generateRestyledAIAgentsHtml(): string {
     { title: 'Automazioni CRM e follow-up', problem: 'I lead non vengono ricontattati e il follow-up dipende da chi si ricorda.', actions: ['Riceve il lead da form, campagne o LinkedIn', 'Lo assegna al commerciale giusto nel CRM, con il contesto già pronto', 'Prepara il primo messaggio e i promemoria di follow-up'], requirements: ['CRM esistente o incluso', 'Numero WhatsApp business', 'Elenco dei momenti di contatto da automatizzare'], timing: '2-3 settimane', price: 'Setup da 490 € · canone da 150 €/mese' },
     { title: 'Richieste WhatsApp che arrivano già compilate', problem: 'I clienti ti scrivono su WhatsApp in tre messaggi disordinati, e qualcuno deve leggere, capire e ridigitare tutto a mano. Nel frattempo passano ore, e il lead ha già chiesto un preventivo a qualcun altro.', description: "Legge i messaggi in arrivo, estrae le informazioni che ti servono per rispondere (nel caso di un preventivo: cosa, dove, quando, quanto), le scrive nel CRM e manda una prima risposta in meno di un minuto. Se manca un'informazione, la chiede. Quando il dato non è certo, segnala invece di inventare.", requirements: ['Un numero WhatsApp collegabile alla piattaforma. Se oggi rispondi dal tuo cellulare con WhatsApp Business, serve un numero dedicato: te lo spieghiamo prima di partire, non dopo.', 'L’elenco delle informazioni che ti servono per rispondere a una richiesta', 'Una persona che valida i primi giorni di funzionamento'], timing: "4-6 settimane dall'avvio", price: 'Setup 990 € · canone 200 €/mese', pilot: 'Per i primi due clienti: setup 490 € invece di 990 €, in cambio del diritto di raccontare il progetto come caso studio e di una call di feedback dopo il primo mese.' },
   ];
-  const cards = packages.map((pack) => `<article class="rounded-3xl border border-white/10 p-8"><h3 class="text-3xl font-bold mb-5">${escapeHtml(pack.title)}</h3><p><strong>Il problema:</strong> ${escapeHtml(pack.problem)}</p>${pack.description ? `<p class="mt-4"><strong>Cosa fa:</strong> ${escapeHtml(pack.description)}</p>` : ''}${pack.actions ? `<p class="mt-4"><strong>Cosa fa</strong></p><ul>${pack.actions.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}<p class="mt-4"><strong>Cosa serve da te</strong></p><ul>${pack.requirements.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul><p class="mt-4"><strong>Tempi:</strong> ${escapeHtml(pack.timing)}</p><p class="mt-4 text-xl font-bold">${escapeHtml(pack.price)}</p>${pack.pilot ? `<p><strong>Pilot pubblico.</strong> ${escapeHtml(pack.pilot)}</p>` : ''}</article>`).join('');
+  const cards = packages.map((pack) => `<article class="rounded-3xl border border-black/10 p-8"><h3 class="text-3xl font-bold mb-5">${escapeHtml(pack.title)}</h3><p><strong>Il problema:</strong> ${escapeHtml(pack.problem)}</p>${pack.description ? `<p class="mt-4"><strong>Cosa fa:</strong> ${escapeHtml(pack.description)}</p>` : ''}${pack.actions ? `<p class="mt-4"><strong>Cosa fa</strong></p><ul>${pack.actions.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}<p class="mt-4"><strong>Cosa serve da te</strong></p><ul>${pack.requirements.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul><p class="mt-4"><strong>Tempi:</strong> ${escapeHtml(pack.timing)}</p><p class="mt-4 text-xl font-bold">${escapeHtml(pack.price)}</p>${pack.pilot ? `<p><strong>Pilot pubblico.</strong> ${escapeHtml(pack.pilot)}</p>` : ''}</article>`).join('');
   const aiAgentsServiceSchema = {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -1136,26 +1131,25 @@ function generateServerSideTrackingHtml(): string {
 // that hits a dead path gets real 404 status AND machine-readable pointers
 // (sitemap, llms.txt, key pages) so it can reroute instead of giving up.
 function generateNotFoundHtml(): string {
-  const body = `<div class="relative w-full min-h-screen bg-[#050505] text-white flex items-center justify-center overflow-hidden">
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-[150px] pointer-events-none"></div>
+  const body = `<div class="relative w-full min-h-screen bg-white text-[#0a0a0a] flex items-center justify-center overflow-hidden">
     <div class="relative z-10 max-w-2xl mx-auto px-6 text-center py-24">
       <h1 class="text-[200px] md:text-[280px] font-bold leading-none tracking-tighter mb-8" style="background:linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(99,102,241,0.8) 50%, rgba(168,85,247,0.6) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">404</h1>
-      <p class="text-2xl md:text-3xl text-gray-300 mb-4 font-light">Pagina non trovata</p>
+      <p class="text-2xl md:text-3xl text-[#4b5563] mb-4 font-light">Pagina non trovata</p>
       <p class="text-lg text-gray-500 mb-12 max-w-md mx-auto">La pagina che stai cercando non esiste o è stata spostata. Torna alla homepage per continuare a esplorare.</p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <a href="/" class="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold">Torna alla Homepage</a>
+        <a href="/" class="flex items-center gap-3 px-8 py-4 bg-[#0a0a0a] text-white rounded-full font-semibold">Torna alla Homepage</a>
       </div>
-      <section aria-label="Link utili" class="mt-16 pt-10 border-t border-white/10 text-left max-w-md mx-auto">
-        <h2 class="text-lg text-gray-400 mb-4">Link utili per ripartire</h2>
+      <section aria-label="Link utili" class="mt-16 pt-10 border-t border-black/10 text-left max-w-md mx-auto">
+        <h2 class="text-lg text-[#4b5563] mb-4">Link utili per ripartire</h2>
         <ul class="space-y-2 text-sm text-gray-500">
-          <li><a href="/" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Homepage</a> — panoramica di Q4 Studio</li>
-          <li><a href="/tracciamento-server-side" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Tracciamento server-side e prezzi</a></li>
-          <li><a href="/siti-web-ai" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Siti web con AI</a></li>
-          <li><a href="/agenti-ai" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Agenti AI e automazioni</a></li>
-          <li><a href="/casi-studio" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Casi studio</a></li>
-          <li><a href="/risorse" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Risorse</a></li>
-          <li><a href="/sitemap.xml" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">sitemap.xml</a> — elenco completo degli URL pubblicati</li>
-          <li><a href="/llms.txt" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">llms.txt</a> — guida al sito per agenti AI</li>
+          <li><a href="/" class="text-purple-700 hover:text-purple-900 underline underline-offset-4">Homepage</a> — panoramica di Q4 Studio</li>
+          <li><a href="/tracciamento-server-side" class="text-purple-700 hover:text-purple-900 underline underline-offset-4">Tracciamento server-side e prezzi</a></li>
+          <li><a href="/siti-web-ai" class="text-purple-700 hover:text-purple-900 underline underline-offset-4">Siti web con AI</a></li>
+          <li><a href="/agenti-ai" class="text-purple-700 hover:text-purple-900 underline underline-offset-4">Agenti AI e automazioni</a></li>
+          <li><a href="/casi-studio" class="text-purple-700 hover:text-purple-900 underline underline-offset-4">Casi studio</a></li>
+          <li><a href="/risorse" class="text-purple-700 hover:text-purple-900 underline underline-offset-4">Risorse</a></li>
+          <li><a href="/sitemap.xml" class="text-purple-700 hover:text-purple-900 underline underline-offset-4">sitemap.xml</a> — elenco completo degli URL pubblicati</li>
+          <li><a href="/llms.txt" class="text-purple-700 hover:text-purple-900 underline underline-offset-4">llms.txt</a> — guida al sito per agenti AI</li>
         </ul>
       </section>
     </div>

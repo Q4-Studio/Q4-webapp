@@ -29,7 +29,7 @@ const CaseStudiesIndex: React.FC = () => {
   };
 
   return (
-    <section className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
+    <section className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-white text-[#0a0a0a] min-h-screen overflow-hidden">
       <SEOHead
         title="Casi Studio | Q4 Studio"
         description="I progetti di Q4 Studio per aziende B2B italiane: tracking server-side, automazioni e agenti AI, raccontati con dati reali."
@@ -38,14 +38,14 @@ const CaseStudiesIndex: React.FC = () => {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[min(900px,180vw)] h-[min(900px,180vw)] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[min(900px,180vw)] h-[min(900px,180vw)] bg-purple-200/40 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <p className="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">Casi Studio</p>
+        <p className="text-purple-700 text-sm tracking-[0.08em] uppercase mb-5">Casi Studio</p>
         <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] max-w-4xl mb-6">
           Progetti reali, dati reali.
         </h1>
-        <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
+        <p className="text-lg md:text-xl text-[#4b5563] leading-relaxed max-w-3xl mb-14">
           Come lavoriamo con i clienti Q4 Studio: cosa abbiamo trovato, cosa abbiamo costruito e cosa è cambiato, con i numeri veri di ogni progetto.
         </p>
 
@@ -55,7 +55,7 @@ const CaseStudiesIndex: React.FC = () => {
               key={study.slug}
               href={`${caseStudiesPath}/${study.slug}`}
               onClick={() => trackCaseStudyClick({ case_study_slug: study.slug, case_study_client: study.client, cta_location: 'case_studies_index' })}
-              className="group rounded-3xl border border-white/10 bg-white/[0.03] overflow-hidden hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300"
+              className="group rounded-3xl border border-black/5 bg-[#f7f5fb] overflow-hidden hover:border-purple-300 hover:shadow-[0_30px_60px_-40px_rgba(126,34,206,0.35)] transition-all duration-300"
             >
               <img
                 src={study.coverImageMobile}
@@ -66,13 +66,13 @@ const CaseStudiesIndex: React.FC = () => {
                 height={study.coverImageHeight}
                 loading="lazy"
                 decoding="async"
-                className="w-full aspect-video object-cover border-b border-white/10"
+                className="w-full aspect-video object-cover border-b border-black/5"
               />
               <div className="p-6">
-                <span className="text-[11px] uppercase tracking-[0.08em] text-indigo-300">{study.category}</span>
-                <h2 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mt-4 mb-3 group-hover:text-indigo-200 transition-colors">{study.client}</h2>
-                <p className="text-gray-400 leading-relaxed mb-6">{study.subheadline}</p>
-                <span className="inline-flex items-center gap-2 text-indigo-300 font-medium">
+                <span className="text-[11px] uppercase tracking-[0.08em] text-purple-700">{study.category}</span>
+                <h2 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mt-4 mb-3 group-hover:text-purple-700 transition-colors">{study.client}</h2>
+                <p className="text-[#4b5563] leading-relaxed mb-6">{study.subheadline}</p>
+                <span className="inline-flex items-center gap-2 text-purple-700 font-medium">
                   Leggi il caso studio
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </span>
