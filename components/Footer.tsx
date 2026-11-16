@@ -12,9 +12,13 @@ gsap.registerPlugin(ScrollTrigger);
 interface FooterProps {
   /** Mostra il blocco CTA "Pronto a crescere?" in testa al footer (default true). */
   showCta?: boolean;
+  /** `light`: footer su fondo bianco (home chiara). Default `dark`. */
+  tone?: 'dark' | 'light';
 }
 
-const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
+const Footer: React.FC<FooterProps> = ({ showCta = true, tone = 'dark' }) => {
+  const light = tone === 'light';
+  const link = light ? 'hover:text-[#0a0a0a] transition-colors' : 'hover:text-indigo-400 transition-colors';
   const footerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const buttonWrapperRef = useRef<HTMLDivElement>(null);
@@ -90,9 +94,9 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
   }, []);
 
   return (
-    <footer ref={footerRef} className={`relative bg-[#050505] text-white ${showCta ? 'pt-40 md:pt-52' : 'pt-20'} pb-10 px-6 overflow-hidden`}>
+    <footer ref={footerRef} className={`relative ${light ? 'bg-white text-[#0a0a0a]' : 'bg-[#050505] text-white'} ${showCta ? 'pt-40 md:pt-52' : light ? 'pt-12' : 'pt-20'} pb-10 px-6 overflow-hidden`}>
       {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-[120px] pointer-events-none" />
+      {!light && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-[120px] pointer-events-none" />}
 
       <div className="max-w-7xl mx-auto relative z-10 flex flex-col items-center text-center">
         {showCta && (
@@ -117,7 +121,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
           </>
         )}
 
-        <div ref={linksRef} className="w-full grid grid-cols-1 md:grid-cols-4 gap-8 border-t border-white/10 pt-10 text-sm text-gray-400">
+        <div ref={linksRef} className={`w-full grid grid-cols-1 md:grid-cols-4 gap-8 border-t pt-10 text-sm ${light ? 'border-black/10 text-gray-500' : 'border-white/10 text-gray-400'}`}>
             <div className="col-span-1 md:col-span-2 text-center md:text-left">
                 <img
                   src="/logo.webp"
@@ -126,20 +130,20 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                   height={40}
                   loading="lazy"
                   decoding="async"
-                  className="h-8 md:h-10 w-auto mb-4 mx-auto md:mx-0"
+                  className={`h-8 md:h-10 w-auto mb-4 mx-auto md:mx-0 ${light ? 'brightness-0' : ''}`}
                 />
                 <p className="max-w-xs mb-4 mx-auto md:mx-0">
                     Studio tecnico per tracciamento server-side, siti web, automazioni e agenti AI.
                 </p>
                 <div className="flex flex-col gap-2 mt-4 mb-4">
                   {phone && (
-                    <a href={`tel:${phone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-gray-400 hover:text-indigo-400 transition-colors justify-center md:justify-start">
+                    <a href={`tel:${phone.replace(/\s/g, '')}`} className={`flex items-center gap-2 justify-center md:justify-start ${light ? 'text-gray-500 hover:text-[#0a0a0a]' : 'text-gray-400 hover:text-indigo-400'} transition-colors`}>
                       <Phone className="w-4 h-4 flex-shrink-0" />
                       <span>{phone}</span>
                     </a>
                   )}
                   {email && (
-                    <a href={`mailto:${email}`} className="flex items-center gap-2 text-gray-400 hover:text-indigo-400 transition-colors justify-center md:justify-start">
+                    <a href={`mailto:${email}`} className={`flex items-center gap-2 justify-center md:justify-start ${light ? 'text-gray-500 hover:text-[#0a0a0a]' : 'text-gray-400 hover:text-indigo-400'} transition-colors`}>
                       <Mail className="w-4 h-4 flex-shrink-0" />
                       <span>{email}</span>
                     </a>
@@ -150,7 +154,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                         href="https://www.instagram.com/q4.studio"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-indigo-400 hover:text-indigo-400 transition-all duration-300 hover:scale-110"
+                        className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:scale-110 ${light ? 'border-black/15 hover:border-[#0a0a0a] hover:text-[#0a0a0a]' : 'border-white/20 hover:border-indigo-400 hover:text-indigo-400'}`}
                     >
                         <Instagram className="w-5 h-5" />
                     </a>
@@ -158,19 +162,19 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                         href="https://www.linkedin.com/company/q4studio/about/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-indigo-400 hover:text-indigo-400 transition-all duration-300 hover:scale-110"
+                        className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:scale-110 ${light ? 'border-black/15 hover:border-[#0a0a0a] hover:text-[#0a0a0a]' : 'border-white/20 hover:border-indigo-400 hover:text-indigo-400'}`}
                     >
                         <Linkedin className="w-5 h-5" />
                     </a>
                 </div>
             </div>
             <div>
-                <h4 className="text-white font-bold text-lg mb-4">Servizi</h4>
+                <h4 className={`font-bold text-lg mb-4 ${light ? 'text-[#0a0a0a]' : 'text-white'}`}>Servizi</h4>
                 <ul className="space-y-2">
-                    <li><a href="/tracciamento-server-side" className="hover:text-indigo-400 transition-colors">Tracciamento server-side</a></li>
-                    <li><a href="/siti-web-ai" className="hover:text-indigo-400 transition-colors">Siti web con AI</a></li>
+                    <li><a href="/tracciamento-server-side" className={link}>Tracciamento server-side</a></li>
+                    <li><a href="/siti-web-ai" className={link}>Siti web con AI</a></li>
                     <li
-                        className="hover:text-indigo-400 cursor-pointer transition-colors"
+                        className={`${link} cursor-pointer`}
                         onClick={() => {
                             window.history.pushState(null, '', '/agenti-ai');
                             window.dispatchEvent(new Event('popstate'));
@@ -179,39 +183,39 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
                         Agenti AI
                     </li>
                     <li>
-                        <a href={caseStudiesPath} className="hover:text-indigo-400 transition-colors">
+                        <a href={caseStudiesPath} className={link}>
                             Casi Studio
                         </a>
                     </li>
-                    <li><a href="/meta-advertising-b2b" className="hover:text-indigo-400 transition-colors">Meta Advertising B2B</a></li>
+                    <li><a href="/meta-advertising-b2b" className={link}>Meta Advertising B2B</a></li>
                 </ul>
             </div>
             <div>
-                <h4 className="text-white font-bold text-lg mb-4">Esplora</h4>
+                <h4 className={`font-bold text-lg mb-4 ${light ? 'text-[#0a0a0a]' : 'text-white'}`}>Esplora</h4>
                 <ul className="space-y-2">
                     <li>
-                        <a href="/blog" className="hover:text-indigo-400 transition-colors">Blog</a>
+                        <a href="/blog" className={link}>Blog</a>
                     </li>
                     <li>
-                        <a href="/risorse" className="hover:text-indigo-400 transition-colors">
+                        <a href="/risorse" className={link}>
                             Risorse
                         </a>
                     </li>
                     <li>
-                        <a href="/about" className="hover:text-indigo-400 transition-colors">
+                        <a href="/about" className={link}>
                             Chi siamo
                         </a>
                     </li>
                     <li>
-                        <a href="/contact" className="hover:text-indigo-400 transition-colors">
+                        <a href="/contact" className={link}>
                             Contatti
                         </a>
                     </li>
-                    <li className="pt-2 text-gray-500">Legale</li>
+                    <li className={`pt-2 ${light ? 'text-gray-400' : 'text-gray-500'}`}>Legale</li>
                     {/* Link reale alla pagina /privacy (prerenderata): i crawler
                         senza JS la raggiungono dal footer, come le altre voci. */}
                     <li>
-                        <a href="/privacy" className="hover:text-indigo-400 transition-colors">
+                        <a href="/privacy" className={link}>
                             Privacy & Cookie Policy
                         </a>
                     </li>
@@ -219,7 +223,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true }) => {
             </div>
         </div>
         
-        <div ref={bottomRef} className="w-full flex flex-col md:flex-row justify-between items-center gap-2 mt-20 text-[11px] text-gray-600">
+        <div ref={bottomRef} className={`w-full flex flex-col md:flex-row justify-between items-center gap-2 mt-20 text-[11px] ${light ? 'text-gray-500' : 'text-gray-600'}`}>
             <span>© {new Date().getFullYear()} Q4 Studio. Tutti i diritti riservati. • P.I. 03033250352</span>
             <span>Reggio Emilia</span>
         </div>

@@ -1,24 +1,16 @@
 import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowDownRight, ArrowUpRight, Bot, Database, MessageCircle, BarChart3, Zap, Server, ShieldCheck } from 'lucide-react';
-import MagneticButton from '../MagneticButton';
-
-gsap.registerPlugin(ScrollTrigger);
+import { ArrowUpRight } from 'lucide-react';
+import { trackCtaClick } from '../../utils/dataLayer';
 
 /* ------------------------------------------------------------------ */
-/* Video di sfondo dell'hero: copre tutta l'area, a opacità ridotta    */
-/* così il titolo resta leggibile anche in cima alla pagina. Niente    */
-/* overlay/scrim: l'opacità è applicata direttamente al <video>.       */
-/* Sostituito da un fermo immagine se l'utente preferisce meno         */
-/* animazioni.                                                         */
+/* Hero della home chiara: blocco scuro con angoli arrotondati in      */
+/* basso, aurora in deriva, video di sfondo e titolo a sinistra che    */
+/* entra parola per parola. Le animazioni sono CSS (classi .w, .aur,   */
+/* .scroll-cue in index.css): niente timeline GSAP da tenere in piedi, */
+/* quindi niente rete di sicurezza per i ticker sospesi nelle webview. */
 /* ------------------------------------------------------------------ */
 
-// Opacità abbassata (da 0.45) e desaturazione via filter direttamente sul
-// video: nessun overlay/scrim, il titolo bianco e il gradiente risaltano di
-// più su uno sfondo neutro e più tenue.
-const HERO_VIDEO_OPACITY = 0.28;
-const HERO_VIDEO_FILTER = 'grayscale(1) contrast(1.05) brightness(1.05)';
+const HERO_VIDEO_OPACITY = 0.6;
 
 const HeroBackgroundVideo: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -31,27 +23,11 @@ const HeroBackgroundVideo: React.FC = () => {
     if (videoRef.current) videoRef.current.muted = true;
   }, []);
 
-  useEffect(() => {
-    // Il video non ha altezza intrinseca nel flusso (è absolute inset-0), ma
-    // il suo caricamento può comunque coincidere con altri assestamenti di
-    // layout (font, immagini). Ricalcoliamo le posizioni dei trigger quando
-    // ha davvero un frame pronto, per sicurezza.
-    const video = videoRef.current;
-    if (!video) return;
-    const onLoaded = () => ScrollTrigger.refresh();
-    video.addEventListener('loadeddata', onLoaded);
-    return () => video.removeEventListener('loadeddata', onLoaded);
-  }, []);
-
   if (reducedMotion) {
     return (
       <div
-        className="absolute inset-0 w-full h-full bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/hero-poster.jpg')",
-          opacity: HERO_VIDEO_OPACITY,
-          filter: HERO_VIDEO_FILTER,
-        }}
+        className="absolute inset-0 h-full w-full bg-cover bg-center"
+        style={{ backgroundImage: "url('/hero-poster.jpg')", opacity: HERO_VIDEO_OPACITY }}
         aria-hidden="true"
       />
     );
@@ -67,267 +43,86 @@ const HeroBackgroundVideo: React.FC = () => {
       poster="/hero-poster.jpg"
       preload="metadata"
       aria-hidden="true"
-      className="absolute inset-0 w-full h-full object-cover"
-      style={{ opacity: HERO_VIDEO_OPACITY, filter: HERO_VIDEO_FILTER }}
+      className="absolute inset-0 h-full w-full object-cover"
+      style={{ opacity: HERO_VIDEO_OPACITY }}
     >
       <source src="/hero-bg.mp4" type="video/mp4" />
     </video>
   );
 };
 
-/* ------------------------------------------------------------------ */
-/* Ticker di parole chiave, mostrato tra manifesto e tracciamento      */
-/* ------------------------------------------------------------------ */
+const LINE_1 = ['Il', 'tuo', 'marketing', 'funziona', 'a', 'metà,'];
+const LINE_2 = ['e', 'il', 'problema', 'è', 'tecnico.'];
 
-const tickerItems = [
-  { label: 'TRACCIAMENTO SERVER-SIDE', icon: <Server className="w-3.5 h-3.5" /> },
-  { label: 'CONSENT MODE', icon: <ShieldCheck className="w-3.5 h-3.5" /> },
-  { label: 'AUTOMAZIONI CRM', icon: <Database className="w-3.5 h-3.5" /> },
-  { label: 'WHATSAPP', icon: <MessageCircle className="w-3.5 h-3.5" /> },
-  { label: 'AGENTI AI', icon: <Bot className="w-3.5 h-3.5" /> },
-  { label: 'META ADS', icon: <Zap className="w-3.5 h-3.5" /> },
-  { label: 'DIGITAL ANALYTICS', icon: <BarChart3 className="w-3.5 h-3.5" /> },
-];
-
-export const HeroTicker: React.FC = () => {
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!trackRef.current) return;
-    const track = trackRef.current;
-    const singleWidth = track.scrollWidth / 3;
-    const tween = gsap.fromTo(track, { x: 0 }, { x: -singleWidth, duration: 26, ease: 'none', repeat: -1 });
-    return () => {
-      tween.kill();
-    };
-  }, []);
-
-  return (
-    <div className="relative w-full overflow-hidden border-y border-white/5 bg-[#050505]/80 py-4 backdrop-blur-sm">
-      <div ref={trackRef} className="flex whitespace-nowrap items-center gap-10 text-[11px] tracking-[0.08em] text-gray-500">
-        {[...tickerItems, ...tickerItems, ...tickerItems].map((item, i) => (
-          <span key={i} className="flex items-center gap-3 flex-shrink-0">
-            <span className="text-indigo-500/70">{item.icon}</span>
-            {item.label}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
+const goTo = (path: string) => {
+  window.history.pushState(null, '', path);
+  window.dispatchEvent(new Event('popstate'));
 };
 
-/* ------------------------------------------------------------------ */
-/* Hero                                                                */
-/* ------------------------------------------------------------------ */
-
 const Hero2: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const canvasWrapRef = useRef<HTMLDivElement>(null);
-  const ghostRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const kickerRef = useRef<HTMLParagraphElement>(null);
-  const line1Ref = useRef<HTMLSpanElement>(null);
-  const line2Ref = useRef<HTMLSpanElement>(null);
-  const subRef = useRef<HTMLParagraphElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    let tl: gsap.core.Timeline | null = null;
-
-    // Rete di sicurezza armata PRIMA di qualsiasi chiamata a GSAP. Nelle
-    // webview in-app (Facebook su Android) requestAnimationFrame può restare
-    // sospeso: il ticker di GSAP non avanza mai, la timeline resta ferma sul
-    // suo stato iniziale e l'hero — alto 100svh — è una schermata nera. I
-    // timer invece continuano a scattare, quindi se dopo un secondo la
-    // timeline non è avanzata di un tick la portiamo direttamente allo stato
-    // finale, che è "tutto visibile".
-    const failSafe = window.setTimeout(() => {
-      if (tl && tl.totalTime() === 0) tl.progress(1);
-    }, 1000);
-
-    const ctx = gsap.context(() => {}, containerRef);
-
-    const build = () => {
-      // Split manuale dei titoli in caratteri (word-safe). I caratteri non
-      // vengono più nascosti qui: lo stato iniziale lo imposta la tween qui
-      // sotto, così il titolo resta leggibile anche se la timeline non viene
-      // mai costruita.
-      const splitChars = (el: HTMLElement | null) => {
-        const targets: HTMLElement[] = [];
-        if (!el) return targets;
-        const original = el.innerText;
-        el.innerHTML = '';
-        original.split(' ').forEach((word, i, arr) => {
-          const wordSpan = document.createElement('span');
-          wordSpan.style.display = 'inline-block';
-          wordSpan.style.whiteSpace = 'nowrap';
-          word.split('').forEach((char) => {
-            const c = document.createElement('span');
-            c.innerText = char;
-            c.style.display = 'inline-block';
-            wordSpan.appendChild(c);
-            targets.push(c);
-          });
-          el.appendChild(wordSpan);
-          if (i < arr.length - 1) el.appendChild(document.createTextNode(' '));
-        });
-        return targets;
-      };
-
-      const chars1 = splitChars(line1Ref.current);
-
-      // Il contenitore non viene più animato in opacità (e non parte più da
-      // `opacity-0` in CSS): entrano i singoli elementi. Così una timeline che
-      // non parte lascia l'hero visibile invece di una schermata nera.
-      tl = gsap.timeline({ delay: 0.15 });
-      tl.fromTo(
-          kickerRef.current,
-          { y: 14, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
-        )
-        .fromTo(
-          chars1,
-          { y: 110, opacity: 0, rotateX: -90 },
-          { y: 0, opacity: 1, rotateX: 0, stagger: 0.022, duration: 0.9, ease: 'back.out(1.6)' },
-          '-=0.15'
-        )
-        // La riga con gradiente non viene splittata in caratteri: figli con
-        // opacity/transform rompono background-clip:text. Reveal come blocco.
-        .fromTo(
-          line2Ref.current,
-          { y: 90, opacity: 0, clipPath: 'inset(0% 0% 100% 0%)' },
-          { y: 0, opacity: 1, clipPath: 'inset(0% 0% -20% 0%)', duration: 1.1, ease: 'power4.out' },
-          '-=0.55'
-        )
-        .fromTo(subRef.current, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, '-=0.5')
-        .fromTo(ctaRef.current, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, '-=0.6')
-        .fromTo(canvasWrapRef.current, { opacity: 0 }, { opacity: 1, duration: 1.6, ease: 'power2.out' }, '-=1.2');
-
-      // Parallasse allo scroll: livelli che scorrono a velocità diverse.
-      // L'opacità del video è già ridotta in modo fisso (HERO_VIDEO_OPACITY,
-      // sul tag <video>): qui animiamo solo la posizione, non l'opacità del
-      // wrapper. Se avessimo animato anche l'opacity del wrapper, i due valori
-      // si sarebbero moltiplicati e in fondo all'hero il video sarebbe quasi
-      // sparito: il cliente vuole che scrollando resti visibile com'è ora.
-      gsap.to(canvasWrapRef.current, {
-        yPercent: 10,
-        ease: 'none',
-        scrollTrigger: { trigger: containerRef.current, start: 'top top', end: 'bottom top', scrub: true },
-      });
-      gsap.to(ghostRef.current, {
-        yPercent: -38,
-        ease: 'none',
-        scrollTrigger: { trigger: containerRef.current, start: 'top top', end: 'bottom top', scrub: true },
-      });
-      gsap.to(contentRef.current, {
-        yPercent: 12,
-        opacity: 0,
-        ease: 'none',
-        scrollTrigger: { trigger: containerRef.current, start: 'top top', end: '75% top', scrub: true },
-      });
-    };
-
-    try {
-      ctx.add(build);
-    } catch {
-      // Se la costruzione fallisce a metà, alcuni elementi hanno già lo stato
-      // iniziale (opacity 0) senza una tween che li riaccenda: annulliamo
-      // tutto. Meglio nessuna animazione che un hero invisibile.
-      ctx.revert();
-      tl = null;
-    }
-
-    return () => {
-      window.clearTimeout(failSafe);
-      ctx.revert();
-    };
-  }, []);
-
-  const goTo = (path: string) => {
-    window.history.pushState(null, '', path);
-    window.dispatchEvent(new Event('popstate'));
-  };
+  // Ritardi come nel mockup: 80 ms tra una parola e l'altra, una pausa più
+  // lunga tra le due righe, i CTA per ultimi.
+  const words = [
+    ...LINE_1.map((w, i) => ({ w, delay: 0.15 + i * 0.08, br: i === LINE_1.length - 1 })),
+    ...LINE_2.map((w, i) => ({ w, delay: 0.62 + i * 0.08, br: false })),
+  ];
 
   return (
-    <div ref={containerRef} className="relative w-full h-[100svh] min-h-[640px] overflow-hidden bg-[#050505]">
-      {/* Video di sfondo: copre tutta l'area dell'hero. La leggibilità del
-          titolo è affidata all'opacità ridotta del video stesso (HERO_VIDEO_OPACITY),
-          non a un overlay/scrim sopra. */}
-      <div ref={canvasWrapRef} className="absolute inset-0 z-0">
-        <HeroBackgroundVideo />
-      </div>
-
-      {/* Ghost text in parallasse */}
+    <section
+      id="hero"
+      className="relative flex min-h-[100svh] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:rounded-b-[56px]"
+    >
+      <div className="aur aur-1" aria-hidden="true" />
+      <div className="aur aur-2" aria-hidden="true" />
+      <div className="aur aur-3" aria-hidden="true" />
+      <HeroBackgroundVideo />
       <div
-        ref={ghostRef}
+        className="absolute inset-0"
         aria-hidden="true"
-        className="absolute -right-8 bottom-[-6%] z-0 select-none pointer-events-none font-bold leading-none"
-        style={{
-          fontFamily: "'Space Grotesk', sans-serif",
-          fontSize: 'clamp(180px, 32vw, 480px)',
-          color: 'transparent',
-          WebkitTextStroke: '1px rgba(129, 140, 248, 0.08)',
-        }}
-      >
-        Q4
-      </div>
+        style={{ background: 'linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.15) 50%, rgba(5,5,5,.75) 100%)' }}
+      />
 
-      <div
-        ref={contentRef}
-        className="relative z-10 h-full max-w-5xl mx-auto px-6 flex flex-col items-center justify-center text-center"
-      >
-        <p
-          ref={kickerRef}
-          className="mb-4 md:mb-5 uppercase tracking-[0.08em] text-[11px] text-indigo-300/70"
-        >
-          TRACCIAMENTO · AUTOMAZIONI · AGENTI AI
-        </p>
-
-        <h1
-          className="max-w-[15ch] font-bold tracking-tighter leading-[0.95] text-white text-[clamp(42px,11vw,60px)] md:text-[clamp(56px,7vw,96px)]"
-          style={{
-            perspective: '800px',
-            textShadow: '0 2px 24px rgba(0,0,0,0.55)',
-          }}
-        >
-          <span ref={line1Ref} className="block">Il tuo marketing funziona a metà,</span>
-          {/* pb + margin-bottom negativo: allargano l'area di paint del
-              background (bg-clip-text) oltre la line-box stretta (leading-0.95)
-              così il discendente della "g" non resta fuori dal gradiente, senza
-              spostare gli elementi sotto (il margin negativo compensa il padding). */}
-          <span
-            ref={line2Ref}
-            className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 pb-[0.2em] -mb-[0.2em]"
-          >
-            e il problema è tecnico.
-          </span>
+      {/* La nav fissa di App.tsx sta sopra: il padding alto lascia spazio. */}
+      <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-20 pt-36 md:px-12 md:pt-40">
+        <h1 className="h-xl max-w-[1300px] text-white" style={{ color: '#fff' }}>
+          {words.map(({ w, delay, br }, i) => (
+            <React.Fragment key={i}>
+              <span className="w" style={{ animationDelay: `${delay}s` }}>{w}</span>
+              {br ? <br className="hidden md:block" /> : null}{' '}
+            </React.Fragment>
+          ))}
         </h1>
 
-        <p
-          ref={subRef}
-          className="mt-8 text-lg md:text-xl text-gray-300 max-w-xl mx-auto leading-relaxed"
-          style={{ textShadow: '0 1px 12px rgba(0,0,0,0.6)' }}
-        >
-          Conversioni che non vengono tracciate. Lead che aspettano ore prima di una risposta. Dati ridigitati a mano da qualcuno che potrebbe fare altro. Sistemiamo lo strato tecnico che sta sotto al marketing: tracciamento server-side, automazioni, agenti AI.
-        </p>
-
-        <div ref={ctaRef} className="mt-10 flex flex-wrap items-center justify-center gap-5">
-          <MagneticButton onClick={() => goTo('/tracciamento-server-side')} className="text-white">
+        <div className="w mt-12 flex flex-wrap items-center gap-5 md:mt-[72px] md:gap-10" style={{ animationDelay: '1.15s' }}>
+          <a
+            href="/tracciamento-server-side"
+            className="btn btn-white"
+            onClick={(e) => {
+              e.preventDefault();
+              trackCtaClick({ cta_location: 'home_hero', cta_label: 'Vedi il tracciamento e i prezzi', cta_destination: '/tracciamento-server-side' });
+              goTo('/tracciamento-server-side');
+            }}
+          >
             Vedi il tracciamento e i prezzi
-            <ArrowUpRight className="w-5 h-5" />
-          </MagneticButton>
-          <button
-            onClick={() => goTo('/casi-studio/candiani-denim-tracking-server-side')}
-            className="group flex items-center gap-2 text-sm tracking-[0.08em] text-gray-400 hover:text-indigo-300 transition-colors cursor-pointer bg-transparent border-0 uppercase"
+            <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+          </a>
+          <a
+            href="/casi-studio/candiani-denim-tracking-server-side"
+            className="btn btn-glass"
+            onClick={(e) => {
+              e.preventDefault();
+              goTo('/casi-studio/candiani-denim-tracking-server-side');
+            }}
           >
             Leggi il caso studio
-            <ArrowDownRight className="w-4 h-4 -rotate-90 group-hover:translate-x-1 transition-transform" />
-          </button>
+          </a>
         </div>
       </div>
-    </div>
+
+      <div className="relative z-[2] flex justify-center pb-8" aria-hidden="true">
+        <div className="scroll-cue" />
+      </div>
+    </section>
   );
 };
 

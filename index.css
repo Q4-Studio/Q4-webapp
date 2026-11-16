@@ -78,3 +78,210 @@ h1, h2, h3, h4, h5, h6 {
   95% { opacity: 0.1; }
   100% { opacity: 0; }
 }
+
+/* ------------------------------------------------------------------ */
+/* Home chiara (mockup "Q4 Studio Homepage Restyle"). Tutto è scopato   */
+/* sotto .home-light: le altre pagine restano sul sistema scuro.        */
+/* Token: carta #f7f5fb, inchiostro #0a0a0a, corpo #4b5563, linea 9%,   */
+/* gradiente indigo → purple. Font Hanken Grotesk solo qui.             */
+/* ------------------------------------------------------------------ */
+.home-light {
+  --ink: #0a0a0a;
+  --body: #4b5563;
+  --mute: #6b7280;
+  --paper: #f7f5fb;
+  --line: rgba(10, 10, 10, 0.09);
+  --grad: linear-gradient(120deg, #818cf8 0%, #a855f7 55%, #9333ea 100%);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Hanken Grotesk', 'Inter', Arial, sans-serif;
+  color: var(--body);
+  background: #fff;
+}
+.home-light h1, .home-light h2, .home-light h3, .home-light .disp {
+  font-family: 'Hanken Grotesk', 'Inter', Arial, sans-serif;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.home-light .disp { letter-spacing: -0.05em; }
+.home-light .h-xl { font-size: clamp(2.75rem, 8.8vw, 9rem); letter-spacing: -0.055em; line-height: 0.95; }
+.home-light .h-l { font-size: clamp(2.5rem, 7.2vw, 7.25rem); letter-spacing: -0.05em; line-height: 0.98; }
+.home-light .lead { font-size: clamp(1.125rem, 1.5vw, 1.375rem); font-weight: 300; line-height: 1.6; }
+.home-light .grad {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Bottoni */
+.home-light .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 9999px;
+  padding: 18px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  min-height: 56px;
+  border: 0;
+  cursor: pointer;
+  transition: transform 0.5s var(--ease-out), box-shadow 0.5s, background 0.3s, color 0.3s;
+}
+.home-light .btn svg { transition: transform 0.5s var(--ease-out); }
+.home-light .btn:hover svg { transform: translate(3px, -3px); }
+.home-light .btn-dark { background: #0a0a0a; color: #fff; }
+.home-light .btn-dark:hover { background: #9333ea; box-shadow: 0 0 60px -15px rgba(168, 85, 247, 0.7); }
+.home-light .btn-glass {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+}
+.home-light .btn-glass:hover { background: rgba(255, 255, 255, 0.16); }
+.home-light .btn-white { background: #fff; color: #0a0a0a; }
+.home-light .btn-white:hover { box-shadow: 0 0 70px -10px rgba(192, 132, 252, 0.9); }
+.home-light .btn:focus-visible, .home-light a:focus-visible, .home-light summary:focus-visible {
+  outline: 2px solid #a855f7;
+  outline-offset: 3px;
+}
+
+/* Aurora: blob sfocati in deriva lenta (hero e chiusura) */
+.home-light .aur { position: absolute; border-radius: 50%; filter: blur(110px); pointer-events: none; }
+.home-light .aur-1 { width: 760px; height: 760px; background: rgba(99, 102, 241, 0.55); left: -180px; top: -200px; animation: q4-drift 16s ease-in-out infinite; }
+.home-light .aur-2 { width: 820px; height: 820px; background: rgba(147, 51, 234, 0.5); right: -220px; top: 80px; animation: q4-drift 20s ease-in-out infinite reverse; }
+.home-light .aur-3 { width: 560px; height: 560px; background: rgba(192, 38, 211, 0.28); left: 30%; bottom: -260px; animation: q4-drift 24s ease-in-out infinite; }
+@keyframes q4-drift { 50% { transform: translate(90px, 60px) scale(1.08); } }
+
+/* Hero: parole che salgono, cue di scroll */
+.home-light .w { display: inline-block; opacity: 0; transform: translateY(60px); animation: q4-up 1s var(--ease-out) forwards; }
+@keyframes q4-up { to { opacity: 1; transform: none; } }
+.home-light .scroll-cue { width: 1px; height: 64px; background: linear-gradient(#fff, transparent); transform-origin: top; animation: q4-cue 2.2s ease-in-out infinite; }
+@keyframes q4-cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+
+/* Righe del flusso lead */
+.home-light .row {
+  display: grid;
+  grid-template-columns: 200px 1fr 340px;
+  gap: 48px;
+  align-items: center;
+  padding: 64px 0;
+  border-top: 1px solid var(--line);
+  transition: padding 0.7s var(--ease-out);
+}
+.home-light .row:last-child { border-bottom: 1px solid var(--line); }
+.home-light .row:hover { padding-left: 24px; }
+.home-light .row .tm { font-weight: 500; font-size: 20px; color: var(--mute); letter-spacing: -0.01em; transition: color 0.3s; }
+.home-light .row:hover .tm { color: #9333ea; }
+.home-light .row h3 { font-size: clamp(2rem, 4.8vw, 4.75rem); letter-spacing: -0.045em; }
+.home-light .row p { font-size: 16px; line-height: 1.6; }
+
+/* Bento servizi */
+.home-light .bc {
+  border-radius: 32px;
+  background: var(--paper);
+  position: relative;
+  overflow: hidden;
+  padding: 44px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.8s var(--ease-out), box-shadow 0.6s;
+}
+.home-light .bc:hover { transform: translateY(-8px); box-shadow: 0 40px 80px -40px rgba(126, 34, 206, 0.45); }
+.home-light .bc h3 { font-size: clamp(1.875rem, 2.8vw, 2.875rem); letter-spacing: -0.04em; line-height: 1.02; }
+.home-light .bc p.d { font-size: 16px; line-height: 1.6; margin-top: 14px; }
+.home-light .ov { margin: -56px 28px 0; position: relative; z-index: 2; outline: 8px solid #fff; box-shadow: 0 40px 70px -40px rgba(76, 29, 149, 0.45); }
+.home-light .price { font-weight: 600; color: var(--ink); font-size: 36px; letter-spacing: -0.03em; line-height: 1; }
+.home-light .dots { position: absolute; inset: 0; opacity: 0.22; background-image: radial-gradient(#7e22ce 1px, transparent 1px); background-size: 18px 18px; pointer-events: none; }
+.home-light .mock { background: #fff; border-radius: 20px; box-shadow: 0 30px 70px -30px rgba(76, 29, 149, 0.35), 0 0 0 1px rgba(10, 10, 10, 0.06); }
+.home-light .ev {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 500;
+  animation: q4-hl 9s ease-in-out infinite;
+}
+.home-light .ev:last-child { border-bottom: 0; }
+.home-light .ev:nth-child(2) { animation-delay: 2.25s; }
+.home-light .ev:nth-child(3) { animation-delay: 4.5s; }
+.home-light .ev:nth-child(4) { animation-delay: 6.75s; }
+@keyframes q4-hl { 0%, 24%, 100% { background: transparent; } 6%, 18% { background: rgba(168, 85, 247, 0.1); } }
+.home-light .ev .ok { flex: none; width: 22px; height: 22px; border-radius: 50%; background: #9333ea; display: grid; place-items: center; color: #fff; }
+.home-light .ev em { margin-left: auto; font-style: normal; font-size: 12px; color: var(--mute); }
+
+/* Tile del processo */
+.home-light .tile { position: relative; aspect-ratio: 4 / 5; border-radius: 32px; overflow: hidden; background: #0a0a0a; color: #fff; }
+.home-light .tile i { position: absolute; border-radius: 50%; filter: blur(50px); }
+.home-light .tile .n { position: absolute; left: 32px; top: 28px; font-weight: 600; font-size: 20px; color: rgba(255, 255, 255, 0.8); }
+.home-light .t1 i:nth-child(1) { width: 70%; height: 70%; left: -10%; top: -10%; background: #6366f1; animation: q4-drift 12s ease-in-out infinite; }
+.home-light .t1 i:nth-child(2) { width: 80%; height: 80%; right: -30%; bottom: -20%; background: #a855f7; animation: q4-drift 16s ease-in-out infinite reverse; }
+.home-light .t2 i:nth-child(1) { width: 80%; height: 80%; right: -20%; top: -20%; background: #9333ea; animation: q4-drift 14s ease-in-out infinite; }
+.home-light .t2 i:nth-child(2) { width: 60%; height: 60%; left: -10%; bottom: -10%; background: #818cf8; animation: q4-drift 18s ease-in-out infinite reverse; }
+.home-light .t3 i:nth-child(1) { width: 70%; height: 70%; left: 10%; top: 25%; background: #c026d3; animation: q4-drift 15s ease-in-out infinite; }
+.home-light .t3 i:nth-child(2) { width: 70%; height: 70%; right: -20%; top: -20%; background: #6366f1; animation: q4-drift 19s ease-in-out infinite reverse; }
+.home-light .tile svg { position: absolute; left: 50%; top: 50%; margin: -60px 0 0 -60px; }
+.home-light .tile .rot { animation: q4-spin 30s linear infinite; transform-origin: 60px 60px; }
+@keyframes q4-spin { to { transform: rotate(360deg); } }
+
+/* FAQ */
+.home-light details.f { border-top: 1px solid var(--line); }
+.home-light details.f:last-child { border-bottom: 1px solid var(--line); }
+.home-light details.f summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+  padding: 40px 0;
+  min-height: 56px;
+}
+.home-light details.f summary::-webkit-details-marker { display: none; }
+.home-light details.f summary h3 { font-size: clamp(1.375rem, 2.2vw, 2rem); letter-spacing: -0.03em; line-height: 1.15; }
+.home-light details.f summary .pl {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  transition: transform 0.5s var(--ease-out), background 0.3s, color 0.3s;
+}
+.home-light details.f summary:hover .pl { background: #f3e8ff; }
+.home-light details.f[open] summary .pl { transform: rotate(45deg); background: #9333ea; color: #fff; border-color: #9333ea; }
+.home-light details.f p { padding: 0 80px 40px 0; font-size: 18px; line-height: 1.7; color: var(--body); max-width: 820px; }
+
+/* Chiusura */
+.home-light .close { background: #050505; color: #fff; border-radius: 56px; position: relative; overflow: hidden; }
+.home-light .close h2 { color: #fff; }
+.home-light .grid60 {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.22;
+  -webkit-mask-image: radial-gradient(60% 70% at 50% 45%, #000, transparent);
+  mask-image: radial-gradient(60% 70% at 50% 45%, #000, transparent);
+}
+
+@media (max-width: 1000px) {
+  .home-light .row { grid-template-columns: 1fr; gap: 16px; padding: 40px 0; }
+  .home-light .row:hover { padding-left: 0; }
+  .home-light .ov { margin: -40px 16px 0; }
+  .home-light .bc { padding: 32px 28px; }
+  .home-light details.f p { padding-right: 0; }
+  .home-light .close { border-radius: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-light *, .home-light *::before, .home-light *::after { animation: none !important; transition: none !important; }
+  .home-light .w { opacity: 1 !important; transform: none !important; }
+}
