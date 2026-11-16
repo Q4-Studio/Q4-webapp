@@ -109,7 +109,7 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
   };
 
   return (
-    <article className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
+    <article className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-white text-[#0a0a0a] min-h-screen overflow-hidden">
       <SEOHead
         title={study.metaTitle}
         description={study.description}
@@ -122,26 +122,26 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[min(900px,180vw)] h-[min(900px,180vw)] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[min(900px,180vw)] h-[min(900px,180vw)] bg-purple-200/40 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto relative z-10">
         <nav aria-label="Breadcrumb" className="mb-10">
-          <ol className="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" className="hover:text-indigo-300 transition-colors">Home</a></li>
+          <ol className="flex items-center gap-2 text-sm text-gray-500">
+            <li><a href="/" className="hover:text-purple-700 transition-colors">Home</a></li>
             <li>/</li>
-            <li><a href={caseStudiesPath} className="hover:text-indigo-300 transition-colors">Casi Studio</a></li>
+            <li><a href={caseStudiesPath} className="hover:text-purple-700 transition-colors">Casi Studio</a></li>
             <li>/</li>
-            <li className="text-gray-300">{study.client}</li>
+            <li className="text-[#0a0a0a]">{study.client}</li>
           </ol>
         </nav>
 
         <header className="mb-12">
-          <p className="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">{study.kicker}</p>
+          <p className="text-purple-700 text-sm tracking-[0.08em] uppercase mb-5">{study.kicker}</p>
           <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">{study.title}</h1>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">{study.subheadline}</p>
+          <p className="text-lg md:text-xl text-[#4b5563] leading-relaxed max-w-3xl">{study.subheadline}</p>
         </header>
 
-        <div className="relative rounded-3xl overflow-hidden mb-14 md:mb-16 border border-white/10">
+        <div className="relative rounded-3xl overflow-hidden mb-14 md:mb-16 border border-black/10">
           <img
             src={study.coverImage}
             srcSet={`${study.coverImageMobile} 836w, ${study.coverImage} 1672w`}
@@ -158,7 +158,7 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
 
         <div className="space-y-6 mb-16 max-w-3xl">
           {study.intro.map((block, i) => (
-            <p key={block.link?.href ?? i} className="text-gray-300 leading-relaxed">
+            <p key={block.link?.href ?? i} className="text-[#4b5563] leading-relaxed">
               {block.paragraph}
               {block.link && (
                 <>
@@ -167,7 +167,7 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
                     href={block.link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4 decoration-indigo-400/40 transition-colors"
+                    className="text-purple-700 hover:text-purple-900 underline underline-offset-4 decoration-purple-400/50 transition-colors"
                   >
                     {block.link.label}
                   </a>
@@ -181,19 +181,19 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
           <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">{study.challenge.heading}</h2>
           <div className="space-y-4 max-w-3xl">
             {study.challenge.paragraphs.map((p, i) => (
-              <p key={i} className="text-lg md:text-xl text-gray-300 leading-relaxed">{p}</p>
+              <p key={i} className="text-lg md:text-xl text-[#4b5563] leading-relaxed">{p}</p>
             ))}
           </div>
         </section>
 
         <section className="mb-16">
           <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">{study.work.heading}</h2>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-8">{study.work.intro}</p>
+          <p className="text-lg md:text-xl text-[#4b5563] leading-relaxed max-w-3xl mb-8">{study.work.intro}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {study.work.items.map((item) => (
-              <div key={item} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                <CheckCircle2 className="w-5 h-5 text-indigo-300 mt-1 flex-shrink-0" />
-                <span className="text-gray-200">{item}</span>
+              <div key={item} className="flex items-start gap-3 rounded-2xl border border-black/5 bg-[#f7f5fb] p-5">
+                <CheckCircle2 className="w-5 h-5 text-purple-700 mt-1 flex-shrink-0" />
+                <span className="text-[#0a0a0a]">{item}</span>
               </div>
             ))}
           </div>
@@ -202,60 +202,59 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
         {study.demoVideo && (
           <section className="mb-16">
             <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">{study.demoVideo.heading}</h2>
-            <div className="relative rounded-3xl overflow-hidden mb-6 border border-white/10">
+            <div className="relative rounded-3xl overflow-hidden mb-6 border border-black/10">
               <CaseStudyDemo demo={study.demoVideo} />
             </div>
-            <p className="text-gray-400 leading-relaxed max-w-3xl">{study.demoVideo.caption}</p>
+            <p className="text-[#4b5563] leading-relaxed max-w-3xl">{study.demoVideo.caption}</p>
           </section>
         )}
 
         <section className="mb-16">
           <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">{study.results.heading}</h2>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-8">{study.results.intro}</p>
+          <p className="text-lg md:text-xl text-[#4b5563] leading-relaxed max-w-3xl mb-8">{study.results.intro}</p>
 
           {study.results.stats && study.results.stats.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/5 rounded-3xl overflow-hidden border border-white/5 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-black/5 rounded-3xl overflow-hidden border border-black/5 mb-8">
               {study.results.stats.map((stat) => (
-                <div key={stat.label} className="bg-[#070707] p-8 md:p-10 text-center flex flex-col items-center gap-3">
+                <div key={stat.label} className="bg-[#f7f5fb] p-8 md:p-10 text-center flex flex-col items-center gap-3">
                   <p
-                    className="tabular-nums text-[clamp(28px,4.5vw,48px)] font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300"
-                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    className="tabular-nums text-[clamp(28px,4.5vw,48px)] font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-500 to-purple-700"
                   >
                     {stat.value}
                   </p>
-                  <p className="text-sm text-gray-400 leading-relaxed">{stat.label}</p>
+                  <p className="text-sm text-gray-500 leading-relaxed">{stat.label}</p>
                 </div>
               ))}
             </div>
           )}
 
-          <p className="text-gray-400 leading-relaxed max-w-3xl">{study.results.note}</p>
+          <p className="text-[#4b5563] leading-relaxed max-w-3xl">{study.results.note}</p>
         </section>
 
         <section className="mb-16">
           <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">{study.whyItMatters.heading}</h2>
           <div className="space-y-4 max-w-3xl">
             {study.whyItMatters.paragraphs.map((p, i) => (
-              <p key={i} className="text-lg md:text-xl text-gray-300 leading-relaxed">{p}</p>
+              <p key={i} className="text-lg md:text-xl text-[#4b5563] leading-relaxed">{p}</p>
             ))}
           </div>
         </section>
 
         {study.cta && (
-          <section className="mb-16 rounded-[2rem] border border-cyan-400/20 bg-cyan-400/[0.05] p-8 md:p-12">
+          <section className="mb-16 rounded-[2rem] border border-black/5 bg-gradient-to-br from-[#f7f5fb] to-[#ecdffb] p-8 md:p-12">
             <h2 className="mb-4 text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em]">{study.cta.heading}</h2>
-            <p className="mb-7 max-w-3xl text-lg leading-relaxed text-gray-300">{study.cta.body}</p>
+            <p className="mb-7 max-w-3xl text-lg leading-relaxed text-[#4b5563]">{study.cta.body}</p>
             <a
               href={study.cta.href}
               onClick={() => trackCtaClick({ cta_location: 'case_study_detail', cta_label: study.cta!.label, cta_destination: study.cta!.href, case_study_slug: study.slug })}
-              className="inline-flex rounded-full bg-white px-6 py-3.5 font-semibold text-[#050505]"
+              className="inline-flex rounded-full bg-[#0a0a0a] px-6 py-3.5 font-semibold text-white transition-colors hover:bg-purple-700"
             >{study.cta.label}</a>
           </section>
         )}
 
-        <div className="flex flex-wrap gap-3 pt-8 border-t border-white/10">
+        <div className="flex flex-wrap gap-3 pt-8 border-t border-black/10">
           {study.services.map((service) => (
-            <span key={service} className="text-[11px] uppercase tracking-[0.08em] text-gray-400 rounded-full border border-white/10 px-3 py-1.5">
+            <span key={service} className="text-[11px] uppercase tracking-[0.08em] text-gray-500 rounded-full border border-black/10 px-3 py-1.5">
               {service}
             </span>
           ))}

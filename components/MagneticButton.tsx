@@ -58,10 +58,10 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
     <button
       ref={buttonRef}
       onClick={onClick}
-      className={`relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-medium transition-colors duration-300 rounded-full group ${className}`}
+      className={`relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-medium transition-colors duration-300 rounded-full group text-[#0a0a0a] hover:text-white ${className}`}
     >
       <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></span>
-      <span className="absolute inset-0 w-full h-full border border-white/20 rounded-full group-hover:border-transparent transition-colors duration-300"></span>
+      <span className="absolute inset-0 w-full h-full border border-black/10 rounded-full group-hover:border-transparent transition-colors duration-300"></span>
       <span ref={textRef} className="relative z-10 flex items-center gap-2">
         {children}
       </span>

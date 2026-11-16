@@ -232,20 +232,6 @@ const HomeV2: React.FC = () => {
     if (!loading) ScrollTrigger.refresh();
   }, [loading]);
 
-  // La home è chiara ma html/body restano scuri (index.css) per le altre
-  // pagine: qui si schiariscono, e si ripristinano quando si cambia pagina,
-  // così l'overscroll e le aree fuori dalle sezioni non mostrano il nero.
-  useEffect(() => {
-    const { documentElement: html, body } = document;
-    const previousHtml = html.style.backgroundColor;
-    const previousBody = body.style.backgroundColor;
-    html.style.backgroundColor = '#ffffff';
-    body.style.backgroundColor = '#ffffff';
-    return () => {
-      html.style.backgroundColor = previousHtml;
-      body.style.backgroundColor = previousBody;
-    };
-  }, []);
 
   // Rete di sicurezza aggiuntiva: il layout può assestarsi anche dopo la fine
   // del preloader (font che finiscono di caricare e cambiano le altezze del
@@ -270,7 +256,7 @@ const HomeV2: React.FC = () => {
   }, []);
 
   return (
-    <div className="home-light relative w-full">
+    <div className="relative w-full">
       <SEOHead
         title="Tracciamento Server-Side e Automazioni AI per PMI | Q4 Studio"
         description="Recuperiamo i segnali di conversione che browser e ad blocker bloccano. Tracciamento server-side, Consent Mode, automazioni AI. Reggio Emilia."
@@ -300,16 +286,16 @@ const HomeV2: React.FC = () => {
       />
 
       <Hero2 />
-      <Marquee tone="light" />
+      <Marquee />
       <Statement />
       <CandianiVisual />
       <LeadFlow />
       <ServicesBento />
       <Process />
       <HomeSeoContent />
-      <ContactForm showHeader={false} tone="light" />
+      <ContactForm showHeader={false} />
       <FinalCTA />
-      <Footer showCta={false} tone="light" />
+      <Footer showCta={false} />
     </div>
   );
 };

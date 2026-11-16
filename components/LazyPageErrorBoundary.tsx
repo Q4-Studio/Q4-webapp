@@ -11,8 +11,8 @@ interface LazyPageErrorBoundaryState {
 
 // Rete di sicurezza per le pagine caricate con lazy(): se un chunk fallisce
 // a caricarsi o va in errore durante il render, senza questo boundary React
-// smonta tutto l'albero e la pagina resta nera. Qui invece mostriamo un
-// fallback minimo, cliccabile, invece di una pagina bianca o nera.
+// smonta tutto l'albero e la pagina resta vuota. Qui invece mostriamo un
+// fallback minimo, cliccabile, invece di una pagina vuota.
 class LazyPageErrorBoundary extends React.Component<LazyPageErrorBoundaryProps, LazyPageErrorBoundaryState> {
   state: LazyPageErrorBoundaryState = { hasError: false };
 
@@ -28,17 +28,17 @@ class LazyPageErrorBoundary extends React.Component<LazyPageErrorBoundaryProps, 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="relative flex min-h-screen w-full items-center justify-center bg-[#050505] px-6 text-center text-white">
+        <div className="relative flex min-h-screen w-full items-center justify-center bg-white px-6 text-center text-[#4b5563]">
           <div className="max-w-xl">
-            <h1 className="mb-5 text-3xl font-bold tracking-[-0.02em] md:text-4xl">Qualcosa non ha funzionato.</h1>
-            <p className="mb-8 leading-relaxed text-gray-400">
+            <h1 className="mb-5 text-3xl font-bold text-[#0a0a0a] tracking-[-0.02em] md:text-4xl">Qualcosa non ha funzionato.</h1>
+            <p className="mb-8 leading-relaxed text-[#4b5563]">
               Questa pagina non si è caricata correttamente. Riprova dalla home, oppure scrivici direttamente.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <a href="/" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-[#050505]">
+              <a href="/" className="inline-flex items-center gap-2 rounded-full bg-[#0a0a0a] px-7 py-4 font-semibold text-white hover:bg-purple-700">
                 Torna alla home
               </a>
-              <a href="/#contatti" className="inline-flex items-center gap-2 rounded-full border border-white/20 px-7 py-4 font-semibold text-white hover:border-white/40">
+              <a href="/#contatti" className="inline-flex items-center gap-2 rounded-full border border-black/10 px-7 py-4 font-semibold text-[#0a0a0a] hover:bg-black/5">
                 Contattaci
               </a>
             </div>

@@ -134,66 +134,71 @@ const SitesWebAI: React.FC = () => {
   };
 
   return (
-    <article ref={pageRef} className="relative overflow-hidden bg-[#050505] px-6 pb-24 pt-36 text-white md:pt-44">
+    <article ref={pageRef} className="relative overflow-hidden bg-white pb-24 text-[#4b5563]">
       <SEOHead title="Siti web con AI per aziende B2B | Q4 Studio" description="Siti e landing page B2B fatti con l’AI, non dall’AI: asset su misura, motion e produzione foto-video. Progetti da 2.999 €." url={`${siteUrl}/siti-web-ai`} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[760px] w-[min(1100px,150vw)] -translate-x-1/2 rounded-full bg-cyan-900/10 blur-[170px]" />
-      <div className="relative z-10 mx-auto max-w-7xl">
-        <header className="grid min-h-[72vh] items-center gap-14 pb-28 lg:grid-cols-[1.08fr_0.92fr] lg:gap-16">
+      {/* Hero scuro come in home: id="hero" guida il colore della nav (App.tsx). */}
+      <header id="hero" className="relative overflow-hidden rounded-b-[36px] bg-[#050505] px-6 pb-20 pt-36 text-white md:rounded-b-[56px] md:pt-44">
+        <div className="aur aur-1" aria-hidden="true" />
+        <div className="aur aur-2" aria-hidden="true" />
+        <div className="relative z-10 mx-auto grid min-h-[64vh] max-w-7xl items-center gap-14 lg:grid-cols-[1.08fr_0.92fr] lg:gap-16">
           <div className="max-w-4xl">
-            <p className="sites-hero-reveal mb-6 text-xs uppercase tracking-[0.16em] text-cyan-300">Siti web · direzione umana · strumenti AI</p>
-            <h1 className="sites-hero-reveal mb-8 text-[clamp(48px,7.2vw,104px)] font-bold leading-[0.9] tracking-[-0.055em]">Fatto con l’AI,<br /><span className="font-normal italic text-white/35" style={{ fontFamily: "'Times New Roman', Georgia, serif" }}>non dall’AI.</span></h1>
+            <p className="sites-hero-reveal mb-6 text-xs uppercase tracking-[0.16em] text-purple-300">Siti web · direzione umana · strumenti AI</p>
+            <h1 className="sites-hero-reveal mb-8 text-[clamp(48px,7.2vw,104px)] font-bold leading-[0.9] tracking-[-0.055em] text-white">Fatto con l’AI,<br /><span className="font-normal italic text-white/35" style={{ fontFamily: "'Times New Roman', Georgia, serif" }}>non dall’AI.</span></h1>
             <p className="sites-hero-reveal max-w-2xl text-xl leading-relaxed text-gray-300 md:text-2xl">Progettiamo siti e landing page con una direzione precisa. L’AI ci permette di produrre immagini, movimento e varianti più velocemente; non decide cosa dire, cosa mostrare o perché.</p>
             <div className="sites-hero-reveal mt-10 flex flex-wrap items-center gap-5">
-              <a href="#contatti" onClick={scrollToContact} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-[#050505] transition-colors hover:bg-cyan-100">Parlaci del tuo sito <ArrowRight className="h-4 w-4" /></a>
+              <a href="#contatti" onClick={scrollToContact} className="btn btn-white">Parlaci del tuo sito <ArrowRight className="h-4 w-4" /></a>
               <span className="text-sm text-gray-400">Progetti da <strong className="text-white">2.999 €</strong></span>
             </div>
           </div>
           <div className="sites-browser-wrap sites-hero-reveal relative py-8"><BrowserStudy /></div>
-        </header>
+        </div>
+      </header>
 
-        <section className="sites-reveal grid gap-10 border-y border-white/10 py-20 lg:grid-cols-[0.85fr_1.15fr] lg:gap-24">
-          <p className="text-xs uppercase tracking-[0.16em] text-cyan-300">Una distinzione importante</p>
-          <div><h2 className="mb-7 text-[clamp(34px,5vw,64px)] font-bold leading-[1.03] tracking-[-0.04em]">L’AI abbassa il costo della produzione. Non il livello delle scelte.</h2><div className="max-w-3xl space-y-5 text-lg leading-relaxed text-gray-300"><p>Un sito non diventa efficace perché una macchina ha generato una pagina. Serve capire cosa deve far ricordare, quale percorso deve costruire e dove deve portare chi lo visita.</p><p>Usiamo l’AI nel processo creativo e tecnico, sotto direzione umana. Il risultato non è “un sito AI”: è un sito riconoscibile, costruito con più possibilità a disposizione.</p></div></div>
+      <div className="relative z-10 mx-auto max-w-7xl px-6 pt-8 md:pt-12">
+
+        <section className="sites-reveal grid gap-10 border-b border-black/10 py-20 lg:grid-cols-[0.85fr_1.15fr] lg:gap-24">
+          <p className="text-xs uppercase tracking-[0.16em] text-purple-700">Una distinzione importante</p>
+          <div><h2 className="mb-7 text-[clamp(34px,5vw,64px)] font-bold leading-[1.03] tracking-[-0.04em]">L’AI abbassa il costo della produzione. Non il livello delle scelte.</h2><div className="max-w-3xl space-y-5 text-lg leading-relaxed text-[#4b5563]"><p>Un sito non diventa efficace perché una macchina ha generato una pagina. Serve capire cosa deve far ricordare, quale percorso deve costruire e dove deve portare chi lo visita.</p><p>Usiamo l’AI nel processo creativo e tecnico, sotto direzione umana. Il risultato non è “un sito AI”: è un sito riconoscibile, costruito con più possibilità a disposizione.</p></div></div>
         </section>
 
         <section className="py-28 md:py-36">
-          <div className="sites-reveal mb-14 max-w-4xl"><p className="mb-5 text-xs uppercase tracking-[0.16em] text-indigo-300">Più linguaggi, nello stesso progetto</p><h2 className="text-[clamp(36px,5.8vw,72px)] font-bold leading-[1] tracking-[-0.045em]">Il sito può fare più che mettere testo sopra una foto.</h2></div>
-          <div className="grid gap-px overflow-hidden rounded-[2rem] border border-white/10 bg-white/10 lg:grid-cols-3">
-            {capabilities.map(({ icon: Icon, index, title, copy }) => <article key={index} className="sites-reveal group relative min-h-[380px] bg-[#080808] p-8 md:p-10"><div className="mb-20 flex items-center justify-between"><span className="text-xs text-gray-600">{index} / 03</span><Icon className="h-7 w-7 text-cyan-300 transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-3" /></div><h3 className="mb-5 text-3xl font-bold leading-tight tracking-[-0.025em]">{title}</h3><p className="leading-relaxed text-gray-400">{copy}</p></article>)}
+          <div className="sites-reveal mb-14 max-w-4xl"><p className="mb-5 text-xs uppercase tracking-[0.16em] text-purple-700">Più linguaggi, nello stesso progetto</p><h2 className="text-[clamp(36px,5.8vw,72px)] font-bold leading-[1] tracking-[-0.045em]">Il sito può fare più che mettere testo sopra una foto.</h2></div>
+          <div className="grid gap-px overflow-hidden rounded-[2rem] border border-black/5 bg-black/5 lg:grid-cols-3">
+            {capabilities.map(({ icon: Icon, index, title, copy }) => <article key={index} className="sites-reveal group relative min-h-[380px] bg-[#f7f5fb] p-8 md:p-10"><div className="mb-20 flex items-center justify-between"><span className="text-xs text-gray-500">{index} / 03</span><Icon className="h-7 w-7 text-purple-700 transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-3" /></div><h3 className="mb-5 text-3xl font-bold leading-tight tracking-[-0.025em]">{title}</h3><p className="leading-relaxed text-[#4b5563]">{copy}</p></article>)}
           </div>
         </section>
 
-        <section className="sites-reveal grid gap-10 rounded-[2.5rem] border border-cyan-300/20 bg-cyan-300/[0.045] p-8 md:p-14 lg:grid-cols-[1fr_0.8fr] lg:items-end">
-          <div><p className="mb-5 text-xs uppercase tracking-[0.16em] text-cyan-300">Landing page</p><h2 className="mb-6 text-[clamp(36px,5.2vw,68px)] font-bold leading-[1] tracking-[-0.045em]">Una pagina può essere pronta in una settimana.</h2><p className="max-w-2xl text-lg leading-relaxed text-gray-300">Quando serve portare online un’offerta o una campagna senza aspettare un sito completo, concentriamo direzione, contenuto e sviluppo in una singola esperienza.</p></div>
-          <div className="border-t border-white/10 pt-7 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0"><p className="mb-2 text-sm uppercase tracking-[0.12em] text-gray-500">Siti web</p><p className="text-4xl font-bold text-white">da 2.999 €</p><p className="mt-4 text-sm leading-relaxed text-gray-400">Forma, tempi e produzione vengono definiti sul progetto.</p></div>
+        <section className="sites-reveal grid gap-10 rounded-[2.5rem] bg-[#f7f5fb] p-8 md:p-14 lg:grid-cols-[1fr_0.8fr] lg:items-end">
+          <div><p className="mb-5 text-xs uppercase tracking-[0.16em] text-purple-700">Landing page</p><h2 className="mb-6 text-[clamp(36px,5.2vw,68px)] font-bold leading-[1] tracking-[-0.045em]">Una pagina può essere pronta in una settimana.</h2><p className="max-w-2xl text-lg leading-relaxed text-[#4b5563]">Quando serve portare online un’offerta o una campagna senza aspettare un sito completo, concentriamo direzione, contenuto e sviluppo in una singola esperienza.</p></div>
+          <div className="border-t border-black/10 pt-7 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0"><p className="mb-2 text-sm uppercase tracking-[0.12em] text-gray-500">Siti web</p><p className="price">da 2.999 €</p><p className="mt-4 text-sm leading-relaxed text-gray-500">Forma, tempi e produzione vengono definiti sul progetto.</p></div>
         </section>
 
         <section className="py-28 md:py-36">
           <div className="sites-reveal grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
-            <div><p className="mb-5 text-xs uppercase tracking-[0.16em] text-indigo-300">Caso studio</p><h2 className="mb-6 text-[clamp(36px,5vw,64px)] font-bold leading-[1.02] tracking-[-0.04em]">GP Meccatronica, dal rebranding al sito in movimento.</h2><p className="mb-8 text-lg leading-relaxed text-gray-300">Una direzione visiva scura e tecnica, motion design e asset generati con l’AI per accompagnare il traffico delle campagne ADV.</p><a href="/casi-studio/gp-meccatronica-sito-web" className="inline-flex items-center gap-2 font-semibold text-cyan-200 hover:text-white">Leggi il caso studio <ArrowRight className="h-4 w-4" /></a></div>
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/10"><img src="/case-studies/gp-meccatronica-hero.webp" srcSet="/case-studies/gp-meccatronica-hero-836w.webp 836w, /case-studies/gp-meccatronica-hero.webp 1672w" sizes="(min-width: 1024px) 55vw, 100vw" alt="GP Meccatronica: autobus scuro con fari accesi, overlay di dati tecnici blu" width="1672" height="941" loading="lazy" decoding="async" className="aspect-video h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" /></div>
+            <div><p className="mb-5 text-xs uppercase tracking-[0.16em] text-purple-700">Caso studio</p><h2 className="mb-6 text-[clamp(36px,5vw,64px)] font-bold leading-[1.02] tracking-[-0.04em]">GP Meccatronica, dal rebranding al sito in movimento.</h2><p className="mb-8 text-lg leading-relaxed text-[#4b5563]">Una direzione visiva scura e tecnica, motion design e asset generati con l’AI per accompagnare il traffico delle campagne ADV.</p><a href="/casi-studio/gp-meccatronica-sito-web" className="inline-flex items-center gap-2 font-semibold text-[#0a0a0a] hover:text-purple-700">Leggi il caso studio <ArrowRight className="h-4 w-4" /></a></div>
+            <div className="relative overflow-hidden rounded-[2rem] border border-black/5"><img src="/case-studies/gp-meccatronica-hero.webp" srcSet="/case-studies/gp-meccatronica-hero-836w.webp 836w, /case-studies/gp-meccatronica-hero.webp 1672w" sizes="(min-width: 1024px) 55vw, 100vw" alt="GP Meccatronica: autobus scuro con fari accesi, overlay di dati tecnici blu" width="1672" height="941" loading="lazy" decoding="async" className="aspect-video h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" /></div>
           </div>
         </section>
 
-        <section className="sites-reveal border-t border-white/10 py-24">
-          <div className="mb-14 max-w-3xl"><p className="mb-5 text-xs uppercase tracking-[0.16em] text-cyan-300">Come lavoriamo</p><h2 className="text-[clamp(36px,5vw,64px)] font-bold leading-[1.02] tracking-[-0.04em]">Tre fasi, non un modulo da compilare.</h2></div>
+        <section className="sites-reveal border-t border-black/10 py-24">
+          <div className="mb-14 max-w-3xl"><p className="mb-5 text-xs uppercase tracking-[0.16em] text-purple-700">Come lavoriamo</p><h2 className="text-[clamp(36px,5vw,64px)] font-bold leading-[1.02] tracking-[-0.04em]">Tre fasi, non un modulo da compilare.</h2></div>
           <div className="grid gap-8 md:grid-cols-3">
-            {process.map((step) => <div key={step.n} className="border-t border-white/10 pt-7"><span className="text-sm text-cyan-400">{step.n}</span><h3 className="mb-3 mt-3 text-2xl font-bold">{step.title}</h3><p className="leading-relaxed text-gray-400">{step.copy}</p></div>)}
+            {process.map((step) => <div key={step.n} className="border-t border-black/10 pt-7"><span className="text-sm text-purple-700">{step.n}</span><h3 className="mb-3 mt-3 text-2xl font-bold">{step.title}</h3><p className="leading-relaxed text-[#4b5563]">{step.copy}</p></div>)}
           </div>
         </section>
 
-        <section className="sites-reveal grid gap-10 border-t border-white/10 py-24 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-          <div><p className="mb-5 text-xs uppercase tracking-[0.16em] text-indigo-300">Prima di iniziare</p><h2 className="text-[clamp(32px,4.8vw,56px)] font-bold leading-[1.05] tracking-[-0.04em]">Cosa serve da te</h2></div>
-          <ul className="space-y-4">{requirements.map((item) => <li key={item} className="flex gap-3 text-lg leading-relaxed text-gray-300"><span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-cyan-300" />{item}</li>)}</ul>
+        <section className="sites-reveal grid gap-10 border-t border-black/10 py-24 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+          <div><p className="mb-5 text-xs uppercase tracking-[0.16em] text-purple-700">Prima di iniziare</p><h2 className="text-[clamp(32px,4.8vw,56px)] font-bold leading-[1.05] tracking-[-0.04em]">Cosa serve da te</h2></div>
+          <ul className="space-y-4">{requirements.map((item) => <li key={item} className="flex gap-3 text-lg leading-relaxed text-[#4b5563]"><span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-purple-700" />{item}</li>)}</ul>
         </section>
 
-        <section className="sites-reveal border-t border-white/10 py-24"><div className="mb-12 max-w-3xl"><p className="mb-5 text-xs uppercase tracking-[0.16em] text-indigo-300">FAQ</p><h2 className="text-[clamp(36px,5vw,64px)] font-bold tracking-[-0.04em]">Domande prima di partire.</h2></div><div className="grid gap-4 lg:grid-cols-2">{faqs.map((faq) => <details key={faq.question} className="group rounded-3xl border border-white/10 bg-white/[0.025] p-6 open:border-cyan-300/25"><summary className="flex cursor-pointer list-none items-start justify-between gap-5 text-xl font-semibold"><span>{faq.question}</span><span className="text-cyan-300 transition-transform group-open:rotate-45">+</span></summary><p className="mt-5 leading-relaxed text-gray-300">{faq.answer}</p></details>)}</div></section>
+        <section className="sites-reveal border-t border-black/10 py-24"><div className="mb-12 max-w-3xl"><p className="mb-5 text-xs uppercase tracking-[0.16em] text-purple-700">FAQ</p><h2 className="text-[clamp(36px,5vw,64px)] font-bold tracking-[-0.04em]">Domande prima di partire.</h2></div><div className="grid gap-4 lg:grid-cols-2">{faqs.map((faq) => <details key={faq.question} className="group rounded-3xl border border-black/5 bg-[#f7f5fb] p-6 open:border-purple-300"><summary className="flex cursor-pointer list-none items-start justify-between gap-5 text-xl font-semibold text-[#0a0a0a]"><span>{faq.question}</span><span className="text-purple-700 transition-transform group-open:rotate-45">+</span></summary><p className="mt-5 leading-relaxed text-[#4b5563]">{faq.answer}</p></details>)}</div></section>
 
-        <section className="sites-reveal rounded-[2.5rem] border border-white/10 bg-white/[0.035] p-8 text-center md:p-16"><Layers3 className="mx-auto mb-7 h-8 w-8 text-cyan-300" /><h2 className="mx-auto mb-6 max-w-4xl text-[clamp(38px,5.8vw,72px)] font-bold leading-[1] tracking-[-0.045em]">Il prossimo sito non deve sembrare il precedente.</h2><p className="mx-auto mb-9 max-w-2xl text-lg leading-relaxed text-gray-300">Raccontaci cosa deve fare, per chi e perché adesso. Partiamo da lì.</p><a href="#contatti" onClick={scrollToContact} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-[#050505] hover:bg-cyan-100">Parlaci del progetto <ArrowRight className="h-4 w-4" /></a></section>
+        <section className="sites-reveal rounded-[2.5rem] bg-[#f7f5fb] p-8 text-center md:p-16"><Layers3 className="mx-auto mb-7 h-8 w-8 text-purple-700" /><h2 className="mx-auto mb-6 max-w-4xl text-[clamp(38px,5.8vw,72px)] font-bold leading-[1] tracking-[-0.045em]">Il prossimo sito non deve sembrare il precedente.</h2><p className="mx-auto mb-9 max-w-2xl text-lg leading-relaxed text-[#4b5563]">Raccontaci cosa deve fare, per chi e perché adesso. Partiamo da lì.</p><a href="#contatti" onClick={scrollToContact} className="btn btn-dark">Parlaci del progetto <ArrowRight className="h-4 w-4" /></a></section>
       </div>
 
       <style>{`

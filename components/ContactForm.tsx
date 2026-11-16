@@ -18,11 +18,11 @@ interface ContactFormProps {
   /** Testi opzionali per contestualizzare l'intestazione su una pagina servizio. */
   headerTitle?: string;
   headerDescription?: string;
-  /** `light`: variante su fondo chiaro (home). Default `dark`. */
+  /** `dark`: variante per blocchi scuri. Default `light`. */
   tone?: 'dark' | 'light';
 }
 
-const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, headerTitle, headerDescription, tone = 'dark' }) => {
+const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, headerTitle, headerDescription, tone = 'light' }) => {
   const light = tone === 'light';
   const inputClass = light
     ? 'w-full px-4 py-3 bg-white border border-black/10 rounded-xl text-[#0a0a0a] placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors'
@@ -190,11 +190,11 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
       <div className="max-w-4xl mx-auto">
         {showHeader && (
           <div className="text-center mb-16">
-            <span className="text-indigo-500 text-sm tracking-[0.08em] mb-5 block">CONTATTACI</span>
-            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">
-              {headerTitle ?? <>Iniziamo a <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Crescere</span></>}
+            <span className={`text-sm tracking-[0.08em] mb-5 block ${light ? 'text-purple-700' : 'text-indigo-500'}`}>CONTATTACI</span>
+            <h2 className={`text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6 ${light ? 'text-[#0a0a0a]' : ''}`}>
+              {headerTitle ?? <>Iniziamo a <span className={`text-transparent bg-clip-text bg-gradient-to-r ${light ? 'from-indigo-400 via-purple-500 to-purple-700' : 'from-indigo-400 to-purple-400'}`}>Crescere</span></>}
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className={`text-lg max-w-2xl mx-auto ${light ? 'text-[#4b5563]' : 'text-gray-400'}`}>
               {headerDescription ?? 'Raccontaci la tua sfida. Ti mostreremo come automatizzare la crescita del tuo business B2B.'}
             </p>
           </div>
@@ -205,8 +205,8 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
           {!light && <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-3xl -z-10" />}
 
           {subject && (
-            <div className="mb-8 rounded-2xl border border-cyan-400/20 bg-cyan-400/[0.06] px-5 py-4">
-              <span className="block text-[11px] uppercase tracking-[0.08em] text-cyan-300">Richiesta</span>
+            <div className={`mb-8 rounded-2xl border px-5 py-4 ${light ? 'border-purple-200 bg-purple-50' : 'border-cyan-400/20 bg-cyan-400/[0.06]'}`}>
+              <span className={`block text-[11px] uppercase tracking-[0.08em] ${light ? 'text-purple-700' : 'text-cyan-300'}`}>Richiesta</span>
               <strong className={`mt-1 block text-lg ${light ? 'text-[#0a0a0a]' : 'text-white'}`}>{subject}</strong>
             </div>
           )}
@@ -296,14 +296,14 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
 
           {/* Status Messages */}
           {submitStatus === 'success' && (
-            <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-xl flex items-center gap-3 text-green-400">
+            <div className={`mb-6 p-4 rounded-xl flex items-center gap-3 ${light ? 'bg-green-50 border border-green-300 text-green-700' : 'bg-green-500/10 border border-green-500/30 text-green-400'}`}>
               <CheckCircle className="w-5 h-5" />
               <span>Messaggio inviato con successo! Ti contatteremo presto.</span>
             </div>
           )}
 
           {submitStatus === 'error' && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-3 text-red-400">
+            <div className={`mb-6 p-4 rounded-xl flex items-center gap-3 ${light ? 'bg-red-50 border border-red-300 text-red-700' : 'bg-red-500/10 border border-red-500/30 text-red-400'}`}>
               <AlertCircle className="w-5 h-5" />
               <span>Errore nell'invio. Riprova o contattaci direttamente via email.</span>
             </div>

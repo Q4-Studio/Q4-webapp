@@ -16,11 +16,11 @@ const logos = [
 ];
 
 interface MarqueeProps {
-  /** `light`: loghi neri su fondo bianco (home chiara). Default `dark`. */
+  /** `dark`: variante per blocchi scuri. Default `light`. */
   tone?: 'dark' | 'light';
 }
 
-const Marquee: React.FC<MarqueeProps> = ({ tone = 'dark' }) => {
+const Marquee: React.FC<MarqueeProps> = ({ tone = 'light' }) => {
   const light = tone === 'light';
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);

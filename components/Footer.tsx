@@ -12,11 +12,11 @@ gsap.registerPlugin(ScrollTrigger);
 interface FooterProps {
   /** Mostra il blocco CTA "Pronto a crescere?" in testa al footer (default true). */
   showCta?: boolean;
-  /** `light`: footer su fondo bianco (home chiara). Default `dark`. */
+  /** `dark`: variante per blocchi scuri. Default `light`. */
   tone?: 'dark' | 'light';
 }
 
-const Footer: React.FC<FooterProps> = ({ showCta = true, tone = 'dark' }) => {
+const Footer: React.FC<FooterProps> = ({ showCta = true, tone = 'light' }) => {
   const light = tone === 'light';
   const link = light ? 'hover:text-[#0a0a0a] transition-colors' : 'hover:text-indigo-400 transition-colors';
   const footerRef = useRef<HTMLDivElement>(null);
@@ -107,7 +107,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true, tone = 'dark' }) => {
 
             <div ref={buttonWrapperRef} className="mb-24">
                 <MagneticButton
-                  className="group text-lg md:text-xl px-8 py-4 md:px-10 md:py-5 font-semibold hover:shadow-[0_0_60px_-15px_rgba(99,102,241,0.6)] transition-shadow duration-500 border border-white/10 hover:border-white/30"
+                  className={`group text-lg md:text-xl px-8 py-4 md:px-10 md:py-5 font-semibold transition-shadow duration-500 ${light ? 'bg-[#0a0a0a] text-white hover:shadow-[0_0_60px_-15px_rgba(168,85,247,0.7)]' : 'hover:shadow-[0_0_60px_-15px_rgba(99,102,241,0.6)] border border-white/10 hover:border-white/30'}`}
                   onClick={() => {
                     trackCtaClick({ cta_location: 'footer', cta_label: 'Parla con un esperto', cta_destination: '/#contatti' });
                     window.history.pushState(null, '', '/#contatti');

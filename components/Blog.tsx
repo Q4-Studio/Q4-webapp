@@ -71,7 +71,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
+    <section ref={sectionRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-white text-[#0a0a0a] min-h-screen overflow-hidden">
       {/* SEO: Dynamic meta tags for blog listing */}
       <SEOHead
         title="Blog Q4 Studio | Guide Meta Advertising e AI Automation"
@@ -80,18 +80,18 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
       />
 
       {/* Background gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-purple-200/40 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div ref={titleRef} className="text-center mb-20">
-          <span className="text-indigo-500 tracking-[0.08em] mb-5 block text-sm uppercase">
+          <span className="text-purple-700 tracking-[0.08em] mb-5 block text-sm uppercase">
             Insights & Strategie
           </span>
           <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">
-            Il nostro <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span>
+            Il nostro <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-500 to-purple-700">Blog</span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-[#4b5563] max-w-2xl mx-auto leading-relaxed">
             Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Agenti AI.
           </p>
         </div>
@@ -99,8 +99,8 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
         {/* Loading State */}
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-20">
-            <Loader2 className="w-12 h-12 text-indigo-500 animate-spin mb-4" />
-            <p className="text-gray-400 text-lg">Caricamento articoli...</p>
+            <Loader2 className="w-12 h-12 text-purple-700 animate-spin mb-4" />
+            <p className="text-[#4b5563] text-lg">Caricamento articoli...</p>
           </div>
         )}
 
@@ -111,8 +111,8 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/10 flex items-center justify-center">
                 <span className="text-3xl">⚠️</span>
               </div>
-              <p className="text-red-400 text-lg mb-2">Errore</p>
-              <p className="text-gray-400">{error}</p>
+              <p className="text-red-600 text-lg mb-2">Errore</p>
+              <p className="text-[#4b5563]">{error}</p>
             </div>
           </div>
         )}
@@ -124,7 +124,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
             <div
               key={post.id}
               ref={(el) => { cardsRef.current[index] = el }}
-              className="group relative bg-[#0A0A0A] border border-white/5 rounded-3xl overflow-hidden hover:border-indigo-500/30 transition-all duration-500 cursor-pointer"
+              className="group relative bg-[#f7f5fb] border border-black/5 rounded-3xl overflow-hidden hover:border-purple-300 hover:shadow-[0_30px_60px_-40px_rgba(126,34,206,0.35)] transition-all duration-500 cursor-pointer"
               onClick={() => onArticleClick(post.slug)}
             >
               {/* Cover Image */}
@@ -136,11 +136,11 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
                   decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#f7f5fb] via-transparent to-transparent" />
 
                 {/* Category Badge */}
-                <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-indigo-500/20 backdrop-blur-sm border border-indigo-500/30">
-                  <span className="text-indigo-300 text-[11px] font-medium">{post.category}</span>
+                <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/85 backdrop-blur-sm border border-black/10">
+                  <span className="text-purple-700 text-[11px] font-medium">{post.category}</span>
                 </div>
               </div>
 
@@ -159,17 +159,17 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
                 </div>
 
                 {/* Title */}
-                <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3 group-hover:text-indigo-300 transition-colors duration-300 line-clamp-2">
+                <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3 group-hover:text-purple-700 transition-colors duration-300 line-clamp-2">
                   {post.title}
                 </h3>
 
                 {/* Excerpt */}
-                <p className="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">
+                <p className="text-[#4b5563] text-sm leading-relaxed mb-4 line-clamp-3">
                   {post.excerpt}
                 </p>
 
                 {/* Author & CTA */}
-                <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                <div className="flex items-center justify-between pt-4 border-t border-black/5">
                   <div className="flex items-center gap-3">
                     <img
                       src={post.author.image}
@@ -184,7 +184,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
                     <span className="text-sm text-gray-500">{post.author.name}</span>
                   </div>
 
-                  <div className="flex items-center gap-2 text-indigo-400 text-sm font-medium group-hover:gap-3 transition-all duration-300">
+                  <div className="flex items-center gap-2 text-purple-700 text-sm font-medium group-hover:gap-3 transition-all duration-300">
                     <span>Leggi</span>
                     <ArrowRight className="w-4 h-4" />
                   </div>
@@ -192,7 +192,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
               </div>
 
               {/* Hover Line */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-400 to-purple-700 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
             </div>
             ))}
           </div>
@@ -211,7 +211,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) 
         {!isLoading && !error && posts.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="max-w-md text-center">
-              <p className="text-gray-400 text-lg">Nessun articolo disponibile al momento.</p>
+              <p className="text-[#4b5563] text-lg">Nessun articolo disponibile al momento.</p>
               <p className="text-gray-500 text-sm mt-2">Torna presto per nuovi contenuti!</p>
             </div>
           </div>

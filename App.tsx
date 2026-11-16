@@ -46,10 +46,10 @@ const App: React.FC = () => {
   const [blogError, setBlogError] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   // La nav è sempre chiara (pillola bianca, voci scure). Cambia solo ciò che
-  // sta fuori dalla pillola: sopra l'hero scuro della home e sulle pagine
-  // ancora scure logo, hamburger e "Contatti" sono bianchi; scorrendo oltre
-  // l'hero della home diventano neri, perché sotto c'è il fondo bianco. Idem
-  // con il menu mobile aperto: il pannello è bianco e sta sotto la nav.
+  // sta fuori dalla pillola: sopra un hero scuro (elemento con id="hero")
+  // logo, hamburger e "Contatti" sono bianchi; scorrendo oltre l'hero, o su
+  // una pagina senza hero scuro, diventano neri perché sotto c'è il bianco.
+  // Idem con il menu mobile aperto: il pannello è bianco e sta sotto la nav.
   const [navOnLight, setNavOnLight] = useState(false);
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
   const previousRouteRef = useRef<string | null>(null);
@@ -221,23 +221,29 @@ const App: React.FC = () => {
   }, [blogPosts, isLoadingBlog]);
 
   useEffect(() => {
-    if (currentPage !== 'home') {
-      setNavOnLight(false);
-      return;
-    }
     const update = () => {
+      // L'hero scuro può arrivare dopo (pagine lazy): finché non c'è, la nav
+      // è su fondo chiaro.
       const hero = document.getElementById('hero');
-      const threshold = hero ? hero.offsetHeight - 80 : window.innerHeight - 80;
-      setNavOnLight(window.scrollY > threshold);
+      if (!hero) {
+        setNavOnLight(true);
+        return;
+      }
+      setNavOnLight(window.scrollY > hero.offsetHeight - 80);
     };
     update();
+    // Le pagine lazy montano l'hero dopo il primo render: si riosserva il DOM
+    // finché l'hero compare (o si conferma che non c'è).
+    const observer = new MutationObserver(update);
+    observer.observe(document.body, { childList: true, subtree: true });
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     return () => {
+      observer.disconnect();
       window.removeEventListener('scroll', update);
       window.removeEventListener('resize', update);
     };
-  }, [currentPage]);
+  }, [currentPage, currentArticleSlug, currentSeoSlug, currentCaseStudySlug]);
 
   const navigateTo = (page: Page, slug?: string) => {
     if (page === 'blog-article' && slug) {
@@ -324,7 +330,7 @@ const App: React.FC = () => {
   ];
 
   return (
-    <main className="w-full min-h-screen bg-[#050505] text-white selection:bg-indigo-500 selection:text-white cursor-none">
+    <main className="home-light w-full min-h-screen bg-white text-[#4b5563] selection:bg-purple-600 selection:text-white cursor-none">
       <SpeedInsights />
       {currentPage === 'app-support' && (
         <SEOHead
@@ -335,8 +341,7 @@ const App: React.FC = () => {
       )}
       {/* Navbar fissa e chiara su tutte le pagine: pillola bianca con voci
           scure. Logo, hamburger e "Contatti" seguono `navOnLight`: bianchi
-          sopra l'hero scuro della home e sulle pagine ancora scure, neri una
-          volta superato l'hero della home (sotto c'è il bianco). */}
+          sopra un hero scuro (id="hero"), neri altrove. */}
       <nav className="fixed top-0 left-0 w-full z-[70] p-6 sm:p-7 flex justify-between items-center">
         <img
           src="/logo.webp"

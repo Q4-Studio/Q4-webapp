@@ -43,20 +43,19 @@ const Privacy: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
+    <div ref={containerRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-white text-[#4b5563] min-h-screen overflow-hidden">
       {/* Background gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Header */}
         <div ref={headerRef} className="text-center mb-16">
           <div className="inline-flex items-center gap-3 mb-6">
-            <Shield className="w-12 h-12 text-indigo-400" />
+            <Shield className="w-12 h-12 text-purple-700" />
           </div>
           <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">
             Privacy & Cookie Policy
           </h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-[#4b5563] text-lg max-w-2xl mx-auto">
             Ultimo aggiornamento: 5 Gennaio 2025
           </p>
         </div>
@@ -64,23 +63,23 @@ const Privacy: React.FC = () => {
         {/* Content */}
         <div ref={contentRef} className="space-y-12">
           {/* Privacy Policy */}
-          <section className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8">
+          <section className="bg-[#f7f5fb] border border-black/5 rounded-3xl p-8">
             <div className="flex items-center gap-3 mb-6">
-              <Eye className="w-6 h-6 text-indigo-400" />
-              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-indigo-300">Privacy Policy</h2>
+              <Eye className="w-6 h-6 text-purple-700" />
+              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-[#0a0a0a]">Privacy Policy</h2>
             </div>
 
-            <div className="space-y-6 text-gray-300 leading-relaxed">
+            <div className="space-y-6 text-[#4b5563] leading-relaxed">
               <div>
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">1. Titolare del Trattamento</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-[#0a0a0a] mb-3">1. Titolare del Trattamento</h3>
                 <p>
                   Q4 Studio - P.IVA 03033250352<br />
-                  Email: {email && <a href={`mailto:${email}`} className="text-indigo-400 hover:underline">{email}</a>}
+                  Email: {email && <a href={`mailto:${email}`} className="text-purple-700 hover:underline">{email}</a>}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">2. Dati Raccolti</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-[#0a0a0a] mb-3">2. Dati Raccolti</h3>
                 <p className="mb-3">Raccogliamo i seguenti dati personali:</p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li><strong>Dati di contatto:</strong> nome, cognome, email, telefono, azienda (tramite form di contatto)</li>
@@ -90,7 +89,7 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">3. Finalità del Trattamento</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-[#0a0a0a] mb-3">3. Finalità del Trattamento</h3>
                 <p className="mb-3">I dati personali sono trattati per:</p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li>Rispondere alle richieste di contatto e preventivi</li>
@@ -101,7 +100,7 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">4. Base Giuridica</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-[#0a0a0a] mb-3">4. Base Giuridica</h3>
                 <p>
                   Il trattamento dei dati è basato su:
                 </p>
@@ -113,7 +112,7 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">5. Conservazione dei Dati</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-[#0a0a0a] mb-3">5. Conservazione dei Dati</h3>
                 <p>
                   I dati personali sono conservati per:
                 </p>
@@ -125,7 +124,7 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">6. Diritti dell'Interessato</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-[#0a0a0a] mb-3">6. Diritti dell'Interessato</h3>
                 <p className="mb-3">Ai sensi del GDPR, hai diritto a:</p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li>Accedere ai tuoi dati personali</li>
@@ -139,7 +138,7 @@ const Privacy: React.FC = () => {
                 <p className="mt-4">
                   Per esercitare i tuoi diritti, contattaci all'email{' '}
                   {email && (
-                    <a href={`mailto:${email}`} className="text-indigo-400 hover:underline">
+                    <a href={`mailto:${email}`} className="text-purple-700 hover:underline">
                       {email}
                     </a>
                   )}
@@ -149,15 +148,15 @@ const Privacy: React.FC = () => {
           </section>
 
           {/* Cookie Policy */}
-          <section className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-8">
+          <section className="bg-[#f7f5fb] border border-black/5 rounded-3xl p-8">
             <div className="flex items-center gap-3 mb-6">
-              <Cookie className="w-6 h-6 text-purple-400" />
-              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-purple-300">Cookie Policy</h2>
+              <Cookie className="w-6 h-6 text-purple-700" />
+              <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] text-[#0a0a0a]">Cookie Policy</h2>
             </div>
 
-            <div className="space-y-6 text-gray-300 leading-relaxed">
+            <div className="space-y-6 text-[#4b5563] leading-relaxed">
               <div>
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">Cosa sono i Cookie</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-[#0a0a0a] mb-3">Cosa sono i Cookie</h3>
                 <p>
                   I cookie sono piccoli file di testo che i siti web visitati inviano al browser dell'utente,
                   dove vengono memorizzati per essere ritrasmessi agli stessi siti alla visita successiva.
@@ -165,15 +164,15 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">Cookie Utilizzati</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-[#0a0a0a] mb-3">Cookie Utilizzati</h3>
 
                 {/* Cookie Tecnici */}
                 <div className="mb-6">
-                  <h4 className="text-lg font-semibold text-indigo-300 mb-2">Cookie Tecnici (Nessun consenso richiesto)</h4>
+                  <h4 className="text-lg font-semibold text-purple-700 mb-2">Cookie Tecnici (Nessun consenso richiesto)</h4>
                   <p className="mb-3">
                     Cookie necessari al funzionamento del sito, non richiedono consenso esplicito.
                   </p>
-                  <div className="bg-[#050505] border border-white/5 rounded-xl p-4">
+                  <div className="bg-white border border-black/10 rounded-xl p-4">
                     <p className="text-sm">
                       <strong>cookie_consent</strong><br />
                       Finalità: Memorizza le preferenze sui cookie<br />
@@ -184,11 +183,11 @@ const Privacy: React.FC = () => {
 
                 {/* Cookie Analytics */}
                 <div className="mb-6">
-                  <h4 className="text-lg font-semibold text-indigo-300 mb-2">Cookie Analytics (Consenso richiesto)</h4>
+                  <h4 className="text-lg font-semibold text-purple-700 mb-2">Cookie Analytics (Consenso richiesto)</h4>
                   <p className="mb-3">
                     Utilizzati per raccogliere informazioni aggregate sull'uso del sito.
                   </p>
-                  <div className="bg-[#050505] border border-white/5 rounded-xl p-4 space-y-3">
+                  <div className="bg-white border border-black/10 rounded-xl p-4 space-y-3">
                     <div>
                       <p className="text-sm">
                         <strong>Google Analytics 4 (_ga, _ga_*, _gid)</strong><br />
@@ -202,11 +201,11 @@ const Privacy: React.FC = () => {
 
                 {/* Cookie Marketing */}
                 <div>
-                  <h4 className="text-lg font-semibold text-indigo-300 mb-2">Cookie di Marketing (Consenso richiesto)</h4>
+                  <h4 className="text-lg font-semibold text-purple-700 mb-2">Cookie di Marketing (Consenso richiesto)</h4>
                   <p className="mb-3">
                     Utilizzati per tracciare i visitatori attraverso i siti web per mostrare annunci pertinenti.
                   </p>
-                  <div className="bg-[#050505] border border-white/5 rounded-xl p-4">
+                  <div className="bg-white border border-black/10 rounded-xl p-4">
                     <p className="text-sm">
                       <strong>Meta Pixel (_fbp, _fbc, fr)</strong><br />
                       Finalità: Tracciamento conversioni e remarketing su Facebook/Instagram<br />
@@ -218,34 +217,34 @@ const Privacy: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">Gestione dei Cookie</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-[#0a0a0a] mb-3">Gestione dei Cookie</h3>
                 <p className="mb-3">
                   Puoi gestire le tue preferenze sui cookie tramite il banner presente sul sito o
                   direttamente dalle impostazioni del tuo browser:
                 </p>
                 <ul className="list-disc list-inside space-y-1 ml-4 text-sm">
-                  <li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">Google Chrome</a></li>
-                  <li><a href="https://support.mozilla.org/it/kb/Gestione%20dei%20cookie" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">Mozilla Firefox</a></li>
-                  <li><a href="https://support.apple.com/it-it/guide/safari/sfri11471/mac" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">Safari</a></li>
-                  <li><a href="https://support.microsoft.com/it-it/microsoft-edge/eliminare-i-cookie-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">Microsoft Edge</a></li>
+                  <li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer" className="text-purple-700 hover:underline">Google Chrome</a></li>
+                  <li><a href="https://support.mozilla.org/it/kb/Gestione%20dei%20cookie" target="_blank" rel="noopener noreferrer" className="text-purple-700 hover:underline">Mozilla Firefox</a></li>
+                  <li><a href="https://support.apple.com/it-it/guide/safari/sfri11471/mac" target="_blank" rel="noopener noreferrer" className="text-purple-700 hover:underline">Safari</a></li>
+                  <li><a href="https://support.microsoft.com/it-it/microsoft-edge/eliminare-i-cookie-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer" className="text-purple-700 hover:underline">Microsoft Edge</a></li>
                 </ul>
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-white mb-3">Link Utili</h3>
+                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] text-[#0a0a0a] mb-3">Link Utili</h3>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li>
-                    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">
+                    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-purple-700 hover:underline">
                       Privacy Policy Google Analytics
                     </a>
                   </li>
                   <li>
-                    <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">
+                    <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer" className="text-purple-700 hover:underline">
                       Privacy Policy Meta
                     </a>
                   </li>
                   <li>
-                    <a href="https://www.garanteprivacy.it/cookie" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">
+                    <a href="https://www.garanteprivacy.it/cookie" target="_blank" rel="noopener noreferrer" className="text-purple-700 hover:underline">
                       Garante Privacy - Cookie
                     </a>
                   </li>
@@ -255,18 +254,18 @@ const Privacy: React.FC = () => {
           </section>
 
           {/* Contact Section */}
-          <section className="bg-gradient-to-br from-indigo-950/30 to-purple-950/30 border border-white/10 rounded-3xl p-8">
+          <section className="bg-gradient-to-br from-[#f7f5fb] to-[#ecdffb] border border-black/5 rounded-3xl p-8">
             <div className="flex items-center gap-3 mb-4">
-              <Mail className="w-6 h-6 text-indigo-400" />
+              <Mail className="w-6 h-6 text-purple-700" />
               <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em]">Hai domande?</h2>
             </div>
-            <p className="text-gray-300 mb-4">
+            <p className="text-[#4b5563] mb-4">
               Per qualsiasi domanda relativa alla privacy o ai cookie, contattaci:
             </p>
             {email && (
               <a
                 href={`mailto:${email}`}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all duration-300"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#0a0a0a] text-white rounded-full font-semibold hover:bg-purple-700 transition-colors duration-300"
               >
                 {email}
               </a>

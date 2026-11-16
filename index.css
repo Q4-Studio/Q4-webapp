@@ -7,13 +7,18 @@ html, body {
   overflow-x: hidden;
   overscroll-behavior-x: none;
 }
+/* Sistema chiaro di tutto il sito (mockup "Q4 Studio Homepage Restyle"):
+   fondo bianco, inchiostro #0a0a0a, corpo #4b5563, Hanken Grotesk ovunque.
+   I token e i componenti condivisi (bottoni, card, FAQ…) stanno nel blocco
+   .home-light più sotto, applicato al <main> dell'app. */
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: #050505;
-  color: #ffffff;
+  font-family: 'Hanken Grotesk', 'Inter', Arial, sans-serif;
+  background-color: #ffffff;
+  color: #4b5563;
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Hanken Grotesk', 'Inter', Arial, sans-serif;
+  color: #0a0a0a;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -80,8 +85,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ------------------------------------------------------------------ */
-/* Home chiara (mockup "Q4 Studio Homepage Restyle"). Tutto è scopato   */
-/* sotto .home-light: le altre pagine restano sul sistema scuro.        */
+/* Sistema chiaro (mockup "Q4 Studio Homepage Restyle"). La classe      */
+/* .home-light sta sul <main> dell'app: vale per tutte le pagine.       */
 /* Token: carta #f7f5fb, inchiostro #0a0a0a, corpo #4b5563, linea 9%,   */
 /* gradiente indigo → purple. Font Hanken Grotesk solo qui.             */
 /* ------------------------------------------------------------------ */
@@ -93,12 +98,12 @@ h1, h2, h3, h4, h5, h6 {
   --line: rgba(10, 10, 10, 0.09);
   --grad: linear-gradient(120deg, #818cf8 0%, #a855f7 55%, #9333ea 100%);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  font-family: 'Hanken Grotesk', 'Inter', Arial, sans-serif;
   color: var(--body);
   background: #fff;
 }
-.home-light h1, .home-light h2, .home-light h3, .home-light .disp {
-  font-family: 'Hanken Grotesk', 'Inter', Arial, sans-serif;
+/* :where() azzera la specificità: le utility Tailwind delle pagine
+   (font-bold, leading-*, tracking-*) vincono su questi default. */
+:where(.home-light) :where(h1, h2, h3, .disp) {
   font-weight: 600;
   color: var(--ink);
   letter-spacing: -0.04em;

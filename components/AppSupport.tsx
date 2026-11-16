@@ -100,24 +100,24 @@ const AppSupport: React.FC = () => {
   };
 
   return (
-    <div ref={containerRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
+    <div ref={containerRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-white text-[#4b5563] min-h-screen overflow-hidden">
       {/* Background gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-purple-200/40 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Header */}
         <div ref={headerRef} className="text-center mb-16">
           <div className="inline-flex items-center justify-center gap-3 mb-6">
-            <Smartphone className="w-12 h-12 text-indigo-400" />
+            <Smartphone className="w-12 h-12 text-purple-700" />
           </div>
-          <span className="text-indigo-500 text-sm tracking-[0.08em] mb-5 block">SUPPORTO APP</span>
+          <span className="text-purple-700 text-sm tracking-[0.08em] mb-5 block">SUPPORTO APP</span>
           <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">
             Supporto{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-500 to-purple-700">
               Q4 CRM
             </span>
           </h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-500 text-lg max-w-2xl mx-auto">
             Hai bisogno di aiuto con l'app Q4 CRM? Siamo qui per supportarti.
             Compila il modulo sottostante e ti risponderemo il prima possibile.
           </p>
@@ -125,33 +125,31 @@ const AppSupport: React.FC = () => {
 
         {/* FAQ quick links */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 flex items-start gap-4">
-            <HelpCircle className="w-6 h-6 text-indigo-400 flex-shrink-0 mt-0.5" />
+          <div className="bg-[#f7f5fb] border border-black/5 rounded-2xl p-6 flex items-start gap-4">
+            <HelpCircle className="w-6 h-6 text-purple-700 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold mb-1">Problemi di accesso</h3>
-              <p className="text-sm text-gray-400">Difficoltà con login o password? Indica il tuo account nel messaggio.</p>
+              <h3 className="font-semibold mb-1 text-[#0a0a0a]">Problemi di accesso</h3>
+              <p className="text-sm text-gray-500">Difficoltà con login o password? Indica il tuo account nel messaggio.</p>
             </div>
           </div>
-          <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 flex items-start gap-4">
-            <MessageSquare className="w-6 h-6 text-purple-400 flex-shrink-0 mt-0.5" />
+          <div className="bg-[#f7f5fb] border border-black/5 rounded-2xl p-6 flex items-start gap-4">
+            <MessageSquare className="w-6 h-6 text-purple-700 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold mb-1">Bug o malfunzionamenti</h3>
-              <p className="text-sm text-gray-400">Descrivi il problema e il dispositivo utilizzato per un supporto rapido.</p>
+              <h3 className="font-semibold mb-1 text-[#0a0a0a]">Bug o malfunzionamenti</h3>
+              <p className="text-sm text-gray-500">Descrivi il problema e il dispositivo utilizzato per un supporto rapido.</p>
             </div>
           </div>
-          <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 flex items-start gap-4">
-            <Mail className="w-6 h-6 text-indigo-400 flex-shrink-0 mt-0.5" />
+          <div className="bg-[#f7f5fb] border border-black/5 rounded-2xl p-6 flex items-start gap-4">
+            <Mail className="w-6 h-6 text-purple-700 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold mb-1">Richieste generali</h3>
-              <p className="text-sm text-gray-400">Per qualsiasi altra domanda sull'app, il tuo team Q4 Studio è disponibile.</p>
+              <h3 className="font-semibold mb-1 text-[#0a0a0a]">Richieste generali</h3>
+              <p className="text-sm text-gray-500">Per qualsiasi altra domanda sull'app, il tuo team Q4 Studio è disponibile.</p>
             </div>
           </div>
         </div>
 
         {/* Contact Form */}
-        <form ref={formRef} onSubmit={handleSubmit} className="relative bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 md:p-12">
-          {/* Background glow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-3xl -z-10" />
+        <form ref={formRef} onSubmit={handleSubmit} className="relative bg-[#f7f5fb] border border-black/5 rounded-3xl p-8 md:p-12">
 
           <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em]">Invia una richiesta di supporto</h2>
@@ -159,7 +157,7 @@ const AppSupport: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium mb-2 text-gray-300">
+              <label htmlFor="name" className="block text-sm font-medium mb-2 text-gray-700">
                 Nome e Cognome *
               </label>
               <input
@@ -169,13 +167,13 @@ const AppSupport: React.FC = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full px-4 py-3 bg-white border border-black/10 rounded-xl text-[#0a0a0a] placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors"
                 placeholder="Mario Rossi"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2 text-gray-300">
+              <label htmlFor="email" className="block text-sm font-medium mb-2 text-gray-700">
                 Email *
               </label>
               <input
@@ -185,7 +183,7 @@ const AppSupport: React.FC = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full px-4 py-3 bg-white border border-black/10 rounded-xl text-[#0a0a0a] placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors"
                 placeholder="mario@esempio.it"
               />
             </div>
@@ -193,7 +191,7 @@ const AppSupport: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium mb-2 text-gray-300">
+              <label htmlFor="phone" className="block text-sm font-medium mb-2 text-gray-700">
                 Telefono
               </label>
               <input
@@ -202,13 +200,13 @@ const AppSupport: React.FC = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full px-4 py-3 bg-white border border-black/10 rounded-xl text-[#0a0a0a] placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors"
                 placeholder="+39 123 456 7890"
               />
             </div>
 
             <div>
-              <label htmlFor="subject" className="block text-sm font-medium mb-2 text-gray-300">
+              <label htmlFor="subject" className="block text-sm font-medium mb-2 text-gray-700">
                 Tipo di problema *
               </label>
               <select
@@ -217,7 +215,7 @@ const AppSupport: React.FC = () => {
                 value={formData.subject}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors appearance-none"
+                className="w-full px-4 py-3 bg-white border border-black/10 rounded-xl text-[#0a0a0a] focus:outline-none focus:border-purple-500 transition-colors appearance-none"
               >
                 <option value="" disabled>Seleziona il tipo di problema</option>
                 <option value="Problemi di accesso">Problemi di accesso / Login</option>
@@ -231,7 +229,7 @@ const AppSupport: React.FC = () => {
           </div>
 
           <div className="mb-8">
-            <label htmlFor="message" className="block text-sm font-medium mb-2 text-gray-300">
+            <label htmlFor="message" className="block text-sm font-medium mb-2 text-gray-700">
               Descrizione del problema *
             </label>
             <textarea
@@ -241,21 +239,21 @@ const AppSupport: React.FC = () => {
               onChange={handleChange}
               required
               rows={5}
-              className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors resize-none"
+              className="w-full px-4 py-3 bg-white border border-black/10 rounded-xl text-[#0a0a0a] placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors resize-none"
               placeholder="Descrivi il problema in dettaglio. Se possibile includi: il dispositivo utilizzato (iPhone/Android), la versione dell'app e i passi per riprodurre il problema..."
             />
           </div>
 
           {/* Status Messages */}
           {submitStatus === 'success' && (
-            <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-xl flex items-center gap-3 text-green-400">
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3 text-green-700">
               <CheckCircle className="w-5 h-5 flex-shrink-0" />
               <span>Richiesta inviata con successo! Il nostro team ti risponderà entro 24 ore.</span>
             </div>
           )}
 
           {submitStatus === 'error' && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-3 text-red-400">
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-red-700">
               <AlertCircle className="w-5 h-5 flex-shrink-0" />
               <span>Errore nell'invio. Riprova o contattaci direttamente tramite l'app.</span>
             </div>
@@ -265,7 +263,7 @@ const AppSupport: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-medium transition-colors duration-300 rounded-full group border border-white/20 hover:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+              className="relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-medium transition-colors duration-300 rounded-full group bg-[#0a0a0a] text-white border-0 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></span>
               <span className="relative z-10 flex items-center gap-2">
