@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ArrowUpRight } from 'lucide-react';
 import SEOHead from '../SEOHead';
 import Marquee from '../Marquee';
 import ContactForm from '../ContactForm';
 import Footer from '../Footer';
 import HomeSeoContent from '../HomeSeoContent';
-import Hero2, { HeroTicker } from './Hero2';
-import TrackingIntro from './TrackingIntro';
-import Manifesto2 from './Manifesto2';
-import Pipeline2 from './Pipeline2';
-import Agents2 from './Agents2';
-import Services2 from './Services2';
-import ScrollRevealText from './ScrollRevealText';
+import Hero2 from './Hero2';
+import Statement from './Statement';
+import CandianiVisual from './CandianiVisual';
+import LeadFlow from './LeadFlow';
+import ServicesBento from './ServicesBento';
+import Process from './Process';
+import Reveal from './Reveal';
 import { trackCtaClick } from '../../utils/dataLayer';
 import { siteUrl } from '../../data/seoPages';
 
@@ -175,85 +176,36 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
 };
 
 /* ------------------------------------------------------------------ */
-/* CTA finale: porta all'offerta tecnica di ingresso.                  */
+/* Chiusura: blocco scuro arrotondato con aurora e griglia, titolo     */
+/* enorme e CTA verso il tracciamento.                                 */
 /* ------------------------------------------------------------------ */
 
-const FinalCTA: React.FC = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!sectionRef.current) return;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const ctx = gsap.context(() => {
-      if (!reduced) {
-        // fromTo + immediateRender:false + once: sostituisce gsap.from(...) con
-        // toggleActions '... reverse'. Se il trigger non scatta mai (misure
-        // prese prima che il layout finisse di assestarsi) il contenuto resta
-        // visibile invece di restare bloccato a opacity 0; una volta acceso,
-        // non si rispegne più tornando indietro con lo scroll.
-        gsap.fromTo(
-          '.cta-reveal',
-          { y: 60, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            stagger: 0.15,
-            ease: 'power3.out',
-            immediateRender: false,
-            scrollTrigger: { trigger: sectionRef.current, start: 'top 75%', once: true },
-          }
-        );
-        gsap.to('.cta-ghost', {
-          xPercent: -12,
-          ease: 'none',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: true },
-        });
-      }
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <section ref={sectionRef} className="relative pt-36 md:pt-48 pb-16 px-6 bg-[#050505] text-white border-t border-white/5 overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="cta-ghost absolute top-1/2 -translate-y-1/2 left-0 whitespace-nowrap select-none pointer-events-none font-bold"
-        style={{
-          fontFamily: "'Space Grotesk', sans-serif",
-          fontSize: 'clamp(120px, 20vw, 320px)',
-          color: 'transparent',
-          WebkitTextStroke: '1px rgba(129, 140, 248, 0.06)',
-        }}
-      >
-        FUTURE-READY · FUTURE-READY ·
-      </div>
-
-      <div className="max-w-5xl mx-auto text-center relative z-10">
-        <h2 className="cta-reveal text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-8">
-          Costruiamo il tuo
+const FinalCTA: React.FC = () => (
+  <section className="px-6 pb-6">
+    <div className="close">
+      <div className="aur aur-1 opacity-80" aria-hidden="true" />
+      <div className="aur aur-2 opacity-80" aria-hidden="true" />
+      <div className="grid60" aria-hidden="true" />
+      <div className="relative mx-auto max-w-[1440px] px-6 py-40 text-center md:px-12 md:py-[280px]">
+        <Reveal as="h2" style={{ fontSize: 'clamp(3rem, 11.5vw, 12rem)', letterSpacing: '-0.06em', lineHeight: 0.92 }}>
+          Costruiamo
           <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400">
-            vantaggio.
-          </span>
-        </h2>
-        <ScrollRevealText
-          as="p"
-          text="Raccontaci la tua sfida: ti mostriamo come trasformarla in un sistema che cresce."
-          className="text-lg md:text-xl text-gray-400 max-w-xl mx-auto leading-relaxed mb-9"
-        />
-        <a
-          href="/tracciamento-server-side"
-          onClick={() => trackCtaClick({ cta_location: 'home_mid_cta', cta_label: 'Vedi il tracciamento e i prezzi', cta_destination: '/tracciamento-server-side' })}
-          className="cta-reveal inline-flex items-center justify-center rounded-full bg-white px-7 py-4 font-semibold text-[#050505] transition-colors hover:bg-cyan-100"
-        >
-          Vedi il tracciamento e i prezzi
-        </a>
+          il tuo <span className="grad">vantaggio.</span>
+        </Reveal>
+        <Reveal delay={0.2} className="mt-14 md:mt-20">
+          <a
+            href="/tracciamento-server-side"
+            onClick={() => trackCtaClick({ cta_location: 'home_mid_cta', cta_label: 'Vai al tracciamento', cta_destination: '/tracciamento-server-side' })}
+            className="btn btn-white"
+          >
+            Vai al tracciamento
+            <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+          </a>
+        </Reveal>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 /* ------------------------------------------------------------------ */
 /* Home v2                                                             */
@@ -280,6 +232,21 @@ const HomeV2: React.FC = () => {
     if (!loading) ScrollTrigger.refresh();
   }, [loading]);
 
+  // La home è chiara ma html/body restano scuri (index.css) per le altre
+  // pagine: qui si schiariscono, e si ripristinano quando si cambia pagina,
+  // così l'overscroll e le aree fuori dalle sezioni non mostrano il nero.
+  useEffect(() => {
+    const { documentElement: html, body } = document;
+    const previousHtml = html.style.backgroundColor;
+    const previousBody = body.style.backgroundColor;
+    html.style.backgroundColor = '#ffffff';
+    body.style.backgroundColor = '#ffffff';
+    return () => {
+      html.style.backgroundColor = previousHtml;
+      body.style.backgroundColor = previousBody;
+    };
+  }, []);
+
   // Rete di sicurezza aggiuntiva: il layout può assestarsi anche dopo la fine
   // del preloader (font che finiscono di caricare e cambiano le altezze del
   // testo, immagini che arrivano). Ricalcoliamo le posizioni dei trigger in
@@ -303,7 +270,7 @@ const HomeV2: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative w-full bg-[#050505] text-white">
+    <div className="home-light relative w-full">
       <SEOHead
         title="Tracciamento Server-Side e Automazioni AI per PMI | Q4 Studio"
         description="Recuperiamo i segnali di conversione che browser e ad blocker bloccano. Tracciamento server-side, Consent Mode, automazioni AI. Reggio Emilia."
@@ -333,17 +300,16 @@ const HomeV2: React.FC = () => {
       />
 
       <Hero2 />
-      <Manifesto2 />
-      <HeroTicker />
-      <TrackingIntro />
-      <Pipeline2 />
-      <Agents2 />
-      <Services2 />
-      <Marquee />
+      <Marquee tone="light" />
+      <Statement />
+      <CandianiVisual />
+      <LeadFlow />
+      <ServicesBento />
+      <Process />
       <HomeSeoContent />
+      <ContactForm showHeader={false} tone="light" />
       <FinalCTA />
-      <ContactForm showHeader={false} />
-      <Footer showCta={false} />
+      <Footer showCta={false} tone="light" />
     </div>
   );
 };

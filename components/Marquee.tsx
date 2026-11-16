@@ -15,7 +15,13 @@ const logos = [
   { name: "Candiani", path: "/logos/candiani.png" },
 ];
 
-const Marquee: React.FC = () => {
+interface MarqueeProps {
+  /** `light`: loghi neri su fondo bianco (home chiara). Default `dark`. */
+  tone?: 'dark' | 'light';
+}
+
+const Marquee: React.FC<MarqueeProps> = ({ tone = 'dark' }) => {
+  const light = tone === 'light';
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -82,15 +88,15 @@ const Marquee: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full bg-[#050505] py-20 border-y border-white/5 overflow-hidden">
+    <div ref={containerRef} className={`w-full overflow-hidden ${light ? 'bg-white pt-24 pb-10' : 'bg-[#050505] py-20 border-y border-white/5'}`}>
         <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
-            <p className="text-sm text-gray-500 uppercase tracking-[0.08em]">Aziende che ci hanno già scelto</p>
+            <p className={`text-sm uppercase tracking-[0.08em] ${light ? 'sr-only' : 'text-gray-500'}`}>Aziende che ci hanno già scelto</p>
         </div>
       <div className="relative w-full overflow-hidden">
         <div ref={trackRef} className="flex whitespace-nowrap gap-16 md:gap-24 items-center">
             {/* Render logos twice for seamless loop */}
             {[...logos, ...logos, ...logos].map((logo, index) => (
-                <div key={index} className="flex-shrink-0 h-12 md:h-16 flex items-center grayscale opacity-40 hover:opacity-80 hover:grayscale-0 transition-all duration-300 cursor-default">
+                <div key={index} className={`flex-shrink-0 h-12 md:h-14 flex items-center transition-all duration-300 cursor-default ${light ? 'brightness-0 opacity-35 hover:opacity-100' : 'grayscale opacity-40 hover:opacity-80 hover:grayscale-0'}`}>
                     <img
                         src={logo.path}
                         alt={logo.name}
@@ -103,8 +109,8 @@ const Marquee: React.FC = () => {
         </div>
         
         {/* Gradients to fade edges */}
-        <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-[#050505] to-transparent z-10"></div>
-        <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-[#050505] to-transparent z-10"></div>
+        <div className={`absolute top-0 left-0 w-32 h-full bg-gradient-to-r to-transparent z-10 ${light ? 'from-white' : 'from-[#050505]'}`}></div>
+        <div className={`absolute top-0 right-0 w-32 h-full bg-gradient-to-l to-transparent z-10 ${light ? 'from-white' : 'from-[#050505]'}`}></div>
       </div>
     </div>
   );

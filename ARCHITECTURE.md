@@ -19,6 +19,12 @@
 
 ## Scala Tipografica
 
+> **Home chiara (2026-11).** La homepage (`components/home2/*`) segue un sistema
+> proprio, scopato sotto `.home-light` in `index.css`: fondo bianco/carta,
+> font Hanken Grotesk, titoli `.h-xl`/`.h-l`, bottoni `.btn-*`, card `.bc`.
+> Spec: `docs/specs/homepage-light-restyle.md`. La scala qui sotto resta
+> valida per tutte le altre pagine.
+
 Scala unica per tutti i `font-size` del sito (solo dimensione: interlinea, tracking e
 spaziature sono fuori scope e vengono gestiti separatamente). 7 gradini, rapporto ~1.15-1.35
 tra gradini adiacenti, più aperto sui due gradini "display". Regola: nessun paragrafo sotto
