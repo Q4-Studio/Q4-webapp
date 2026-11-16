@@ -26,7 +26,7 @@ const ContactPage: React.FC = () => (
           </li>
           <li>
             Telefono e WhatsApp:{' '}
-            <a href="tel:+393751146803" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">+39 375 114 6803</a>
+            <a href="tel:+393383576286" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">+39 338 357 6286</a>
           </li>
           <li>
             <a href="/#contatti" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Form di contatto sul sito</a>

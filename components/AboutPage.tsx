@@ -58,7 +58,7 @@ const AboutPage: React.FC = () => (
           Contatti:{' '}
           <a href="mailto:info@q4.studio" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">info@q4.studio</a>
           {' · '}
-          <a href="tel:+393751146803" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">+39 375 114 6803</a>.
+          <a href="tel:+393383576286" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">+39 338 357 6286</a>.
           Profili verificati:{' '}
           <a href="https://www.linkedin.com/company/q4studio" target="_blank" rel="noopener noreferrer" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">LinkedIn</a>
           {', '}

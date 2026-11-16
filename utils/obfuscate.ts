@@ -3,8 +3,8 @@
 // Nota: decode() usa atob() che è disponibile solo nel browser - chiamarla sempre dentro useEffect
 
 export const OBFUSCATED = {
-  // btoa('+39 375 114 6803') = 'KzM5IDM3NSAxMTQgNjgwMw=='
-  phone: 'KzM5IDM3NSAxMTQgNjgwMw==',
+  // btoa('+39 338 357 6286') = 'KzM5IDMzOCAzNTcgNjI4Ng=='
+  phone: 'KzM5IDMzOCAzNTcgNjI4Ng==',
   // btoa('info@q4.studio') = 'aW5mb0BxNC5zdHVkaW8='
   email: 'aW5mb0BxNC5zdHVkaW8=',
 };
