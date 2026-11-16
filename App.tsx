@@ -1,7 +1,6 @@
 import React, { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import Marquee from './components/Marquee';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
@@ -474,12 +473,11 @@ const App: React.FC = () => {
           )}
 
           {currentPage === 'agenti-ai' && (
-            <>
+            <div className="home-light relative w-full">
               <AIAgents />
-              <Marquee />
-              <ContactForm />
-              <Footer />
-            </>
+              <ContactForm showHeader={false} tone="light" />
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
           {currentPage === 'tracking' && (
