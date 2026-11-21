@@ -162,6 +162,9 @@ h1, h2, h3, h4, h5, h6 {
 .home-light .w { display: inline-block; opacity: 0; transform: translateY(60px); animation: q4-up 1s var(--ease-out) forwards; }
 @keyframes q4-up { to { opacity: 1; transform: none; } }
 .home-light .scroll-cue { width: 1px; height: 64px; background: linear-gradient(#fff, transparent); transform-origin: top; animation: q4-cue 2.2s ease-in-out infinite; }
+@keyframes q4-pageloader { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
+.q4-pageloader-bar { animation: q4-pageloader 1.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .q4-pageloader-bar { animation: none; width: 100%; } }
 @keyframes q4-cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
 
 /* Righe del flusso lead */
