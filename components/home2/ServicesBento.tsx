@@ -68,11 +68,11 @@ const CardLink: React.FC<{ href: string; label: string }> = ({ href, label }) =>
 );
 
 const ServicesBento: React.FC = () => (
-  <section id="servizi" className="px-6 pb-32 md:px-12 md:pb-[240px]">
+  <section id="servizi" className="px-6 pb-24 md:px-12 md:pb-[160px]">
     <div className="mx-auto max-w-[1440px]">
       <Reveal as="h2" className="h-l max-w-[1100px]">Tre servizi, un unico sistema.</Reveal>
 
-      <div className="mt-20 flex flex-col gap-6 md:mt-[120px] md:flex-row md:items-start">
+      <div className="mt-20 flex flex-col gap-6 md:mt-[80px] md:flex-row md:items-start">
         {/* Colonna 1: tracciamento */}
         <div className="flex min-w-0 flex-1 flex-col">
           <Reveal as="article" className="bc" style={{ minHeight: 660, paddingBottom: 110, background: 'linear-gradient(170deg, #f7f5fb 0%, #efe7fb 100%)' }}>

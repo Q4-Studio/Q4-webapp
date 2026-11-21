@@ -177,10 +177,10 @@ const MetaAdvertisingB2B: React.FC = () => {
       </header>
 
       {/* Manifesto */}
-      <section className="px-6 pb-32 pt-32 md:px-12 md:pb-[200px] md:pt-[240px]">
+      <section className="px-6 pb-24 pt-24 md:px-12 md:pb-[140px] md:pt-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l max-w-[1200px]">Non campagne a volume. Un sistema leggibile.</Reveal>
-          <div className="ml-auto mt-20 max-w-[640px] md:mt-[120px]">
+          <div className="ml-auto mt-20 max-w-[640px] md:mt-[80px]">
             <Reveal as="p" className="lead max-w-[560px]">Lavoriamo su lead generation e high ticket, con Meta Ads e Google Ads. Il nostro ruolo è affiancare marketing e sales nella costruzione di un funnel tracciabile e sostenibile, anche per cicli di vendita complessi.</Reveal>
             <Reveal as="p" delay={0.12} className="lead mt-7 max-w-[560px]">Partiamo dal processo commerciale: cliente giusto, proposta di valore, segmentazione, creatività, domande qualificanti, instradamento al CRM e tempi di risposta.</Reveal>
           </div>
@@ -188,7 +188,7 @@ const MetaAdvertisingB2B: React.FC = () => {
       </section>
 
       {/* Tre cifre */}
-      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-12 md:grid-cols-3 md:gap-6">
           {figures.map((figure) => (
             <Reveal key={figure.desc} delay={figure.delay} className="py-2 pl-8" style={{ borderLeft: '1px solid rgba(10,10,10,.12)' }}>
@@ -200,10 +200,10 @@ const MetaAdvertisingB2B: React.FC = () => {
       </section>
 
       {/* Il metodo */}
-      <section id="metodo" className="scroll-mt-24 px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section id="metodo" className="scroll-mt-24 px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l max-w-[1100px]">Il metodo.</Reveal>
-          <div className="mt-20 grid grid-cols-1 gap-6 md:mt-[120px] md:grid-cols-3">
+          <div className="mt-20 grid grid-cols-1 gap-6 md:mt-[80px] md:grid-cols-3">
             {method.map((item) => (
               <Reveal key={item.title} delay={item.delay} className="flex min-h-[360px] flex-col gap-7 rounded-[32px] bg-[#f7f5fb] px-7 py-8 md:p-11">
                 <IconBox icon={item.icon} />
@@ -218,8 +218,8 @@ const MetaAdvertisingB2B: React.FC = () => {
       </section>
 
       {/* Il costo per contatto: blocco carta arrotondato con il funnel */}
-      <section className="px-6 pb-32 md:pb-[240px]">
-        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[140px]" style={{ background: PAPER_BG }}>
+      <section className="px-6 pb-24 md:pb-[160px]">
+        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[100px]" style={{ background: PAPER_BG }}>
           <div className="dots" aria-hidden="true" />
           <div className="relative grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
             <div>
@@ -234,10 +234,10 @@ const MetaAdvertisingB2B: React.FC = () => {
       </section>
 
       {/* Dal click al segnale: cinque passaggi in fila, in colonna sotto lg */}
-      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l max-w-[1100px]">Dal click al segnale.</Reveal>
-          <div className="mt-20 flex flex-col items-center gap-3 md:mt-[120px] lg:flex-row lg:items-start">
+          <div className="mt-20 flex flex-col items-center gap-3 md:mt-[80px] lg:flex-row lg:items-start">
             {flow.map((step, i) => (
               <React.Fragment key={step.title}>
                 {i > 0 && (
@@ -259,11 +259,11 @@ const MetaAdvertisingB2B: React.FC = () => {
       </section>
 
       {/* Agenti AI sul processo sales: bento a tre colonne sfalsate */}
-      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">Agenti AI sul processo sales.</Reveal>
 
-          <div className="mt-20 flex flex-col gap-6 md:mt-[120px] md:flex-row md:items-start">
+          <div className="mt-20 flex flex-col gap-6 md:mt-[80px] md:flex-row md:items-start">
             <div className="flex min-w-0 flex-1 flex-col">
               <AgentCard
                 icon={Bot}
@@ -306,10 +306,10 @@ const MetaAdvertisingB2B: React.FC = () => {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section id="faq" className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">Domande frequenti</Reveal>
-          <Reveal delay={0.12} className="mt-20 md:mt-[120px]">
+          <Reveal delay={0.12} className="mt-20 md:mt-[80px]">
             {metaAdvertisingFaqs.map((faq, i) => (
               <details key={faq.question} className="f" open={i === 0}>
                 <summary>

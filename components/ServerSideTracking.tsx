@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, Check, Plus } from 'lucide-react';
@@ -99,14 +99,16 @@ const OkIcon: React.FC = () => (
 /** Barra che si riempie da sinistra quando entra in viewport. */
 const Bar: React.FC<{ width: string; background: string }> = ({ width, background }) => {
   const ref = useRef<HTMLElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = ref.current;
     if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Stato iniziale applicato prima del primo paint: niente barra piena che
+    // sparisce e si riempie di nuovo.
     const tween = gsap.fromTo(el, { scaleX: 0 }, {
       scaleX: 1,
       duration: 1.4,
       ease: 'power3.out',
-      immediateRender: false,
+      immediateRender: true,
       scrollTrigger: { trigger: el, start: 'top 85%', once: true },
     });
     return () => {
@@ -211,10 +213,10 @@ const ServerSideTracking: React.FC = () => {
       </header>
 
       {/* Cosa sta succedendo */}
-      <section className="px-6 pb-32 pt-32 md:px-12 md:pb-[200px] md:pt-[240px]">
+      <section className="px-6 pb-24 pt-24 md:px-12 md:pb-[140px] md:pt-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l max-w-[1100px]">Cosa sta succedendo.</Reveal>
-          <div className="mt-20 grid grid-cols-1 items-start gap-12 md:mt-[120px] md:grid-cols-2 md:gap-24">
+          <div className="mt-20 grid grid-cols-1 items-start gap-12 md:mt-[80px] md:grid-cols-2 md:gap-24">
             <div>
               <Reveal as="p" className="lead max-w-[560px]">Safari e Firefox limitano i cookie di terze parti. Gli ad blocker bloccano i pixel. Il consenso negato interrompe la raccolta. Il risultato è che Meta e Google vedono una parte delle tue conversioni, e ottimizzano su quella parte.</Reveal>
               <Reveal as="p" delay={0.12} className="lead mt-7 max-w-[560px]">Se il tuo account dice 40 conversioni e il tuo gestionale dice 90, non è un errore di lettura: è il tracciamento che non arriva.</Reveal>
@@ -225,12 +227,12 @@ const ServerSideTracking: React.FC = () => {
       </section>
 
       {/* Come lo risolviamo: blocco carta arrotondato */}
-      <section className="px-6 pb-32 md:pb-[240px]">
-        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[140px]" style={{ background: 'linear-gradient(160deg, #f7f5fb 0%, #ecdffb 100%)' }}>
+      <section className="px-6 pb-24 md:pb-[160px]">
+        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[100px]" style={{ background: 'linear-gradient(160deg, #f7f5fb 0%, #ecdffb 100%)' }}>
           <div className="dots" aria-hidden="true" />
           <div className="relative">
             <Reveal as="h2" className="h-l max-w-[1000px]">Come lo risolviamo.</Reveal>
-            <div className="mt-16 grid grid-cols-1 items-start gap-12 md:mt-[100px] md:grid-cols-2 md:gap-24">
+            <div className="mt-16 grid grid-cols-1 items-start gap-12 md:mt-[72px] md:grid-cols-2 md:gap-24">
               <div>
                 <Reveal as="p" className="lead max-w-[560px] text-gray-700">Spostiamo la raccolta dati dal browser a un container server-side su infrastruttura dedicata. I segnali passano da lì, vengono normalizzati e inviati alle piattaforme via API server-to-server.</Reveal>
                 <Reveal as="p" delay={0.12} className="lead mt-7 max-w-[560px] text-gray-700">Aggiungiamo i segnali che contano davvero: non l'invio del form, ma la qualificazione, la risposta del prospect, l'avanzamento nel CRM. Sono i segnali che l'algoritmo usa per cercare persone simili a chi compra, non a chi compila.</Reveal>
@@ -247,14 +249,14 @@ const ServerSideTracking: React.FC = () => {
       </section>
 
       {/* Risposta tecnica: ad blocker */}
-      <section id="ad-blocker-conversioni" className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section id="ad-blocker-conversioni" className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l max-w-[1100px]">Come recuperare le conversioni bloccate dagli ad blocker.</Reveal>
-          <div className="mt-20 grid grid-cols-1 gap-12 md:mt-[120px] md:grid-cols-2 md:gap-24">
+          <div className="mt-20 grid grid-cols-1 gap-12 md:mt-[80px] md:grid-cols-2 md:gap-24">
             <Reveal as="p" className="lead max-w-[560px]">Non si recuperano installando un altro pixel. Prima si confrontano dati della piattaforma, analytics, CRM e processo commerciale per capire quali eventi mancano. Poi si sposta la raccolta compatibile con il consenso su un container server-side e si inviano a Meta o Google gli eventi che descrivono davvero il percorso del lead.</Reveal>
             <Reveal as="p" delay={0.12} className="lead max-w-[560px]">Se un evento parte sia dal browser sia dal server, deve avere lo stesso identificativo: la deduplicazione evita che una conversione venga contata due volte. Il server-side riduce alcune perdite tecniche, ma non bypassa consenso, informativa o regole privacy.</Reveal>
           </div>
-          <div className="mt-24 md:mt-[140px]">
+          <div className="mt-24 md:mt-[96px]">
             {steps.map((step) => (
               <Reveal key={step.n} as="article" className="row">
                 <span className="tm">{step.n}</span>
@@ -267,10 +269,10 @@ const ServerSideTracking: React.FC = () => {
       </section>
 
       {/* Pacchetti */}
-      <section id="pacchetti" className="scroll-mt-24 px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section id="pacchetti" className="scroll-mt-24 px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">I pacchetti.</Reveal>
-          <div className="mt-20 flex flex-col gap-6 md:mt-[120px] md:flex-row md:items-start">
+          <div className="mt-20 flex flex-col gap-6 md:mt-[80px] md:flex-row md:items-start">
             <PackageColumn pack={packages[0]} background="linear-gradient(170deg, #f7f5fb 0%, #efe7fb 100%)">
               <NoteCard text={packages[0].note!} />
             </PackageColumn>
@@ -293,8 +295,8 @@ const ServerSideTracking: React.FC = () => {
       </section>
 
       {/* Caso reale: blocco scuro allineato a sinistra. Numeri: docs/sources/candiani-2026-11/README.md */}
-      <section className="px-6 pb-32 md:pb-[240px]">
-        <div className="close px-7 py-24 md:px-12 md:py-[200px]">
+      <section className="px-6 pb-24 md:pb-[160px]">
+        <div className="close px-7 py-24 md:px-12 md:py-[100px]">
           <div className="aur aur-1 opacity-80" aria-hidden="true" />
           <div className="aur aur-2 opacity-80" aria-hidden="true" />
           <div className="relative mx-auto max-w-[1440px]">
@@ -311,10 +313,10 @@ const ServerSideTracking: React.FC = () => {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section id="faq" className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">Domande frequenti</Reveal>
-          <Reveal delay={0.12} className="mt-20 md:mt-[120px]">
+          <Reveal delay={0.12} className="mt-20 md:mt-[80px]">
             {faqs.map(([question, answer], i) => (
               <details key={question} className="f" open={i === 0}>
                 <summary>
@@ -329,10 +331,10 @@ const ServerSideTracking: React.FC = () => {
       </section>
 
       {/* Approfondisci */}
-      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">Approfondisci</Reveal>
-          <div className="mt-20 md:mt-[120px]">
+          <div className="mt-20 md:mt-[80px]">
             {related.map((item) => (
               <Reveal key={item.href} as="div" className="row">
                 <span className="tm">{item.tag}</span>

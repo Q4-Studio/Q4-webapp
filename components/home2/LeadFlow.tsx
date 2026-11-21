@@ -15,10 +15,10 @@ const steps = [
 ];
 
 const LeadFlow: React.FC = () => (
-  <section id="automazioni" className="px-6 pb-32 md:px-12 md:pb-[240px]">
+  <section id="automazioni" className="px-6 pb-24 md:px-12 md:pb-[160px]">
     <div className="mx-auto max-w-[1440px]">
       <Reveal as="h2" className="h-l max-w-[1100px]">Dal click al cliente. In automatico.</Reveal>
-      <div className="mt-20 md:mt-[140px]">
+      <div className="mt-20 md:mt-[96px]">
         {steps.map((step) => (
           <Reveal key={step.time} as="article" className="row">
             <span className="tm">{step.time}</span>

@@ -62,10 +62,10 @@ const steps = [
 ];
 
 const Process: React.FC = () => (
-  <section id="processo" className="px-6 pb-32 md:px-12 md:pb-[240px]">
+  <section id="processo" className="px-6 pb-24 md:px-12 md:pb-[160px]">
     <div className="mx-auto max-w-[1440px]">
       <Reveal as="h2" className="h-l">Come lavoriamo</Reveal>
-      <div className="mt-20 grid grid-cols-1 gap-12 md:mt-[120px] md:grid-cols-3 md:gap-8">
+      <div className="mt-20 grid grid-cols-1 gap-12 md:mt-[80px] md:grid-cols-3 md:gap-8">
         {steps.map((step) => (
           <Reveal key={step.n} delay={step.delay} className={step.offset}>
             <div className={`tile ${step.tile}`}>

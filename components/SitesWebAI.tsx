@@ -182,10 +182,10 @@ const SitesWebAI: React.FC = () => {
       </header>
 
       {/* Manifesto */}
-      <section className="px-6 pb-32 pt-32 md:px-12 md:pb-[200px] md:pt-[240px]">
+      <section className="px-6 pb-24 pt-24 md:px-12 md:pb-[140px] md:pt-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l max-w-[1200px]">L’AI abbassa il costo della produzione. Non il livello delle scelte.</Reveal>
-          <div className="ml-auto mt-20 max-w-[640px] md:mt-[120px]">
+          <div className="ml-auto mt-20 max-w-[640px] md:mt-[80px]">
             <Reveal as="p" className="lead max-w-[560px]">Un sito non diventa efficace perché una macchina ha generato una pagina. Serve capire cosa deve far ricordare, quale percorso deve costruire e dove deve portare chi lo visita.</Reveal>
             <Reveal as="p" delay={0.12} className="lead mt-7 max-w-[560px]">Usiamo l’AI nel processo creativo e tecnico, sotto direzione umana. Il risultato non è “un sito AI”: è un sito riconoscibile, costruito con più possibilità a disposizione.</Reveal>
           </div>
@@ -193,7 +193,7 @@ const SitesWebAI: React.FC = () => {
       </section>
 
       {/* Quattro cifre */}
-      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-12 md:grid-cols-4 md:gap-6">
           {figures.map((figure) => (
             <Reveal key={figure.value} delay={figure.delay} className="py-2 pl-8" style={{ borderLeft: '1px solid rgba(10,10,10,.12)' }}>
@@ -205,11 +205,11 @@ const SitesWebAI: React.FC = () => {
       </section>
 
       {/* Più linguaggi: bento a tre colonne sfalsate */}
-      <section id="servizi" className="scroll-mt-24 px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section id="servizi" className="scroll-mt-24 px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">Più linguaggi, nello stesso progetto.</Reveal>
 
-          <div className="mt-20 flex flex-col gap-6 md:mt-[120px] md:flex-row md:items-start">
+          <div className="mt-20 flex flex-col gap-6 md:mt-[80px] md:flex-row md:items-start">
             <div className="flex min-w-0 flex-1 flex-col">
               <LanguageCard
                 icon={Sparkles}
@@ -252,8 +252,8 @@ const SitesWebAI: React.FC = () => {
       </section>
 
       {/* Landing page in una settimana: blocco carta arrotondato */}
-      <section className="px-6 pb-32 md:pb-[240px]">
-        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[140px]" style={{ background: PAPER_BG }}>
+      <section className="px-6 pb-24 md:pb-[160px]">
+        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[100px]" style={{ background: PAPER_BG }}>
           <div className="dots" aria-hidden="true" />
           <div className="relative grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
             <div>
@@ -274,8 +274,8 @@ const SitesWebAI: React.FC = () => {
       </section>
 
       {/* Caso studio GP Meccatronica: blocco scuro */}
-      <section className="px-6 pb-32 md:pb-[240px]">
-        <div className="close px-7 py-24 md:px-20 md:py-[160px]">
+      <section className="px-6 pb-24 md:pb-[160px]">
+        <div className="close px-7 py-24 md:px-20 md:py-[120px]">
           <div className="aur aur-1 opacity-80" aria-hidden="true" />
           <div className="aur aur-2 opacity-80" aria-hidden="true" />
           <div className="relative mx-auto max-w-[1440px]">
@@ -307,10 +307,10 @@ const SitesWebAI: React.FC = () => {
       </section>
 
       {/* Tre fasi */}
-      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l max-w-[1100px]">Tre fasi, non un modulo da compilare.</Reveal>
-          <div className="mt-20 grid grid-cols-1 gap-6 md:mt-[120px] md:grid-cols-3">
+          <div className="mt-20 grid grid-cols-1 gap-6 md:mt-[80px] md:grid-cols-3">
             {phases.map((phase) => (
               <Reveal key={phase.title} delay={phase.delay} className="flex min-h-[360px] flex-col gap-7 rounded-[32px] bg-[#f7f5fb] px-7 py-8 md:p-11">
                 <IconBox icon={phase.icon} />
@@ -325,8 +325,8 @@ const SitesWebAI: React.FC = () => {
       </section>
 
       {/* Cosa serve da te: blocco carta arrotondato */}
-      <section className="px-6 pb-32 md:pb-[240px]">
-        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[140px]" style={{ background: PAPER_BG }}>
+      <section className="px-6 pb-24 md:pb-[160px]">
+        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[100px]" style={{ background: PAPER_BG }}>
           <div className="dots" aria-hidden="true" />
           <div className="relative grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
             <div>
@@ -343,10 +343,10 @@ const SitesWebAI: React.FC = () => {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section id="faq" className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">Domande frequenti</Reveal>
-          <Reveal delay={0.12} className="mt-20 md:mt-[120px]">
+          <Reveal delay={0.12} className="mt-20 md:mt-[80px]">
             {faqs.map((faq, i) => (
               <details key={faq.question} className="f" open={i === 0}>
                 <summary>

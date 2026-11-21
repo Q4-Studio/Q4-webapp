@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -31,7 +31,8 @@ const ScrollRevealText: React.FC<ScrollRevealTextProps> = ({
 }) => {
   const ref = useRef<HTMLElement>(null);
 
-  useEffect(() => {
+  // Split in parole prima del primo paint: evita il lampo di testo pieno.
+  useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
 

@@ -323,7 +323,7 @@ const App: React.FC = () => {
   ];
 
   return (
-    <main className="w-full min-h-screen bg-[#050505] text-white selection:bg-indigo-500 selection:text-white cursor-none">
+    <main className="w-full min-h-screen bg-white text-white selection:bg-purple-600 selection:text-white cursor-none">
       <SpeedInsights />
       {currentPage === 'app-support' && (
         <SEOHead

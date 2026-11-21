@@ -10,7 +10,7 @@ import { trackCtaClick } from '../../utils/dataLayer';
 /* ------------------------------------------------------------------ */
 
 const Statement: React.FC = () => (
-  <section id="tracciamento" className="px-6 pb-32 pt-32 md:px-12 md:pb-[200px] md:pt-[240px]">
+  <section id="tracciamento" className="px-6 pb-24 pt-24 md:px-12 md:pb-[140px] md:pt-[160px]">
     <div className="mx-auto max-w-[1440px]">
       <ScrollRevealText
         as="h2"
