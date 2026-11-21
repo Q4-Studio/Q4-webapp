@@ -4,7 +4,7 @@
 
 ## Comportamento
 
-- Nessun testo sotto i 15px nelle pagine chiare; il corpo delle card, le righe, gli elenchi e le descrizioni stanno tra 17 e 19px. Vale per tutte le pagine sotto `.home-light` (home, agenti AI, tracciamento, siti web, Meta Ads).
+- Nessun testo sotto i 16px nelle pagine chiare; il corpo delle card, le righe, gli elenchi e le descrizioni stanno a 19-20px (alzati di due punti su richiesta dopo il primo controllo). Vale per tutte le pagine sotto `.home-light` (home, agenti AI, tracciamento, siti web, Meta Ads).
 - Spazi verticali ridotti di circa un terzo: sezioni 160px invece di 240px su desktop, titolo→contenuto 80px invece di 120px, chiusure 180/200px invece di 260/280px. Lo sfalsamento delle colonne del bento resta.
 - Primo caricamento senza sfarfallio: i blocchi con reveal partono nascosti prima del primo paint e si mostrano quando entrano in viewport; html e body sono bianchi fin dal primo paint.
 
