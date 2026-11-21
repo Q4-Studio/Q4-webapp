@@ -55,6 +55,8 @@ export interface CaseStudy {
   clientUrl?: string;
   /** Data di pubblicazione della pagina (non della campagna), usata nello schema Article. */
   datePublished: string;
+  /** Ultimo aggiornamento dei contenuti; schema Article e sitemap usano `dateModified ?? datePublished`. */
+  dateModified?: string;
   metaTitle: string;
   description: string;
   /** Categoria editoriale visibile nell'indice dei casi studio. */
@@ -108,15 +110,27 @@ export interface CaseStudy {
 export const siteUrl = 'https://www.q4.studio';
 export const caseStudiesPath = '/casi-studio';
 
+// Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata):
+// Stape Requests Analytics, 90 giorni fino al 20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026.
+// Aggiornare prima lì, poi qui: pagine, home e prerender leggono questi valori.
+export const candianiFigures = {
+  recovered: '752.423',
+  trackingPrevention: '671.779',
+  adBlockers: '80.644',
+  requests: '1.966.768',
+  share: '38,3%',
+  windowLabel: '90 giorni',
+};
+
 export const caseStudies: CaseStudy[] = [
-  // Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata) (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
   {
     slug: 'candiani-denim-tracking-server-side',
     client: 'Candiani Denim',
     clientUrl: 'https://www.candianidenim.com/',
     datePublished: '2026-08-01',
+    dateModified: '2026-11-21',
     metaTitle: 'Candiani Denim: tracking server-side per Meta Ads | Q4 Studio',
-    description: 'Come abbiamo potenziato il tracciamento Meta di Candiani Denim con Meta Conversion API, deduplicazione eventi e server-side tagging, recuperando 752.423 segnali in 90 giorni.',
+    description: `Come abbiamo potenziato il tracciamento Meta di Candiani Denim con Meta Conversion API, deduplicazione eventi e server-side tagging, recuperando ${candianiFigures.recovered} segnali in ${candianiFigures.windowLabel}.`,
     category: 'Tracciamento e dati',
     kicker: 'Caso studio · Tracking server-side',
     title: 'Candiani Denim',
@@ -160,13 +174,13 @@ export const caseStudies: CaseStudy[] = [
     },
     results: {
       heading: 'Il risultato',
-      intro: 'In 90 giorni (22 agosto–20 novembre 2026), su 1.966.768 richieste gestite dal container server-side, il tracciamento server-side ha recuperato:',
+      intro: `In ${candianiFigures.windowLabel}, fino al 20 novembre 2026, su ${candianiFigures.requests} richieste gestite dal container server-side, il tracciamento server-side ha recuperato:`,
       stats: [
-        { value: '671.779', label: 'richieste bloccate dai sistemi di tracking prevention' },
-        { value: '80.644', label: 'richieste bloccate dagli ad blocker' },
-        { value: '752.423', label: 'segnali recuperati in totale (38,3% delle richieste)' }
+        { value: candianiFigures.trackingPrevention, label: 'recuperate dalla tracking prevention dei browser' },
+        { value: candianiFigures.adBlockers, label: 'recuperate dagli ad blocker' },
+        { value: candianiFigures.recovered, label: `segnali recuperati in totale (${candianiFigures.share} delle richieste)` }
       ],
-      note: 'Senza la configurazione server-side questi dati sarebbero andati persi, inclusi eventi e-commerce come visualizzazioni prodotto, aggiunte al carrello, inizio checkout e acquisti. Su Meta, dal 23 ottobre al 19 novembre 2026, l’API Conversions ha registrato più conversioni rispetto al solo pixel: +9,2% sulle visualizzazioni di contenuti (ViewContent), +46,2% sulle aggiunte al carrello (AddToCart), +133,3% sugli inizi di acquisto (InitiateCheckout). Fonti: analytics del container server-side (22 ago–20 nov 2026) e Meta Gestione eventi (23 ott–19 nov 2026).'
+      note: 'Senza la configurazione server-side questi dati sarebbero andati persi, inclusi eventi e-commerce come visualizzazioni prodotto, aggiunte al carrello, inizio checkout e acquisti.'
     },
     data: [
       {
@@ -190,7 +204,7 @@ export const caseStudies: CaseStudy[] = [
           { label: 'Purchase · 135 richieste', value: '79 recuperate (58,5%)' }
         ],
         note: 'Gli eventi vicini all’acquisto sono quelli che si perdono di più: oltre la metà degli acquisti sarebbe rimasta invisibile alle piattaforme.',
-        source: 'Analytics del container server-side di candianidenim.com, 22 agosto – 20 novembre 2026, richieste GA4 per evento.'
+        source: 'Analytics del container server-side di candianidenim.com, 90 giorni fino al 20 novembre 2026, richieste GA4 per evento.'
       },
       {
         heading: 'Dove si perdono i dati: per browser',
@@ -200,7 +214,7 @@ export const caseStudies: CaseStudy[] = [
           { label: 'Chrome (mobile e desktop) · 576K richieste', value: '8,34% recuperato dagli ad blocker' },
           { label: 'Altri (Brave, Edge, Firefox…) · 719K richieste', value: '3,56% recuperato dagli ad blocker' }
         ],
-        source: 'Analytics del container server-side, 22 agosto – 20 novembre 2026, richieste per browser.'
+        source: 'Analytics del container server-side, 90 giorni fino al 20 novembre 2026, richieste per browser.'
       },
       {
         heading: 'Bot fuori, consenso dentro',
@@ -210,7 +224,7 @@ export const caseStudies: CaseStudy[] = [
           { value: '42,29%', label: 'delle PageView con consenso dato (150.698); 57,71% con opt-out (205.679)' },
           { value: '62,96%', label: 'degli acquisti con consenso dato (85); 37,04% con opt-out (50)' }
         ],
-        source: 'Analytics del container server-side, 22 agosto – 20 novembre 2026, richieste da bot e per scelta di consenso (richieste GA4).'
+        source: 'Analytics del container server-side, 90 giorni fino al 20 novembre 2026, richieste da bot e per scelta di consenso (richieste GA4).'
       }
     ],
     whyItMatters: {
@@ -220,7 +234,7 @@ export const caseStudies: CaseStudy[] = [
       ]
     },
     sources: [
-      'Analytics del container server-side di candianidenim.com, periodo 90 giorni (22 agosto – 20 novembre 2026).',
+      'Analytics del container server-side di candianidenim.com, periodo di 90 giorni fino al 20 novembre 2026.',
       'Meta Gestione eventi, Pixel di Candiani Denim, 23 ottobre – 19 novembre 2026.',
       'Screenshot originali e valori estratti conservati da Q4 Studio, disponibili su richiesta.'
     ],

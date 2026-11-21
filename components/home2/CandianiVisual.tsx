@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Reveal from './Reveal';
 import { onInternalLink } from '../../utils/navigate';
+import { candianiFigures } from '../../data/caseStudies';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,7 +12,6 @@ gsap.registerPlugin(ScrollTrigger);
 /* destra. La linea "Recuperati" si disegna mentre si scorre.          */
 /* ------------------------------------------------------------------ */
 
-// Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata) (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
 const CASE_STUDY_PATH = '/casi-studio/candiani-denim-tracking-server-side';
 
 const CandianiVisual: React.FC = () => {
@@ -50,15 +50,15 @@ const CandianiVisual: React.FC = () => {
         <div className="relative grid grid-cols-1 items-start gap-12 md:grid-cols-[0.9fr_1.1fr] md:gap-20">
           <Reveal>
             <p className="disp" style={{ fontSize: 'clamp(3.25rem, 8vw, 8.5rem)', letterSpacing: '-0.06em', lineHeight: 0.95 }}>
-              752.423
+              {candianiFigures.recovered}
             </p>
             <p className="lead mt-6 max-w-[420px]" style={{ color: '#0a0a0a' }}>
-              segnali di conversione recuperati in 90 giorni per{' '}
+              segnali di conversione recuperati in {candianiFigures.windowLabel} per{' '}
               <a href={CASE_STUDY_PATH} onClick={onInternalLink(CASE_STUDY_PATH)} className="underline decoration-purple-400/50 underline-offset-4 hover:decoration-purple-600">
                 Candiani Denim
               </a>.
             </p>
-            <p className="mt-5 max-w-[420px] text-base leading-relaxed">671.779 sarebbero stati bloccati dalla tracking prevention.</p>
+            <p className="mt-5 max-w-[420px] text-base leading-relaxed">{candianiFigures.trackingPrevention} sarebbero stati bloccati dalla tracking prevention.</p>
           </Reveal>
 
           <Reveal delay={0.12} className="mock -mb-10 px-6 pt-6 md:px-8 md:pt-8">

@@ -19,3 +19,15 @@ export const onInternalLink =
     after?.();
     goTo(path);
   };
+
+/**
+ * Scorre all'elemento con quell'id. Con prefers-reduced-motion niente
+ * animazione. Ritorna false se l'elemento non c'è (il chiamante decide).
+ */
+export const scrollToId = (id: string, block: ScrollLogicalPosition = 'start'): boolean => {
+  const target = document.getElementById(id);
+  if (!target) return false;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block });
+  return true;
+};

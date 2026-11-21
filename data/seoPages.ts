@@ -1,3 +1,5 @@
+import { candianiFigures } from './caseStudies';
+
 // Cluster keyword da SEO_GUIDE.md: A = tracciamento server-side (hub
 // /tracciamento-server-side), C/D = automazioni CRM/WhatsApp e agenti AI
 // (hub /agenti-ai, venduti insieme come "automazioni e agenti AI" sullo
@@ -51,11 +53,11 @@ export interface SeoPage {
 // corrispondente — non usare la data di build in scripts/prerender.ts, che
 // si resetta ad ogni deploy anche a contenuto invariato.
 export const pageLastModified: Record<string, string> = {
-  '/': '2026-08-09',
+  '/': '2026-11-21',
   '/agenti-ai': '2026-08-09',
-  '/tracciamento-server-side': '2026-08-26',
+  '/tracciamento-server-side': '2026-11-21',
   '/siti-web-ai': '2026-08-09',
-  '/meta-advertising-b2b': '2026-08-07',
+  '/meta-advertising-b2b': '2026-11-21',
   '/partner-tecnico': '2026-08-07',
   '/casi-studio': '2026-08-05',
   '/risorse': '2026-08-26',
@@ -276,7 +278,7 @@ export const seoPages: SeoPage[] = [
   {
     slug: 'raccolta-dati-marketing-reggio-emilia',
     cluster: 'A',
-    lastModified: '2026-08-26',
+    lastModified: '2026-11-21',
     title: 'Raccolta Dati Marketing a Reggio Emilia',
     metaTitle: 'Problemi di Raccolta Dati Marketing a Reggio Emilia | Q4 Studio',
     description: 'Problemi di raccolta dati marketing a Reggio Emilia? Diagnosi di tracking, Consent Mode e CRM per capire quali conversioni mancano e perché.',
@@ -326,7 +328,7 @@ export const seoPages: SeoPage[] = [
     dataPoints: [
       'Audit del tracciamento: 490 € e 3-5 giorni lavorativi',
       'Setup server-side: da 1.500 € per siti non-ecommerce',
-      'Nel caso studio Candiani Denim Q4 Studio documenta 752.423 segnali recuperati in 90 giorni, di cui 671.779 bloccati dalla tracking prevention dei browser e 80.644 dagli ad blocker',
+      `Nel caso studio Candiani Denim Q4 Studio documenta ${candianiFigures.recovered} segnali recuperati in ${candianiFigures.windowLabel}, di cui ${candianiFigures.trackingPrevention} bloccati dalla tracking prevention dei browser e ${candianiFigures.adBlockers} dagli ad blocker`,
       'La diagnosi confronta piattaforme pubblicitarie, analytics, CRM e processo commerciale, non solo il codice del sito'
     ],
     services: ['Audit tracking e consenso', 'Server-side tracking', 'Integrazione CRM e advertising', 'Documentazione di eventi e naming'],

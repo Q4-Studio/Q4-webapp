@@ -104,7 +104,7 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
     description: study.description,
     image: ogImage,
     datePublished: study.datePublished,
-    dateModified: study.datePublished,
+    dateModified: study.dateModified ?? study.datePublished,
     author: { '@type': 'Organization', name: 'Q4 Studio', url: siteUrl },
     publisher: { '@type': 'Organization', name: 'Q4 Studio', logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.png` } },
     about: { '@type': 'Organization', name: study.client, ...(study.clientUrl ? { url: study.clientUrl } : {}) },

@@ -9,9 +9,10 @@ import TrackingLossCalculator from './TrackingLossCalculator';
 import { Bullets, NoteCard, OkIcon, PaperBlock } from './home2/primitives';
 import { trackingFaqs, trackingOfferPrice, trackingPackages, trackingSchemaFaqs, type TrackingPackage } from '../data/servicePages';
 import { siteUrl } from '../data/seoPages';
+import { candianiFigures } from '../data/caseStudies';
 import { trackCtaClick } from '../utils/dataLayer';
 import { useLightDocument } from '../hooks/useLightDocument';
-import { onInternalLink } from '../utils/navigate';
+import { onInternalLink, scrollToId } from '../utils/navigate';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -136,10 +137,7 @@ const ServerSideTracking: React.FC = () => {
   useLightDocument();
 
   const scrollTo = (id: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-    const target = document.getElementById(id);
-    if (!target) return;
-    event.preventDefault();
-    target.scrollIntoView({ behavior: 'smooth', block: id === 'contatti' ? 'center' : 'start' });
+    if (scrollToId(id, id === 'contatti' ? 'center' : 'start')) event.preventDefault();
   };
 
   return (
@@ -265,14 +263,14 @@ const ServerSideTracking: React.FC = () => {
         </div>
       </section>
 
-      {/* Caso reale: blocco scuro allineato a sinistra. Numeri: le fonti private di Q4 Studio (cartella docs/sources, non versionata) */}
+      {/* Caso reale: blocco scuro allineato a sinistra. Numeri da candianiFigures. */}
       <section className="px-6 pb-24 md:pb-[160px]">
         <div className="close dark-block px-7 py-24 md:px-12 md:py-[100px]">
           <div className="aur aur-1 opacity-80" aria-hidden="true" />
           <div className="aur aur-2 opacity-80" aria-hidden="true" />
           <div className="relative mx-auto max-w-[1440px]">
-            <Reveal as="h2" style={{ fontSize: 'clamp(3rem, 11vw, 11.5rem)', letterSpacing: '-0.06em', lineHeight: 0.92 }}>752.423 segnali recuperati in 90 giorni.</Reveal>
-            <Reveal as="p" delay={0.12} className="lead mt-14 max-w-[720px] text-gray-300">Su Candiani Denim abbiamo recuperato 752.423 segnali di conversione in 90 giorni, di cui 671.779 bloccati dai sistemi di tracking prevention dei browser e 80.644 dagli ad blocker.</Reveal>
+            <Reveal as="h2" style={{ fontSize: 'clamp(3rem, 11vw, 11.5rem)', letterSpacing: '-0.06em', lineHeight: 0.92 }}>{candianiFigures.recovered} segnali recuperati in {candianiFigures.windowLabel}.</Reveal>
+            <Reveal as="p" delay={0.12} className="lead mt-14 max-w-[720px] text-gray-300">{`Su Candiani Denim abbiamo recuperato ${candianiFigures.recovered} segnali di conversione in ${candianiFigures.windowLabel}, di cui ${candianiFigures.trackingPrevention} bloccati dai sistemi di tracking prevention dei browser e ${candianiFigures.adBlockers} dagli ad blocker.`}</Reveal>
             <Reveal delay={0.2} className="mt-12">
               <a
                 href="/casi-studio/candiani-denim-tracking-server-side"

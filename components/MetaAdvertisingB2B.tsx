@@ -4,8 +4,10 @@ import SEOHead from './SEOHead';
 import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
 import { Bullets, NoteCard, PAPER_BG, PaperBlock } from './home2/primitives';
+import { metaAdvertisingFaqs } from '../data/servicePages';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
+import { scrollToId } from '../utils/navigate';
 import { useLightDocument } from '../hooks/useLightDocument';
 
 /* ------------------------------------------------------------------ */
@@ -15,22 +17,6 @@ import { useLightDocument } from '../hooks/useLightDocument';
 /* chiusura verso il tracciamento. Classi .home-light in index.css;    */
 /* reveal allo scroll via <Reveal>.                                    */
 /* ------------------------------------------------------------------ */
-
-/** FAQ del mockup (anche nello schema FAQPage). */
-export const metaAdvertisingFaqs = [
-  {
-    question: 'In pratica, cos’è la B2B Lead Generation su Meta?',
-    answer: 'È l’uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate su cliente giusto, messaggio, form, CRM e segnali di qualità.',
-  },
-  {
-    question: 'Perché collegare Meta Ads, CRM e automazioni?',
-    answer: 'Perché il CRM restituisce segnali più utili dell’invio form. Quando rientrano nel modello di ottimizzazione, le campagne cercano contatti più vicini al valore commerciale reale.',
-  },
-  {
-    question: 'Lavorate anche con Google Ads?',
-    answer: 'Sì. Lead generation e high ticket si gestiscono su Meta Ads e Google Ads, con lo stesso approccio: segnali puliti e lettura dei dati commerciali.',
-  },
-];
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -110,13 +96,13 @@ const AgentCard: React.FC<{ icon: IconType; title: string; desc: string; items: 
 const FunnelMock: React.FC = () => (
   <div className="mock p-7 md:p-9">
     <p className="mb-6 text-[13px] text-gray-500">Schema illustrativo del funnel</p>
+    {/* Etichetta fuori dalla barra (testo scuro, larghezza fissa): sulle
+        barre strette il testo bianco non ci stava su mobile. */}
     {funnel.map((step) => (
       <div key={step.label} className="mb-3.5 flex items-center gap-4">
-        <div
-          className="flex h-14 items-center whitespace-nowrap rounded-2xl px-5 text-[15px] font-semibold text-white"
-          style={{ width: step.width, background: step.background }}
-        >
-          {step.label}
+        <span className="w-[120px] shrink-0 text-[15px] font-semibold text-[#0a0a0a]">{step.label}</span>
+        <div className="min-w-0 flex-1">
+          <div className="h-14 rounded-2xl" style={{ width: step.width, background: step.background }} aria-hidden="true" />
         </div>
       </div>
     ))}
@@ -127,10 +113,7 @@ const MetaAdvertisingB2B: React.FC = () => {
   useLightDocument();
 
   const scrollToMethod = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    const target = document.getElementById('metodo');
-    if (!target) return;
-    event.preventDefault();
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (scrollToId('metodo')) event.preventDefault();
   };
 
   return (

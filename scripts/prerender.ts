@@ -1,6 +1,6 @@
 import { seoPages, siteUrl, resourcesPath, clusterHub, pageLastModified } from '../data/seoPages.ts';
-import { caseStudies, caseStudiesPath, CaseStudy } from '../data/caseStudies.ts';
-import { aiAgentsFaqs, aiAgentsPackages, trackingFaqs, trackingOfferPrice, trackingPackages, trackingSchemaFaqs } from '../data/servicePages.ts';
+import { caseStudies, caseStudiesPath, CaseStudy, candianiFigures } from '../data/caseStudies.ts';
+import { aiAgentsFaqs, aiAgentsPackages, metaAdvertisingFaqs, trackingFaqs, trackingOfferPrice, trackingPackages, trackingSchemaFaqs } from '../data/servicePages.ts';
 import { createClient } from '@supabase/supabase-js';
 import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
@@ -580,7 +580,7 @@ function generateCaseStudyDetailHtml(study: CaseStudy): string {
     description: study.description,
     image: ogImage,
     datePublished: study.datePublished,
-    dateModified: study.datePublished,
+    dateModified: study.dateModified ?? study.datePublished,
     author: {
       '@type': 'Organization',
       name: 'Q4 Studio',
@@ -1022,17 +1022,16 @@ function generateRestyledAIAgentsHtml(): string {
 
 function generateServerSideTrackingHtml(): string {
   // Stessi testi di components/ServerSideTracking.tsx (mockup "Tracciamento server-side").
-  // Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata) (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
   // Pacchetti e FAQ da data/servicePages.ts, gli stessi di components/ServerSideTracking.tsx.
   const trackingPackagesHtml = trackingPackages.map((pack) => `<article><h3>${escapeHtml(pack.title)}</h3><p>${escapeHtml(pack.timing)}</p><ul>${pack.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul><p>${pack.priceFrom ? `Prezzo da ${escapeHtml(pack.price)}` : `Prezzo: ${escapeHtml(pack.price)}`}</p>${pack.note ? `<p>${escapeHtml(pack.note)}</p>` : ''}</article>`).join('');
   const trackingFaqHtml = trackingFaqs.map((faq) => `<h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p>`).join('');
   const body = `<header><h1 class="hero-h1 font-bold">Il tuo account pubblicitario vede meno conversioni di quelle che fai.</h1><p class="hero-subhead">Non è un problema di campagne. È un problema di raccolta dati.</p><a href="#pacchetti">Vedi i pacchetti</a></header>
   <section><h2>Cosa sta succedendo.</h2><p>Safari e Firefox limitano i cookie di terze parti. Gli ad blocker bloccano i pixel. Il consenso negato interrompe la raccolta. Il risultato è che Meta e Google vedono una parte delle tue conversioni, e ottimizzano su quella parte.</p><p>Se il tuo account dice 40 conversioni e il tuo gestionale dice 90, non è un errore di lettura: è il tracciamento che non arriva.</p><p>Esempio: account pubblicitario 40 conversioni, gestionale 90.</p></section>
-  <section id="stima"><h2>Quanto ti costa il tracciamento che non arriva?</h2><p>Inserisci spesa pubblicitaria e visite mensili: stimiamo quanto budget sta ottimizzando su conversioni che le piattaforme non vedono e quante visite restano fuori dai dati. Esempio: con 5.000 € al mese e 50.000 visitatori, tra 900 e 1.400 € di budget lavorano su dati incompleti e tra 6.500 e 11.000 visite non arrivano alle piattaforme.</p><p>Forchette basate sulle stime pubblicate da strumenti di verifica del tracciamento (18–21% del budget, 13–16% delle visite, novembre 2026) e sul caso Candiani Denim, dove il server-side ha recuperato il 38,3% delle richieste in 90 giorni. È una stima: l’audit misura il dato reale del tuo sito.</p></section>
+  <section id="stima"><h2>Quanto ti costa il tracciamento che non arriva?</h2><p>Inserisci spesa pubblicitaria e visite mensili: stimiamo quanto budget sta ottimizzando su conversioni che le piattaforme non vedono e quante visite restano fuori dai dati. Esempio: con 5.000 € al mese e 50.000 visitatori, tra 900 e 1.400 € di budget lavorano su dati incompleti e tra 6.500 e 11.000 visite non arrivano alle piattaforme.</p><p>Forchette basate sulle stime pubblicate da strumenti di verifica del tracciamento (18–21% del budget, 13–16% delle visite, novembre 2026) e sul caso Candiani Denim, dove il server-side ha recuperato il ${candianiFigures.share} delle richieste in ${candianiFigures.windowLabel}. È una stima: l’audit misura il dato reale del tuo sito.</p></section>
   <section><h2>Come lo risolviamo.</h2><p>Spostiamo la raccolta dati dal browser a un container server-side su infrastruttura dedicata. I segnali passano da lì, vengono normalizzati e inviati alle piattaforme via API server-to-server.</p><p>Aggiungiamo i segnali che contano davvero: non l'invio del form, ma la qualificazione, la risposta del prospect, l'avanzamento nel CRM. Sono i segnali che l'algoritmo usa per cercare persone simili a chi compra, non a chi compila.</p><ul><li>Lead qualificato · Conversions API</li><li>Risposta del prospect · Enhanced Conversions</li><li>Avanzamento nel CRM · Meta e Google</li><li>Consent Mode v2</li></ul></section>
   <section id="ad-blocker-conversioni"><h2>Come recuperare le conversioni bloccate dagli ad blocker.</h2><p>Non si recuperano installando un altro pixel. Prima si confrontano dati della piattaforma, analytics, CRM e processo commerciale per capire quali eventi mancano. Poi si sposta la raccolta compatibile con il consenso su un container server-side e si inviano a Meta o Google gli eventi che descrivono davvero il percorso del lead.</p><p>Se un evento parte sia dal browser sia dal server, deve avere lo stesso identificativo: la deduplicazione evita che una conversione venga contata due volte. Il server-side riduce alcune perdite tecniche, ma non bypassa consenso, informativa o regole privacy.</p><ol><li>Audit di eventi, consenso, browser e CRM.</li><li>Configurazione del container e delle integrazioni API.</li><li>Deduplicazione e test con eventi reali.</li><li>Monitoraggio e documentazione per il team.</li></ol></section>
   <section id="pacchetti"><h2>I pacchetti.</h2>${trackingPackagesHtml}<p>Documentazione ufficiale: <a href="https://developers.google.com/tag-platform/tag-manager/server-side" target="_blank" rel="noopener noreferrer">Google Tag Manager server-side</a>, <a href="https://developers.facebook.com/docs/marketing-api/conversions-api/" target="_blank" rel="noopener noreferrer">Meta Conversions API</a>, <a href="https://support.google.com/google-ads/answer/9888656" target="_blank" rel="noopener noreferrer">Google Enhanced Conversions</a>.</p></section>
-  <section><h2>752.423 segnali recuperati in 90 giorni.</h2><p>Su Candiani Denim abbiamo recuperato 752.423 segnali di conversione in 90 giorni, di cui 671.779 bloccati dai sistemi di tracking prevention dei browser e 80.644 dagli ad blocker.</p><a href="/casi-studio/candiani-denim-tracking-server-side">Leggi il caso studio completo</a></section>
+  <section><h2>${candianiFigures.recovered} segnali recuperati in ${candianiFigures.windowLabel}.</h2><p>Su Candiani Denim abbiamo recuperato ${candianiFigures.recovered} segnali di conversione in ${candianiFigures.windowLabel}, di cui ${candianiFigures.trackingPrevention} bloccati dai sistemi di tracking prevention dei browser e ${candianiFigures.adBlockers} dagli ad blocker.</p><a href="/casi-studio/candiani-denim-tracking-server-side">Leggi il caso studio completo</a></section>
   <section id="faq"><h2>Domande frequenti</h2>${trackingFaqHtml}</section>
   <section><h2>Approfondisci</h2><div class="grid gap-4 md:grid-cols-2"><a href="/risorse/tracking-server-side-deduplicazione-eventi">Tracking server-side e deduplicazione degli eventi</a><a href="/agenti-ai">Dopo il tracciamento: agenti AI e automazioni</a></div></section>
   <section><h2>Non sai se il tuo tracciamento è a posto?</h2><p>L'audit da 490 € ti dà una risposta documentata in cinque giorni.</p><a href="#contatti">Richiedi l'audit</a></section><section id="contatti" aria-label="Audit tracciamento">${STATIC_CONTACT_HTML}</section>`;
@@ -1180,13 +1179,6 @@ function generatePrivacyStaticHtml(): string {
   });
 }
 
-// Stessi testi di components/MetaAdvertisingB2B.tsx (mockup "Meta Ads B2B").
-const metaAdvertisingFaqs = [
-  { question: 'In pratica, cos’è la B2B Lead Generation su Meta?', answer: 'È l’uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate su cliente giusto, messaggio, form, CRM e segnali di qualità.' },
-  { question: 'Perché collegare Meta Ads, CRM e automazioni?', answer: 'Perché il CRM restituisce segnali più utili dell’invio form. Quando rientrano nel modello di ottimizzazione, le campagne cercano contatti più vicini al valore commerciale reale.' },
-  { question: 'Lavorate anche con Google Ads?', answer: 'Sì. Lead generation e high ticket si gestiscono su Meta Ads e Google Ads, con lo stesso approccio: segnali puliti e lettura dei dati commerciali.' },
-];
-
 function generateMetaAdvertisingHtml(): string {
   const faqSchema = {
     '@context': 'https://schema.org',
@@ -1222,7 +1214,7 @@ function generateMetaAdvertisingHtml(): string {
   <section><h2>Dal click al segnale.</h2><ol><li>Annuncio: Meta o Google, sul cliente giusto.</li><li>Form qualificante: domande che filtrano.</li><li>CRM: instradamento e follow-up.</li><li>Server-side: eventi di qualità inviati.</li><li>Ottimizzazione: l’algoritmo cerca chi compra.</li></ol></section>
   <section><h2>Agenti AI sul processo sales.</h2><article><h3>Non chatbot generici</h3><p>Li disegniamo con il team, partendo da regole operative, tono di voce, CRM e punti di frizione.</p><ul><li>Qualificano e danno priorità ai contatti</li><li>Preparano il lavoro umano, non lo sostituiscono</li></ul><p>Meno tempo alla prima risposta.</p></article><article><h3>Meta Ads + agenti</h3><p>Nei progetti più maturi l’integrazione riduce i tempi di prima risposta e rende il funnel meno manuale.</p><ul><li>Routing più preciso</li><li>Meno interventi ripetitivi</li></ul><p>Funnel meno dipendente dal manuale.</p></article><article><h3>Risultati leggibili</h3><p>Metriche operative e metriche di business, valutate insieme.</p><ul><li>Confronto prima e dopo integrazione CRM</li><li>Quali campagne generano conversazioni reali</li></ul><p>Evitiamo le campagne che sembrano funzionare ma non vendono.</p></article></section>
   <section id="faq"><h2>Domande frequenti</h2>${faqHtml}</section>
-  <section><h2>Il tracciamento viene prima delle campagne.</h2><p>Parti dall’audit.</p><a href="/tracciamento-server-side">Vedi il tracciamento e i prezzi</a></section>`;
+  <section><h2>Il tracciamento viene prima delle campagne.</h2><p>Parti dall’audit.</p><a href="/tracciamento-server-side">Vedi il tracciamento e i prezzi</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`;
   return generateBaseHtml({ title: 'Meta Ads B2B e Lead Generation su Facebook e Instagram | Q4 Studio', description: 'Consulenza Meta Advertising per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali dal CRM.', canonical: `${siteUrl}/meta-advertising-b2b`, schema: [faqSchema, metaAdvertisingServiceSchema, metaAdvertisingBreadcrumbSchema], bodyContent: staticPage(body) });
 }
 
@@ -1307,8 +1299,7 @@ function generateRestyledHomeBodyContent(): string {
     "<header><h1>Il tuo marketing funziona a metà, e il problema è tecnico.</h1><a href='/tracciamento-server-side'>Vedi il tracciamento e i prezzi</a> <a href='/casi-studio/candiani-denim-tracking-server-side'>Leggi il caso studio</a></header>",
     "<section aria-label='Aziende che ci hanno già scelto'>" + logoHtml + "</section>",
     "<section id='tracciamento'><h2>Prima dei dati giusti, nessuna ottimizzazione funziona.</h2><p>Browser e ad blocker sottraggono conversioni alle piattaforme. Il tracciamento server-side sposta la raccolta su un server controllato da Q4, così Meta e Google ricevono il dato completo.</p><a href='/tracciamento-server-side'>Vedi i pacchetti e i prezzi</a></section>",
-    // Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata) (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
-    "<section id='casi'><p>752.423</p><p>segnali di conversione recuperati in 90 giorni per <a href='/casi-studio/candiani-denim-tracking-server-side'>Candiani Denim</a>.</p><p>671.779 sarebbero stati bloccati dalla tracking prevention.</p></section>",
+    `<section id='casi'><p>${candianiFigures.recovered}</p><p>segnali di conversione recuperati in ${candianiFigures.windowLabel} per <a href='/casi-studio/candiani-denim-tracking-server-side'>Candiani Denim</a>.</p><p>${candianiFigures.trackingPrevention} sarebbero stati bloccati dalla tracking prevention.</p></section>`,
     "<section id='automazioni'><h2>Dal click al cliente. In automatico.</h2><article><p>T+0</p><h3>Il lead entra dal feed</h3><p>Modulo Meta compilato dal contatto.</p></article><article><p>T+2 s</p><h3>Nel CRM prima che tu lo veda</h3><p>Scheda creata e assegnata in automatico.</p></article><article><p>T+60 s</p><h3>Primo contatto in 60 secondi</h3><p>Messaggio WhatsApp inviato al lead.</p></article><article><p>T+90 s</p><h3>Il lead diventa un dossier</h3><p>Dati dell&#39;azienda arricchiti senza lavoro manuale.</p></article><article><p>7 giorni</p><h3>Ogni lead viene seguito. Sempre.</h3><p>Follow-up programmato fino alla risposta.</p></article></section>",
     "<section id='servizi'><h2>Tre servizi, un unico sistema.</h2><article><h3>Tracciamento e dati</h3><p>Audit del setup attuale, container server-side, eventi documentati e segnali che tornano alle campagne. Un setup server-side tipico richiede 8 ore.</p><p>Audit da 490 € · Setup da 1.500 €</p><a href='/tracciamento-server-side'>Pacchetti e prezzi</a></article><article><h3>Automazioni e agenti AI</h3><p>Il CRM lavora da solo: contatto su WhatsApp ed email, follow-up, notifiche al team commerciale e al cliente. Partono in due settimane.</p><p>Setup da 490 € · Canone 59–200 €/mese</p><a href='/agenti-ai'>Vedi le automazioni</a></article><article><h3>Siti web con AI</h3><p>Veloci, e misurabili fin dal primo giorno.</p><p>da 2.999 €</p><a href='/siti-web-ai'>Come lavoriamo sui siti</a></article><article><h3>Advertising</h3><p>Campagne Google Ads e Meta Ads che partono da dati tracciati bene, per lead generation e servizi high ticket.</p><a href='/meta-advertising-b2b'>Approfondisci</a></article><p>8 ore per un setup server-side tipico. 60 s al primo contatto con il lead.</p></section>",
     "<section id='processo'><h2>Come lavoriamo</h2><article><p>01</p><h3>Audit</h3><p>Mappiamo eventi, consensi e passaggi tra sito, CRM e campagne. Ti consegniamo cosa si perde e dove.</p></article><article><p>02</p><h3>Implementazione</h3><p>Configuriamo tracciamento e automazioni. Un setup server-side tipico richiede 8 ore.</p></article><article><p>03</p><h3>Manutenzione</h3><p>Monitoriamo i flussi e correggiamo quando una piattaforma cambia le regole.</p></article></section>",
@@ -1446,7 +1437,7 @@ function generateSitemap(blogPosts: any[] = []): string {
       loc: `${siteUrl}${caseStudiesPath}/${study.slug}`,
       priority: '0.85',
       changefreq: 'monthly',
-      lastmod: study.datePublished
+      lastmod: study.dateModified ?? study.datePublished
     })),
     ...seoPages.map((page) => ({
       loc: `${siteUrl}${resourcesPath}/${page.slug}`,
@@ -1520,8 +1511,7 @@ function buildHomeMd(): string {
     '',
     '## Risultati verificabili',
     '',
-    // Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata) (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
-    'Su Candiani Denim abbiamo recuperato 752.423 segnali di conversione in 90 giorni, di cui 671.779 bloccati dalla tracking prevention dei browser e 80.644 dagli ad blocker.',
+    `Su Candiani Denim abbiamo recuperato ${candianiFigures.recovered} segnali di conversione in ${candianiFigures.windowLabel}, di cui ${candianiFigures.trackingPrevention} bloccati dalla tracking prevention dei browser e ${candianiFigures.adBlockers} dagli ad blocker.`,
     '',
     '## Come si inizia',
     '',
@@ -1648,8 +1638,7 @@ function buildHubMds(): void {
     '',
     '## Caso reale',
     '',
-    // Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata) (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
-    'Su Candiani Denim 752.423 segnali recuperati in 90 giorni: ' + `${siteUrl}${caseStudiesPath}/candiani-denim-tracking-server-side`,
+    `Su Candiani Denim ${candianiFigures.recovered} segnali recuperati in ${candianiFigures.windowLabel}: ` + `${siteUrl}${caseStudiesPath}/candiani-denim-tracking-server-side`,
     '',
     faqSection(trackingMdFaqs),
   ]);
