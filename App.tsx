@@ -499,7 +499,10 @@ const App: React.FC = () => {
           {currentPage === 'technical-partner' && <TechnicalPartner />}
 
           {currentPage === 'meta-advertising' && (
-            <><MetaAdvertisingB2B /><Footer /></>
+            <div className="home-light relative w-full">
+              <MetaAdvertisingB2B />
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
           {currentPage === 'seo-page' && currentSeoPage && (
