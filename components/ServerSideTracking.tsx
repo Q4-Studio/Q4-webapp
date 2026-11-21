@@ -265,7 +265,7 @@ const ServerSideTracking: React.FC = () => {
         </div>
       </section>
 
-      {/* Caso reale: blocco scuro allineato a sinistra. Numeri: docs/sources/candiani-2026-11/README.md */}
+      {/* Caso reale: blocco scuro allineato a sinistra. Numeri: le fonti private di Q4 Studio (cartella docs/sources, non versionata) */}
       <section className="px-6 pb-24 md:pb-[160px]">
         <div className="close dark-block px-7 py-24 md:px-12 md:py-[100px]">
           <div className="aur aur-1 opacity-80" aria-hidden="true" />

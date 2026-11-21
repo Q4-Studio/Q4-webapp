@@ -1022,7 +1022,7 @@ function generateRestyledAIAgentsHtml(): string {
 
 function generateServerSideTrackingHtml(): string {
   // Stessi testi di components/ServerSideTracking.tsx (mockup "Tracciamento server-side").
-  // Fonte dei numeri Candiani: docs/sources/candiani-2026-11/README.md (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
+  // Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata) (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
   // Pacchetti e FAQ da data/servicePages.ts, gli stessi di components/ServerSideTracking.tsx.
   const trackingPackagesHtml = trackingPackages.map((pack) => `<article><h3>${escapeHtml(pack.title)}</h3><p>${escapeHtml(pack.timing)}</p><ul>${pack.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul><p>${pack.priceFrom ? `Prezzo da ${escapeHtml(pack.price)}` : `Prezzo: ${escapeHtml(pack.price)}`}</p>${pack.note ? `<p>${escapeHtml(pack.note)}</p>` : ''}</article>`).join('');
   const trackingFaqHtml = trackingFaqs.map((faq) => `<h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p>`).join('');
@@ -1307,7 +1307,7 @@ function generateRestyledHomeBodyContent(): string {
     "<header><h1>Il tuo marketing funziona a metà, e il problema è tecnico.</h1><a href='/tracciamento-server-side'>Vedi il tracciamento e i prezzi</a> <a href='/casi-studio/candiani-denim-tracking-server-side'>Leggi il caso studio</a></header>",
     "<section aria-label='Aziende che ci hanno già scelto'>" + logoHtml + "</section>",
     "<section id='tracciamento'><h2>Prima dei dati giusti, nessuna ottimizzazione funziona.</h2><p>Browser e ad blocker sottraggono conversioni alle piattaforme. Il tracciamento server-side sposta la raccolta su un server controllato da Q4, così Meta e Google ricevono il dato completo.</p><a href='/tracciamento-server-side'>Vedi i pacchetti e i prezzi</a></section>",
-    // Fonte dei numeri Candiani: docs/sources/candiani-2026-11/README.md (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
+    // Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata) (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
     "<section id='casi'><p>752.423</p><p>segnali di conversione recuperati in 90 giorni per <a href='/casi-studio/candiani-denim-tracking-server-side'>Candiani Denim</a>.</p><p>671.779 sarebbero stati bloccati dalla tracking prevention.</p></section>",
     "<section id='automazioni'><h2>Dal click al cliente. In automatico.</h2><article><p>T+0</p><h3>Il lead entra dal feed</h3><p>Modulo Meta compilato dal contatto.</p></article><article><p>T+2 s</p><h3>Nel CRM prima che tu lo veda</h3><p>Scheda creata e assegnata in automatico.</p></article><article><p>T+60 s</p><h3>Primo contatto in 60 secondi</h3><p>Messaggio WhatsApp inviato al lead.</p></article><article><p>T+90 s</p><h3>Il lead diventa un dossier</h3><p>Dati dell&#39;azienda arricchiti senza lavoro manuale.</p></article><article><p>7 giorni</p><h3>Ogni lead viene seguito. Sempre.</h3><p>Follow-up programmato fino alla risposta.</p></article></section>",
     "<section id='servizi'><h2>Tre servizi, un unico sistema.</h2><article><h3>Tracciamento e dati</h3><p>Audit del setup attuale, container server-side, eventi documentati e segnali che tornano alle campagne. Un setup server-side tipico richiede 8 ore.</p><p>Audit da 490 € · Setup da 1.500 €</p><a href='/tracciamento-server-side'>Pacchetti e prezzi</a></article><article><h3>Automazioni e agenti AI</h3><p>Il CRM lavora da solo: contatto su WhatsApp ed email, follow-up, notifiche al team commerciale e al cliente. Partono in due settimane.</p><p>Setup da 490 € · Canone 59–200 €/mese</p><a href='/agenti-ai'>Vedi le automazioni</a></article><article><h3>Siti web con AI</h3><p>Veloci, e misurabili fin dal primo giorno.</p><p>da 2.999 €</p><a href='/siti-web-ai'>Come lavoriamo sui siti</a></article><article><h3>Advertising</h3><p>Campagne Google Ads e Meta Ads che partono da dati tracciati bene, per lead generation e servizi high ticket.</p><a href='/meta-advertising-b2b'>Approfondisci</a></article><p>8 ore per un setup server-side tipico. 60 s al primo contatto con il lead.</p></section>",
@@ -1520,7 +1520,7 @@ function buildHomeMd(): string {
     '',
     '## Risultati verificabili',
     '',
-    // Fonte dei numeri Candiani: docs/sources/candiani-2026-11/README.md (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
+    // Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata) (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
     'Su Candiani Denim abbiamo recuperato 752.423 segnali di conversione in 90 giorni, di cui 671.779 bloccati dalla tracking prevention dei browser e 80.644 dagli ad blocker.',
     '',
     '## Come si inizia',
@@ -1648,7 +1648,7 @@ function buildHubMds(): void {
     '',
     '## Caso reale',
     '',
-    // Fonte dei numeri Candiani: docs/sources/candiani-2026-11/README.md (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
+    // Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata) (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
     'Su Candiani Denim 752.423 segnali recuperati in 90 giorni: ' + `${siteUrl}${caseStudiesPath}/candiani-denim-tracking-server-side`,
     '',
     faqSection(trackingMdFaqs),

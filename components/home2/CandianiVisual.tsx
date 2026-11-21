@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 /* destra. La linea "Recuperati" si disegna mentre si scorre.          */
 /* ------------------------------------------------------------------ */
 
-// Fonte dei numeri Candiani: docs/sources/candiani-2026-11/README.md (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
+// Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata) (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
 const CASE_STUDY_PATH = '/casi-studio/candiani-denim-tracking-server-side';
 
 const CandianiVisual: React.FC = () => {

@@ -109,7 +109,7 @@ export const siteUrl = 'https://www.q4.studio';
 export const caseStudiesPath = '/casi-studio';
 
 export const caseStudies: CaseStudy[] = [
-  // Fonte dei numeri Candiani: docs/sources/candiani-2026-11/README.md (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
+  // Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata) (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
   {
     slug: 'candiani-denim-tracking-server-side',
     client: 'Candiani Denim',

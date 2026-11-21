@@ -1,6 +1,6 @@
 # Aggiornamento dati caso studio Candiani (novembre 2026)
 
-**Data:** 2026-11-21 · **Decisioni:** D-009, D-010 · **Fonti:** `docs/sources/candiani-2026-11/README.md` (screenshot Stape e Meta consegnati da Q4 Studio).
+**Data:** 2026-11-21 · **Decisioni:** D-009, D-010 · **Fonti:** `le fonti private di Q4 Studio (cartella docs/sources, non versionata)` (screenshot Stape e Meta consegnati da Q4 Studio).
 
 ## Obiettivo
 

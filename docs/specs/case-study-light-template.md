@@ -1,6 +1,6 @@
 # Casi studio sul sistema chiaro e caso Candiani arricchito
 
-**Data:** 2026-11-21 · **Decisioni:** D-013, D-014 · **Richiesta:** Q4 Studio: allineare colori, font, dimensioni e stili del template dei casi studio al sistema chiaro (senza mockup: il contenuto è semplice) e arricchire il caso Candiani con i dati di `docs/sources/candiani-2026-11`.
+**Data:** 2026-11-21 · **Decisioni:** D-013, D-014 · **Richiesta:** Q4 Studio: allineare colori, font, dimensioni e stili del template dei casi studio al sistema chiaro (senza mockup: il contenuto è semplice) e arricchire il caso Candiani con i dati di la cartella privata `docs/sources` (non versionata, fuori dal repo pubblico).
 
 ## Comportamento
 
