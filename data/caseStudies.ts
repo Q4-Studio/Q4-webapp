@@ -89,13 +89,14 @@ export const siteUrl = 'https://www.q4.studio';
 export const caseStudiesPath = '/casi-studio';
 
 export const caseStudies: CaseStudy[] = [
+  // Fonte dei numeri Candiani: docs/sources/candiani-2026-11/README.md (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
   {
     slug: 'candiani-denim-tracking-server-side',
     client: 'Candiani Denim',
     clientUrl: 'https://www.candianidenim.com/',
     datePublished: '2026-08-01',
     metaTitle: 'Candiani Denim: tracking server-side per Meta Ads | Q4 Studio',
-    description: 'Come abbiamo potenziato il tracciamento Meta di Candiani Denim con Meta Conversion API, deduplicazione eventi e server-side tagging Stape, recuperando oltre un milione di segnali in 90 giorni.',
+    description: 'Come abbiamo potenziato il tracciamento Meta di Candiani Denim con Meta Conversion API, deduplicazione eventi e server-side tagging Stape, recuperando 752.423 segnali in 90 giorni.',
     category: 'Tracciamento e dati',
     kicker: 'Caso studio · Tracking server-side',
     title: 'Candiani Denim',
@@ -139,13 +140,13 @@ export const caseStudies: CaseStudy[] = [
     },
     results: {
       heading: 'Il risultato',
-      intro: 'In uno snapshot di 90 giorni, il tracciamento server-side ha recuperato:',
+      intro: 'In 90 giorni (22 agosto–20 novembre 2026), su 1.966.768 richieste gestite dal container server-side, il tracciamento server-side ha recuperato:',
       stats: [
-        { value: '963.652', label: 'richieste bloccate dai sistemi di tracking prevention' },
-        { value: '69.043', label: 'richieste bloccate dagli ad blocker' },
-        { value: '1.032.695', label: 'segnali recuperati in totale' }
+        { value: '671.779', label: 'richieste bloccate dai sistemi di tracking prevention' },
+        { value: '80.644', label: 'richieste bloccate dagli ad blocker' },
+        { value: '752.423', label: 'segnali recuperati in totale (38,3% delle richieste)' }
       ],
-      note: 'Senza la configurazione server-side questi dati sarebbero andati persi, inclusi eventi e-commerce come visualizzazioni prodotto, aggiunte al carrello, inizio checkout e acquisti.'
+      note: 'Senza la configurazione server-side questi dati sarebbero andati persi, inclusi eventi e-commerce come visualizzazioni prodotto, aggiunte al carrello, inizio checkout e acquisti. Su Meta, dal 23 ottobre al 19 novembre 2026, l’API Conversions ha registrato più conversioni rispetto al solo pixel: +9,2% sulle visualizzazioni di contenuti (ViewContent), +46,2% sulle aggiunte al carrello (AddToCart), +133,3% sugli inizi di acquisto (InitiateCheckout). Fonti: Stape Requests Analytics (22 ago–20 nov 2026) e Meta Gestione eventi (23 ott–19 nov 2026).'
     },
     whyItMatters: {
       heading: 'Perché conta',

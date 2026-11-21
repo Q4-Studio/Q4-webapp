@@ -10,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 /* destra. La linea "Recuperati" si disegna mentre si scorre.          */
 /* ------------------------------------------------------------------ */
 
+// Fonte dei numeri Candiani: docs/sources/candiani-2026-11/README.md (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
 const CASE_STUDY_PATH = '/casi-studio/candiani-denim-tracking-server-side';
 
 const CandianiVisual: React.FC = () => {
@@ -46,7 +47,7 @@ const CandianiVisual: React.FC = () => {
         <div className="relative grid grid-cols-1 items-start gap-12 md:grid-cols-[0.9fr_1.1fr] md:gap-20">
           <Reveal>
             <p className="disp" style={{ fontSize: 'clamp(3.25rem, 8vw, 8.5rem)', letterSpacing: '-0.06em', lineHeight: 0.95 }}>
-              1.032.695
+              752.423
             </p>
             <p className="lead mt-6 max-w-[420px]" style={{ color: '#0a0a0a' }}>
               segnali di conversione recuperati in 90 giorni per{' '}
@@ -54,7 +55,7 @@ const CandianiVisual: React.FC = () => {
                 Candiani Denim
               </a>.
             </p>
-            <p className="mt-5 max-w-[420px] text-base leading-relaxed">963.652 sarebbero stati bloccati dalla tracking prevention.</p>
+            <p className="mt-5 max-w-[420px] text-base leading-relaxed">671.779 sarebbero stati bloccati dalla tracking prevention.</p>
           </Reveal>
 
           <Reveal delay={0.12} className="mock -mb-10 px-6 pt-6 md:px-8 md:pt-8">
