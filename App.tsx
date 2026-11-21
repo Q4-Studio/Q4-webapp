@@ -513,17 +513,17 @@ const App: React.FC = () => {
           )}
 
           {currentPage === 'case-studies' && (
-            <>
+            <div className="home-light relative w-full">
               <CaseStudiesIndex />
-              <Footer />
-            </>
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
           {currentPage === 'case-study' && currentCaseStudy && (
-            <>
+            <div className="home-light relative w-full">
               <CaseStudyPage study={currentCaseStudy} />
-              <Footer />
-            </>
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
           {currentPage === '404' && (
