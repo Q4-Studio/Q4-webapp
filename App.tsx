@@ -481,7 +481,11 @@ const App: React.FC = () => {
           )}
 
           {currentPage === 'tracking' && (
-            <><ServerSideTracking /><ContactForm subject="Audit tracciamento" /><Footer /></>
+            <div className="home-light relative w-full">
+              <ServerSideTracking />
+              <ContactForm subject="Audit tracciamento" showHeader={false} tone="light" />
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
           {currentPage === 'sites' && (
