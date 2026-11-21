@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import Reveal from './Reveal';
+import { onInternalLink } from '../../utils/navigate';
 
 /* ------------------------------------------------------------------ */
 /* Chiusura del sistema chiaro: blocco scuro arrotondato con aurora,   */
@@ -39,7 +40,15 @@ const CloseCta: React.FC<CloseCtaProps> = ({ title, size = 'xl', lead, cta, id }
           </Reveal>
         )}
         <Reveal delay={0.2} className="mt-14 md:mt-20">
-          <a href={cta.href} onClick={cta.onClick} className="btn btn-white">
+          <a
+            href={cta.href}
+            onClick={(event) => {
+              cta.onClick?.(event);
+              // Link interno: navigazione SPA senza ricaricare l'app.
+              if (cta.href.startsWith('/') && !event.defaultPrevented) onInternalLink(cta.href)(event);
+            }}
+            className="btn btn-white"
+          >
             {cta.label}
             <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
           </a>

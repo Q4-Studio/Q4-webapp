@@ -6,6 +6,7 @@ import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
 import { trackCtaClick } from '../utils/dataLayer';
 import { useLightDocument } from '../hooks/useLightDocument';
+import { onInternalLink } from '../utils/navigate';
 
 interface CaseStudyPageProps {
   study: CaseStudy;
@@ -146,9 +147,9 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
         <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-20 pt-36 md:px-12 md:pt-40">
           <nav aria-label="Breadcrumb" className="w text-[16px] text-white/70" style={{ animationDelay: '0.1s' }}>
             <ol className="flex flex-wrap items-center gap-2">
-              <li><a href="/" className="hover:text-white">Home</a></li>
+              <li><a href="/" onClick={onInternalLink('/')} className="hover:text-white">Home</a></li>
               <li aria-hidden="true">/</li>
-              <li><a href={caseStudiesPath} className="hover:text-white">Casi studio</a></li>
+              <li><a href={caseStudiesPath} onClick={onInternalLink(caseStudiesPath)} className="hover:text-white">Casi studio</a></li>
               <li aria-hidden="true">/</li>
               <li className="text-white">{study.client}</li>
             </ol>

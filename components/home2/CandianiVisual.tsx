@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Reveal from './Reveal';
+import { onInternalLink } from '../../utils/navigate';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -53,7 +54,7 @@ const CandianiVisual: React.FC = () => {
             </p>
             <p className="lead mt-6 max-w-[420px]" style={{ color: '#0a0a0a' }}>
               segnali di conversione recuperati in 90 giorni per{' '}
-              <a href={CASE_STUDY_PATH} className="underline decoration-purple-400/50 underline-offset-4 hover:decoration-purple-600">
+              <a href={CASE_STUDY_PATH} onClick={onInternalLink(CASE_STUDY_PATH)} className="underline decoration-purple-400/50 underline-offset-4 hover:decoration-purple-600">
                 Candiani Denim
               </a>.
             </p>

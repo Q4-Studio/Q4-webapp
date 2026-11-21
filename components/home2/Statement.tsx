@@ -3,6 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 import ScrollRevealText from './ScrollRevealText';
 import Reveal from './Reveal';
 import { trackCtaClick } from '../../utils/dataLayer';
+import { onInternalLink } from '../../utils/navigate';
 
 /* ------------------------------------------------------------------ */
 /* "Prima dei dati giusti, nessuna ottimizzazione funziona."            */
@@ -27,7 +28,10 @@ const Statement: React.FC = () => (
           <a
             href="/tracciamento-server-side"
             className="btn btn-dark"
-            onClick={() => trackCtaClick({ cta_location: 'home_tracking_intro', cta_label: 'Vedi i pacchetti e i prezzi', cta_destination: '/tracciamento-server-side' })}
+            onClick={(e) => {
+              trackCtaClick({ cta_location: 'home_tracking_intro', cta_label: 'Vedi i pacchetti e i prezzi', cta_destination: '/tracciamento-server-side' });
+              onInternalLink('/tracciamento-server-side')(e);
+            }}
           >
             Vedi i pacchetti e i prezzi
             <ArrowUpRight className="h-5 w-5" aria-hidden="true" />

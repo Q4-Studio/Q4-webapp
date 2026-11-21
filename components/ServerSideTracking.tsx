@@ -9,6 +9,7 @@ import TrackingLossCalculator from './TrackingLossCalculator';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
 import { useLightDocument } from '../hooks/useLightDocument';
+import { onInternalLink } from '../utils/navigate';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -307,7 +308,7 @@ const ServerSideTracking: React.FC = () => {
             <Reveal as="h2" style={{ fontSize: 'clamp(3rem, 11vw, 11.5rem)', letterSpacing: '-0.06em', lineHeight: 0.92 }}>752.423 segnali recuperati in 90 giorni.</Reveal>
             <Reveal as="p" delay={0.12} className="lead mt-14 max-w-[720px] text-gray-300">Su Candiani Denim abbiamo recuperato 752.423 segnali di conversione in 90 giorni, di cui 671.779 bloccati dai sistemi di tracking prevention dei browser e 80.644 dagli ad blocker.</Reveal>
             <Reveal delay={0.2} className="mt-12">
-              <a href="/casi-studio/candiani-denim-tracking-server-side" className="btn btn-white">
+              <a href="/casi-studio/candiani-denim-tracking-server-side" onClick={onInternalLink('/casi-studio/candiani-denim-tracking-server-side')} className="btn btn-white">
                 Leggi il caso studio completo
                 <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
               </a>
@@ -342,7 +343,7 @@ const ServerSideTracking: React.FC = () => {
             {related.map((item) => (
               <Reveal key={item.href} as="div" className="row">
                 <span className="tm">{item.tag}</span>
-                <h3><a href={item.href} className="no-underline hover:text-purple-700">{item.title}</a></h3>
+                <h3><a href={item.href} onClick={onInternalLink(item.href)} className="no-underline hover:text-purple-700">{item.title}</a></h3>
                 <p>{item.desc}</p>
               </Reveal>
             ))}

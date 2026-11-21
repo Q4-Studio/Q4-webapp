@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, Calendar, Check } from 'lucide-react';
 import Reveal from './Reveal';
+import { onInternalLink } from '../../utils/navigate';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,13 +16,16 @@ gsap.registerPlugin(ScrollTrigger);
 const Counter: React.FC<{ to: number; className?: string }> = ({ to, className }) => {
   const ref = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
+  // useLayoutEffect: lo 0 va scritto prima del primo paint, altrimenti si
+  // vede il valore finale che poi salta a 0 e riparte.
+  useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       el.textContent = String(to);
       return;
     }
+    el.textContent = '0';
     const counter = { v: 0 };
     const tween = gsap.to(counter, {
       v: to,
@@ -61,7 +65,7 @@ const PriceRow: React.FC<{ items: Array<{ label: string; value: string }> }> = (
 );
 
 const CardLink: React.FC<{ href: string; label: string }> = ({ href, label }) => (
-  <a href={href} className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-[#0a0a0a] hover:text-purple-700">
+  <a href={href} onClick={onInternalLink(href)} className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-[#0a0a0a] hover:text-purple-700">
     {label}
     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
   </a>
@@ -145,7 +149,7 @@ const ServicesBento: React.FC = () => (
             <div className="aur" aria-hidden="true" style={{ width: 420, height: 420, background: 'rgba(147,51,234,.45)', right: -120, top: -160, filter: 'blur(90px)' }} />
             <h3 className="relative" style={{ color: '#fff' }}>Advertising</h3>
             <p className="d relative text-gray-300">Campagne Google Ads e Meta Ads che partono da dati tracciati bene, per lead generation e servizi high ticket.</p>
-            <a href="/meta-advertising-b2b" className="relative mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-purple-300">
+            <a href="/meta-advertising-b2b" onClick={onInternalLink('/meta-advertising-b2b')} className="relative mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-purple-300">
               Approfondisci
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </a>

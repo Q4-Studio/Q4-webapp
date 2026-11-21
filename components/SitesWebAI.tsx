@@ -6,6 +6,7 @@ import CloseCta from './home2/CloseCta';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
 import { useLightDocument } from '../hooks/useLightDocument';
+import { onInternalLink } from '../utils/navigate';
 
 /* ------------------------------------------------------------------ */
 /* Pagina "Siti web con AI" sul sistema chiaro (mockup "Siti web con   */
@@ -290,7 +291,7 @@ const SitesWebAI: React.FC = () => {
                   ))}
                 </Reveal>
                 <Reveal delay={0.2} className="mt-12">
-                  <a href="/casi-studio/gp-meccatronica-sito-web" className="btn btn-white">
+                  <a href="/casi-studio/gp-meccatronica-sito-web" onClick={onInternalLink('/casi-studio/gp-meccatronica-sito-web')} className="btn btn-white">
                     Leggi il caso studio
                     <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
                   </a>

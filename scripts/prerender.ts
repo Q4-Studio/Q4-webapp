@@ -227,7 +227,10 @@ ${GTM_HEAD}
   <link rel="shortcut icon" href="/favicon/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Stesso link di index.html: Hanken Grotesk serve alle pagine chiare
+       (300 .lead, 400 corpo, 500 .tm, 600 titoli, 700 h4 del footer e <strong>);
+       Inter e Space Grotesk alle pagine ancora scure. -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   ${appStyles}
   <style>
     html, body { max-width: 100%; overflow-x: hidden; overscroll-behavior-x: none; }
@@ -1293,6 +1296,20 @@ function generateSitesWebAiHtml(): string {
   });
 }
 
+// FAQ della home: unica fonte per l'HTML statico (generateRestyledHomeBodyContent)
+// e per il Markdown (/md/index.md). Stessi testi di `homeFaqs` in
+// components/HomeSeoContent.tsx e dello schema FAQPage in index.html.
+const HOME_FAQS: Array<{ question: string; answer: string }> = [
+  { question: 'Cos\'è il tracciamento server-side, in parole semplici?', answer: 'Invece di far inviare i dati dal browser del visitatore a Meta e Google, li raccoglie un server controllato da Q4. Gli ad blocker e la tracking prevention incontrano meno ostacoli, e le piattaforme ricevono conversioni più complete.' },
+  { question: 'Quanto costa e quanto tempo serve?', answer: 'L\'audit parte da 490 €, il setup da 1.500 €. Un setup server-side tipico richiede circa 8 ore di lavoro.' },
+  { question: 'Il tracciamento server-side è conforme al GDPR?', answer: 'Sì, e in più permette di ottenere più dati. Con il server-side si lavora sul dato a monte, prima che arrivi alle piattaforme, elaborandolo e anonimizzandolo. Alcuni cookie che in un setup solo client side richiederebbero un consenso specifico possono invece partire di default, e le piattaforme ricevono più informazioni: sempre in accordo con il DPO e dopo la valutazione del nostro consulente legale. A questo si aggiunge Consent Mode v2, che fa seguire i dati alle scelte di consenso dell\'utente.' },
+  { question: 'Che tipo di automazioni fate, concretamente?', answer: 'Automatizziamo il CRM: il lead entra in automatico, riceve un primo contatto su WhatsApp e via email e viene seguito con follow-up programmati per 7 giorni. Il team commerciale è avvisato quando c\'è qualcosa da fare, il cliente riceve le sue notifiche, e l\'appuntamento finisce in calendario.' },
+  { question: 'Quanto costa e quanto tempo serve per un\'automazione?', answer: 'Le automazioni partono in due settimane. Il setup parte da 490 €, il canone va da 59 a 200 € al mese.' },
+  { question: 'Cos\'è un agente AI e cosa può fare per la mia azienda?', answer: 'Un agente AI svolge compiti ripetitivi seguendo le regole e i dati della tua azienda. Un esempio: gli ordini arrivano sia via mail sia da software diversi, e l\'agente li legge, li traduce in un formato unico e li invia in automatico al gestionale dell\'azienda di produzione. Più flussi, un solo canale. Lo stesso approccio vale per le vendite, il back office e l\'assistenza clienti.' },
+  { question: 'Lavorate anche con la mia agenzia?', answer: 'Sì. Realizziamo tracciamenti e automazioni anche in white label per altre agenzie.' },
+  { question: 'Lavorate solo in Emilia?', answer: 'No. La nostra sede è a Reggio Emilia, dove possiamo incontrare anche i clienti, ma siamo un team in remoto e abituati a lavorare così. Oltre il 90% dei nostri clienti è fuori dall\'Emilia, e alcuni anche fuori dall\'Unione Europea: ne abbiamo uno in Arabia Saudita.' },
+];
+
 function generateRestyledHomeBodyContent(): string {
   // Specchio no-JS della home chiara (components/home2/*): stessi testi,
   // stesso ordine delle sezioni. Se cambia un testo lì, cambia anche qui.
@@ -1309,7 +1326,7 @@ function generateRestyledHomeBodyContent(): string {
     "<section id='automazioni'><h2>Dal click al cliente. In automatico.</h2><article><p>T+0</p><h3>Il lead entra dal feed</h3><p>Modulo Meta compilato dal contatto.</p></article><article><p>T+2 s</p><h3>Nel CRM prima che tu lo veda</h3><p>Scheda creata e assegnata in automatico.</p></article><article><p>T+60 s</p><h3>Primo contatto in 60 secondi</h3><p>Messaggio WhatsApp inviato al lead.</p></article><article><p>T+90 s</p><h3>Il lead diventa un dossier</h3><p>Dati dell&#39;azienda arricchiti senza lavoro manuale.</p></article><article><p>7 giorni</p><h3>Ogni lead viene seguito. Sempre.</h3><p>Follow-up programmato fino alla risposta.</p></article></section>",
     "<section id='servizi'><h2>Tre servizi, un unico sistema.</h2><article><h3>Tracciamento e dati</h3><p>Audit del setup attuale, container server-side, eventi documentati e segnali che tornano alle campagne. Un setup server-side tipico richiede 8 ore.</p><p>Audit da 490 € · Setup da 1.500 €</p><a href='/tracciamento-server-side'>Pacchetti e prezzi</a></article><article><h3>Automazioni e agenti AI</h3><p>Il CRM lavora da solo: contatto su WhatsApp ed email, follow-up, notifiche al team commerciale e al cliente. Partono in due settimane.</p><p>Setup da 490 € · Canone 59–200 €/mese</p><a href='/agenti-ai'>Vedi le automazioni</a></article><article><h3>Siti web con AI</h3><p>Veloci, e misurabili fin dal primo giorno.</p><p>da 2.999 €</p><a href='/siti-web-ai'>Come lavoriamo sui siti</a></article><article><h3>Advertising</h3><p>Campagne Google Ads e Meta Ads che partono da dati tracciati bene, per lead generation e servizi high ticket.</p><a href='/meta-advertising-b2b'>Approfondisci</a></article><p>8 ore per un setup server-side tipico. 60 s al primo contatto con il lead.</p></section>",
     "<section id='processo'><h2>Come lavoriamo</h2><article><p>01</p><h3>Audit</h3><p>Mappiamo eventi, consensi e passaggi tra sito, CRM e campagne. Ti consegniamo cosa si perde e dove.</p></article><article><p>02</p><h3>Implementazione</h3><p>Configuriamo tracciamento e automazioni. Un setup server-side tipico richiede 8 ore.</p></article><article><p>03</p><h3>Manutenzione</h3><p>Monitoriamo i flussi e correggiamo quando una piattaforma cambia le regole.</p></article></section>",
-    "<section id='faq'><h2>Domande frequenti</h2><h3>Cos&#39;è il tracciamento server-side, in parole semplici?</h3><p>Invece di far inviare i dati dal browser del visitatore a Meta e Google, li raccoglie un server controllato da Q4. Gli ad blocker e la tracking prevention incontrano meno ostacoli, e le piattaforme ricevono conversioni più complete.</p><h3>Quanto costa e quanto tempo serve?</h3><p>L&#39;audit parte da 490 €, il setup da 1.500 €. Un setup server-side tipico richiede circa 8 ore di lavoro.</p><h3>Il tracciamento server-side è conforme al GDPR?</h3><p>Sì, e in più permette di ottenere più dati. Con il server-side si lavora sul dato a monte, prima che arrivi alle piattaforme, elaborandolo e anonimizzandolo. Alcuni cookie che in un setup solo client side richiederebbero un consenso specifico possono invece partire di default, e le piattaforme ricevono più informazioni: sempre in accordo con il DPO e dopo la valutazione del nostro consulente legale. A questo si aggiunge Consent Mode v2, che fa seguire i dati alle scelte di consenso dell&#39;utente.</p><h3>Che tipo di automazioni fate, concretamente?</h3><p>Automatizziamo il CRM: il lead entra in automatico, riceve un primo contatto su WhatsApp e via email e viene seguito con follow-up programmati per 7 giorni. Il team commerciale è avvisato quando c&#39;è qualcosa da fare, il cliente riceve le sue notifiche, e l&#39;appuntamento finisce in calendario.</p><h3>Quanto costa e quanto tempo serve per un&#39;automazione?</h3><p>Le automazioni partono in due settimane. Il setup parte da 490 €, il canone va da 59 a 200 € al mese.</p><h3>Cos&#39;è un agente AI e cosa può fare per la mia azienda?</h3><p>Un agente AI svolge compiti ripetitivi seguendo le regole e i dati della tua azienda. Un esempio: gli ordini arrivano sia via mail sia da software diversi, e l&#39;agente li legge, li traduce in un formato unico e li invia in automatico al gestionale dell&#39;azienda di produzione. Più flussi, un solo canale. Lo stesso approccio vale per le vendite, il back office e l&#39;assistenza clienti.</p><h3>Lavorate anche con la mia agenzia?</h3><p>Sì. Realizziamo tracciamenti e automazioni anche in white label per altre agenzie.</p><h3>Lavorate solo in Emilia?</h3><p>No. La nostra sede è a Reggio Emilia, dove possiamo incontrare anche i clienti, ma siamo un team in remoto e abituati a lavorare così. Oltre il 90% dei nostri clienti è fuori dall&#39;Emilia, e alcuni anche fuori dall&#39;Unione Europea: ne abbiamo uno in Arabia Saudita.</p></section>",
+    "<section id='faq'><h2>Domande frequenti</h2>" + HOME_FAQS.map((faq) => '<h3>' + escapeHtml(faq.question) + '</h3><p>' + escapeHtml(faq.answer) + '</p>').join('') + "</section>",
     "<section id='contatti'><h2>Contatti</h2></section>",
     "<section><h2>Costruiamo il tuo vantaggio.</h2><a href='/tracciamento-server-side'>Vai al tracciamento</a></section></div>",
   ].join('');
@@ -1535,11 +1552,7 @@ function buildHomeMd(): string {
     '',
     'Non dedurre prezzi, dati clienti o garanzie che non siano esplicitamente pubblicati nelle pagine elencate.',
     '',
-    faqSection([
-      { question: 'Cos\'è il tracciamento server-side?', answer: 'Normalmente i dati sulle conversioni vengono raccolti dal browser, che blocca gli script, e dagli ad blocker, che bloccano i pixel. Il tracciamento server-side sposta la raccolta su un server dedicato: i dati arrivano completi.' },
-      { question: 'Quanto costa?', answer: 'Audit da 490 €, setup completo da 1.500 € per siti non-ecommerce, canone di infrastruttura e monitoraggio da 100 €/mese.' },
-      { question: 'Lavorate solo in Emilia?', answer: 'Il lavoro tecnico è remoto e segue aziende in tutta Italia; i progetti con presenza si concentrano tra Reggio Emilia, Modena e Parma.' },
-    ]),
+    faqSection(HOME_FAQS),
   ]);
 }
 
@@ -1611,9 +1624,10 @@ function buildTrustMd(): void {
 }
 
 function buildHubMds(): void {
-  const homeFaqs = [
+  const trackingMdFaqs = [
     { question: 'Quanto costa il setup server-side?', answer: 'Da 1.500 € per un sito non-ecommerce, circa una giornata di lavoro. Per gli ecommerce da una a tre giornate. Audit preliminare 490 €.' },
-    { question: 'È conforme al GDPR?', answer: 'Il consenso viene rispettato a monte con Consent Mode v2 e i dati passano da un\'infrastruttura controllata. Implementiamo ciò che il tuo consulente privacy definisce.' },
+    // Stessa domanda e risposta della FAQ GDPR in home e in ServerSideTracking.tsx (testo dal mockup).
+    HOME_FAQS.find((faq) => faq.question === 'Il tracciamento server-side è conforme al GDPR?')!,
   ];
 
   registerMd('/tracciamento-server-side', 'Tracciamento Server-Side per Meta e Google | Q4 Studio', 'Container server-side, Consent Mode v2, Conversions API ed Enhanced Conversions per recuperare i segnali di conversione persi da browser e ad blocker. Audit da 490 €.', [
@@ -1651,7 +1665,7 @@ function buildHubMds(): void {
     // Fonte dei numeri Candiani: docs/sources/candiani-2026-11/README.md (Stape Requests Analytics, 22 ago–20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026). Aggiornare prima lì, poi qui.
     'Su Candiani Denim 752.423 segnali recuperati in 90 giorni: ' + `${siteUrl}${caseStudiesPath}/candiani-denim-tracking-server-side`,
     '',
-    faqSection(homeFaqs),
+    faqSection(trackingMdFaqs),
   ]);
 
   registerMd('/siti-web-ai', 'Siti web con AI per aziende B2B | Q4 Studio', 'Siti e landing page B2B fatti con l\'AI, non dall\'AI: asset su misura, motion e produzione foto-video. Progetti da 2.999 €.', [
