@@ -284,8 +284,9 @@ h1, h2, h3, h4, h5, h6 {
 .home-light .bul li::before { content: ""; flex: none; width: 8px; height: 8px; margin-top: 8px; border-radius: 50%; background: #a855f7; }
 .home-light .meta { display: flex; justify-content: space-between; gap: 16px; align-items: flex-end; margin-top: auto; padding-top: 32px; }
 .home-light .meta small { display: block; font-size: 14px; color: var(--mute); margin-bottom: 8px; }
-.home-light .bar { height: 10px; border-radius: 9999px; background: #ece9f3; overflow: hidden; }
+.home-light .bar { height: 14px; border-radius: 9999px; background: #efe7fb; overflow: hidden; }
 .home-light .bar i { display: block; height: 100%; border-radius: inherit; transform-origin: left; }
+.home-light .ico { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 20px; background: #f3e8ff; color: #7e22ce; flex: none; }
 
 @media (max-width: 1000px) {
   .home-light .row { grid-template-columns: 1fr; gap: 16px; padding: 40px 0; }
