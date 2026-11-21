@@ -1,6 +1,6 @@
 # Pagina Agenti AI sul sistema chiaro
 
-**Data:** 2026-11-16 · **Decisioni:** D-XXX-f, D-XXX-g (registrate qui sotto: il repository non ha ancora `DECISIONS.md`) · **Riferimento:** mockup "Agenti AI e automazioni" (export HTML consegnato da Q4 Studio) · **Dipende da:** [homepage-light-restyle](./homepage-light-restyle.md) (PR #43)
+**Data:** 2026-11-16 · **Decisioni:** D-004, D-005 · **Riferimento:** mockup "Agenti AI e automazioni" (export HTML consegnato da Q4 Studio) · **Dipende da:** [homepage-light-restyle](./homepage-light-restyle.md) (PR #43)
 
 ## Obiettivo
 
@@ -16,8 +16,8 @@ La pagina `/agenti-ai` passa al sistema chiaro seguendo il mockup, sezione per s
 
 ## Decisioni
 
-- **D-XXX-f** Il wrapper `.home-light` (e il relativo CSS) è il sistema chiaro del sito: lo usano anche le pagine interne che hanno un mockup, non solo la home. Il nome della classe resta per non toccare la PR #43.
-- **D-XXX-g** La chiusura scura (`CloseCta`) e lo schiarimento di html/body (`useLightDocument`) sono condivisi tra home e pagine interne, invece di duplicare il markup. Sulla pagina agenti la chiusura precede il form, perché il suo CTA "Scrivici" porta al form.
+- **D-004** Il wrapper `.home-light` (e il relativo CSS) è il sistema chiaro del sito: lo usano anche le pagine interne che hanno un mockup, non solo la home. Il nome della classe resta per non toccare la PR #43.
+- **D-005** La chiusura scura (`CloseCta`) e lo schiarimento di html/body (`useLightDocument`) sono condivisi tra home e pagine interne, invece di duplicare il markup. Sulla pagina agenti la chiusura precede il form, perché il suo CTA "Scrivici" porta al form.
 
 ## File e interfacce
 

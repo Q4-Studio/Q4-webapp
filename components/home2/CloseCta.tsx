@@ -26,7 +26,7 @@ const TITLE_STYLE: Record<NonNullable<CloseCtaProps['size']>, React.CSSPropertie
 
 const CloseCta: React.FC<CloseCtaProps> = ({ title, size = 'xl', lead, cta, id }) => (
   <section id={id} className="px-6 pb-6">
-    <div className="close">
+    <div className="close dark-block">
       <div className="aur aur-1 opacity-80" aria-hidden="true" />
       <div className="aur aur-2 opacity-80" aria-hidden="true" />
       <div className="grid60" aria-hidden="true" />

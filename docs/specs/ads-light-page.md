@@ -1,6 +1,6 @@
 # Pagina Meta Ads B2B sul sistema chiaro
 
-**Data:** 2026-11-21 · **Decisioni:** D-XXX-k (registrata qui sotto) · **Riferimento:** mockup "Meta Ads B2B" (export HTML consegnato da Q4 Studio) · **Dipende da:** [sites-light-page](./sites-light-page.md) (PR #48).
+**Data:** 2026-11-21 · **Decisioni:** D-008 · **Riferimento:** mockup "Meta Ads B2B" (export HTML consegnato da Q4 Studio) · **Dipende da:** [sites-light-page](./sites-light-page.md) (PR #48).
 
 ## Obiettivo
 
@@ -15,7 +15,7 @@ La pagina `/meta-advertising-b2b` passa al sistema chiaro seguendo il mockup, se
 
 ## Decisioni
 
-- **D-XXX-k** Implementazione del componente delegata a Claude Opus su richiesta di Q4 Studio; CSS, routing, prerender, spec, verifica e PR a cura della sessione principale. Rimossi i testi lunghi delle vecchie sezioni Advisory e Misurazione e la frase sul numero limitato di progetti: non sono nel mockup.
+- **D-008** Implementazione del componente delegata a Claude Opus su richiesta di Q4 Studio; CSS, routing, prerender, spec, verifica e PR a cura della sessione principale. Rimossi i testi lunghi delle vecchie sezioni Advisory e Misurazione e la frase sul numero limitato di progetti: non sono nel mockup.
 
 ## File e interfacce
 

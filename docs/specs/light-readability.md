@@ -1,6 +1,6 @@
 # Leggibilità e primo caricamento delle pagine chiare
 
-**Data:** 2026-11-21 · **Decisioni:** D-XXX-n, D-XXX-o · **Richiesta:** Q4 Studio, dopo il controllo visivo delle pagine chiare: testi troppo piccoli (descrizioni sotto le cifre, elenchi nelle card, chip, eyebrow), troppo spazio tra le sezioni, sfarfallio delle animazioni al primo caricamento.
+**Data:** 2026-11-21 · **Decisioni:** D-011, D-012 · **Richiesta:** Q4 Studio, dopo il controllo visivo delle pagine chiare: testi troppo piccoli (descrizioni sotto le cifre, elenchi nelle card, chip, eyebrow), troppo spazio tra le sezioni, sfarfallio delle animazioni al primo caricamento.
 
 ## Comportamento
 
@@ -10,8 +10,8 @@
 
 ## Decisioni
 
-- **D-XXX-n** La soglia di leggibilità è nel CSS (`.home-light`): le classi Tailwind piccole (`text-xs`, `text-sm`, `text-[13px]`, `text-[15px]`, `text-base`) vengono alzate lì, così vale anche per i componenti condivisi (form) e per le pagine future senza ritoccare ogni file.
-- **D-XXX-o** `Reveal` usa IntersectionObserver e `useLayoutEffect` al posto di ScrollTrigger con `immediateRender:false`: il vecchio schema mostrava il contenuto, lo nascondeva e lo faceva rientrare (lo sfarfallio). Un timer di sicurezza mostra il blocco se l'observer non scatta. Lo sfondo di html/body passa a bianco in `index.html` e nel prerender: le pagine ancora scure hanno già il proprio sfondo, quindi non cambiano; il `useLightDocument` resta come rete di sicurezza.
+- **D-011** La soglia di leggibilità è nel CSS (`.home-light`): le classi Tailwind piccole (`text-xs`, `text-sm`, `text-[13px]`, `text-[15px]`, `text-base`) vengono alzate lì, così vale anche per i componenti condivisi (form) e per le pagine future senza ritoccare ogni file.
+- **D-012** `Reveal` usa IntersectionObserver e `useLayoutEffect` al posto di ScrollTrigger con `immediateRender:false`: il vecchio schema mostrava il contenuto, lo nascondeva e lo faceva rientrare (lo sfarfallio). Un timer di sicurezza mostra il blocco se l'observer non scatta. Lo sfondo di html/body passa a bianco in `index.html` e nel prerender: le pagine ancora scure hanno già il proprio sfondo, quindi non cambiano; il `useLightDocument` resta come rete di sicurezza.
 
 ## File
 

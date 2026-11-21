@@ -66,7 +66,7 @@ const Hero2: React.FC = () => {
   return (
     <section
       id="hero"
-      className="relative flex min-h-[100svh] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:rounded-b-[56px]"
+      className="dark-block relative flex min-h-[100svh] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:rounded-b-[56px]"
     >
       <div className="aur aur-1" aria-hidden="true" />
       <div className="aur aur-2" aria-hidden="true" />
@@ -80,7 +80,7 @@ const Hero2: React.FC = () => {
 
       {/* La nav fissa di App.tsx sta sopra: il padding alto lascia spazio. */}
       <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-20 pt-36 md:px-12 md:pt-40">
-        <h1 className="h-xl max-w-[1300px] text-white" style={{ color: '#fff' }}>
+        <h1 className="h-xl max-w-[1300px]">
           {words.map(({ w, delay, br }, i) => (
             <React.Fragment key={i}>
               <span className="w" style={{ animationDelay: `${delay}s` }}>{w}</span>
@@ -89,7 +89,7 @@ const Hero2: React.FC = () => {
           ))}
         </h1>
 
-        <div className="w mt-12 flex flex-wrap items-center gap-5 md:mt-[72px] md:gap-10" style={{ animationDelay: '1.15s' }}>
+        <div className="w-block mt-12 flex flex-wrap items-center gap-5 md:mt-[72px] md:gap-10" style={{ animationDelay: '1.15s' }}>
           <a
             href="/tracciamento-server-side"
             className="btn btn-white"

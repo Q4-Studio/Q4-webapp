@@ -1,6 +1,6 @@
 # Stima dei segnali persi (calcolatore)
 
-**Data:** 2026-11-21 · **Decisioni:** D-XXX-s · **Richiesta:** Q4 Studio: un contatore come "Estimated tracking losses" di Stape, nella pagina Tracciamento.
+**Data:** 2026-11-21 · **Decisioni:** D-016 · **Richiesta:** Q4 Studio: un contatore come "Estimated tracking losses" di Stape, nella pagina Tracciamento.
 
 ## Comportamento
 
@@ -11,7 +11,7 @@
 
 ## Decisioni
 
-- **D-XXX-s** Percentuali 18–27% (budget) e 13–22% (visite): un po' più ampie di Stape, sotto il 30%, su indicazione di Q4 Studio; il 38,3% di Candiani resta citato come riferimento, non usato nella formula. Si cambiano in `BUDGET_SHARE` e `VISITS_SHARE`.
+- **D-016** Percentuali 18–27% (budget) e 13–22% (visite): un po' più ampie di Stape, sotto il 30%, su indicazione di Q4 Studio; il 38,3% di Candiani resta citato come riferimento, non usato nella formula. Si cambiano in `BUDGET_SHARE` e `VISITS_SHARE`.
 
 ## File
 

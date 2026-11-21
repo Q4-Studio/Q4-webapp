@@ -64,9 +64,9 @@ const App: React.FC = () => {
   const [blogError, setBlogError] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   // La nav è sempre chiara (pillola bianca, voci scure). Cambia solo ciò che
-  // sta fuori dalla pillola: sopra l'hero scuro della home e sulle pagine
+  // sta fuori dalla pillola: sopra gli hero scuri (#hero) e sulle pagine
   // ancora scure logo, hamburger e "Contatti" sono bianchi; scorrendo oltre
-  // l'hero della home diventano neri, perché sotto c'è il fondo bianco. Idem
+  // l'hero delle pagine chiare diventano neri, perché sotto c'è il bianco. Idem
   // con il menu mobile aperto: il pannello è bianco e sta sotto la nav.
   const [navOnLight, setNavOnLight] = useState(false);
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
@@ -229,7 +229,8 @@ const App: React.FC = () => {
       // un aggiornamento dati riporterebbe l'utente in cima mentre legge.
       if (previousRouteRef.current !== route) {
         previousRouteRef.current = route;
-        if (path === '/' && hash === 'contatti') {
+        // #contatti su qualsiasi path: le pagine chiare hanno il form in fondo.
+        if (hash === 'contatti') {
           const scrollWhenReady = (attemptsLeft: number) => {
             const contactSection = document.getElementById('contatti');
             if (contactSection) {
@@ -255,38 +256,53 @@ const App: React.FC = () => {
   }, [blogPosts, isLoadingBlog]);
 
   useEffect(() => {
-    if (currentPage !== 'home') {
-      setNavOnLight(false);
-      return;
-    }
+    // Gira su tutte le pagine. Con #hero (home e pagine chiare con hero
+    // scuro): chiaro oltre l'hero. Senza #hero: chiaro solo se la pagina è
+    // dentro .home-light, altrimenti (blog, about, privacy…) resta bianco.
     // L'altezza dell'hero può cambiare senza scroll né resize (font che
     // arrivano, barra URL mobile): la osserviamo con un ResizeObserver,
-    // agganciato appena #hero esiste (la home può montare dopo l'effetto).
+    // agganciato appena #hero esiste. Le pagine lazy montano dopo l'effetto:
+    // un MutationObserver sul body ricalcola quando arrivano (1 volta per frame).
     let cancelled = false;
     let observedHero: HTMLElement | null = null;
+    let rafId = 0;
     const resizeObserver = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => update()) : null;
     function update() {
       if (cancelled) return;
       const hero = document.getElementById('hero');
-      if (hero && resizeObserver && hero !== observedHero) {
+      if (resizeObserver && hero !== observedHero) {
         if (observedHero) resizeObserver.unobserve(observedHero);
-        resizeObserver.observe(hero);
+        if (hero) resizeObserver.observe(hero);
         observedHero = hero;
       }
-      const threshold = hero ? hero.offsetHeight - 80 : window.innerHeight - 80;
-      setNavOnLight(window.scrollY > threshold);
+      if (hero) {
+        setNavOnLight(window.scrollY > hero.offsetHeight - 80);
+      } else {
+        setNavOnLight(document.querySelector('.home-light') !== null);
+      }
     }
+    const scheduleUpdate = () => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = 0;
+        update();
+      });
+    };
+    const mutationObserver = typeof MutationObserver !== 'undefined' ? new MutationObserver(scheduleUpdate) : null;
+    mutationObserver?.observe(document.body, { childList: true, subtree: true });
     update();
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     document.fonts?.ready.then(update).catch(() => {});
     return () => {
       cancelled = true;
+      if (rafId) window.cancelAnimationFrame(rafId);
       resizeObserver?.disconnect();
+      mutationObserver?.disconnect();
       window.removeEventListener('scroll', update);
       window.removeEventListener('resize', update);
     };
-  }, [currentPage]);
+  }, [currentPage, currentArticleSlug, currentSeoSlug, currentCaseStudySlug]);
 
   const navigateTo = (page: Page, slug?: string) => {
     if (page === 'blog-article' && slug) {
@@ -322,10 +338,10 @@ const App: React.FC = () => {
     }
   };
 
-  // Scrolla alla sezione del form contatti. Se non siamo in home, naviga prima
-  // lì e poi attende (con qualche retry) che la sezione sia nel DOM prima di
-  // scrollare: un singolo setTimeout(100ms) può scattare prima che HomeV2
-  // abbia finito di montarsi, perdendo lo scroll.
+  // Scrolla alla sezione del form contatti. Se la pagina corrente ha già
+  // #contatti (le pagine chiare hanno il form in fondo) resta lì; altrimenti
+  // naviga in home e attende (con qualche retry) che la sezione sia nel DOM:
+  // un singolo setTimeout(100ms) può scattare prima che HomeV2 sia montata.
   const scrollToContact = () => {
     const trySmoothScroll = (attemptsLeft: number) => {
       const contactForm = document.getElementById('contatti');
@@ -336,15 +352,16 @@ const App: React.FC = () => {
       }
     };
 
-    if (currentPage !== 'home') {
+    if (document.getElementById('contatti')) {
+      // Hash sul path corrente: /agenti-ai#contatti, non /#contatti.
+      if (window.location.hash !== '#contatti') {
+        window.history.pushState(null, '', `${window.location.pathname}${window.location.search}#contatti`);
+      }
+      trySmoothScroll(0);
+    } else {
       window.history.pushState(null, '', '/#contatti');
       setCurrentPage('home');
       setTimeout(() => trySmoothScroll(20), 100);
-    } else {
-      if (window.location.hash !== '#contatti') {
-        window.history.pushState(null, '', '/#contatti');
-      }
-      trySmoothScroll(20);
     }
   };
 
@@ -384,8 +401,8 @@ const App: React.FC = () => {
       )}
       {/* Navbar fissa e chiara su tutte le pagine: pillola bianca con voci
           scure. Logo, hamburger e "Contatti" seguono `navOnLight`: bianchi
-          sopra l'hero scuro della home e sulle pagine ancora scure, neri una
-          volta superato l'hero della home (sotto c'è il bianco). */}
+          sopra gli hero scuri e sulle pagine ancora scure, neri una volta
+          superato l'hero delle pagine chiare (sotto c'è il bianco). */}
       <nav className="fixed top-0 left-0 w-full z-[70] p-6 sm:p-7 flex justify-between items-center">
         <img
           src="/logo.webp"

@@ -1,8 +1,9 @@
 import React from 'react';
-import { ArrowUpRight, Check, Compass, Flag, Layers, LayoutGrid, Plus, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Compass, Flag, Layers, LayoutGrid, Plus, Sparkles } from 'lucide-react';
 import SEOHead from './SEOHead';
 import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
+import { Bullets, NoteCard, OkIcon, PAPER_BG, PaperBlock } from './home2/primitives';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
 import { useLightDocument } from '../hooks/useLightDocument';
@@ -66,9 +67,9 @@ const HERO_WORDS = ['Fatto', 'con', 'l’AI,', 'non', 'dall’AI.'];
 
 const figures = [
   { value: '2.999 €', desc: 'Prezzo di partenza dei progetti. Il preventivo si definisce sul progetto.', delay: 0 },
-  { value: '7 giorni', desc: 'Per una landing page, quando serve portare online un’offerta.', delay: 0.12 },
+  { value: '7 giorni', desc: 'Per una landing page, quando serve portare online un’offerta.', delay: 0.1 },
   { value: '3 fasi', desc: 'Direzione, produzione, consegna. Non un modulo da compilare.', delay: 0.2 },
-  { value: '1 referente', desc: 'Una persona sola che valida le scelte, senza rincorrere pareri.', delay: 0 },
+  { value: '1 referente', desc: 'Una persona sola che valida le scelte, senza rincorrere pareri.', delay: 0.3 },
 ];
 
 const phases = [
@@ -81,25 +82,12 @@ const caseChips = ['Rebranding', 'Web design', 'Sviluppo sito', 'Art direction',
 
 const caseSteps = ['Infrastruttura del sito', 'Creazione degli asset', 'Creazione dei copy', 'Ottimizzazione SEO', 'Redirect dal vecchio sito al nuovo'];
 
-const PAPER_BG = 'linear-gradient(160deg, #f7f5fb 0%, #ecdffb 100%)';
 const CARD_TITLE: React.CSSProperties = { fontSize: 'clamp(2.75rem, 5.6vw, 5.5rem)' };
-
-const OkIcon: React.FC = () => (
-  <span className="ok" aria-hidden="true">
-    <Check className="h-3 w-3" strokeWidth={3} />
-  </span>
-);
 
 const IconBox: React.FC<{ icon: React.ComponentType<{ className?: string; strokeWidth?: number }> }> = ({ icon: Icon }) => (
   <span className="ico" aria-hidden="true">
     <Icon className="h-7 w-7" strokeWidth={1.7} />
   </span>
-);
-
-const Bullets: React.FC<{ items: string[] }> = ({ items }) => (
-  <ul className="bul">
-    {items.map((item) => <li key={item}>{item}</li>)}
-  </ul>
 );
 
 const LanguageCard: React.FC<{ icon: React.ComponentType<{ className?: string; strokeWidth?: number }>; title: string; desc: string; items: string[]; background: string; delay?: number }> = ({ icon, title, desc, items, background, delay }) => (
@@ -108,12 +96,6 @@ const LanguageCard: React.FC<{ icon: React.ComponentType<{ className?: string; s
     <h3>{title}</h3>
     <p className="d">{desc}</p>
     <Bullets items={items} />
-  </Reveal>
-);
-
-const NoteCard: React.FC<{ text: string; delay?: number }> = ({ text, delay }) => (
-  <Reveal as="article" delay={delay} className="bc ov justify-center" style={{ minHeight: 220, background: '#f7f5fb' }}>
-    <p className="d m-0 font-medium" style={{ color: '#0a0a0a', marginTop: 0 }}>{text}</p>
   </Reveal>
 );
 
@@ -157,23 +139,23 @@ const SitesWebAI: React.FC = () => {
 
       {/* Hero scuro: id="hero" fa restare bianchi logo e hamburger della nav
           finché non si scorre oltre (vedi App.tsx). */}
-      <header id="hero" className="relative flex min-h-[640px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[780px] md:rounded-b-[56px]">
+      <header id="hero" className="dark-block relative flex min-h-[640px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[780px] md:rounded-b-[56px]">
         <div className="aur aur-1" aria-hidden="true" />
         <div className="aur aur-2" aria-hidden="true" />
         <div className="aur aur-3" aria-hidden="true" />
         <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.15) 50%, rgba(5,5,5,.75) 100%)' }} />
         <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-24 pt-36 md:px-12 md:pt-40">
-          <h1 className="h-sub max-w-[1250px] text-white" style={{ color: '#fff' }}>
+          <h1 className="h-sub max-w-[1250px]">
             {HERO_WORDS.map((word, i) => (
               <React.Fragment key={word}>
                 <span className="w" style={{ animationDelay: `${(0.15 + i * 0.07).toFixed(2)}s` }}>{word}</span>{' '}
               </React.Fragment>
             ))}
           </h1>
-          <p className="w lead mt-12 max-w-[640px] text-gray-300" style={{ animationDelay: '0.7s' }}>
+          <p className="w-block lead mt-12 max-w-[640px] text-gray-300" style={{ animationDelay: '0.7s' }}>
             Progettiamo siti e landing page con una direzione precisa. L’AI ci permette di produrre immagini, movimento e varianti più velocemente; non decide cosa dire, cosa mostrare o perché.
           </p>
-          <div className="w mt-12" style={{ animationDelay: '0.85s' }}>
+          <div className="w-block mt-12" style={{ animationDelay: '0.85s' }}>
             <a href="#contatti" onClick={scrollToContact('Progetti da 2.999 €')} className="btn btn-white">
               Progetti da 2.999 €
               <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
@@ -210,7 +192,7 @@ const SitesWebAI: React.FC = () => {
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">Più linguaggi, nello stesso progetto.</Reveal>
 
-          <div className="mt-20 flex flex-col gap-6 md:mt-[80px] md:flex-row md:items-start">
+          <div className="mt-20 flex flex-col gap-6 md:mt-[80px] lg:flex-row lg:items-start">
             <div className="flex min-w-0 flex-1 flex-col">
               <LanguageCard
                 icon={Sparkles}
@@ -219,10 +201,10 @@ const SitesWebAI: React.FC = () => {
                 items={['Creati con strumenti AI e diretti da noi', 'Rifiniti dentro un’identità coerente']}
                 background={PAPER_BG}
               />
-              <NoteCard text="Niente stock, niente pagine che sembrano già viste." />
+              <NoteCard text="Niente stock, niente pagine che sembrano già viste." minHeight={220} />
             </div>
 
-            <div className="flex min-w-0 flex-1 flex-col md:mt-[120px]">
+            <div className="flex min-w-0 flex-1 flex-col lg:mt-[120px]">
               <LanguageCard
                 icon={LayoutGrid}
                 title="Il movimento racconta"
@@ -231,13 +213,13 @@ const SitesWebAI: React.FC = () => {
                 background="linear-gradient(150deg, #f7f5fb 0%, #efe7fb 100%)"
                 delay={0.12}
               />
-              <Reveal as="article" delay={0.12} className="bc ov justify-end text-white" style={{ minHeight: 260, background: '#050505' }}>
+              <Reveal as="article" delay={0.12} className="bc ov dark-block justify-end text-white" style={{ minHeight: 260, background: '#050505' }}>
                 <div className="aur" aria-hidden="true" style={{ width: 360, height: 360, background: 'rgba(147,51,234,.5)', right: -100, top: -140, filter: 'blur(80px)' }} />
                 <p className="d relative text-gray-300" style={{ marginTop: 0 }}>Quando serve, la produzione è reale: foto e video originali entrano nello stesso progetto.</p>
               </Reveal>
             </div>
 
-            <div className="flex min-w-0 flex-1 flex-col md:mt-10">
+            <div className="flex min-w-0 flex-1 flex-col lg:mt-10">
               <LanguageCard
                 icon={Compass}
                 title="Direzione umana"
@@ -246,7 +228,7 @@ const SitesWebAI: React.FC = () => {
                 background="#f7f5fb"
                 delay={0.2}
               />
-              <NoteCard text="AI e produzione sul campo non sono alternative: sono strumenti della stessa direzione." delay={0.2} />
+              <NoteCard text="AI e produzione sul campo non sono alternative: sono strumenti della stessa direzione." delay={0.2} minHeight={220} />
             </div>
           </div>
         </div>
@@ -254,34 +236,31 @@ const SitesWebAI: React.FC = () => {
 
       {/* Landing page in una settimana: blocco carta arrotondato */}
       <section className="px-6 pb-24 md:pb-[160px]">
-        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[100px]" style={{ background: PAPER_BG }}>
-          <div className="dots" aria-hidden="true" />
-          <div className="relative grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
-            <div>
-              <Reveal as="h2" className="h-l" style={CARD_TITLE}>Una pagina può essere pronta in una settimana.</Reveal>
-              <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">Quando serve portare online un’offerta o una campagna senza aspettare un sito completo, concentriamo direzione, contenuto e sviluppo in una singola esperienza. Siti web da 2.999 €: forma, tempi e produzione si definiscono sul progetto.</Reveal>
-            </div>
-            <Reveal delay={0.12}>
-              <BrowserMock />
-              <div className="mt-7 flex flex-wrap gap-2.5">
-                <span className="chip">Direzione</span>
-                <span className="chip">Contenuto</span>
-                <span className="chip">Sviluppo</span>
-                <span className="chip" style={{ background: '#9333ea', color: '#fff' }}>Online</span>
-              </div>
-            </Reveal>
+        <PaperBlock className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
+          <div>
+            <Reveal as="h2" className="h-l" style={CARD_TITLE}>Una pagina può essere pronta in una settimana.</Reveal>
+            <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">Quando serve portare online un’offerta o una campagna senza aspettare un sito completo, concentriamo direzione, contenuto e sviluppo in una singola esperienza. Siti web da 2.999 €: forma, tempi e produzione si definiscono sul progetto.</Reveal>
           </div>
-        </div>
+          <Reveal delay={0.12}>
+            <BrowserMock />
+            <div className="mt-7 flex flex-wrap gap-2.5">
+              <span className="chip">Direzione</span>
+              <span className="chip">Contenuto</span>
+              <span className="chip">Sviluppo</span>
+              <span className="chip" style={{ background: '#9333ea', color: '#fff' }}>Online</span>
+            </div>
+          </Reveal>
+        </PaperBlock>
       </section>
 
       {/* Caso studio GP Meccatronica: blocco scuro */}
       <section className="px-6 pb-24 md:pb-[160px]">
-        <div className="close px-7 py-24 md:px-20 md:py-[120px]">
+        <div className="close dark-block px-7 py-24 md:px-20 md:py-[120px]">
           <div className="aur aur-1 opacity-80" aria-hidden="true" />
           <div className="aur aur-2 opacity-80" aria-hidden="true" />
           <div className="relative mx-auto max-w-[1440px]">
             <p className="text-base font-medium" style={{ color: '#d8b4fe' }}>Caso studio · Rebranding e sito web</p>
-            <Reveal as="h2" className="mt-6" style={{ color: '#fff', fontSize: 'clamp(3.2rem, 8.5vw, 9rem)', letterSpacing: '-0.06em', lineHeight: 0.92 }}>GP Meccatronica, dal rebranding al sito in movimento.</Reveal>
+            <Reveal as="h2" className="mt-6" style={{ fontSize: 'clamp(3.2rem, 8.5vw, 9rem)', letterSpacing: '-0.06em', lineHeight: 0.92 }}>GP Meccatronica, dal rebranding al sito in movimento.</Reveal>
             <div className="mt-16 grid grid-cols-1 items-start gap-12 md:mt-24 md:grid-cols-2 md:gap-24">
               <div>
                 <Reveal as="p" className="lead max-w-[560px] text-gray-300">Una direzione visiva scura e tecnica, motion design e asset generati con l’AI per accompagnare il traffico delle campagne ADV. Il sito arriva insieme al rebranding: fa parte della stessa identità.</Reveal>
@@ -291,7 +270,13 @@ const SitesWebAI: React.FC = () => {
                   ))}
                 </Reveal>
                 <Reveal delay={0.2} className="mt-12">
-                  <a href="/casi-studio/gp-meccatronica-sito-web" onClick={onInternalLink('/casi-studio/gp-meccatronica-sito-web')} className="btn btn-white">
+                  <a
+                    href="/casi-studio/gp-meccatronica-sito-web"
+                    onClick={onInternalLink('/casi-studio/gp-meccatronica-sito-web', () =>
+                      trackCtaClick({ cta_location: 'sites_web_ai_page', cta_label: 'Leggi il caso studio', cta_destination: '/casi-studio/gp-meccatronica-sito-web' }),
+                    )}
+                    className="btn btn-white"
+                  >
                     Leggi il caso studio
                     <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
                   </a>
@@ -327,20 +312,17 @@ const SitesWebAI: React.FC = () => {
 
       {/* Cosa serve da te: blocco carta arrotondato */}
       <section className="px-6 pb-24 md:pb-[160px]">
-        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[100px]" style={{ background: PAPER_BG }}>
-          <div className="dots" aria-hidden="true" />
-          <div className="relative grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
-            <div>
-              <Reveal as="h2" className="h-l" style={CARD_TITLE}>Cosa serve da te.</Reveal>
-              <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">Se manca del materiale, lo produciamo insieme. Il resto lo mettiamo noi.</Reveal>
-            </div>
-            <Reveal delay={0.12} className="mock">
-              <div className="ev"><OkIcon />Un obiettivo chiaro<em>cosa deve far fare il sito</em></div>
-              <div className="ev"><OkIcon />Materiale esistente<em>logo, foto, testi, guideline</em></div>
-              <div className="ev"><OkIcon />Un referente unico<em>valida le scelte</em></div>
-            </Reveal>
+        <PaperBlock className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
+          <div>
+            <Reveal as="h2" className="h-l" style={CARD_TITLE}>Cosa serve da te.</Reveal>
+            <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">Se manca del materiale, lo produciamo insieme. Il resto lo mettiamo noi.</Reveal>
           </div>
-        </div>
+          <Reveal delay={0.12} className="mock">
+            <div className="ev"><OkIcon />Un obiettivo chiaro<em>cosa deve far fare il sito</em></div>
+            <div className="ev"><OkIcon />Materiale esistente<em>logo, foto, testi, guideline</em></div>
+            <div className="ev"><OkIcon />Un referente unico<em>valida le scelte</em></div>
+          </Reveal>
+        </PaperBlock>
       </section>
 
       {/* FAQ */}

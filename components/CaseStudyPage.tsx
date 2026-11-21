@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { Check } from 'lucide-react';
 import { CaseStudy, CaseStudyDataBlock, CaseStudyDemoVideo, CaseStudyStat, caseStudiesPath, siteUrl } from '../data/caseStudies';
 import SEOHead from './SEOHead';
 import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
+import { OkIcon, PaperBlock } from './home2/primitives';
 import { trackCtaClick } from '../utils/dataLayer';
 import { useLightDocument } from '../hooks/useLightDocument';
 import { onInternalLink } from '../utils/navigate';
@@ -19,8 +19,6 @@ interface CaseStudyPageProps {
 /* conta, chiusura scura con CTA, servizi e fonti. Un solo template    */
 /* per tutti i casi studio: il contenuto arriva da data/caseStudies.ts */
 /* ------------------------------------------------------------------ */
-
-const PAPER_BG = 'linear-gradient(160deg, #f7f5fb 0%, #ecdffb 100%)';
 
 /* Video dimostrativo (loop muto, decorativo). Stessa convenzione di
    HeroBackgroundVideo: `muted` forzato via ref, poster statico con
@@ -45,12 +43,6 @@ const CaseStudyDemo: React.FC<{ demo: CaseStudyDemoVideo }> = ({ demo }) => {
     </video>
   );
 };
-
-const OkIcon: React.FC = () => (
-  <span className="ok" aria-hidden="true">
-    <Check className="h-3 w-3" strokeWidth={3} />
-  </span>
-);
 
 const SectionTitle: React.FC<{ children: React.ReactNode; small?: boolean }> = ({ children, small }) => (
   <Reveal as="h2" className="h-l max-w-[1100px]" style={small ? { fontSize: 'clamp(2.25rem, 4.6vw, 4.5rem)' } : undefined}>
@@ -139,13 +131,13 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
       {/* Hero scuro: id="hero" tiene bianchi logo e hamburger della nav. */}
-      <header id="hero" className="relative flex min-h-[560px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[680px] md:rounded-b-[56px]">
+      <header id="hero" className="dark-block relative flex min-h-[560px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[680px] md:rounded-b-[56px]">
         <div className="aur aur-1" aria-hidden="true" />
         <div className="aur aur-2" aria-hidden="true" />
         <div className="aur aur-3" aria-hidden="true" />
         <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.15) 50%, rgba(5,5,5,.75) 100%)' }} />
         <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-20 pt-36 md:px-12 md:pt-40">
-          <nav aria-label="Breadcrumb" className="w text-[16px] text-white/70" style={{ animationDelay: '0.1s' }}>
+          <nav aria-label="Breadcrumb" className="w-block text-[16px] text-white/70" style={{ animationDelay: '0.1s' }}>
             <ol className="flex flex-wrap items-center gap-2">
               <li><a href="/" onClick={onInternalLink('/')} className="hover:text-white">Home</a></li>
               <li aria-hidden="true">/</li>
@@ -154,15 +146,15 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
               <li className="text-white">{study.client}</li>
             </ol>
           </nav>
-          <p className="w mt-10 text-[17px] font-medium text-purple-300" style={{ animationDelay: '0.2s' }}>{study.kicker}</p>
-          <h1 className="h-sub mt-5 max-w-[1250px] text-white" style={{ color: '#fff' }}>
+          <p className="w-block mt-10 text-[17px] font-medium text-purple-300" style={{ animationDelay: '0.2s' }}>{study.kicker}</p>
+          <h1 className="h-sub mt-5 max-w-[1250px]">
             {titleWords.map((word, i) => (
               <React.Fragment key={`${word}-${i}`}>
                 <span className="w" style={{ animationDelay: `${0.3 + i * 0.08}s` }}>{word}</span>{' '}
               </React.Fragment>
             ))}
           </h1>
-          <p className="w lead mt-10 max-w-[720px] text-gray-300" style={{ animationDelay: `${0.4 + titleWords.length * 0.08}s` }}>{study.subheadline}</p>
+          <p className="w-block lead mt-10 max-w-[720px] text-gray-300" style={{ animationDelay: `${0.4 + titleWords.length * 0.08}s` }}>{study.subheadline}</p>
         </div>
       </header>
 
@@ -217,16 +209,13 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
 
       {/* Il lavoro: blocco carta con la lista */}
       <section className="px-6 pb-24 md:pb-[160px]">
-        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-16 md:rounded-[56px] md:px-20 md:py-[100px]" style={{ background: PAPER_BG }}>
-          <div className="dots" aria-hidden="true" />
-          <div className="relative grid grid-cols-1 items-start gap-12 md:grid-cols-2 md:gap-24">
-            <div>
-              <SectionTitle small>{study.work.heading}</SectionTitle>
-              <Lead className="mt-7 max-w-[560px] text-gray-700">{study.work.intro}</Lead>
-            </div>
-            <RowList rows={study.work.items.map((item) => ({ label: item, value: '' }))} />
+        <PaperBlock padding="px-7 py-16 md:px-20 md:py-[100px]" className="grid grid-cols-1 items-start gap-12 md:grid-cols-2 md:gap-24">
+          <div>
+            <SectionTitle small>{study.work.heading}</SectionTitle>
+            <Lead className="mt-7 max-w-[560px] text-gray-700">{study.work.intro}</Lead>
           </div>
-        </div>
+          <RowList rows={study.work.items.map((item) => ({ label: item, value: '' }))} />
+        </PaperBlock>
       </section>
 
       {/* Video dimostrativo */}

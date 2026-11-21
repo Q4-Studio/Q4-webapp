@@ -1,6 +1,6 @@
 # Aggiornamento dati caso studio Candiani (novembre 2026)
 
-**Data:** 2026-11-21 · **Decisioni:** D-XXX-l, D-XXX-m · **Fonti:** `docs/sources/candiani-2026-11/README.md` (screenshot Stape e Meta consegnati da Q4 Studio).
+**Data:** 2026-11-21 · **Decisioni:** D-009, D-010 · **Fonti:** `docs/sources/candiani-2026-11/README.md` (screenshot Stape e Meta consegnati da Q4 Studio).
 
 ## Obiettivo
 
@@ -15,8 +15,8 @@ Sostituire ovunque i numeri del caso studio Candiani con i dati degli ultimi 90 
 
 ## Decisioni
 
-- **D-XXX-l** Le fonti stanno nel repository (`docs/sources/<caso>-<anno-mese>/`): screenshot originali più un README con i valori estratti, il periodo e i valori precedenti sostituiti. Ogni numero pubblicato deve essere rintracciabile lì.
-- **D-XXX-m** Gli uplift Meta stanno nella nota testuale dei risultati e non nella griglia delle metriche: periodo e significato diversi dai dati Stape.
+- **D-009** Le fonti stanno nel repository (`docs/sources/<caso>-<anno-mese>/`): screenshot originali più un README con i valori estratti, il periodo e i valori precedenti sostituiti. Ogni numero pubblicato deve essere rintracciabile lì.
+- **D-010** Gli uplift Meta stanno nella nota testuale dei risultati e non nella griglia delle metriche: periodo e significato diversi dai dati Stape.
 
 ## Fuori scope
 

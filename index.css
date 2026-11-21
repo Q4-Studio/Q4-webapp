@@ -160,6 +160,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Hero: parole che salgono, cue di scroll */
 .home-light .w { display: inline-block; opacity: 0; transform: translateY(60px); animation: q4-up 1s var(--ease-out) forwards; }
+/* Variante a blocco per lead, CTA, breadcrumb e kicker: stessa entrata,
+   ma non inline-block (le parole sì, i wrapper no). */
+.home-light .w-block { display: block; opacity: 0; transform: translateY(60px); animation: q4-up 1s var(--ease-out) forwards; }
+/* Wrapper dei CTA con layout flex (Hero2): resta flex. */
+.home-light .w-block.flex { display: flex; }
 @keyframes q4-up { to { opacity: 1; transform: none; } }
 .home-light .scroll-cue { width: 1px; height: 64px; background: linear-gradient(#fff, transparent); transform-origin: top; animation: q4-cue 2.2s ease-in-out infinite; }
 @keyframes q4-pageloader { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
@@ -213,13 +218,18 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 17px;
   color: var(--ink);
   font-weight: 500;
-  animation: q4-hl 9s ease-in-out infinite;
+  /* Ciclo da 13.5s = 6 righe × 2.25s: ogni riga si accende nel suo slot. */
+  animation: q4-hl 13.5s ease-in-out infinite;
 }
 .home-light .ev:last-child { border-bottom: 0; }
 .home-light .ev:nth-child(2) { animation-delay: 2.25s; }
 .home-light .ev:nth-child(3) { animation-delay: 4.5s; }
 .home-light .ev:nth-child(4) { animation-delay: 6.75s; }
-@keyframes q4-hl { 0%, 24%, 100% { background: transparent; } 6%, 18% { background: rgba(168, 85, 247, 0.1); } }
+.home-light .ev:nth-child(5) { animation-delay: 9s; }
+.home-light .ev:nth-child(6) { animation-delay: 11.25s; }
+/* Percentuali sul ciclo da 13.5s: accesa 0.54–1.62s, spenta entro 2.16s,
+   cioè dentro lo slot di 2.25s (16.67%): nessuna sovrapposizione. */
+@keyframes q4-hl { 0%, 16%, 100% { background: transparent; } 4%, 12% { background: rgba(168, 85, 247, 0.1); } }
 .home-light .ev .ok { flex: none; width: 22px; height: 22px; border-radius: 50%; background: #9333ea; display: grid; place-items: center; color: #fff; }
 .home-light .ev em { margin-left: auto; font-style: normal; font-size: 14px; color: var(--mute); }
 
@@ -270,6 +280,9 @@ h1, h2, h3, h4, h5, h6 {
 /* Chiusura */
 .home-light .close { background: #050505; color: #fff; border-radius: 56px; position: relative; overflow: hidden; }
 .home-light .close h2 { color: #fff; }
+/* Blocchi scuri (hero, chiusure, card #050505): titoli bianchi senza
+   style inline, vince su .home-light h1/h2/h3 per specificità. */
+.home-light .dark-block h1, .home-light .dark-block h2, .home-light .dark-block h3 { color: #fff; }
 .home-light .grid60 {
   position: absolute;
   inset: 0;
@@ -290,7 +303,7 @@ h1, h2, h3, h4, h5, h6 {
 .home-light .bul { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 12px; font-size: 19px; line-height: 1.5; }
 .home-light .bul li { display: flex; gap: 12px; align-items: flex-start; }
 .home-light .bul li::before { content: ""; flex: none; width: 8px; height: 8px; margin-top: 10px; border-radius: 50%; background: #a855f7; }
-.home-light .meta { display: flex; justify-content: space-between; gap: 16px; align-items: flex-end; margin-top: auto; padding-top: 32px; }
+.home-light .meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: flex-end; margin-top: auto; padding-top: 32px; }
 .home-light .meta small { display: block; font-size: 17px; color: var(--mute); margin-bottom: 8px; }
 .home-light .bar { height: 14px; border-radius: 9999px; background: #efe7fb; overflow: hidden; }
 .home-light .bar i { display: block; height: 100%; border-radius: inherit; transform-origin: left; }
@@ -307,5 +320,5 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (prefers-reduced-motion: reduce) {
   .home-light *, .home-light *::before, .home-light *::after { animation: none !important; transition: none !important; }
-  .home-light .w { opacity: 1 !important; transform: none !important; }
+  .home-light .w, .home-light .w-block { opacity: 1 !important; transform: none !important; }
 }
