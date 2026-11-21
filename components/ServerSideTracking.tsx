@@ -5,6 +5,7 @@ import { ArrowUpRight, Check, Plus } from 'lucide-react';
 import SEOHead from './SEOHead';
 import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
+import TrackingLossCalculator from './TrackingLossCalculator';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
 import { useLightDocument } from '../hooks/useLightDocument';
@@ -225,6 +226,9 @@ const ServerSideTracking: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Stima dei segnali persi: calcolatore lato client */}
+      <TrackingLossCalculator />
 
       {/* Come lo risolviamo: blocco carta arrotondato */}
       <section className="px-6 pb-24 md:pb-[160px]">
