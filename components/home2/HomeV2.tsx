@@ -20,15 +20,22 @@ import { siteUrl } from '../../data/seoPages';
 gsap.registerPlugin(ScrollTrigger);
 
 /* ------------------------------------------------------------------ */
-/* Preloader editoriale: due parole in serif corsivo che si alternano    */
-/* al centro, contatore in basso a destra, riga di avanzamento e poi    */
-/* sipario verso l'alto.                                               */
+/* Preloader sul sistema chiaro: due parole in Hanken Grotesk con il    */
+/* gradiente indaco-viola che si alternano al centro su fondo carta,    */
+/* contatore scuro in basso a destra, riga di avanzamento e poi sipario */
+/* verso l'alto.                                                        */
 /* ------------------------------------------------------------------ */
 
 /** I due tempi del lavoro di Q4. Basta cambiare queste stringhe. */
-const PRELOADER_WORDS = ['Web', 'Agenti'];
+const PRELOADER_WORDS = ['Dati', 'Automazioni'];
 
-const SERIF_ITALIC = "'Times New Roman', Georgia, 'Playfair Display', serif";
+const DISPLAY_FONT = "'Hanken Grotesk', 'Inter', Arial, sans-serif";
+const GRADIENT_TEXT: React.CSSProperties = {
+  background: 'linear-gradient(120deg, #818cf8 0%, #a855f7 55%, #9333ea 100%)',
+  WebkitBackgroundClip: 'text',
+  backgroundClip: 'text',
+  color: 'transparent',
+};
 
 const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -126,7 +133,7 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
   }, []);
 
   return (
-    <div ref={overlayRef} className="fixed inset-0 z-[9999] bg-[#050505] overflow-hidden">
+    <div ref={overlayRef} className="fixed inset-0 z-[9999] bg-[#f7f5fb] overflow-hidden">
       {/* Logo in alto a sinistra */}
       <img
         src="/logo.webp"
@@ -135,7 +142,7 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
         height={40}
         loading="eager"
         fetchPriority="high"
-        className="absolute top-6 left-6 h-7 w-auto"
+        className="absolute top-6 left-6 h-7 w-auto brightness-0"
       />
 
       {/* Parole al centro: un solo slot, le parole si sovrappongono */}
@@ -147,8 +154,8 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
             <span
               key={word}
               ref={(el) => { wordsRef.current[i] = el; }}
-              className="absolute inset-0 flex items-center justify-center whitespace-nowrap text-gray-300"
-              style={{ fontFamily: SERIF_ITALIC, fontStyle: 'italic', opacity: 0 }}
+              className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
+              style={{ ...GRADIENT_TEXT, fontFamily: DISPLAY_FONT, fontWeight: 600, letterSpacing: '-0.05em', opacity: 0 }}
             >
               {word}
             </span>
@@ -159,8 +166,8 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
       {/* Contatore in basso a destra */}
       <span
         ref={counterRef}
-        className="absolute bottom-8 right-6 text-white tabular-nums leading-none"
-        style={{ fontFamily: SERIF_ITALIC, fontSize: 'clamp(56px, 13vw, 132px)' }}
+        className="absolute bottom-8 right-6 text-[#0a0a0a] tabular-nums leading-none"
+        style={{ fontFamily: DISPLAY_FONT, fontWeight: 600, letterSpacing: '-0.05em', fontSize: 'clamp(56px, 13vw, 132px)' }}
       >
         000
       </span>
@@ -168,7 +175,7 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
       {/* Riga di avanzamento in fondo */}
       <div
         ref={barRef}
-        className="absolute bottom-0 left-0 h-px w-full origin-left bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400"
+        className="absolute bottom-0 left-0 h-[2px] w-full origin-left bg-gradient-to-r from-indigo-400 via-purple-500 to-purple-700"
         style={{ transform: 'scaleX(0)' }}
       />
     </div>
