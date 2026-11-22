@@ -8,7 +8,7 @@ import { resourcesPath } from './seoPages';
 /* chiaro). Tutte le altre rotte sono scure.                            */
 /* ------------------------------------------------------------------ */
 
-export const LIGHT_ROUTES = ['/', '/agenti-ai', '/tracciamento-server-side', '/siti-web-ai', '/meta-advertising-b2b', caseStudiesPath, resourcesPath, '/directory'];
+export const LIGHT_ROUTES = ['/', '/agenti-ai', '/tracciamento-server-side', '/siti-web-ai', '/meta-advertising-b2b', caseStudiesPath, resourcesPath, '/directory', '/about', '/contact', '/privacy'];
 
 /** Prefissi delle pagine di dettaglio chiare: casi studio e risorse (anche il vecchio alias /seo/). */
 export const LIGHT_ROUTE_PREFIXES = [`${caseStudiesPath}/`, `${resourcesPath}/`, '/seo/'];
