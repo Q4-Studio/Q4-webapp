@@ -2,11 +2,19 @@ import * as Sentry from '@sentry/react';
 
 const dsn = import.meta.env.VITE_SENTRY_DSN;
 
-// Senza DSN Sentry resta spento: in locale e nelle preview Vercel non vogliamo
-// rumore. In produzione la variabile va impostata su Vercel.
-export const isSentryEnabled = Boolean(dsn);
+/** Host di produzione: solo da qui gli eventi finiscono nel progetto Sentry. */
+const PRODUCTION_HOST = 'www.q4.studio';
 
-if (dsn) {
+// Sentry si accende solo con il DSN E sul dominio di produzione. Il DSN da
+// solo non basta: una build con `.env.local` servita in locale o su una
+// anteprima (Tailscale, Vercel preview) riporterebbe al progetto di
+// produzione errori che non sono del sito (chunk vecchi, script Vercel
+// assenti). Eccezione: VITE_SENTRY_FORCE=1 per provare Sentry fuori dal
+// dominio.
+const onProductionHost = typeof window !== 'undefined' && window.location.hostname === PRODUCTION_HOST;
+export const isSentryEnabled = Boolean(dsn) && (onProductionHost || import.meta.env.VITE_SENTRY_FORCE === '1');
+
+if (isSentryEnabled) {
   Sentry.init({
     dsn,
     environment: import.meta.env.MODE,
