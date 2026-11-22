@@ -9,7 +9,7 @@ Numerazione progressiva delle decisioni registrate nelle spec (`docs/specs/`), i
 | D-003 | 2026-11-16 | Form contatti e footer con prop `tone` invece di componenti duplicati. | [homepage-light-restyle.md](specs/homepage-light-restyle.md) |
 | D-004 | 2026-11-16 | `.home-light` è il sistema chiaro del sito, usato anche dalle pagine interne con mockup. | [agenti-ai-light-page.md](specs/agenti-ai-light-page.md) |
 | D-005 | 2026-11-16 | `CloseCta` e `useLightDocument` condivisi tra home e pagine interne; sugli agenti la chiusura precede il form. | [agenti-ai-light-page.md](specs/agenti-ai-light-page.md) |
-| D-006 | 2026-11-21 | La FAQ sugli ad blocker resta nello schema FAQPage del tracciamento anche se non è tra le FAQ visibili. | [tracking-light-page.md](specs/tracking-light-page.md) |
+| D-006 | 2026-11-21 | La FAQ sugli ad blocker resta nello schema FAQPage del tracciamento anche se non è tra le FAQ visibili. Sostituita da D-029. | [tracking-light-page.md](specs/tracking-light-page.md) |
 | D-007 | 2026-11-21 | Componente "Siti web" delegato a Claude Opus; rimossi mock browser GSAP e immagine hero GP Meccatronica. | [sites-light-page.md](specs/sites-light-page.md) |
 | D-008 | 2026-11-21 | Componente "Meta Ads B2B" delegato a Claude Opus; rimossi i testi lunghi non presenti nel mockup. | [ads-light-page.md](specs/ads-light-page.md) |
 | D-009 | 2026-11-21 | ~~Le fonti dei numeri stanno in `docs/sources/<caso>-<anno-mese>/` con screenshot e README.~~ Sostituita da D-022. | [candiani-figures-2026-11.md](specs/candiani-figures-2026-11.md) |
@@ -32,3 +32,4 @@ Numerazione progressiva delle decisioni registrate nelle spec (`docs/specs/`), i
 | D-026 | 2026-11-22 | I cambi rotta SPA passano da `useTransition`: con il chunk in cache la pagina cambia senza loader; altrimenti resta la pagina corrente e il loader compare dopo 150 ms. Il primo caricamento non usa la transizione | [review-51-59-fixes.md](specs/review-51-59-fixes.md) |
 | D-027 | 2026-11-22 | Prezzi delle card servizi in home derivati dai pacchetti (`homePriceRows`); l'etichetta "Audit da 490 €" resta quella del mockup della home anche se il pacchetto ha prezzo fisso | [review-51-59-fixes.md](specs/review-51-59-fixes.md) |
 | D-028 | 2026-11-22 | Numeri del calcolatore e dei prezzi derivati sempre con il punto delle migliaia ("5.000"), con un formatter condiviso invece di `Intl` it-IT, che sotto 10.000 non lo mette | [review-51-59-fixes.md](specs/review-51-59-fixes.md) |
+| D-029 | 2026-11-22 | La FAQ sugli ad blocker è visibile nella pagina Tracciamento (seconda posizione) e resta nello schema FAQPage; il testo della FAQ GDPR del mockup è confermato da Q4 Studio. Sostituisce D-006. | [review-51-59-fixes.md](specs/review-51-59-fixes.md) |

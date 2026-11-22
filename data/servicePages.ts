@@ -198,18 +198,18 @@ export const trackingFaqs: Faq[] = [
 ];
 
 /**
- * La domanda sugli ad blocker non è tra le FAQ del mockup ma resta nello
- * schema FAQPage (seconda posizione): la risposta è la sezione "Come
- * recuperare le conversioni bloccate dagli ad blocker", e
- * scripts/verify-agentic.mjs la richiede nel JSON-LD.
+ * La domanda sugli ad blocker non era tra le FAQ del mockup: dal 2026-11-22
+ * è visibile in seconda posizione (D-029) e, come prima, sta nello schema
+ * FAQPage, dove scripts/verify-agentic.mjs la richiede.
  */
 export const adBlockerFaq: Faq = {
   question: 'Come recuperare i dati di conversione bloccati dagli ad blocker?',
   answer: 'Prima si verifica quali eventi mancano e perché. Poi si configura una raccolta server-side con gli eventi e il consenso corretti, si inviano i segnali a Meta o Google tramite API e si deduplicano gli eventi inviati sia dal browser sia dal server. Il server-side riduce alcune perdite tecniche, ma non aggira consenso o regole privacy.',
 };
+trackingFaqs.splice(1, 0, adBlockerFaq);
 
-/** Ordine delle FAQ nello schema FAQPage del tracciamento. */
-export const trackingSchemaFaqs: Faq[] = [trackingFaqs[0], adBlockerFaq, ...trackingFaqs.slice(1)];
+/** Le FAQ dello schema FAQPage del tracciamento coincidono con quelle visibili. */
+export const trackingSchemaFaqs: Faq[] = trackingFaqs;
 
 /** FAQ della pagina Meta Ads B2B (mockup), usate anche da FAQPage e prerender. */
 export const metaAdvertisingFaqs: Faq[] = [

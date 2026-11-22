@@ -68,8 +68,8 @@
 
 ## Da decidere (decisioni del cliente, non toccate)
 
-- Testo della FAQ GDPR (ora in un'unica costante `gdprFaq`).
-- FAQ sugli ad blocker visibile in pagina o solo nello schema (D-006).
+- Testo della FAQ GDPR: confermato da Q4 Studio il 2026-11-22 (unica costante `gdprFaq`).
+- FAQ sugli ad blocker: dal 2026-11-22 visibile in pagina in seconda posizione e nello schema (D-029, sostituisce D-006).
 - Posizione della nota "Disdetta libera" (oggi sotto il Setup, anche nel markdown).
 - Dicitura "segnali di conversione recuperati".
 - "Stape Partner" in `data/seoPages.ts` e `ARCHITECTURE.md` (D-018).
