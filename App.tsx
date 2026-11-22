@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect, useRef } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useRef, useTransition } from 'react';
 import { Menu, X } from 'lucide-react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import ContactForm from './components/ContactForm';
@@ -15,7 +15,9 @@ import { getSeoPageBySlug, resourcesPath } from './data/seoPages';
 import { getCaseStudyBySlug, caseStudiesPath } from './data/caseStudies';
 import { captureAttribution } from './utils/attribution';
 import { trackCtaClick } from './utils/dataLayer';
-import { scrollToId } from './utils/navigate';
+import { onInternalLink, scrollToId, scrollToTop } from './utils/navigate';
+import { isLightRoute } from './data/lightRoutes';
+import { useDocumentTheme } from './hooks/useDocumentTheme';
 
 const Blog = lazy(() => import('./components/Blog'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
@@ -43,10 +45,23 @@ const TechnicalPartner = lazy(() => import('./components/TechnicalPartner'));
 const MetaAdvertisingB2B = lazy(loadMetaAdvertisingB2B);
 const SitesWebAI = lazy(loadSitesWebAI);
 
-/** Schermo di attesa mentre arriva il chunk di una pagina: fondo carta, logo e riga che scorre. */
-const PageLoader: React.FC = () => (
-  <div className="fixed inset-0 z-[60] bg-[#f7f5fb]" role="status" aria-live="polite" aria-label="Caricamento pagina">
-    <img src="/logo.webp" alt="" width={130} height={40} className="absolute top-6 left-6 h-7 w-auto brightness-0" />
+/**
+ * Schermo di attesa mentre arriva il chunk di una pagina: fondo carta e riga
+ * che scorre (il logo è quello della nav, sopra). `home-light` fa trattare il
+ * loader come fondo chiaro alla nav; `data-page-loader` lo distingue da una
+ * pagina chiara vera (vedi l'effetto di `navOnLight`). Con `delayed` (cambio
+ * rotta in transizione) compare solo dopo ~150 ms: sui cambi istantanei non
+ * lampeggia.
+ */
+const PageLoader: React.FC<{ delayed?: boolean }> = ({ delayed }) => (
+  <div
+    className={`home-light fixed inset-0 z-[60] ${delayed ? 'q4-pageloader-delayed' : ''}`}
+    style={{ background: '#f7f5fb' }}
+    role="status"
+    aria-live="polite"
+    data-page-loader=""
+  >
+    <span className="sr-only">Caricamento pagina…</span>
     <div className="absolute bottom-0 left-0 h-[2px] w-full overflow-hidden">
       <div className="q4-pageloader-bar h-full w-1/3 bg-gradient-to-r from-indigo-400 via-purple-500 to-purple-700" />
     </div>
@@ -72,6 +87,10 @@ const App: React.FC = () => {
   const [navOnLight, setNavOnLight] = useState(false);
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
   const previousRouteRef = useRef<string | null>(null);
+  // Cambio rotta in transizione: se il chunk della pagina è già in cache la
+  // pagina cambia subito, senza passare dal fallback di Suspense; se no resta
+  // la pagina corrente e compare il loader (ritardato) finché arriva.
+  const [isPending, startTransition] = useTransition();
 
   // Chiude il menu e riporta il focus sull'hamburger che lo aveva aperto:
   // senza questo, con tastiera/screen reader il focus si perde in cima al
@@ -147,11 +166,15 @@ const App: React.FC = () => {
 
   // Route public pages with real paths.
   useEffect(() => {
-    const handleRouteChange = () => {
+    // `inTransition`: false al primo caricamento (deve comparire subito la
+    // pagina giusta, non restare sulla home in attesa del chunk), true per
+    // popstate/hashchange (navigazione SPA, anche da goTo/onInternalLink).
+    const handleRouteChange = (inTransition: boolean) => {
       const path = window.location.pathname.replace(/\/$/, '') || '/';
       const hash = window.location.hash.slice(1); // Remove #
       const route = `${path}#${hash}`;
 
+      const applyRoute = () => {
       if (path === '/tracciamento-server-side') {
         setCurrentPage('tracking');
       } else if (path === '/siti-web-ai') {
@@ -225,6 +248,9 @@ const App: React.FC = () => {
       } else {
         setCurrentPage('home');
       }
+      };
+      if (inTransition) startTransition(applyRoute);
+      else applyRoute();
       // Il fetch del blog aggiorna questo effect per risolvere le rotte degli
       // articoli. Scorriamo in alto solo quando cambia davvero l'URL, altrimenti
       // un aggiornamento dati riporterebbe l'utente in cima mentre legge.
@@ -244,12 +270,13 @@ const App: React.FC = () => {
       }
     };
 
-    handleRouteChange(); // Initial load
-    window.addEventListener('hashchange', handleRouteChange);
-    window.addEventListener('popstate', handleRouteChange);
+    handleRouteChange(false); // Initial load
+    const onNavigation = () => handleRouteChange(true);
+    window.addEventListener('hashchange', onNavigation);
+    window.addEventListener('popstate', onNavigation);
     return () => {
-      window.removeEventListener('hashchange', handleRouteChange);
-      window.removeEventListener('popstate', handleRouteChange);
+      window.removeEventListener('hashchange', onNavigation);
+      window.removeEventListener('popstate', onNavigation);
     };
   }, [blogPosts, isLoadingBlog]);
 
@@ -260,7 +287,9 @@ const App: React.FC = () => {
     // L'altezza dell'hero può cambiare senza scroll né resize (font che
     // arrivano, barra URL mobile): la osserviamo con un ResizeObserver,
     // agganciato appena #hero esiste. Le pagine lazy montano dopo l'effetto:
-    // un MutationObserver sul body ricalcola quando arrivano (1 volta per frame).
+    // un MutationObserver sul body ricalcola quando arrivano (1 volta per
+    // frame) e si stacca appena la pagina chiara (#hero o .home-light, non il
+    // loader) è nel DOM; al cambio rotta l'effetto riparte e lo riaggancia.
     let cancelled = false;
     let observedHero: HTMLElement | null = null;
     let rafId = 0;
@@ -277,6 +306,9 @@ const App: React.FC = () => {
         setNavOnLight(window.scrollY > hero.offsetHeight - 80);
       } else {
         setNavOnLight(document.querySelector('.home-light') !== null);
+      }
+      if (hero || document.querySelector('.home-light:not([data-page-loader])')) {
+        mutationObserver?.disconnect();
       }
     }
     const scheduleUpdate = () => {
@@ -303,31 +335,22 @@ const App: React.FC = () => {
   }, [currentPage, currentArticleSlug, currentSeoSlug, currentCaseStudySlug]);
 
   const navigateTo = (page: Page, slug?: string) => {
-    if (page === 'blog-article' && slug) {
-      window.history.pushState(null, '', `/blog/${slug}`);
-      setCurrentArticleSlug(slug);
-      setCurrentPage('blog-article');
-      window.scrollTo({ top: 0 });
-    } else if (page === 'blog') {
-      window.history.pushState(null, '', '/blog');
-      setCurrentPage('blog');
-      window.scrollTo({ top: 0 });
-    } else if (page === 'home') {
-      window.history.pushState(null, '', '/');
-      setCurrentPage('home');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (page === 'agenti-ai') {
-      window.history.pushState(null, '', '/agenti-ai');
-      setCurrentPage('agenti-ai');
-      window.scrollTo({ top: 0 });
-    } else if (page === 'tracking') {
-      window.history.pushState(null, '', '/tracciamento-server-side');
-      setCurrentPage('tracking');
-      window.scrollTo({ top: 0 });
-    } else if (page === 'sites') {
-      window.history.pushState(null, '', '/siti-web-ai');
-      setCurrentPage('sites');
-      window.scrollTo({ top: 0 });
+    const paths: Partial<Record<Page, string>> = {
+      blog: '/blog',
+      home: '/',
+      'agenti-ai': '/agenti-ai',
+      tracking: '/tracciamento-server-side',
+      sites: '/siti-web-ai',
+    };
+    const path = page === 'blog-article' && slug ? `/blog/${slug}` : paths[page];
+    if (path) {
+      window.history.pushState(null, '', path);
+      startTransition(() => {
+        if (page === 'blog-article' && slug) setCurrentArticleSlug(slug);
+        setCurrentPage(page);
+      });
+      // Home: scorrimento morbido (rispetta prefers-reduced-motion); le altre pagine saltano in cima.
+      scrollToTop(page === 'home');
     } else {
       if (window.location.pathname !== '/') {
         window.history.pushState(null, '', '/');
@@ -384,6 +407,11 @@ const App: React.FC = () => {
     { label: 'Blog', active: currentPage === 'blog' || currentPage === 'blog-article', onClick: () => navigateTo('blog') },
   ];
 
+  // Sfondo di html/body e theme-color: rotte chiare da data/lightRoutes.ts;
+  // privacy, supporto app e 404 restano scure anche su un path chiaro.
+  const lightDocument = isLightRoute(typeof window !== 'undefined' ? window.location.pathname : '/') && !['privacy', 'app-support', '404'].includes(currentPage);
+  useDocumentTheme(lightDocument);
+
   return (
     <main className="w-full min-h-screen bg-white text-white selection:bg-purple-600 selection:text-white cursor-none">
       <SpeedInsights />
@@ -415,7 +443,7 @@ const App: React.FC = () => {
         <div className={`hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 rounded-full border bg-white/90 backdrop-blur-md px-2.5 py-2 transition-shadow duration-300 ${navOnLight ? 'border-black/10 shadow-[0_10px_40px_-20px_rgba(10,10,10,0.35)]' : 'border-white/40'}`}>
           {navItems.map((item) =>
             item.href ? (
-              <a key={item.label} href={item.href} className={navItemClass(item.active)}>
+              <a key={item.label} href={item.href} onClick={onInternalLink(item.href)} className={navItemClass(item.active)}>
                 {item.label}
               </a>
             ) : (
@@ -476,6 +504,7 @@ const App: React.FC = () => {
         {currentPage === 'home' && <HomeV2 />}
 
         <LazyPageErrorBoundary>
+        {isPending && <PageLoader delayed />}
         <Suspense fallback={<PageLoader />}>
           {currentPage === 'blog' && (
             <>

@@ -80,7 +80,8 @@ const Reveal: React.FC<RevealProps> = ({ children, className, style, as = 'div',
 
   const Tag = as;
   return (
-    <Tag ref={ref as React.Ref<never>} id={id} className={className} style={style}>
+    // data-reveal: in stampa index.css annulla lo stato nascosto (@media print).
+    <Tag ref={ref as React.Ref<never>} id={id} className={className} style={style} data-reveal="">
       {children}
     </Tag>
   );

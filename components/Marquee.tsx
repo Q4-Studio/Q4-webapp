@@ -112,12 +112,13 @@ const Marquee: React.FC<MarqueeProps> = ({ tone = 'dark' }) => {
         </div>
       <div className="relative w-full overflow-hidden">
         <div ref={trackRef} className="flex whitespace-nowrap gap-16 md:gap-24 items-center">
-            {/* Render logos twice for seamless loop */}
+            {/* Tre copie dei loghi per il loop continuo: solo la prima è letta
+                dagli screen reader, le copie 2 e 3 sono decorative. */}
             {[...logos, ...logos, ...logos].map((logo, index) => (
-                <div key={index} className={`flex-shrink-0 h-12 md:h-14 flex items-center transition-all duration-300 cursor-default ${t.logo}`}>
+                <div key={index} className={`flex-shrink-0 h-12 md:h-14 flex items-center transition-all duration-300 cursor-default ${t.logo}`} aria-hidden={index >= logos.length ? true : undefined}>
                     <img
                         src={logo.path}
-                        alt={logo.name}
+                        alt={index >= logos.length ? '' : logo.name}
                         loading="lazy"
                         decoding="async"
                         className="h-full w-auto object-contain"

@@ -8,7 +8,6 @@ import { metaAdvertisingFaqs } from '../data/servicePages';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
 import { scrollToId } from '../utils/navigate';
-import { useLightDocument } from '../hooks/useLightDocument';
 
 /* ------------------------------------------------------------------ */
 /* Pagina "Meta Ads B2B" sul sistema chiaro (mockup "Meta Ads B2B"):   */
@@ -110,7 +109,6 @@ const FunnelMock: React.FC = () => (
 );
 
 const MetaAdvertisingB2B: React.FC = () => {
-  useLightDocument();
 
   const scrollToMethod = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (scrollToId('metodo')) event.preventDefault();

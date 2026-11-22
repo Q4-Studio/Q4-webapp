@@ -4,9 +4,9 @@
 
 ## Comportamento
 
-- Mentre arriva il chunk di una pagina, al posto del bianco c'è uno schermo di attesa chiaro (fondo carta, logo, riga che scorre). Lo stesso componente serve tutte le pagine lazy.
+- Mentre arriva il chunk di una pagina, al posto del bianco c'è uno schermo di attesa chiaro (fondo carta e riga che scorre; il logo è quello della nav). Lo stesso componente serve tutte le pagine lazy.
 - Dopo il primo paint, quando il browser è libero, i chunk delle sei pagine principali (tracciamento, siti, agenti AI, casi studio indice e dettaglio, Meta Ads) vengono scaricati in anticipo: il cambio pagina sulla stessa visita è immediato anche su reti lente.
-- Nei testi visibili del sito (caso studio Candiani, calcolatore, fonti) non compare più "Stape": si parla di "container server-side" e di "strumenti di verifica del tracciamento". La documentazione interna in `docs/sources` resta com'è.
+- Nei testi visibili del sito (caso studio Candiani, calcolatore, fonti) non compare più "Stape": si parla di "container server-side" e di "strumenti di verifica del tracciamento". Le fonti originali restano com'erano, conservate fuori dal repository.
 
 ## Decisioni
 

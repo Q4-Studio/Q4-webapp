@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { caseStudiesPath } from '../data/caseStudies';
+import { onInternalLink } from '../utils/navigate';
 
 export const MOBILE_MENU_PANEL_ID = 'mobile-menu-panel';
 
@@ -148,7 +149,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigateHome
                   key={item.label}
                   ref={(el) => { if (i === 0) firstItemRef.current = el; }}
                   href={item.href}
-                  onClick={onClose}
+                  onClick={onInternalLink(item.href, onClose)}
                   className={commonClasses}
                 >
                   <span>{item.label}</span>

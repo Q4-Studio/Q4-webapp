@@ -1,10 +1,9 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
-import { caseStudies, caseStudiesPath, siteUrl } from '../data/caseStudies';
+import { caseStudies, caseStudiesIndexCopy, caseStudiesPath, siteUrl } from '../data/caseStudies';
 import SEOHead from './SEOHead';
 import Reveal from './home2/Reveal';
 import { trackCaseStudyClick } from '../utils/dataLayer';
-import { useLightDocument } from '../hooks/useLightDocument';
 import { onInternalLink } from '../utils/navigate';
 
 /* ------------------------------------------------------------------ */
@@ -12,10 +11,9 @@ import { onInternalLink } from '../utils/navigate';
 /* .bc con copertina, categoria, cliente e sottotitolo.                */
 /* ------------------------------------------------------------------ */
 
-const TITLE_WORDS = ['Progetti', 'reali,', 'dati', 'reali.'];
+const TITLE_WORDS = caseStudiesIndexCopy.title.split(' ');
 
 const CaseStudiesIndex: React.FC = () => {
-  useLightDocument();
   const pageUrl = `${siteUrl}${caseStudiesPath}`;
 
   const itemListSchema = {
@@ -46,16 +44,16 @@ const CaseStudiesIndex: React.FC = () => {
         <div className="aur aur-3" aria-hidden="true" />
         <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.15) 50%, rgba(5,5,5,.75) 100%)' }} />
         <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-20 pt-36 md:px-12 md:pt-40">
-          <p className="w-block text-[17px] font-medium text-purple-300" style={{ animationDelay: '0.1s' }}>Casi studio</p>
+          <p className="w-block text-[17px] font-medium text-purple-300" style={{ animationDelay: '0.1s' }}>{caseStudiesIndexCopy.kicker}</p>
           <h1 className="h-sub mt-5 max-w-[1250px]">
             {TITLE_WORDS.map((word, i) => (
-              <React.Fragment key={word}>
+              <React.Fragment key={`${word}-${i}`}>
                 <span className="w" style={{ animationDelay: `${0.2 + i * 0.08}s` }}>{word}</span>{' '}
               </React.Fragment>
             ))}
           </h1>
           <p className="w-block lead mt-10 max-w-[720px] text-gray-300" style={{ animationDelay: '0.6s' }}>
-            Come lavoriamo con i clienti Q4 Studio: cosa abbiamo trovato, cosa abbiamo costruito e cosa è cambiato, con i numeri veri di ogni progetto.
+            {caseStudiesIndexCopy.lead}
           </p>
         </div>
       </header>

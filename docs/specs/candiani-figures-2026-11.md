@@ -1,6 +1,6 @@
 # Aggiornamento dati caso studio Candiani (novembre 2026)
 
-**Data:** 2026-11-21 · **Decisioni:** D-009, D-010 · **Fonti:** `le fonti private di Q4 Studio (cartella docs/sources, non versionata)` (screenshot Stape e Meta consegnati da Q4 Studio).
+**Data:** 2026-11-21 · **Decisioni:** D-009, D-010 (sostituite da D-022, D-023; precisate da D-024) · **Fonti:** screenshot del container server-side e di Meta consegnati da Q4 Studio, conservati privatamente da Q4 Studio fuori dal repository.
 
 ## Obiettivo
 
@@ -8,7 +8,7 @@ Sostituire ovunque i numeri del caso studio Candiani con i dati degli ultimi 90 
 
 ## Comportamento
 
-- Nuovi valori: 752.423 segnali recuperati in 90 giorni (22 ago–20 nov 2026), di cui 671.779 dalla tracking prevention e 80.644 dagli ad blocker, su 1.966.768 richieste (38,3%).
+- Nuovi valori: 752.423 segnali recuperati nei 90 giorni fino al 20 novembre 2026, di cui 671.779 dalla tracking prevention e 80.644 dagli ad blocker, su 1.966.768 richieste (38,3%).
 - Nuovi dati Meta API Conversions (23 ott–19 nov 2026) nella nota dei risultati del caso studio: +9,2% ViewContent, +46,2% AddToCart, +133,3% InitiateCheckout rispetto al solo pixel.
 - Il titolo "Oltre un milione di segnali recuperati." diventa "752.423 segnali recuperati in 90 giorni." in tracciamento e nelle versioni statiche.
 - Aggiornati: `data/caseStudies.ts`, `data/seoPages.ts`, `scripts/prerender.ts`, `components/home2/CandianiVisual.tsx`, `components/ServerSideTracking.tsx`, `SEO_GUIDE.md`.

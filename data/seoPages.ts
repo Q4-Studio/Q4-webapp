@@ -446,8 +446,8 @@ export const seoPages: SeoPage[] = [
     audience: 'aziende e agenzie della zona di Modena che vedono discrepanze tra conversioni pubblicitarie, analytics e dati reali del CRM',
     pain: 'pixel bloccati, cookie limitati e configurazioni duplicate fanno perdere segnali oppure gonfiano i report quando client-side e server-side non sono deduplicati',
     solution: 'verifichiamo l’architettura esistente, scegliamo gli strumenti adatti, configuriamo container server-side, Consent Mode, Meta CAPI o Enhanced Conversions e documentiamo gli eventi',
-    proof: 'Q4 Studio è Stape Partner e lavora soprattutto tra Reggio Emilia, Modena e Parma per i progetti che richiedono presenza; l’audit separa il problema tecnico dal problema di attribuzione',
-    directAnswer: 'Gli strumenti per il tracking server-side a Modena includono un container server-side, spesso con sGTM e un’infrastruttura come Stape, più Consent Mode v2, Meta Conversions API, Enhanced Conversions Google e un collegamento ai dati CRM. Lo strumento da solo non basta: bisogna definire gli eventi, rispettare il consenso e deduplicare gli invii client-side e server-side.',
+    proof: 'Q4 Studio configura e mantiene l’infrastruttura server-side e lavora soprattutto tra Reggio Emilia, Modena e Parma per i progetti che richiedono presenza; l’audit separa il problema tecnico dal problema di attribuzione',
+    directAnswer: 'Gli strumenti per il tracking server-side a Modena includono un container server-side, spesso con sGTM su un’infrastruttura dedicata, più Consent Mode v2, Meta Conversions API, Enhanced Conversions Google e un collegamento ai dati CRM. Lo strumento da solo non basta: bisogna definire gli eventi, rispettare il consenso e deduplicare gli invii client-side e server-side.',
     clusters: [
       {
         keyword: 'quali strumenti tracking server-side modena',
@@ -455,9 +455,9 @@ export const seoPages: SeoPage[] = [
         content: 'Il setup tipico combina Google Tag Manager server-side, un’infrastruttura su cui eseguire il container, Consent Mode v2 e le destinazioni advertising o analytics. Meta può ricevere eventi tramite Conversions API e Google tramite Enhanced Conversions, ma la scelta dipende dal sito, dal CRM, dalle piattaforme usate e dagli eventi che l’azienda vuole misurare. Aggiungere strumenti senza una mappa degli eventi crea solo un sistema più complesso.'
       },
       {
-        keyword: 'sgtm stape modena server-side tagging',
-        heading: 'sGTM, Stape e implementazione tecnica',
-        content: 'sGTM è il container server-side che riceve ed elabora gli eventi; Stape è una delle infrastrutture disponibili per eseguirlo e mantenerlo. Sono componenti tecnici, non una strategia di misurazione completa. Q4 Studio è Stape Partner e può occuparsi della configurazione, del collegamento al dominio e del monitoraggio, mantenendo la documentazione degli eventi all’azienda.'
+        keyword: 'sgtm modena server-side tagging',
+        heading: 'sGTM, infrastruttura e implementazione tecnica',
+        content: 'sGTM è il container server-side che riceve ed elabora gli eventi; serve poi un’infrastruttura dedicata per eseguirlo e mantenerlo. Sono componenti tecnici, non una strategia di misurazione completa. Q4 Studio può occuparsi della configurazione, del collegamento al dominio e del monitoraggio, mantenendo la documentazione degli eventi all’azienda.'
       },
       {
         keyword: 'ad blocker conversioni tracking modena',
@@ -490,13 +490,13 @@ export const seoPages: SeoPage[] = [
       'Audit tracciamento: 490 € e 3-5 giorni lavorativi',
       'Setup server-side: da 1.500 € per siti non-ecommerce',
       'Meta Conversions API ed Enhanced Conversions Google possono lavorare insieme al client-side con deduplicazione corretta',
-      'Q4 Studio è Stape Partner e segue soprattutto il territorio Reggio Emilia, Modena e Parma per i progetti con presenza'
+      'Q4 Studio configura e mantiene l’infrastruttura server-side e segue soprattutto il territorio Reggio Emilia, Modena e Parma per i progetti con presenza'
     ],
     services: ['Audit eventi e consenso', 'Container sGTM e infrastruttura', 'Meta CAPI e Enhanced Conversions', 'Deduplicazione e monitoraggio'],
     faqs: [
       {
         question: 'Quali strumenti servono per il tracking server-side a Modena?',
-        answer: 'In genere servono un container server-side, un’infrastruttura per eseguirlo, Consent Mode v2, le integrazioni con Meta o Google e una mappa degli eventi. sGTM e Stape sono componenti possibili, ma la scelta dipende dall’architettura esistente.'
+        answer: 'In genere servono un container server-side, un’infrastruttura per eseguirlo, Consent Mode v2, le integrazioni con Meta o Google e una mappa degli eventi. sGTM e un’infrastruttura dedicata sono componenti possibili, ma la scelta dipende dall’architettura esistente.'
       },
       {
         question: 'Il tracking server-side elimina gli ad blocker?',
@@ -885,18 +885,18 @@ export const seoPages: SeoPage[] = [
     lastModified: '2026-08-09',
     title: 'Tracking Server-Side e Deduplicazione degli Eventi',
     metaTitle: 'Tracking Server-Side e Deduplicazione Eventi | Q4 Studio',
-    description: 'Come funziona il tracking server-side, perché senza deduplicazione degli eventi i numeri di conversione si gonfiano. Q4 Studio è Stape Partner.',
+    description: 'Come funziona il tracking server-side, perché senza deduplicazione degli eventi i numeri di conversione si gonfiano. Q4 Studio configura e mantiene l’infrastruttura.',
     keyword: 'tracking server-side deduplicazione eventi',
     audience: 'aziende che investono in advertising digitale (Meta, Google) e vedono i numeri di conversione non coincidere tra piattaforme pubblicitarie, analytics e CRM',
     pain: 'i browser bloccano sempre più script e cookie eseguiti lato client (cioè direttamente nel browser dell\'utente), quindi una parte delle conversioni reali non viene registrata; se poi si aggiunge un tracciamento server-side senza gestirlo bene, lo stesso evento rischia di essere contato due volte, gonfiando i numeri nella direzione opposta',
     solution: 'configuriamo il tracciamento server-side (una raccolta dati che passa da un server anziché solo dal browser dell\'utente) e impostiamo la deduplicazione degli eventi tra le due fonti, così ogni conversione viene contata una sola volta ed è più resistente ai blocchi di ad blocker e browser orientati alla privacy',
-    proof: 'siamo Stape Partner per il server-side tagging: la configurazione tecnica corretta non è un dettaglio, è quello che decide se i numeri su cui l\'azienda decide il budget sono affidabili o no',
+    proof: 'configuriamo e manteniamo l’infrastruttura del server-side tagging: la configurazione tecnica corretta non è un dettaglio, è quello che decide se i numeri su cui l\'azienda decide il budget sono affidabili o no',
     directAnswer: 'Il tracking server-side raccoglie i dati di navigazione e conversione tramite un server intermedio invece che solo dal browser dell\'utente, riducendo l\'impatto di ad blocker e browser privacy-first. La deduplicazione degli eventi assicura che la stessa conversione, se arriva sia dal client che dal server, venga contata una sola volta invece di gonfiare i numeri nei report.',
     clusters: [
       { keyword: 'cosa cambia rispetto al tracciamento tradizionale', heading: 'Tracciamento client-side vs server-side: cosa cambia', content: 'Il tracciamento tradizionale (client-side) invia i dati direttamente dal browser dell\'utente alla piattaforma pubblicitaria, tramite pixel e script che ad blocker, Safari ITP e Firefox ETP possono bloccare in parte. Il tracciamento server-side sposta questa raccolta su un server, spesso collegato a un dominio proprio del sito, rendendo la trasmissione dei dati meno dipendente dai blocchi impostati nel browser. Non è una soluzione magica: resta comunque soggetto a consenso e alle regole privacy, ma riduce la perdita di segnali dovuta ai soli blocchi tecnici.' },
       { keyword: 'cos\'è la deduplicazione degli eventi', heading: 'Cos\'è la deduplicazione degli eventi e perché serve', content: 'Quando lo stesso evento (per esempio un acquisto) viene inviato sia dal browser sia dal server, la piattaforma pubblicitaria rischia di registrarlo due volte se non riceve un\'indicazione che si tratta dello stesso evento. La deduplicazione risolve questo problema assegnando a ogni evento un identificativo univoco, condiviso tra le due fonti: la piattaforma lo riconosce e conta l\'evento una sola volta. Senza questo passaggio, i dati di conversione risultano gonfiati e le decisioni sul budget pubblicitario si basano su numeri sbagliati.' },
       { keyword: 'perché i dati di advertising non tornano con il crm', heading: 'Perché i numeri di advertising non coincidono con il CRM', content: 'Capita spesso che i numeri di conversione mostrati da Meta o Google non coincidano con quelli reali nel CRM aziendale. Le cause più comuni sono opposte tra loro: da un lato il blocco di cookie e script fa sottostimare le conversioni reali; dall\'altro un tracciamento server-side aggiunto senza deduplicazione le sovrastima. Il modo corretto di leggere questi numeri è confrontarli sempre con i dati reali del CRM, non fidarsi solo di quello che mostra la piattaforma pubblicitaria.' },
-      { keyword: 'stape partner server-side tagging', heading: 'Perché lavoriamo con Stape per il server-side tagging', content: 'Il server-side tagging richiede un\'infrastruttura tecnica da configurare e mantenere: un container che riceve i dati, li elabora e li inoltra correttamente alle piattaforme di advertising e analytics. Q4 Studio è Stape Partner, e usa questa infrastruttura per configurare il tracciamento server-side dei clienti in modo affidabile, mantenendo la deduplicazione degli eventi e monitorando che i dati restino coerenti nel tempo.' }
+      { keyword: 'infrastruttura server-side tagging', heading: 'Perché l’infrastruttura conta nel server-side tagging', content: 'Il server-side tagging richiede un\'infrastruttura tecnica da configurare e mantenere: un container che riceve i dati, li elabora e li inoltra correttamente alle piattaforme di advertising e analytics. Q4 Studio configura e mantiene questa infrastruttura per il tracciamento server-side dei clienti in modo affidabile, mantenendo la deduplicazione degli eventi e monitorando che i dati restino coerenti nel tempo.' }
     ],
     comparisonTable: {
       title: 'Tracciamento client-side vs server-side',
@@ -912,12 +912,12 @@ export const seoPages: SeoPage[] = [
       'Il tracciamento client-side perde eventi quando ad blocker, Safari ITP o Firefox ETP bloccano script e cookie',
       'La deduplicazione confronta un identificativo univoco (event ID) tra evento client-side e server-side per contarlo una sola volta',
       'Senza deduplicazione, lo stesso evento può comparire due volte nei report advertising, gonfiando i risultati',
-      'Q4 Studio è Stape Partner per la configurazione e la manutenzione del server-side tagging'
+      'Q4 Studio si occupa della configurazione e della manutenzione dell’infrastruttura server-side'
     ],
-    services: ['Audit del tracciamento esistente', 'Configurazione server-side tagging (Stape)', 'Deduplicazione degli eventi tra client e server', 'Verifica e monitoraggio continuo dei dati raccolti'],
+    services: ['Audit del tracciamento esistente', 'Configurazione server-side tagging su infrastruttura dedicata', 'Deduplicazione degli eventi tra client e server', 'Verifica e monitoraggio continuo dei dati raccolti'],
     faqs: [
       { question: 'Il tracking server-side sostituisce completamente quello client-side?', answer: 'No, di solito lavorano insieme: il client-side resta utile per segnali immediati, il server-side aggiunge affidabilità contro i blocchi. La deduplicazione evita che lo stesso evento venga contato due volte.' },
-      { question: 'Cosa serve per attivare il tracking server-side?', answer: 'Un dominio proprio da collegare al container server-side, accesso agli strumenti di advertising e analytics già in uso, e una configurazione tecnica che curiamo noi come Stape Partner.' },
+      { question: 'Cosa serve per attivare il tracking server-side?', answer: 'Un dominio proprio da collegare al container server-side, accesso agli strumenti di advertising e analytics già in uso, e una configurazione tecnica che curiamo noi.' },
       { question: 'La deduplicazione richiede modifiche al sito?', answer: 'Serve identificare ogni evento con lo stesso identificativo sia lato client sia lato server: normalmente si interviene sul codice di tracciamento esistente, senza toccare il resto del sito.' },
       { question: 'Il server-side tagging risolve da solo i problemi di privacy?', answer: 'No. Gli obblighi su consenso, informativa e conservazione dei dati restano gli stessi: cambia dove viene elaborato il dato, non le regole sulla privacy da rispettare.' }
     ]

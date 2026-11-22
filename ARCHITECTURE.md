@@ -64,7 +64,7 @@ non cambia: qui si interviene solo su `line-height` (`leading-*`) e `letter-spac
 | Small/kicker uppercase (14px e 11px) | invariata (di norma una riga) | **`tracking-[0.08em]`** (valore unico) | Prima 4 valori diversi (`0.25/0.3/0.35em`, `tracking-widest`, `tracking-wider`); un solo valore, scelto perché regge anche le etichette più strette a 375px. |
 | Small/kicker non uppercase (meta info, timestamp, testo normale) | `leading-relaxed`/default | neutro | Non è un'etichetta maiuscola: nessun tracking positivo. |
 
-**Eccezione al tracking unico** — badge "Stape Partner — Server-Side Tagging"
+**Eccezione al tracking unico** — badge partner "Server-Side Tagging"
 (`components/home2/Services2.tsx`): a 375px anche a `tracking-[0]` il testo natural
 è più largo della pillola disponibile (~253px vs ~277px). Per riportarlo su una riga
 usa `tracking-[-0.08em]`, l'unico modo entro il perimetro "solo tracking" per farlo
@@ -75,7 +75,7 @@ dimensione.
 **Elementi esclusi dall'unificazione del tracking** (lasciati con i loro valori
 originali, non sono etichette maiuscole ma letture numeriche/tecniche in stile
 "console" — `tabular-nums`, orari, contatori step):
-- `components/home2/Pipeline2.tsx`: il contatore `0{active+1}/05` (`tracking-widest tabular-nums`) e il badge dell'orario `step.time` / `s.time` (es. "T+0 s", `tracking-[0.2em]`).
+- `components/home2/LeadFlow.tsx`: l'etichetta del tempo di ogni riga (`.tm`, es. "Subito", "2 secondi", "7 giorni"), scritta in parole e senza tracking dedicato (sostituisce `Pipeline2.tsx` e i badge "T+0 s", componente rimosso).
 - `components/home2/Agents2.tsx`: il nome dello scenario nel terminale mock (es. "q4-agent · preventivi", `tracking-[0.2em]`, minuscolo per estetica da riga di comando).
 
 **Elementi con `leading-none` lasciati invariati** (etichette/numeri brevi e
@@ -114,7 +114,7 @@ pensati come un unico flusso, "il form segue subito sotto" la CTA, non due
 sezioni separate).
 
 **Casi risolti con intervento di layout, non di spaziatura** (vedi anche sezioni
-sopra): le etichette delle statistiche e il badge "Stape Partner" in
+sopra): le etichette delle statistiche e il badge partner in
 `components/home2/Services2.tsx` — dettagli nel changelog del componente.
 
 ---

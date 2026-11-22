@@ -7,11 +7,10 @@ import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
 import TrackingLossCalculator from './TrackingLossCalculator';
 import { Bullets, NoteCard, OkIcon, PaperBlock } from './home2/primitives';
-import { trackingFaqs, trackingOfferPrice, trackingPackages, trackingSchemaFaqs, type TrackingPackage } from '../data/servicePages';
+import { trackingFaqs, trackingOffer, trackingPackages, trackingSchemaFaqs, type TrackingPackage } from '../data/servicePages';
 import { siteUrl } from '../data/seoPages';
 import { candianiFigures } from '../data/caseStudies';
 import { trackCtaClick } from '../utils/dataLayer';
-import { useLightDocument } from '../hooks/useLightDocument';
 import { onInternalLink, scrollToId } from '../utils/navigate';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -35,7 +34,7 @@ const serviceSchema = {
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Pacchetti tracciamento server-side',
-    itemListElement: trackingPackages.map((pack) => ({ '@type': 'Offer', name: pack.title, price: trackingOfferPrice(pack) })),
+    itemListElement: trackingPackages.map(trackingOffer),
   },
 };
 
@@ -134,7 +133,6 @@ const PackageColumn: React.FC<{ pack: TrackingPackage; offset?: string; delay?: 
 const DOC_LINK = 'relative underline decoration-white/40 underline-offset-4 hover:text-white';
 
 const ServerSideTracking: React.FC = () => {
-  useLightDocument();
 
   const scrollTo = (id: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (scrollToId(id, id === 'contatti' ? 'center' : 'start')) event.preventDefault();
@@ -270,7 +268,7 @@ const ServerSideTracking: React.FC = () => {
           <div className="aur aur-2 opacity-80" aria-hidden="true" />
           <div className="relative mx-auto max-w-[1440px]">
             <Reveal as="h2" style={{ fontSize: 'clamp(3rem, 11vw, 11.5rem)', letterSpacing: '-0.06em', lineHeight: 0.92 }}>{candianiFigures.recovered} segnali recuperati in {candianiFigures.windowLabel}.</Reveal>
-            <Reveal as="p" delay={0.12} className="lead mt-14 max-w-[720px] text-gray-300">{`Su Candiani Denim abbiamo recuperato ${candianiFigures.recovered} segnali di conversione in ${candianiFigures.windowLabel}, di cui ${candianiFigures.trackingPrevention} bloccati dai sistemi di tracking prevention dei browser e ${candianiFigures.adBlockers} dagli ad blocker.`}</Reveal>
+            <Reveal as="p" delay={0.12} className="lead mt-14 max-w-[720px] text-gray-300">{`Su Candiani Denim abbiamo recuperato ${candianiFigures.recovered} segnali in ${candianiFigures.windowLabel}, di cui ${candianiFigures.trackingPrevention} bloccati dai sistemi di tracking prevention dei browser e ${candianiFigures.adBlockers} dagli ad blocker.`}</Reveal>
             <Reveal delay={0.2} className="mt-12">
               <a
                 href="/casi-studio/candiani-denim-tracking-server-side"

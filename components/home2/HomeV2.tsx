@@ -14,28 +14,19 @@ import ServicesBento from './ServicesBento';
 import Process from './Process';
 import CloseCta from './CloseCta';
 import { trackCtaClick } from '../../utils/dataLayer';
-import { useLightDocument } from '../../hooks/useLightDocument';
 import { siteUrl } from '../../data/seoPages';
 
 gsap.registerPlugin(ScrollTrigger);
 
 /* ------------------------------------------------------------------ */
-/* Preloader sul sistema chiaro: due parole in Hanken Grotesk con il    */
-/* gradiente indaco-viola che si alternano al centro su fondo carta,    */
+/* Preloader sul sistema chiaro: due parole (.disp, gradiente .grad di */
+/* index.css) che si alternano al centro su fondo carta,                */
 /* contatore scuro in basso a destra, riga di avanzamento e poi sipario */
 /* verso l'alto.                                                        */
 /* ------------------------------------------------------------------ */
 
 /** I due tempi del lavoro di Q4. Basta cambiare queste stringhe. */
 const PRELOADER_WORDS = ['Dati', 'Automazioni'];
-
-const DISPLAY_FONT = "'Hanken Grotesk', 'Inter', Arial, sans-serif";
-const GRADIENT_TEXT: React.CSSProperties = {
-  background: 'linear-gradient(120deg, #818cf8 0%, #a855f7 55%, #9333ea 100%)',
-  WebkitBackgroundClip: 'text',
-  backgroundClip: 'text',
-  color: 'transparent',
-};
 
 const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -154,10 +145,11 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
             <span
               key={word}
               ref={(el) => { wordsRef.current[i] = el; }}
-              className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
-              style={{ ...GRADIENT_TEXT, fontFamily: DISPLAY_FONT, fontWeight: 600, letterSpacing: '-0.05em', opacity: 0 }}
+              className="disp absolute inset-0 flex items-center justify-center whitespace-nowrap"
+              style={{ opacity: 0 }}
             >
-              {word}
+              {/* Gradiente solo sulla parola (span inline), non sullo slot largo quanto lo schermo. */}
+              <span className="grad">{word}</span>
             </span>
           ))}
         </div>
@@ -166,8 +158,8 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
       {/* Contatore in basso a destra */}
       <span
         ref={counterRef}
-        className="absolute bottom-8 right-6 text-[#0a0a0a] tabular-nums leading-none"
-        style={{ fontFamily: DISPLAY_FONT, fontWeight: 600, letterSpacing: '-0.05em', fontSize: 'clamp(56px, 13vw, 132px)' }}
+        className="disp absolute bottom-8 right-6 tabular-nums leading-none"
+        style={{ fontSize: 'clamp(56px, 13vw, 132px)' }}
       >
         000
       </span>
@@ -206,8 +198,6 @@ const HomeV2: React.FC = () => {
   useEffect(() => {
     if (!loading) ScrollTrigger.refresh();
   }, [loading]);
-
-  useLightDocument();
 
   // Rete di sicurezza aggiuntiva: il layout può assestarsi anche dopo la fine
   // del preloader (font che finiscono di caricare e cambiano le altezze del
