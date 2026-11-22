@@ -1,4 +1,4 @@
-import { seoPages, siteUrl, resourcesPath, clusterHub, pageLastModified } from '../data/seoPages.ts';
+import { seoPages, siteUrl, resourcesPath, clusterHub, pageLastModified, asHeading, asSentence, getRelatedSeoPages, resourceArticleCopy, resourceGroups, resourceKicker, resourcePagesInOrder, resourcesIndexCopy } from '../data/seoPages.ts';
 import { caseStudies, caseStudiesIndexCopy, caseStudiesPath, CaseStudy, candianiFigures } from '../data/caseStudies.ts';
 import { aiAgentsFaqs, aiAgentsOffer, aiAgentsPackages, faqPageSchema, homeFaqs, homePriceRows, metaAdvertisingFaqs, priceRowText, sitesOffer, sitesWebAiFaqs, trackingFaqs, trackingOffer, trackingPackages, trackingSchemaFaqs } from '../data/servicePages.ts';
 import { CALCULATOR_EXAMPLE, CALCULATOR_LEAD, CALCULATOR_SOURCE, CALCULATOR_TITLE } from '../data/trackingCalculator.ts';
@@ -259,15 +259,13 @@ ${GTM_HEAD}
 </html>`;
 }
 
+// Mirror statico chiaro di components/SeoLandingPage.tsx (mockup Articolo.html):
+// stesse sezioni, stessi titoli (resourceArticleCopy) e stessi dati di SeoPage.
 function generateLandingPageHtml(page: typeof seoPages[0]): string {
   const pageUrl = `${siteUrl}${resourcesPath}/${page.slug}`;
   const hub = clusterHub[page.cluster];
-  // Mirror di components/SeoLandingPage.tsx: "Pagine correlate" preferisce lo
-  // stesso cluster tematico invece di pescare a caso tra le 10 pagine.
-  const otherPages = seoPages.filter((p) => p.slug !== page.slug);
-  const sameCluster = otherPages.filter((p) => p.cluster === page.cluster);
-  const otherCluster = otherPages.filter((p) => p.cluster !== page.cluster);
-  const relatedPages = [...sameCluster, ...otherCluster].slice(0, 3);
+  const relatedPages = getRelatedSeoPages(page);
+  const copy = resourceArticleCopy;
 
   const serviceSchema = {
     '@context': 'https://schema.org',
@@ -307,129 +305,42 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     ]
   };
 
-  const servicesHtml = page.services
-    .map((s) => `<div class="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5"><svg class="w-5 h-5 text-indigo-300 mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg><span class="text-gray-200">${escapeHtml(s)}</span></div>`)
-    .join('\n              ');
+  const profileHtml = [
+    [copy.audience, page.audience],
+    [copy.pain, page.pain],
+    [copy.proof, page.proof],
+  ].map(([title, text]) => `<article><h3>${escapeHtml(title)}</h3><p>${escapeHtml(asSentence(text))}</p></article>`).join('');
 
-  const dataPointsHtml = page.dataPoints
-    .map((point) => `<div class="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5"><svg class="w-5 h-5 text-cyan-300 mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg><span class="text-gray-200">${escapeHtml(point)}</span></div>`)
-    .join('\n              ');
+  const dataPointsHtml = page.dataPoints.length
+    ? `<section><h2>${escapeHtml(copy.dataPoints)}</h2><ul>${page.dataPoints.map((point) => `<li>${escapeHtml(asSentence(point))}</li>`).join('')}</ul></section>`
+    : '';
 
   const clustersHtml = page.clusters
-    .map((cluster) => `<section class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3 text-indigo-200">${escapeHtml(cluster.heading)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(cluster.content)}</p></section>`)
-    .join('\n            ');
+    .map((cluster) => `<article><h3>${escapeHtml(cluster.heading)}</h3><p>${escapeHtml(cluster.content)}</p></article>`)
+    .join('');
 
-  const comparisonTableHtml = page.comparisonTable ? `
-    <section class="mb-16">
-      <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(page.comparisonTable.title)}</h2>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="border-b border-white/20">
-              ${page.comparisonTable.headers.map((h) => `<th class="p-4 text-indigo-300 font-semibold">${escapeHtml(h)}</th>`).join('')}
-            </tr>
-          </thead>
-          <tbody>
-            ${page.comparisonTable.rows.map((row) => `<tr class="border-b border-white/10 hover:bg-white/[0.02]">${row.map((cell) => `<td class="p-4 text-gray-300">${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}
-          </tbody>
-        </table>
-      </div>
-    </section>
-  ` : '';
+  const comparisonHtml = page.comparisonTable
+    ? `<section><h2>${escapeHtml(asHeading(page.comparisonTable.title || copy.comparison))}</h2><div class="overflow-x-auto"><table><thead><tr>${page.comparisonTable.headers.map((h) => `<th scope="col">${escapeHtml(h)}</th>`).join('')}</tr></thead><tbody>${page.comparisonTable.rows.map((row) => `<tr>${row.map((cell, j) => (j === 0 ? `<th scope="row">${escapeHtml(cell)}</th>` : `<td>${escapeHtml(cell)}</td>`)).join('')}</tr>`).join('')}</tbody></table></div></section>`
+    : '';
 
-  const faqsHtml = page.faqs
-    .map((faq) => `<div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h3 class="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3">${escapeHtml(faq.question)}</h3><p class="text-gray-400 leading-relaxed">${escapeHtml(faq.answer)}</p></div>`)
-    .join('\n            ');
+  const servicesHtml = page.services.map((service) => `<li>${escapeHtml(service)}</li>`).join('');
+
+  const faqsHtml = page.faqs.map((faq) => `<h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p>`).join('');
 
   const relatedHtml = relatedPages
-    .map((p) => `<a href="${resourcesPath}/${p.slug}" class="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors">${escapeHtml(p.title)}</a>`)
-    .join('\n            ');
+    .map((p) => `<article><h3><a href="${resourcesPath}/${p.slug}">${escapeHtml(p.title)}</a></h3><p>${escapeHtml(p.description)}</p></article>`)
+    .join('');
 
-  const bodyContent = `
-    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-purple-900/10 rounded-full blur-[160px] pointer-events-none"></div>
-      <div class="max-w-5xl mx-auto relative z-10">
-        <nav aria-label="Breadcrumb" class="mb-10">
-          <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
-            <li>/</li>
-            <li><a href="${resourcesPath}" class="hover:text-indigo-300 transition-colors">Risorse</a></li>
-            <li>/</li>
-            <li class="text-gray-300">${escapeHtml(page.title)}</li>
-          </ol>
-        </nav>
-
-        <header class="mb-14">
-          <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">${escapeHtml(page.keyword)}</p>
-          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">${escapeHtml(page.title)}</h1>
-          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">${escapeHtml(page.description)}</p>
-        </header>
-
-        <section class="mb-16 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
-          <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Risposta diretta</h2>
-          <p class="text-lg md:text-xl text-gray-200 leading-relaxed">${escapeHtml(page.directAnswer)}</p>
-        </section>
-
-        <a href="${hub.path}" class="mb-16 flex items-center justify-between gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 transition-colors">
-          <span class="text-gray-200">Vuoi vedere prezzi e pacchetti? <strong class="text-white">${escapeHtml(hub.label)}</strong></span>
-          <svg class="h-5 w-5 flex-shrink-0 text-indigo-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-        </a>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-16">
-          <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Per chi</h2>
-            <p class="text-gray-400 leading-relaxed">${escapeHtml(page.audience)}.</p>
-          </section>
-          <section class="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Problema</h2>
-            <p class="text-gray-400 leading-relaxed">${escapeHtml(page.pain)}.</p>
-          </section>
-          <section class="rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-6">
-            <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3">Risultato</h2>
-            <p class="text-gray-300 leading-relaxed">${escapeHtml(page.proof)}.</p>
-          </section>
-        </div>
-
-        <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Dati e risultati</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            ${dataPointsHtml}
-          </div>
-        </section>
-
-        <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Argomenti correlati</h2>
-          <div class="space-y-6">
-            ${clustersHtml}
-          </div>
-        </section>
-
-        ${comparisonTableHtml}
-
-        <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-5">Come interveniamo</h2>
-          <p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">${escapeHtml(page.solution)}.</p>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            ${servicesHtml}
-          </div>
-        </section>
-
-        <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">FAQ</h2>
-          <div class="space-y-4">
-            ${faqsHtml}
-          </div>
-        </section>
-
-        <section>
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Pagine correlate</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            ${relatedHtml}
-          </div>
-        </section>
-      </div>
-    </article>
-  `;
+  const body = `<header><p class="eyebrow">${escapeHtml(resourceKicker(page))}</p><h1 class="hero-h1 font-bold">${escapeHtml(page.title)}</h1><p class="hero-subhead">${escapeHtml(page.description)}</p><a href="${hub.path}">${escapeHtml(copy.heroCta)}</a></header>
+  <section><h2>${escapeHtml(copy.directAnswer)}</h2><p>${escapeHtml(page.directAnswer)}</p></section>
+  <section><h2>${escapeHtml(copy.profile)}</h2>${profileHtml}</section>
+  ${dataPointsHtml}
+  <section><h2>${escapeHtml(copy.clusters)}</h2>${clustersHtml}</section>
+  ${comparisonHtml}
+  <section><h2>${escapeHtml(copy.services)}</h2><p>${escapeHtml(asSentence(page.solution))}</p><ol>${servicesHtml}</ol></section>
+  <section id="faq"><h2>${escapeHtml(copy.faq)}</h2>${faqsHtml}</section>
+  <section><h2>${escapeHtml(copy.related)}</h2>${relatedHtml}</section>
+  <section><h2>${escapeHtml(copy.close.title)}</h2><p>${escapeHtml(copy.close.lead)}</p><a href="#contatti">${escapeHtml(copy.close.cta)}</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`;
 
   return generateBaseHtml({
     title: page.metaTitle,
@@ -437,20 +348,23 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     canonical: pageUrl,
     type: 'article',
     schema: [serviceSchema, faqSchema, breadcrumbSchema],
-    bodyContent
+    bodyContent: staticPage(body, true)
   });
 }
 
+// Mirror statico chiaro di components/SeoDirectory.tsx (mockup Risorse.html):
+// stessi gruppi per pagina hub e stesso ordine (resourceGroups).
 function generateResourcesHtml(): string {
+  const pageUrl = `${siteUrl}${resourcesPath}`;
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Risorse Q4 Studio',
-    itemListElement: seoPages.map((page, index) => ({
+    itemListElement: resourcePagesInOrder.map((page, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       name: page.title,
-      url: `${siteUrl}${resourcesPath}/${page.slug}`
+      url: `${pageUrl}/${page.slug}`
     }))
   };
 
@@ -459,52 +373,27 @@ function generateResourcesHtml(): string {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Risorse', item: `${siteUrl}${resourcesPath}` }
+      { '@type': 'ListItem', position: 2, name: 'Risorse', item: pageUrl }
     ]
   };
 
-  const pagesHtml = seoPages
-    .map((page) => `
-      <a href="${resourcesPath}/${page.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] p-6 hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
-        <span class="text-[11px] uppercase tracking-[0.08em] text-indigo-300">${escapeHtml(page.keyword)}</span>
-        <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mt-4 mb-3 group-hover:text-indigo-200 transition-colors">${escapeHtml(page.title)}</h2>
-        <p class="text-gray-400 leading-relaxed mb-6">${escapeHtml(page.description)}</p>
-        <span class="inline-flex items-center gap-2 text-indigo-300 font-medium">Apri pagina <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
-      </a>
-    `)
-    .join('\n          ');
+  const groupsHtml = resourceGroups
+    .map((group) => `<section aria-labelledby="risorse-${group.id}"><h2 id="risorse-${group.id}">${escapeHtml(group.hub.label)}.</h2>${group.pages
+      .map((page) => `<article><h3><a href="${resourcesPath}/${page.slug}">${escapeHtml(page.title)}</a></h3><p>${escapeHtml(page.description)}</p></article>`)
+      .join('')}</section>`)
+    .join('\n  ');
 
-  const bodyContent = `
-    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
-      <div class="max-w-6xl mx-auto relative z-10">
-        <nav aria-label="Breadcrumb" class="mb-10">
-          <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
-            <li>/</li>
-            <li class="text-gray-300">Risorse</li>
-          </ol>
-        </nav>
-
-        <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">Risorse</p>
-        <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] max-w-4xl mb-6">Risorse su Agenti AI, Automazioni e Tecnologia per Aziende B2B</h1>
-        <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
-          Questa directory raccoglie le pagine verticali di Q4 Studio. Ogni pagina approfondisce un intento di ricerca specifico e collega servizi, problemi, soluzioni e FAQ.
-        </p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          ${pagesHtml}
-        </div>
-      </div>
-    </section>
-  `;
+  const { close } = resourcesIndexCopy;
+  const body = `<header><p class="eyebrow">${escapeHtml(resourcesIndexCopy.kicker)}</p><h1 class="hero-h1 font-bold">${escapeHtml(resourcesIndexCopy.title)}</h1><p class="hero-subhead">${escapeHtml(resourcesIndexCopy.lead)}</p></header>
+  ${groupsHtml}
+  <section><h2>${escapeHtml(close.title)}</h2><p>${escapeHtml(close.lead)}</p><a href="#contatti">${escapeHtml(close.cta)}</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`;
 
   return generateBaseHtml({
-    title: 'Risorse su AI, Automazioni e Tecnologia per PMI B2B | Q4 Studio',
-    description: 'Risorse Q4 Studio su agenti AI, automazioni WhatsApp e CRM, centralino e chatbot intelligenti per le aziende B2B.',
-    canonical: `${siteUrl}${resourcesPath}`,
+    title: resourcesIndexCopy.metaTitle,
+    description: resourcesIndexCopy.metaDescription,
+    canonical: pageUrl,
     schema: [itemListSchema, breadcrumbSchema],
-    bodyContent
+    bodyContent: staticPage(body, true)
   });
 }
 
@@ -1721,31 +1610,69 @@ function buildIndexAndBlogMds(blogPosts: any[]): void {
     ]);
   }
 
-  // Indice risorse + pagine verticali
-  const resourceLines = seoPages
-    .map((p) => `- ${p.title}: ${siteUrl}${resourcesPath}/${p.slug}`)
-    .join('\n');
-  registerMd(resourcesPath, 'Risorse Q4 Studio', 'Directory delle pagine verticali di Q4 Studio su agenti AI, automazioni WhatsApp e CRM e tecnologia per aziende B2B.', [
-    'Ogni pagina approfondisce un intento di ricerca specifico collegando servizi, problemi, soluzioni e FAQ.\n',
-    '## Elenco',
+  // Indice risorse + pagine verticali: stesse sezioni e titoli della UI
+  // chiara (resourcesIndexCopy / resourceArticleCopy), senza il punto finale.
+  const mdHeading = (text: string) => text.replace(/\.$/, '');
+  const mdCell = (text: string) => text.replace(/\|/g, '\\|');
+  registerMd(resourcesPath, 'Risorse Q4 Studio', resourcesIndexCopy.metaDescription, [
+    `${resourcesIndexCopy.title} ${resourcesIndexCopy.lead}`,
     '',
-    resourceLines,
+    ...resourceGroups.flatMap((group) => [
+      `## ${group.hub.label}`,
+      '',
+      ...group.pages.map((p) => `- [${p.title}](${siteUrl}${resourcesPath}/${p.slug}): ${p.description}`),
+      '',
+    ]),
+    `## ${mdHeading(resourcesIndexCopy.close.title)}`,
+    '',
+    `${resourcesIndexCopy.close.lead} Contatti: ${siteUrl}/contact`,
     '',
   ]);
   for (const page of seoPages) {
+    const copy = resourceArticleCopy;
+    const hub = clusterHub[page.cluster];
+    const table = page.comparisonTable;
     registerMd(`${resourcesPath}/${page.slug}`, page.title, page.description, [
-      `**Risposta diretta**: ${page.directAnswer}`,
+      `${resourceKicker(page)}. ${copy.heroCta}: ${siteUrl}${hub.path}`,
       '',
-      `**Per chi**: ${page.audience}.`,
+      `## ${mdHeading(copy.directAnswer)}`,
       '',
-      `**Problema**: ${page.pain}.`,
+      page.directAnswer,
       '',
-      `**Soluzione**: ${page.solution}.`,
+      `## ${mdHeading(copy.profile)}`,
       '',
-      '## Argomenti correlati',
+      `### ${copy.audience}`, '', asSentence(page.audience), '',
+      `### ${copy.pain}`, '', asSentence(page.pain), '',
+      `### ${copy.proof}`, '', asSentence(page.proof), '',
+      ...(page.dataPoints.length ? [`## ${mdHeading(copy.dataPoints)}`, '', ...page.dataPoints.map((point) => `- ${asSentence(point)}`), ''] : []),
+      `## ${mdHeading(copy.clusters)}`,
       '',
       ...page.clusters.flatMap((c) => [`### ${c.heading}`, '', c.content, '']),
+      ...(table
+        ? [
+            `## ${mdHeading(asHeading(table.title || copy.comparison))}`,
+            '',
+            `| ${table.headers.map(mdCell).join(' | ')} |`,
+            `| ${table.headers.map(() => '---').join(' | ')} |`,
+            ...table.rows.map((row) => `| ${row.map(mdCell).join(' | ')} |`),
+            '',
+          ]
+        : []),
+      `## ${mdHeading(copy.services)}`,
+      '',
+      asSentence(page.solution),
+      '',
+      ...page.services.map((service, i) => `${i + 1}. ${service}`),
+      '',
       faqSection(page.faqs.map((f) => ({ question: f.question, answer: f.answer }))),
+      `## ${mdHeading(copy.related)}`,
+      '',
+      ...getRelatedSeoPages(page).map((p) => `- [${p.title}](${siteUrl}${resourcesPath}/${p.slug}): ${p.description}`),
+      '',
+      `## ${mdHeading(copy.close.title)}`,
+      '',
+      `${copy.close.lead} Contatti: ${siteUrl}/contact`,
+      '',
     ]);
   }
 

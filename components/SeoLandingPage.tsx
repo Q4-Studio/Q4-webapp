@@ -1,23 +1,44 @@
 import React from 'react';
-import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { clusterHub, resourcesPath, SeoPage, seoPages, siteUrl } from '../data/seoPages';
+import { ArrowUpRight, Bot, Clock, Plus, Target, Users } from 'lucide-react';
+import {
+  asHeading,
+  asSentence,
+  clusterHub,
+  getRelatedSeoPages,
+  resourceArticleCopy as copy,
+  resourceKicker,
+  resourcesPath,
+  SeoPage,
+  siteUrl
+} from '../data/seoPages';
 import SEOHead from './SEOHead';
+import Reveal from './home2/Reveal';
+import CloseCta from './home2/CloseCta';
+import { OkIcon, PaperBlock } from './home2/primitives';
+import ResourceCard, { IconBox } from './ResourceCard';
+import { trackCtaClick } from '../utils/dataLayer';
+import { onInternalLink, scrollToId } from '../utils/navigate';
+
+/* ------------------------------------------------------------------ */
+/* Articolo risorsa sul sistema chiaro (mockup Articolo.html): hero     */
+/* scuro corto, risposta diretta, per chi/problema/risultato, dati,     */
+/* approfondimenti, confronto, come interveniamo, FAQ, argomenti        */
+/* correlati e chiusura. Form contatti e footer chiari in App.tsx.      */
+/* ------------------------------------------------------------------ */
 
 interface SeoLandingPageProps {
   page: SeoPage;
 }
 
+const CARD_TITLE_STYLE: React.CSSProperties = { fontSize: 'clamp(1.6rem, 2.3vw, 2.4rem)', letterSpacing: '-0.04em', lineHeight: 1.05 };
+
 const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
   const pageUrl = `${siteUrl}${resourcesPath}/${page.slug}`;
   const hub = clusterHub[page.cluster];
-  // "Pagine correlate" preferisce lo stesso cluster tematico (stesso hub di
-  // riferimento) invece di pescare a caso tra le 10 pagine: prima le altre
-  // pagine dello stesso cluster, poi riempie con le rimanenti solo se non
-  // bastano a fare 3.
-  const otherPages = seoPages.filter((relatedPage) => relatedPage.slug !== page.slug);
-  const sameCluster = otherPages.filter((relatedPage) => relatedPage.cluster === page.cluster);
-  const otherCluster = otherPages.filter((relatedPage) => relatedPage.cluster !== page.cluster);
-  const relatedPages = [...sameCluster, ...otherCluster].slice(0, 3);
+  const relatedPages = getRelatedSeoPages(page);
+  const titleWords = page.title.split(' ');
+  const leadDelay = 0.15 + titleWords.length * 0.07 + 0.2;
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -54,149 +75,216 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
     ]
   };
 
+  const profile = [
+    { icon: Users, title: copy.audience, text: page.audience },
+    { icon: Clock, title: copy.pain, text: page.pain },
+    { icon: Target, title: copy.proof, text: page.proof },
+  ];
+
   return (
-    <article className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
-      <SEOHead title={page.metaTitle} description={page.description} url={pageUrl} />
+    <article className="relative">
+      <SEOHead title={page.metaTitle} description={page.description} url={pageUrl} type="article" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[min(900px,180vw)] h-[min(900px,180vw)] bg-purple-900/10 rounded-full blur-[160px] pointer-events-none" />
-
-      <div className="max-w-5xl mx-auto relative z-10">
-        <nav aria-label="Breadcrumb" className="mb-10">
-          <ol className="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" className="hover:text-indigo-300 transition-colors">Home</a></li>
-            <li>/</li>
-            <li><a href={resourcesPath} className="hover:text-indigo-300 transition-colors">Risorse</a></li>
-            <li>/</li>
-            <li className="text-gray-300">{page.title}</li>
-          </ol>
-        </nav>
-
-        <header className="mb-14">
-          <p className="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">{page.keyword}</p>
-          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">{page.title}</h1>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">{page.description}</p>
-        </header>
-
-        {/* Direct Answer for GEO */}
-        <section className="mb-16 rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-8">
-          <h2 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Risposta diretta</h2>
-          <p className="text-lg md:text-xl text-gray-200 leading-relaxed">{page.directAnswer}</p>
-        </section>
-
-        {/* Link mandatorio spoke→hub: questa pagina informativa collega
-            sempre alla pagina di offerta bespoke del suo cluster. */}
-        <a href={hub.path} className="mb-16 flex items-center justify-between gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-indigo-400/50">
-          <span className="text-gray-200">Vuoi vedere prezzi e pacchetti? <strong className="text-white">{hub.label}</strong></span>
-          <ArrowRight className="h-5 w-5 flex-shrink-0 text-indigo-300" />
-        </a>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-16">
-          <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Per chi</h2>
-            <p className="text-gray-400 leading-relaxed">{page.audience}.</p>
-          </section>
-          <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Problema</h2>
-            <p className="text-gray-400 leading-relaxed">{page.pain}.</p>
-          </section>
-          <section className="rounded-3xl border border-indigo-400/30 bg-indigo-500/[0.06] p-6">
-            <h2 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-4">Risultato</h2>
-            <p className="text-gray-300 leading-relaxed">{page.proof}.</p>
-          </section>
+      {/* Hero scuro corto: id="hero" tiene bianchi logo e hamburger della nav. */}
+      <header id="hero" className="dark-block relative flex min-h-[560px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[680px] md:rounded-b-[56px]">
+        <div className="aur aur-1" aria-hidden="true" />
+        <div className="aur aur-2" aria-hidden="true" />
+        <div className="aur aur-3" aria-hidden="true" />
+        <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.15) 50%, rgba(5,5,5,.75) 100%)' }} />
+        <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-20 pt-36 md:px-12 md:pb-24 md:pt-40">
+          <p className="w-block text-[17px] font-medium text-purple-300" style={{ animationDelay: '0.05s' }}>{resourceKicker(page)}</p>
+          <h1 className="h-sub mt-8 max-w-[1250px]">
+            {titleWords.map((word, i) => (
+              <React.Fragment key={`${word}-${i}`}>
+                <span className="w" style={{ animationDelay: `${(0.15 + i * 0.07).toFixed(2)}s` }}>{word}</span>{' '}
+              </React.Fragment>
+            ))}
+          </h1>
+          <p className="w-block lead mt-12 max-w-[640px] text-gray-300" style={{ animationDelay: `${leadDelay.toFixed(2)}s` }}>
+            {page.description}
+          </p>
+          {/* Link spoke→hub: ogni risorsa porta alla pagina di offerta del suo cluster. */}
+          <div className="w-block mt-12" style={{ animationDelay: `${(leadDelay + 0.15).toFixed(2)}s` }}>
+            <a
+              href={hub.path}
+              onClick={(event) => {
+                trackCtaClick({ cta_location: 'resource_page_hero', cta_label: copy.heroCta, cta_destination: hub.path });
+                onInternalLink(hub.path)(event);
+              }}
+              className="btn btn-white"
+            >
+              {copy.heroCta}
+              <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+            </a>
+          </div>
         </div>
+      </header>
 
-        {/* Data Points */}
-        <section className="mb-16">
-          <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Dati e risultati</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {page.dataPoints.map((point, i) => (
-              <div key={i} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                <CheckCircle2 className="w-5 h-5 text-cyan-300 mt-1 flex-shrink-0" />
-                <span className="text-gray-200">{point}</span>
-              </div>
+      {/* Risposta diretta: blocco carta con la risposta in una card bianca. */}
+      <section className="px-6 pb-24 pt-24 md:pb-[160px] md:pt-[160px]">
+        <PaperBlock className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-24">
+          <div>
+            <Reveal as="h2" className="h-l" style={{ fontSize: 'clamp(2.5rem, 5vw, 5rem)' }}>{copy.directAnswer}</Reveal>
+          </div>
+          <Reveal delay={0.12}>
+            <div className="mock p-7 md:p-11">
+              <div className="mb-6"><IconBox icon={Bot} /></div>
+              <p className="m-0 text-[20px] font-medium leading-[1.55] text-[#0a0a0a]">{page.directAnswer}</p>
+            </div>
+          </Reveal>
+        </PaperBlock>
+      </section>
+
+      {/* Per chi, problema, risultato */}
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l max-w-[1100px]">{copy.profile}</Reveal>
+          <div className="mt-16 grid grid-cols-1 gap-6 md:mt-[120px] lg:grid-cols-3">
+            {profile.map((item, i) => (
+              <Reveal key={item.title} delay={i * 0.1} className="flex min-h-[360px] flex-col gap-7 rounded-[32px] bg-[#f7f5fb] px-7 py-8 md:p-11">
+                <IconBox icon={item.icon} />
+                <div className="mt-auto">
+                  <h3 style={CARD_TITLE_STYLE}>{item.title}</h3>
+                  <p className="mt-3.5 text-base leading-[1.6]">{asSentence(item.text)}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Keyword Clusters */}
-        <section className="mb-16">
-          <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Argomenti correlati</h2>
-          <div className="space-y-6">
+      {/* Dati e risultati: non previsti dal mockup, nello stile della fila
+          di cifre (colonne con filo a sinistra) che occupa questo punto. */}
+      {page.dataPoints.length > 0 && (
+        <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
+          <div className="mx-auto max-w-[1440px]">
+            <Reveal as="h2" className="h-l max-w-[1100px]" style={{ fontSize: 'clamp(2.5rem, 5vw, 5rem)' }}>{copy.dataPoints}</Reveal>
+            <ul className="mt-16 grid list-none grid-cols-1 gap-10 p-0 md:mt-20 md:grid-cols-2 md:gap-6 xl:grid-cols-4">
+              {page.dataPoints.map((point, i) => (
+                <li key={point} className="m-0">
+                  <Reveal delay={(i % 4) * 0.1} className="h-full py-2 pl-8" style={{ borderLeft: '1px solid rgba(10,10,10,.12)' }}>
+                    <p className="m-0 text-[19px] font-medium leading-[1.55] text-[#0a0a0a]">{asSentence(point)}</p>
+                  </Reveal>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {/* Approfondimenti: righe titolo | testo */}
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l mb-16 max-w-[1100px] md:mb-24">{copy.clusters}</Reveal>
+          <div style={{ borderBottom: '1px solid rgba(10,10,10,.09)' }}>
             {page.clusters.map((cluster) => (
-              <section key={cluster.keyword} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-4 text-indigo-200">{cluster.heading}</h3>
-                <p className="text-gray-400 leading-relaxed">{cluster.content}</p>
-              </section>
+              <Reveal key={cluster.keyword} className="grid grid-cols-1 gap-5 py-10 md:py-14 lg:grid-cols-[420px_1fr] lg:gap-[72px]" style={{ borderTop: '1px solid rgba(10,10,10,.09)' }}>
+                <h3 style={{ fontSize: 'clamp(1.6rem, 2.4vw, 2.4rem)', letterSpacing: '-0.04em', lineHeight: 1.08 }}>{cluster.heading}</h3>
+                <p className="m-0 max-w-[760px] text-[19px] leading-[1.7]">{cluster.content}</p>
+              </Reveal>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Comparison Table */}
-        {page.comparisonTable && (
-          <section className="mb-16">
-            <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">{page.comparisonTable.title}</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+      {/* Confronto: tabella in una card bianca, scorrevole in orizzontale su mobile */}
+      {page.comparisonTable && (
+        <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
+          <div className="mx-auto max-w-[1440px]">
+            <Reveal as="h2" className="h-l mb-16 max-w-[1100px] md:mb-24">{asHeading(page.comparisonTable.title || copy.comparison)}</Reveal>
+            <Reveal className="mock overflow-x-auto p-2">
+              <table className="w-full border-collapse text-left">
                 <thead>
-                  <tr className="border-b border-white/20">
+                  <tr>
                     {page.comparisonTable.headers.map((header) => (
-                      <th key={header} className="p-4 text-indigo-300 font-semibold">{header}</th>
+                      <th key={header} scope="col" className="whitespace-nowrap px-6 py-[22px] text-[16px] font-medium text-[#6b7280]">{header}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {page.comparisonTable.rows.map((row, i) => (
-                    <tr key={i} className="border-b border-white/10 hover:bg-white/[0.02]">
+                    <tr key={i} style={{ borderTop: '1px solid rgba(10,10,10,.08)' }}>
                       {row.map((cell, j) => (
-                        <td key={j} className="p-4 text-gray-300">{cell}</td>
+                        j === 0
+                          ? <th key={j} scope="row" className="min-w-[180px] p-6 text-[19px] font-semibold leading-[1.45] text-[#0a0a0a]">{cell}</th>
+                          : <td key={j} className="min-w-[180px] p-6 text-[19px] leading-[1.45] text-[#0a0a0a]">{cell}</td>
                       ))}
                     </tr>
                   ))}
                 </tbody>
               </table>
+            </Reveal>
+          </div>
+        </section>
+      )}
+
+      {/* Come interveniamo: blocco carta con soluzione e passaggi */}
+      <section className="px-6 pb-24 md:pb-[160px]">
+        <PaperBlock className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-24">
+          <div>
+            <Reveal as="h2" className="h-l" style={{ fontSize: 'clamp(2.75rem, 5.6vw, 5.5rem)' }}>{copy.services}</Reveal>
+            <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">{asSentence(page.solution)}</Reveal>
+          </div>
+          <Reveal delay={0.12}>
+            <div className="mock">
+              {page.services.map((service, i) => (
+                <div key={service} className="ev">
+                  <OkIcon />
+                  {service}
+                  <em>{i + 1}</em>
+                </div>
+              ))}
             </div>
-          </section>
-        )}
+          </Reveal>
+        </PaperBlock>
+      </section>
 
-        <section className="mb-16">
-          <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Come interveniamo</h2>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">{page.solution}.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {page.services.map((service) => (
-              <div key={service} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                <CheckCircle2 className="w-5 h-5 text-indigo-300 mt-1 flex-shrink-0" />
-                <span className="text-gray-200">{service}</span>
-              </div>
+      {/* FAQ */}
+      <section id="faq" className="px-6 pb-24 md:px-12 md:pb-[160px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l">{copy.faq}</Reveal>
+          <Reveal delay={0.12} className="mt-16 md:mt-[120px]">
+            {page.faqs.map((faq, i) => (
+              <details key={faq.question} className="f" open={i === 0}>
+                <summary>
+                  <h3>{faq.question}</h3>
+                  <span className="pl" aria-hidden="true"><Plus className="h-[18px] w-[18px]" /></span>
+                </summary>
+                <p>{faq.answer}</p>
+              </details>
+            ))}
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Argomenti correlati */}
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l mb-16 max-w-[1100px] md:mb-[120px]">{copy.related}</Reveal>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {relatedPages.map((related, i) => (
+              <ResourceCard key={related.slug} page={related} delay={i * 0.1} minHeight={240} />
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="mb-16">
-          <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">FAQ</h2>
-          <div className="space-y-4">
-            {page.faqs.map((faq) => (
-              <div key={faq.question} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                <h3 className="text-2xl font-semibold leading-[1.25] tracking-[-0.01em] mb-3">{faq.question}</h3>
-                <p className="text-gray-400 leading-relaxed">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Pagine correlate</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {relatedPages.map((relatedPage) => (
-              <a key={relatedPage.slug} href={`${resourcesPath}/${relatedPage.slug}`} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-gray-300 hover:text-white hover:border-indigo-400/50 transition-colors">
-                {relatedPage.title}
-              </a>
-            ))}
-          </div>
-        </section>
-      </div>
+      <CloseCta
+        size="l"
+        title={copy.close.title}
+        lead={copy.close.lead}
+        cta={{
+          label: copy.close.cta,
+          href: '#contatti',
+          onClick: (event) => {
+            trackCtaClick({ cta_location: 'resource_page', cta_label: copy.close.cta, cta_destination: '#contatti' });
+            if (scrollToId('contatti', 'center')) event.preventDefault();
+          },
+        }}
+      />
     </article>
   );
 };
