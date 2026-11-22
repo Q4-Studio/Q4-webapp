@@ -1,13 +1,21 @@
-import React, { useEffect, useRef } from 'react';
-import { ArrowRight, Camera, Film, Layers3, Sparkles } from 'lucide-react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React from 'react';
+import { ArrowUpRight, Check, Compass, Flag, Layers, LayoutGrid, Plus, Sparkles } from 'lucide-react';
 import SEOHead from './SEOHead';
+import Reveal from './home2/Reveal';
+import CloseCta from './home2/CloseCta';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
+import { useLightDocument } from '../hooks/useLightDocument';
 
-gsap.registerPlugin(ScrollTrigger);
+/* ------------------------------------------------------------------ */
+/* Pagina "Siti web con AI" sul sistema chiaro (mockup "Siti web con   */
+/* AI"): hero scuro con aurora, manifesto, quattro cifre, bento dei    */
+/* linguaggi, blocco carta landing page, caso GP Meccatronica, tre     */
+/* fasi, cosa serve, FAQ e chiusura. Classi .home-light in index.css;  */
+/* reveal allo scroll via <Reveal>.                                    */
+/* ------------------------------------------------------------------ */
 
+/** FAQ del mockup: stessi testi del contenuto statico in scripts/prerender.ts. */
 const faqs = [
   {
     question: 'Il sito viene generato automaticamente dall’AI?',
@@ -15,7 +23,7 @@ const faqs = [
   },
   {
     question: 'Quanto costa un sito web con Q4 Studio?',
-    answer: 'I progetti partono da 2.999 €. Il preventivo dipende dal tipo di sito, dai contenuti e dalla produzione necessaria: definiamo il progetto prima di iniziare, senza trasformarlo in un elenco rigido di moduli.',
+    answer: 'I progetti partono da 2.999 €. Il preventivo dipende dal tipo di sito, dai contenuti e dalla produzione necessaria: definiamo il progetto prima di iniziare.',
   },
   {
     question: 'Quanto tempo serve per una landing page?',
@@ -23,184 +31,341 @@ const faqs = [
   },
   {
     question: 'Potete occuparvi anche di foto e video reali?',
-    answer: 'Sì. Quando il progetto lo richiede, la produzione di foto e video reali può rientrare nella realizzazione del sito, insieme ad asset creati con l’AI, video animati e sezioni con animazioni allo scroll.',
+    answer: 'Sì. Quando il progetto lo richiede, la produzione di foto e video reali può rientrare nella realizzazione, insieme ad asset creati con l’AI, video animati e sezioni con animazioni allo scroll.',
   },
 ];
 
-const capabilities = [
-  {
-    icon: Sparkles,
-    index: '01',
-    title: 'Asset che non arrivano da una banca immagini',
-    copy: 'Creiamo visual, texture e composizioni su misura con strumenti AI, poi li dirigiamo e rifiniamo dentro un’identità coerente.',
-  },
-  {
-    icon: Film,
-    index: '02',
-    title: 'Il movimento fa parte del racconto',
-    copy: 'Video animati e sezioni che reagiscono allo scroll possono guidare la lettura, spiegare un servizio e rendere il sito riconoscibile.',
-  },
-  {
-    icon: Camera,
-    index: '03',
-    title: 'Quando serve, la produzione è reale',
-    copy: 'Foto e video originali possono entrare nello stesso progetto. AI e produzione sul campo non sono alternative: sono strumenti diversi della stessa direzione.',
-  },
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Siti web con AI per aziende B2B',
+  description: 'Progettazione e sviluppo di siti e landing page B2B con direzione umana e strumenti AI.',
+  provider: { '@type': 'Organization', name: 'Q4 Studio', url: siteUrl },
+  areaServed: 'IT',
+  url: `${siteUrl}/siti-web-ai`,
+  offers: { '@type': 'Offer', priceCurrency: 'EUR', price: '2999', description: 'Prezzo di partenza' },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })),
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Siti Web AI', item: `${siteUrl}/siti-web-ai` },
+  ],
+};
+
+const HERO_WORDS = ['Fatto', 'con', 'l’AI,', 'non', 'dall’AI.'];
+
+const figures = [
+  { value: '2.999 €', desc: 'Prezzo di partenza dei progetti. Il preventivo si definisce sul progetto.', delay: 0 },
+  { value: '7 giorni', desc: 'Per una landing page, quando serve portare online un’offerta.', delay: 0.12 },
+  { value: '3 fasi', desc: 'Direzione, produzione, consegna. Non un modulo da compilare.', delay: 0.2 },
+  { value: '1 referente', desc: 'Una persona sola che valida le scelte, senza rincorrere pareri.', delay: 0 },
 ];
 
-const BrowserStudy: React.FC = () => (
-  <div className="sites-browser relative mx-auto w-full max-w-[660px] overflow-hidden rounded-[1.75rem] border border-white/15 bg-[#090b0f] shadow-[0_45px_140px_-45px_rgba(34,211,238,0.28)]">
-    <div className="flex h-12 items-center gap-2 border-b border-white/10 px-5" aria-hidden="true">
-      <span className="h-2.5 w-2.5 rounded-full bg-cyan-300/80" />
-      <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-      <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-      <span className="ml-4 h-5 flex-1 rounded-full border border-white/10 bg-white/[0.03]" />
+const phases = [
+  { icon: Compass, title: '01 · Direzione', desc: 'Una call per capire cosa deve fare il sito, per chi e cosa deve far ricordare. Da qui esce una struttura, non un elenco di pagine.', delay: 0 },
+  { icon: Layers, title: '02 · Produzione', desc: 'Testo, asset visivi, motion e sviluppo. L’AI accelera le parti dove ha senso; direzione e gusto restano nostri.', delay: 0.12 },
+  { icon: Flag, title: '03 · Consegna', desc: 'Sito pubblicato, ottimizzato e documentato: sai cosa c’è dentro e chi lo aggiorna dopo.', delay: 0.2 },
+];
+
+const caseChips = ['Rebranding', 'Web design', 'Sviluppo sito', 'Art direction', 'Motion design', 'Asset AI', 'SEO'];
+
+const caseSteps = ['Infrastruttura del sito', 'Creazione degli asset', 'Creazione dei copy', 'Ottimizzazione SEO', 'Redirect dal vecchio sito al nuovo'];
+
+const PAPER_BG = 'linear-gradient(160deg, #f7f5fb 0%, #ecdffb 100%)';
+const CARD_TITLE: React.CSSProperties = { fontSize: 'clamp(2.75rem, 5.6vw, 5.5rem)' };
+
+const OkIcon: React.FC = () => (
+  <span className="ok" aria-hidden="true">
+    <Check className="h-3 w-3" strokeWidth={3} />
+  </span>
+);
+
+const IconBox: React.FC<{ icon: React.ComponentType<{ className?: string; strokeWidth?: number }> }> = ({ icon: Icon }) => (
+  <span className="ico" aria-hidden="true">
+    <Icon className="h-7 w-7" strokeWidth={1.7} />
+  </span>
+);
+
+const Bullets: React.FC<{ items: string[] }> = ({ items }) => (
+  <ul className="bul">
+    {items.map((item) => <li key={item}>{item}</li>)}
+  </ul>
+);
+
+const LanguageCard: React.FC<{ icon: React.ComponentType<{ className?: string; strokeWidth?: number }>; title: string; desc: string; items: string[]; background: string; delay?: number }> = ({ icon, title, desc, items, background, delay }) => (
+  <Reveal as="article" delay={delay} className="bc" style={{ minHeight: 640, paddingBottom: 110, background }}>
+    <div style={{ marginBottom: 28 }}><IconBox icon={icon} /></div>
+    <h3>{title}</h3>
+    <p className="d">{desc}</p>
+    <Bullets items={items} />
+  </Reveal>
+);
+
+const NoteCard: React.FC<{ text: string; delay?: number }> = ({ text, delay }) => (
+  <Reveal as="article" delay={delay} className="bc ov justify-center" style={{ minHeight: 220, background: '#f7f5fb' }}>
+    <p className="d m-0 font-medium" style={{ color: '#0a0a0a', marginTop: 0 }}>{text}</p>
+  </Reveal>
+);
+
+const BrowserMock: React.FC = () => (
+  <div className="mock overflow-hidden" aria-hidden="true">
+    <div className="flex items-center gap-2 px-[18px] py-3.5" style={{ borderBottom: '1px solid rgba(10,10,10,.08)' }}>
+      <i className="h-2.5 w-2.5 rounded-full bg-[#e5e7eb]" />
+      <i className="h-2.5 w-2.5 rounded-full bg-[#e5e7eb]" />
+      <i className="h-2.5 w-2.5 rounded-full bg-[#e5e7eb]" />
+      <span className="ml-3.5 flex h-[26px] flex-1 items-center rounded-full bg-[#f3f4f6] px-3.5 text-xs text-gray-500">tuosito.it</span>
     </div>
-    <div className="relative aspect-[4/3] overflow-hidden p-6 sm:p-9">
-      <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px)', backgroundSize: '38px 38px' }} />
-      <div className="sites-scan absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300 to-transparent shadow-[0_0_18px_rgba(103,232,249,0.75)]" aria-hidden="true" />
-      <div className="relative flex h-full flex-col justify-between">
-        <div className="flex items-start justify-between gap-4">
-          <div className="h-2 w-20 rounded-full bg-white/80" />
-          <div className="flex gap-4 text-[9px] uppercase tracking-[0.16em] text-white/40"><span>Idea</span><span>Direzione</span><span>Codice</span></div>
-        </div>
-        <div className="max-w-md">
-          <p className="mb-3 text-[10px] uppercase tracking-[0.22em] text-cyan-300">Human directed / AI accelerated</p>
-          <p className="text-[clamp(30px,6vw,62px)] font-bold leading-[0.9] tracking-[-0.055em]">Non un template.<br /><span className="text-white/35">Un punto di vista.</span></p>
-        </div>
-        <div className="grid grid-cols-[1fr_auto] items-end gap-5">
-          <div className="space-y-2"><div className="h-1.5 w-full rounded-full bg-white/10" /><div className="h-1.5 w-3/5 rounded-full bg-white/10" /></div>
-          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-cyan-300/50 text-xs text-cyan-200">Q4</div>
-        </div>
+    <div className="relative h-[340px] overflow-hidden bg-[#050505]">
+      <div className="aur" style={{ width: 300, height: 300, background: 'rgba(99,102,241,.6)', left: -60, top: -90, filter: 'blur(70px)' }} />
+      <div className="aur" style={{ width: 320, height: 320, background: 'rgba(147,51,234,.6)', right: -80, bottom: -110, filter: 'blur(70px)' }} />
+      <div className="absolute left-9 right-9 top-11">
+        <div className="h-3 w-[110px] rounded-md" style={{ background: 'rgba(255,255,255,.35)' }} />
+        <div className="mt-[26px] h-[34px] w-[78%] rounded-[10px] bg-white" />
+        <div className="mt-3 h-[34px] w-[56%] rounded-[10px] bg-white" />
+        <div className="mt-7 h-3 w-[64%] rounded-md" style={{ background: 'rgba(255,255,255,.3)' }} />
+        <div className="mt-[30px] h-[46px] w-[150px] rounded-full" style={{ background: 'linear-gradient(120deg, #818cf8, #a855f7 55%, #9333ea)' }} />
       </div>
     </div>
   </div>
 );
 
-const process = [
-  { n: '01', title: 'Direzione', copy: 'Una call per capire cosa deve fare il sito, per chi, e cosa deve far ricordare a chi lo visita. Da qui esce una struttura, non un elenco di pagine.' },
-  { n: '02', title: 'Produzione', copy: 'Testo, asset visivi, motion e sviluppo. L’AI accelera le parti dove ha senso; la direzione, il gusto e le scelte di fondo restano nostre, non della macchina.' },
-  { n: '03', title: 'Consegna', copy: 'Sito pubblicato, ottimizzato e documentato: sai cosa c’è dentro e chi lo aggiorna dopo, senza dipendere da noi per ogni piccola modifica.' },
-];
-
-const requirements = [
-  'Un obiettivo chiaro: cosa deve far fare il sito a chi lo visita, non solo "un sito nuovo"',
-  'Materiale esistente se c’è (logo, foto, testi, brand guideline) — altrimenti lo produciamo insieme',
-  'Un referente unico che validi le scelte di direzione, per non rincorrere pareri diversi durante il progetto',
-];
-
 const SitesWebAI: React.FC = () => {
-  const pageRef = useRef<HTMLElement>(null);
-  const scrollToContact = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  useLightDocument();
+
+  const scrollToContact = (label: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    trackCtaClick({ cta_location: 'sites_web_ai_page', cta_label: event.currentTarget.textContent?.trim() || 'CTA', cta_destination: '#contatti' });
+    trackCtaClick({ cta_location: 'sites_web_ai_page', cta_label: label, cta_destination: '#contatti' });
     document.getElementById('contatti')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
-  useEffect(() => {
-    if (!pageRef.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.sites-hero-reveal', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, stagger: 0.1, ease: 'power3.out' });
-      gsap.utils.toArray<HTMLElement>('.sites-reveal').forEach((element) => {
-        gsap.fromTo(element, { y: 48, opacity: 0 }, { y: 0, opacity: 1, duration: 0.85, ease: 'power3.out', immediateRender: false, scrollTrigger: { trigger: element, start: 'top 82%', once: true } });
-      });
-      gsap.to('.sites-browser', { yPercent: -7, ease: 'none', scrollTrigger: { trigger: '.sites-browser-wrap', start: 'top bottom', end: 'bottom top', scrub: true } });
-    }, pageRef);
-    return () => ctx.revert();
-  }, []);
-
-  const serviceSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: 'Siti web con AI per aziende B2B',
-    description: 'Progettazione e sviluppo di siti e landing page B2B con direzione umana e strumenti AI.',
-    provider: { '@type': 'Organization', name: 'Q4 Studio', url: siteUrl },
-    areaServed: 'IT',
-    url: `${siteUrl}/siti-web-ai`,
-    offers: { '@type': 'Offer', priceCurrency: 'EUR', price: '2999', description: 'Prezzo di partenza' },
-  };
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((faq) => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })),
-  };
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Siti Web AI', item: `${siteUrl}/siti-web-ai` },
-    ],
-  };
-
   return (
-    <article ref={pageRef} className="relative overflow-hidden bg-[#050505] px-6 pb-24 pt-36 text-white md:pt-44">
+    <article className="relative">
       <SEOHead title="Siti web con AI per aziende B2B | Q4 Studio" description="Siti e landing page B2B fatti con l’AI, non dall’AI: asset su misura, motion e produzione foto-video. Progetti da 2.999 €." url={`${siteUrl}/siti-web-ai`} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[760px] w-[min(1100px,150vw)] -translate-x-1/2 rounded-full bg-cyan-900/10 blur-[170px]" />
-      <div className="relative z-10 mx-auto max-w-7xl">
-        <header className="grid min-h-[72vh] items-center gap-14 pb-28 lg:grid-cols-[1.08fr_0.92fr] lg:gap-16">
-          <div className="max-w-4xl">
-            <p className="sites-hero-reveal mb-6 text-xs uppercase tracking-[0.16em] text-cyan-300">Siti web · direzione umana · strumenti AI</p>
-            <h1 className="sites-hero-reveal mb-8 text-[clamp(48px,7.2vw,104px)] font-bold leading-[0.9] tracking-[-0.055em]">Fatto con l’AI,<br /><span className="font-normal italic text-white/35" style={{ fontFamily: "'Times New Roman', Georgia, serif" }}>non dall’AI.</span></h1>
-            <p className="sites-hero-reveal max-w-2xl text-xl leading-relaxed text-gray-300 md:text-2xl">Progettiamo siti e landing page con una direzione precisa. L’AI ci permette di produrre immagini, movimento e varianti più velocemente; non decide cosa dire, cosa mostrare o perché.</p>
-            <div className="sites-hero-reveal mt-10 flex flex-wrap items-center gap-5">
-              <a href="#contatti" onClick={scrollToContact} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-[#050505] transition-colors hover:bg-cyan-100">Parlaci del tuo sito <ArrowRight className="h-4 w-4" /></a>
-              <span className="text-sm text-gray-400">Progetti da <strong className="text-white">2.999 €</strong></span>
+      {/* Hero scuro: id="hero" fa restare bianchi logo e hamburger della nav
+          finché non si scorre oltre (vedi App.tsx). */}
+      <header id="hero" className="relative flex min-h-[640px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[780px] md:rounded-b-[56px]">
+        <div className="aur aur-1" aria-hidden="true" />
+        <div className="aur aur-2" aria-hidden="true" />
+        <div className="aur aur-3" aria-hidden="true" />
+        <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.15) 50%, rgba(5,5,5,.75) 100%)' }} />
+        <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-24 pt-36 md:px-12 md:pt-40">
+          <h1 className="h-sub max-w-[1250px] text-white" style={{ color: '#fff' }}>
+            {HERO_WORDS.map((word, i) => (
+              <React.Fragment key={word}>
+                <span className="w" style={{ animationDelay: `${(0.15 + i * 0.07).toFixed(2)}s` }}>{word}</span>{' '}
+              </React.Fragment>
+            ))}
+          </h1>
+          <p className="w lead mt-12 max-w-[640px] text-gray-300" style={{ animationDelay: '0.7s' }}>
+            Progettiamo siti e landing page con una direzione precisa. L’AI ci permette di produrre immagini, movimento e varianti più velocemente; non decide cosa dire, cosa mostrare o perché.
+          </p>
+          <div className="w mt-12" style={{ animationDelay: '0.85s' }}>
+            <a href="#contatti" onClick={scrollToContact('Progetti da 2.999 €')} className="btn btn-white">
+              Progetti da 2.999 €
+              <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+      </header>
+
+      {/* Manifesto */}
+      <section className="px-6 pb-32 pt-32 md:px-12 md:pb-[200px] md:pt-[240px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l max-w-[1200px]">L’AI abbassa il costo della produzione. Non il livello delle scelte.</Reveal>
+          <div className="ml-auto mt-20 max-w-[640px] md:mt-[120px]">
+            <Reveal as="p" className="lead max-w-[560px]">Un sito non diventa efficace perché una macchina ha generato una pagina. Serve capire cosa deve far ricordare, quale percorso deve costruire e dove deve portare chi lo visita.</Reveal>
+            <Reveal as="p" delay={0.12} className="lead mt-7 max-w-[560px]">Usiamo l’AI nel processo creativo e tecnico, sotto direzione umana. Il risultato non è “un sito AI”: è un sito riconoscibile, costruito con più possibilità a disposizione.</Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Quattro cifre */}
+      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-12 md:grid-cols-4 md:gap-6">
+          {figures.map((figure) => (
+            <Reveal key={figure.value} delay={figure.delay} className="py-2 pl-8" style={{ borderLeft: '1px solid rgba(10,10,10,.12)' }}>
+              <p className="disp" style={{ fontSize: 'clamp(3rem, 6vw, 6.5rem)', letterSpacing: '-0.06em' }}>{figure.value}</p>
+              <p className="mt-4 max-w-[240px] text-[15px] leading-normal">{figure.desc}</p>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* Più linguaggi: bento a tre colonne sfalsate */}
+      <section id="servizi" className="scroll-mt-24 px-6 pb-32 md:px-12 md:pb-[240px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l">Più linguaggi, nello stesso progetto.</Reveal>
+
+          <div className="mt-20 flex flex-col gap-6 md:mt-[120px] md:flex-row md:items-start">
+            <div className="flex min-w-0 flex-1 flex-col">
+              <LanguageCard
+                icon={Sparkles}
+                title="Asset su misura"
+                desc="Visual, texture e composizioni che non arrivano da una banca immagini."
+                items={['Creati con strumenti AI e diretti da noi', 'Rifiniti dentro un’identità coerente']}
+                background={PAPER_BG}
+              />
+              <NoteCard text="Niente stock, niente pagine che sembrano già viste." />
+            </div>
+
+            <div className="flex min-w-0 flex-1 flex-col md:mt-[120px]">
+              <LanguageCard
+                icon={LayoutGrid}
+                title="Il movimento racconta"
+                desc="Video animati e sezioni che reagiscono allo scroll guidano la lettura e spiegano un servizio."
+                items={['Rendono il sito riconoscibile', 'Fanno parte della struttura, non sono decorazione']}
+                background="linear-gradient(150deg, #f7f5fb 0%, #efe7fb 100%)"
+                delay={0.12}
+              />
+              <Reveal as="article" delay={0.12} className="bc ov justify-end text-white" style={{ minHeight: 260, background: '#050505' }}>
+                <div className="aur" aria-hidden="true" style={{ width: 360, height: 360, background: 'rgba(147,51,234,.5)', right: -100, top: -140, filter: 'blur(80px)' }} />
+                <p className="d relative text-gray-300" style={{ marginTop: 0 }}>Quando serve, la produzione è reale: foto e video originali entrano nello stesso progetto.</p>
+              </Reveal>
+            </div>
+
+            <div className="flex min-w-0 flex-1 flex-col md:mt-10">
+              <LanguageCard
+                icon={Compass}
+                title="Direzione umana"
+                desc="Struttura, messaggio, scelte visive e controllo finale restano nostri."
+                items={['L’AI accelera dove ha senso', 'Una call per capire cosa deve fare il sito']}
+                background="#f7f5fb"
+                delay={0.2}
+              />
+              <NoteCard text="AI e produzione sul campo non sono alternative: sono strumenti della stessa direzione." delay={0.2} />
             </div>
           </div>
-          <div className="sites-browser-wrap sites-hero-reveal relative py-8"><BrowserStudy /></div>
-        </header>
+        </div>
+      </section>
 
-        <section className="sites-reveal grid gap-10 border-y border-white/10 py-20 lg:grid-cols-[0.85fr_1.15fr] lg:gap-24">
-          <p className="text-xs uppercase tracking-[0.16em] text-cyan-300">Una distinzione importante</p>
-          <div><h2 className="mb-7 text-[clamp(34px,5vw,64px)] font-bold leading-[1.03] tracking-[-0.04em]">L’AI abbassa il costo della produzione. Non il livello delle scelte.</h2><div className="max-w-3xl space-y-5 text-lg leading-relaxed text-gray-300"><p>Un sito non diventa efficace perché una macchina ha generato una pagina. Serve capire cosa deve far ricordare, quale percorso deve costruire e dove deve portare chi lo visita.</p><p>Usiamo l’AI nel processo creativo e tecnico, sotto direzione umana. Il risultato non è “un sito AI”: è un sito riconoscibile, costruito con più possibilità a disposizione.</p></div></div>
-        </section>
-
-        <section className="py-28 md:py-36">
-          <div className="sites-reveal mb-14 max-w-4xl"><p className="mb-5 text-xs uppercase tracking-[0.16em] text-indigo-300">Più linguaggi, nello stesso progetto</p><h2 className="text-[clamp(36px,5.8vw,72px)] font-bold leading-[1] tracking-[-0.045em]">Il sito può fare più che mettere testo sopra una foto.</h2></div>
-          <div className="grid gap-px overflow-hidden rounded-[2rem] border border-white/10 bg-white/10 lg:grid-cols-3">
-            {capabilities.map(({ icon: Icon, index, title, copy }) => <article key={index} className="sites-reveal group relative min-h-[380px] bg-[#080808] p-8 md:p-10"><div className="mb-20 flex items-center justify-between"><span className="text-xs text-gray-600">{index} / 03</span><Icon className="h-7 w-7 text-cyan-300 transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-3" /></div><h3 className="mb-5 text-3xl font-bold leading-tight tracking-[-0.025em]">{title}</h3><p className="leading-relaxed text-gray-400">{copy}</p></article>)}
+      {/* Landing page in una settimana: blocco carta arrotondato */}
+      <section className="px-6 pb-32 md:pb-[240px]">
+        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[140px]" style={{ background: PAPER_BG }}>
+          <div className="dots" aria-hidden="true" />
+          <div className="relative grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
+            <div>
+              <Reveal as="h2" className="h-l" style={CARD_TITLE}>Una pagina può essere pronta in una settimana.</Reveal>
+              <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">Quando serve portare online un’offerta o una campagna senza aspettare un sito completo, concentriamo direzione, contenuto e sviluppo in una singola esperienza. Siti web da 2.999 €: forma, tempi e produzione si definiscono sul progetto.</Reveal>
+            </div>
+            <Reveal delay={0.12}>
+              <BrowserMock />
+              <div className="mt-7 flex flex-wrap gap-2.5">
+                <span className="chip">Direzione</span>
+                <span className="chip">Contenuto</span>
+                <span className="chip">Sviluppo</span>
+                <span className="chip" style={{ background: '#9333ea', color: '#fff' }}>Online</span>
+              </div>
+            </Reveal>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="sites-reveal grid gap-10 rounded-[2.5rem] border border-cyan-300/20 bg-cyan-300/[0.045] p-8 md:p-14 lg:grid-cols-[1fr_0.8fr] lg:items-end">
-          <div><p className="mb-5 text-xs uppercase tracking-[0.16em] text-cyan-300">Landing page</p><h2 className="mb-6 text-[clamp(36px,5.2vw,68px)] font-bold leading-[1] tracking-[-0.045em]">Una pagina può essere pronta in una settimana.</h2><p className="max-w-2xl text-lg leading-relaxed text-gray-300">Quando serve portare online un’offerta o una campagna senza aspettare un sito completo, concentriamo direzione, contenuto e sviluppo in una singola esperienza.</p></div>
-          <div className="border-t border-white/10 pt-7 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0"><p className="mb-2 text-sm uppercase tracking-[0.12em] text-gray-500">Siti web</p><p className="text-4xl font-bold text-white">da 2.999 €</p><p className="mt-4 text-sm leading-relaxed text-gray-400">Forma, tempi e produzione vengono definiti sul progetto.</p></div>
-        </section>
-
-        <section className="py-28 md:py-36">
-          <div className="sites-reveal grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
-            <div><p className="mb-5 text-xs uppercase tracking-[0.16em] text-indigo-300">Caso studio</p><h2 className="mb-6 text-[clamp(36px,5vw,64px)] font-bold leading-[1.02] tracking-[-0.04em]">GP Meccatronica, dal rebranding al sito in movimento.</h2><p className="mb-8 text-lg leading-relaxed text-gray-300">Una direzione visiva scura e tecnica, motion design e asset generati con l’AI per accompagnare il traffico delle campagne ADV.</p><a href="/casi-studio/gp-meccatronica-sito-web" className="inline-flex items-center gap-2 font-semibold text-cyan-200 hover:text-white">Leggi il caso studio <ArrowRight className="h-4 w-4" /></a></div>
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/10"><img src="/case-studies/gp-meccatronica-hero.webp" srcSet="/case-studies/gp-meccatronica-hero-836w.webp 836w, /case-studies/gp-meccatronica-hero.webp 1672w" sizes="(min-width: 1024px) 55vw, 100vw" alt="GP Meccatronica: autobus scuro con fari accesi, overlay di dati tecnici blu" width="1672" height="941" loading="lazy" decoding="async" className="aspect-video h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" /></div>
+      {/* Caso studio GP Meccatronica: blocco scuro */}
+      <section className="px-6 pb-32 md:pb-[240px]">
+        <div className="close px-7 py-24 md:px-20 md:py-[160px]">
+          <div className="aur aur-1 opacity-80" aria-hidden="true" />
+          <div className="aur aur-2 opacity-80" aria-hidden="true" />
+          <div className="relative mx-auto max-w-[1440px]">
+            <p className="text-base font-medium" style={{ color: '#d8b4fe' }}>Caso studio · Rebranding e sito web</p>
+            <Reveal as="h2" className="mt-6" style={{ color: '#fff', fontSize: 'clamp(3.2rem, 8.5vw, 9rem)', letterSpacing: '-0.06em', lineHeight: 0.92 }}>GP Meccatronica, dal rebranding al sito in movimento.</Reveal>
+            <div className="mt-16 grid grid-cols-1 items-start gap-12 md:mt-24 md:grid-cols-2 md:gap-24">
+              <div>
+                <Reveal as="p" className="lead max-w-[560px] text-gray-300">Una direzione visiva scura e tecnica, motion design e asset generati con l’AI per accompagnare il traffico delle campagne ADV. Il sito arriva insieme al rebranding: fa parte della stessa identità.</Reveal>
+                <Reveal delay={0.12} className="mt-10 flex flex-wrap gap-2.5">
+                  {caseChips.map((chip) => (
+                    <span key={chip} className="chip" style={{ background: 'rgba(255,255,255,.1)', color: '#e9d5ff' }}>{chip}</span>
+                  ))}
+                </Reveal>
+                <Reveal delay={0.2} className="mt-12">
+                  <a href="/casi-studio/gp-meccatronica-sito-web" className="btn btn-white">
+                    Leggi il caso studio
+                    <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+                  </a>
+                </Reveal>
+              </div>
+              <Reveal delay={0.12} className="mock" style={{ background: 'rgba(255,255,255,.06)', boxShadow: '0 0 0 1px rgba(255,255,255,.12)' }}>
+                {caseSteps.map((step) => (
+                  <div key={step} className="ev" style={{ color: '#fff', borderColor: 'rgba(255,255,255,.12)' }}><OkIcon />{step}</div>
+                ))}
+              </Reveal>
+            </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="sites-reveal border-t border-white/10 py-24">
-          <div className="mb-14 max-w-3xl"><p className="mb-5 text-xs uppercase tracking-[0.16em] text-cyan-300">Come lavoriamo</p><h2 className="text-[clamp(36px,5vw,64px)] font-bold leading-[1.02] tracking-[-0.04em]">Tre fasi, non un modulo da compilare.</h2></div>
-          <div className="grid gap-8 md:grid-cols-3">
-            {process.map((step) => <div key={step.n} className="border-t border-white/10 pt-7"><span className="text-sm text-cyan-400">{step.n}</span><h3 className="mb-3 mt-3 text-2xl font-bold">{step.title}</h3><p className="leading-relaxed text-gray-400">{step.copy}</p></div>)}
+      {/* Tre fasi */}
+      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l max-w-[1100px]">Tre fasi, non un modulo da compilare.</Reveal>
+          <div className="mt-20 grid grid-cols-1 gap-6 md:mt-[120px] md:grid-cols-3">
+            {phases.map((phase) => (
+              <Reveal key={phase.title} delay={phase.delay} className="flex min-h-[360px] flex-col gap-7 rounded-[32px] bg-[#f7f5fb] px-7 py-8 md:p-11">
+                <IconBox icon={phase.icon} />
+                <div className="mt-auto">
+                  <h3 style={{ fontSize: 'clamp(1.6rem, 2.3vw, 2.4rem)', letterSpacing: '-0.04em', lineHeight: 1.05 }}>{phase.title}</h3>
+                  <p className="mt-3.5 text-base leading-[1.6]">{phase.desc}</p>
+                </div>
+              </Reveal>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="sites-reveal grid gap-10 border-t border-white/10 py-24 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-          <div><p className="mb-5 text-xs uppercase tracking-[0.16em] text-indigo-300">Prima di iniziare</p><h2 className="text-[clamp(32px,4.8vw,56px)] font-bold leading-[1.05] tracking-[-0.04em]">Cosa serve da te</h2></div>
-          <ul className="space-y-4">{requirements.map((item) => <li key={item} className="flex gap-3 text-lg leading-relaxed text-gray-300"><span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-cyan-300" />{item}</li>)}</ul>
-        </section>
+      {/* Cosa serve da te: blocco carta arrotondato */}
+      <section className="px-6 pb-32 md:pb-[240px]">
+        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[140px]" style={{ background: PAPER_BG }}>
+          <div className="dots" aria-hidden="true" />
+          <div className="relative grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
+            <div>
+              <Reveal as="h2" className="h-l" style={CARD_TITLE}>Cosa serve da te.</Reveal>
+              <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">Se manca del materiale, lo produciamo insieme. Il resto lo mettiamo noi.</Reveal>
+            </div>
+            <Reveal delay={0.12} className="mock">
+              <div className="ev"><OkIcon />Un obiettivo chiaro<em>cosa deve far fare il sito</em></div>
+              <div className="ev"><OkIcon />Materiale esistente<em>logo, foto, testi, guideline</em></div>
+              <div className="ev"><OkIcon />Un referente unico<em>valida le scelte</em></div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
 
-        <section className="sites-reveal border-t border-white/10 py-24"><div className="mb-12 max-w-3xl"><p className="mb-5 text-xs uppercase tracking-[0.16em] text-indigo-300">FAQ</p><h2 className="text-[clamp(36px,5vw,64px)] font-bold tracking-[-0.04em]">Domande prima di partire.</h2></div><div className="grid gap-4 lg:grid-cols-2">{faqs.map((faq) => <details key={faq.question} className="group rounded-3xl border border-white/10 bg-white/[0.025] p-6 open:border-cyan-300/25"><summary className="flex cursor-pointer list-none items-start justify-between gap-5 text-xl font-semibold"><span>{faq.question}</span><span className="text-cyan-300 transition-transform group-open:rotate-45">+</span></summary><p className="mt-5 leading-relaxed text-gray-300">{faq.answer}</p></details>)}</div></section>
+      {/* FAQ */}
+      <section id="faq" className="px-6 pb-32 md:px-12 md:pb-[240px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l">Domande frequenti</Reveal>
+          <Reveal delay={0.12} className="mt-20 md:mt-[120px]">
+            {faqs.map((faq, i) => (
+              <details key={faq.question} className="f" open={i === 0}>
+                <summary>
+                  <h3>{faq.question}</h3>
+                  <span className="pl" aria-hidden="true"><Plus className="h-[18px] w-[18px]" /></span>
+                </summary>
+                <p>{faq.answer}</p>
+              </details>
+            ))}
+          </Reveal>
+        </div>
+      </section>
 
-        <section className="sites-reveal rounded-[2.5rem] border border-white/10 bg-white/[0.035] p-8 text-center md:p-16"><Layers3 className="mx-auto mb-7 h-8 w-8 text-cyan-300" /><h2 className="mx-auto mb-6 max-w-4xl text-[clamp(38px,5.8vw,72px)] font-bold leading-[1] tracking-[-0.045em]">Il prossimo sito non deve sembrare il precedente.</h2><p className="mx-auto mb-9 max-w-2xl text-lg leading-relaxed text-gray-300">Raccontaci cosa deve fare, per chi e perché adesso. Partiamo da lì.</p><a href="#contatti" onClick={scrollToContact} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-[#050505] hover:bg-cyan-100">Parlaci del progetto <ArrowRight className="h-4 w-4" /></a></section>
-      </div>
-
-      <style>{`
-        .sites-scan { animation: sites-scan 5s ease-in-out infinite; }
-        @keyframes sites-scan { 0%, 100% { transform: translateY(12px); opacity: 0; } 12% { opacity: .8; } 88% { opacity: .8; } 100% { transform: translateY(470px); opacity: 0; } }
-        @media (prefers-reduced-motion: reduce) { .sites-scan { animation: none; top: 48%; opacity: .45; } }
-      `}</style>
+      <CloseCta
+        size="l"
+        title="Il prossimo sito non deve sembrare il precedente."
+        lead="Raccontaci cosa deve fare, per chi e perché adesso. Partiamo da lì."
+        cta={{ label: 'Parlaci del progetto', href: '#contatti', onClick: scrollToContact('Parlaci del progetto') }}
+      />
     </article>
   );
 };

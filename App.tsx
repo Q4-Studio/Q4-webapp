@@ -489,7 +489,11 @@ const App: React.FC = () => {
           )}
 
           {currentPage === 'sites' && (
-            <><SitesWebAI /><ContactForm subject="Sito web AI" headerTitle="Parliamo del tuo prossimo sito." headerDescription="Raccontaci cosa deve fare, per chi e perché adesso." /><Footer /></>
+            <div className="home-light relative w-full">
+              <SitesWebAI />
+              <ContactForm subject="Sito web AI" showHeader={false} tone="light" />
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
           {currentPage === 'technical-partner' && <TechnicalPartner />}
