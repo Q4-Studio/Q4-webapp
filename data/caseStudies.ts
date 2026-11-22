@@ -32,6 +32,22 @@ export interface CaseStudyDemoVideo {
   caption: string;
 }
 
+export interface CaseStudyDataRow {
+  label: string;
+  value: string;
+}
+
+/** Blocco di dati aggiuntivo (per browser, per evento, consenso…): numeri grandi e/o righe etichetta → valore. */
+export interface CaseStudyDataBlock {
+  heading: string;
+  intro?: string;
+  stats?: CaseStudyStat[];
+  rows?: CaseStudyDataRow[];
+  note?: string;
+  /** Fonte e periodo del blocco, mostrati sotto i numeri. */
+  source?: string;
+}
+
 export interface CaseStudy {
   slug: string;
   client: string;
@@ -74,10 +90,14 @@ export interface CaseStudy {
     stats?: CaseStudyStat[];
     note: string;
   };
+  /** Blocchi di dati oltre al risultato principale. Assenti quando non ci sono altri numeri verificati. */
+  data?: CaseStudyDataBlock[];
   whyItMatters: {
     heading: string;
     paragraphs: string[];
   };
+  /** Fonti dei numeri (strumento e periodo), elencate a fine pagina. */
+  sources?: string[];
   cta?: { heading: string; body: string; label: string; href: string };
   /** Tag di servizi/tecnologie coinvolte, mostrati come pillole a fine pagina. */
   services: string[];
@@ -148,12 +168,62 @@ export const caseStudies: CaseStudy[] = [
       ],
       note: 'Senza la configurazione server-side questi dati sarebbero andati persi, inclusi eventi e-commerce come visualizzazioni prodotto, aggiunte al carrello, inizio checkout e acquisti. Su Meta, dal 23 ottobre al 19 novembre 2026, l’API Conversions ha registrato più conversioni rispetto al solo pixel: +9,2% sulle visualizzazioni di contenuti (ViewContent), +46,2% sulle aggiunte al carrello (AddToCart), +133,3% sugli inizi di acquisto (InitiateCheckout). Fonti: Stape Requests Analytics (22 ago–20 nov 2026) e Meta Gestione eventi (23 ott–19 nov 2026).'
     },
+    data: [
+      {
+        heading: 'Più conversioni per Meta, evento per evento',
+        intro: 'Con l’API Conversions attiva accanto al pixel, Meta registra più conversioni di quante ne vedrebbe dal solo browser. Più si scende nel funnel, più il recupero pesa.',
+        stats: [
+          { value: '+9,2%', label: 'visualizzazioni di contenuti (ViewContent), su 97.652 eventi' },
+          { value: '+46,2%', label: 'aggiunte al carrello (AddToCart), su 1.934 eventi' },
+          { value: '+133,3%', label: 'inizi di acquisto (InitiateCheckout), su 1.236 eventi' }
+        ],
+        source: 'Meta Gestione eventi, Pixel di Candiani Denim, 23 ottobre – 19 novembre 2026: “conversioni aggiuntive registrate dall’API Conversions rispetto al solo pixel”.'
+      },
+      {
+        heading: 'Cosa recupera, evento per evento',
+        intro: 'Richieste GA4 passate dal container in 90 giorni e quante di queste il browser o un ad blocker avrebbero bloccato (somma di tracking prevention e ad blocker).',
+        rows: [
+          { label: 'PageView · 356.380 richieste', value: '146.310 recuperate (41,1%)' },
+          { label: 'ViewItem · 132.729 richieste', value: '55.955 recuperate (42,2%)' },
+          { label: 'AddToCart · 1.591 richieste', value: '687 recuperate (43,2%)' },
+          { label: 'BeginCheckout · 1.148 richieste', value: '523 recuperate (45,6%)' },
+          { label: 'Purchase · 135 richieste', value: '79 recuperate (58,5%)' }
+        ],
+        note: 'Gli eventi vicini all’acquisto sono quelli che si perdono di più: oltre la metà degli acquisti sarebbe rimasta invisibile alle piattaforme.',
+        source: 'Stape Requests Analytics, container sGTM candianidenim.com, 22 agosto – 20 novembre 2026, tabella “Requests by client · GA4”.'
+      },
+      {
+        heading: 'Dove si perdono i dati: per browser',
+        intro: 'Gli ad blocker pesano soprattutto su Chrome; su Safari il problema è la tracking prevention integrata nel browser.',
+        rows: [
+          { label: 'Safari (mobile e desktop) · 672K richieste', value: '1,04% recuperato dagli ad blocker' },
+          { label: 'Chrome (mobile e desktop) · 576K richieste', value: '8,34% recuperato dagli ad blocker' },
+          { label: 'Altri (Brave, Edge, Firefox…) · 719K richieste', value: '3,56% recuperato dagli ad blocker' }
+        ],
+        source: 'Stape Requests Analytics, 22 agosto – 20 novembre 2026, “Requests by browser”.'
+      },
+      {
+        heading: 'Bot fuori, consenso dentro',
+        intro: 'Il container filtra il traffico dei bot prima che arrivi alle piattaforme e fa seguire ai dati le scelte di consenso dell’utente (Consent Mode v2).',
+        stats: [
+          { value: '17,84%', label: 'delle richieste GA (245.945 su 1.378.470) riconosciute come bot e scartate' },
+          { value: '42,29%', label: 'delle PageView con consenso dato (150.698); 57,71% con opt-out (205.679)' },
+          { value: '62,96%', label: 'degli acquisti con consenso dato (85); 37,04% con opt-out (50)' }
+        ],
+        source: 'Stape Requests Analytics, 22 agosto – 20 novembre 2026, “Requests from bots” e “Requests by consent choice” (richieste GA4).'
+      }
+    ],
     whyItMatters: {
       heading: 'Perché conta',
       paragraphs: [
         'Ogni segnale non tracciato è un’informazione che l’algoritmo non ha. Su un budget pubblicitario a cinque cifre, ottimizzare su dati parziali significa pagare per raggiungere le persone sbagliate.'
       ]
     },
+    sources: [
+      'Stape Requests Analytics, container sGTM candianidenim.com, periodo 90 giorni (22 agosto – 20 novembre 2026).',
+      'Meta Gestione eventi, Pixel di Candiani Denim, 23 ottobre – 19 novembre 2026.',
+      'Screenshot e valori estratti: docs/sources/candiani-2026-11 nel repository del sito.'
+    ],
     cta: {
       heading: 'Quanti segnali stanno perdendo le tue campagne?',
       body: 'L’audit di tracciamento ti dà una risposta documentata e una mappa di cosa sistemare.',

@@ -520,43 +520,40 @@ function generateCaseStudiesIndexHtml(): string {
     ]
   };
 
+  // Stesso markup chiaro di components/CaseStudiesIndex.tsx.
   const cardsHtml = caseStudies
     .map((study) => `
-      <a href="${caseStudiesPath}/${study.slug}" class="group rounded-3xl border border-white/10 bg-white/[0.03] overflow-hidden hover:border-indigo-400/50 hover:bg-indigo-500/[0.06] transition-all duration-300">
-        <img src="${study.coverImageMobile}" srcset="${study.coverImageMobile} 836w, ${study.coverImage} 1672w" sizes="(min-width: 768px) 50vw, 100vw" alt="${escapeHtml(study.coverImageAlt)}" width="${study.coverImageWidth}" height="${study.coverImageHeight}" loading="lazy" decoding="async" class="w-full aspect-video object-cover border-b border-white/10" />
-        <div class="p-6">
-          <span class="text-[11px] uppercase tracking-[0.08em] text-indigo-300">${escapeHtml(study.category)}</span>
-          <h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mt-4 mb-3 group-hover:text-indigo-200 transition-colors">${escapeHtml(study.client)}</h2>
-          <p class="text-gray-400 leading-relaxed mb-6">${escapeHtml(study.subheadline)}</p>
-          <span class="inline-flex items-center gap-2 text-indigo-300 font-medium">Leggi il caso studio <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
+      <article class="bc" style="padding:0"><a href="${caseStudiesPath}/${study.slug}" class="flex h-full flex-col no-underline">
+        <img src="${study.coverImageMobile}" srcset="${study.coverImageMobile} 836w, ${study.coverImage} 1672w" sizes="(min-width: 768px) 50vw, 100vw" alt="${escapeHtml(study.coverImageAlt)}" width="${study.coverImageWidth}" height="${study.coverImageHeight}" loading="lazy" decoding="async" class="aspect-video w-full object-cover" />
+        <div class="flex flex-1 flex-col p-8 md:p-11">
+          <span class="chip self-start">${escapeHtml(study.category)}</span>
+          <h2 class="mt-6" style="font-size:clamp(1.875rem,2.8vw,2.875rem);letter-spacing:-0.04em;line-height:1.02">${escapeHtml(study.client)}</h2>
+          <p class="d">${escapeHtml(study.subheadline)}</p>
+          <span class="mt-auto inline-flex items-center gap-1.5 pt-8 text-[17px] font-semibold text-[#0a0a0a]">Leggi il caso studio</span>
         </div>
-      </a>
+      </a></article>
     `)
     .join('\n          ');
 
   const bodyContent = `
-    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
-      <div class="max-w-6xl mx-auto relative z-10">
-        <nav aria-label="Breadcrumb" class="mb-10">
-          <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
-            <li>/</li>
-            <li class="text-gray-300">Casi Studio</li>
-          </ol>
-        </nav>
-
-        <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">Casi Studio</p>
-        <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] max-w-4xl mb-6">Progetti reali, dati reali.</h1>
-        <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-14">
-          Come lavoriamo con i clienti Q4 Studio: cosa abbiamo trovato, cosa abbiamo costruito e cosa è cambiato, con i numeri veri di ogni progetto.
-        </p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div class="home-light relative w-full">
+    <section class="relative">
+      <header id="hero" class="relative flex min-h-[520px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[640px] md:rounded-b-[56px]">
+        <div class="aur aur-1" aria-hidden="true"></div><div class="aur aur-2" aria-hidden="true"></div><div class="aur aur-3" aria-hidden="true"></div>
+        <div class="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-20 pt-36 md:px-12 md:pt-40">
+          <nav aria-label="Breadcrumb" class="text-[16px] text-white/70"><ol class="flex items-center gap-2"><li><a href="/">Home</a></li><li>/</li><li class="text-white">Casi Studio</li></ol></nav>
+          <p class="mt-10 text-[17px] font-medium text-purple-300">Casi studio</p>
+          <h1 class="h-sub mt-5 max-w-[1250px]" style="color:#fff">Progetti reali, dati reali.</h1>
+          <p class="lead mt-10 max-w-[720px] text-gray-300">Come lavoriamo con i clienti Q4 Studio: cosa abbiamo trovato, cosa abbiamo costruito e cosa è cambiato, con i numeri veri di ogni progetto.</p>
+        </div>
+      </header>
+      <div class="px-6 pb-24 pt-16 md:px-12 md:pb-[160px] md:pt-24">
+        <div class="mx-auto grid max-w-[1440px] grid-cols-1 gap-6 md:grid-cols-2">
           ${cardsHtml}
         </div>
       </div>
     </section>
+    </div>
   `;
 
   return generateBaseHtml({
@@ -615,114 +612,64 @@ function generateCaseStudyDetailHtml(study: CaseStudy): string {
     ]
   };
 
+  // Stesso markup chiaro di components/CaseStudyPage.tsx.
+  const lead = (text: string, cls = '') => `<p class="lead max-w-[720px] ${cls}">${escapeHtml(text)}</p>`;
+  const sectionTitle = (text: string, small = false) => `<h2 class="h-l max-w-[1100px]"${small ? ' style="font-size:clamp(2.25rem,4.6vw,4.5rem)"' : ''}>${escapeHtml(text)}</h2>`;
+  const statGrid = (stats: Array<{ value: string; label: string }>) => `<div class="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-6">${stats.map((stat) => `<div class="py-2 pl-8" style="border-left:1px solid rgba(10,10,10,.12)"><p class="disp grad tabular-nums" style="font-size:clamp(2.75rem,5.2vw,5.5rem);letter-spacing:-0.06em">${escapeHtml(stat.value)}</p><p class="mt-4 max-w-[320px] text-[19px] leading-normal">${escapeHtml(stat.label)}</p></div>`).join('')}</div>`;
+  const okIcon = '<span class="ok" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span>';
+  const rowList = (rows: Array<{ label: string; value?: string }>) => `<div class="mock">${rows.map((row) => `<div class="ev">${okIcon}${escapeHtml(row.label)}${row.value ? `<em>${escapeHtml(row.value)}</em>` : ''}</div>`).join('')}</div>`;
+
   const introHtml = study.intro
-    .map((block) => `<p class="text-gray-300 leading-relaxed">${escapeHtml(block.paragraph)}${block.link ? ` <a href="${block.link.href}" target="_blank" rel="noopener noreferrer" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4 decoration-indigo-400/40 transition-colors">${escapeHtml(block.link.label)}</a>` : ''}</p>`)
+    .map((block, i) => `<p class="lead max-w-[720px]${i > 0 ? ' mt-7' : ''}">${escapeHtml(block.paragraph)}${block.link ? ` <a href="${block.link.href}" target="_blank" rel="noopener noreferrer" class="text-[#0a0a0a] underline underline-offset-4">${escapeHtml(block.link.label)}</a>` : ''}</p>`)
     .join('\n          ');
 
-  const challengeHtml = study.challenge.paragraphs
-    .map((p) => `<p class="text-lg md:text-xl text-gray-300 leading-relaxed">${escapeHtml(p)}</p>`)
-    .join('\n            ');
-
-  const workItemsHtml = study.work.items
-    .map((item) => `<div class="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5"><svg class="w-5 h-5 text-indigo-300 mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg><span class="text-gray-200">${escapeHtml(item)}</span></div>`)
-    .join('\n            ');
-
-  const statsHtml = (study.results.stats ?? [])
-    .map((stat) => `<div class="bg-[#070707] p-8 md:p-10 text-center flex flex-col items-center gap-3"><p class="tabular-nums text-[clamp(28px,4.5vw,48px)] font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300" style="font-family: 'Space Grotesk', sans-serif;">${escapeHtml(stat.value)}</p><p class="text-sm text-gray-400 leading-relaxed">${escapeHtml(stat.label)}</p></div>`)
-    .join('\n            ');
+  const challengeHtml = study.challenge.paragraphs.map((p) => lead(p, 'max-w-[560px]')).join('');
 
   const demoVideoHtml = study.demoVideo
-    ? `
-        <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.demoVideo.heading)}</h2>
-          <div class="relative rounded-3xl overflow-hidden mb-6 border border-white/10">
-            <video autoplay muted loop playsinline preload="metadata" poster="${study.demoVideo.poster}" width="${study.demoVideo.width}" height="${study.demoVideo.height}" aria-label="${escapeHtml(study.demoVideo.alt)}" class="w-full h-auto aspect-video object-cover">
-              <source src="${study.demoVideo.webmSrc}" type="video/webm" />
-              <source src="${study.demoVideo.mp4Src}" type="video/mp4" />
-            </video>
-          </div>
-          <p class="text-gray-400 leading-relaxed max-w-3xl">${escapeHtml(study.demoVideo.caption)}</p>
-        </section>`
+    ? `<section class="px-6 pb-24 md:px-12 md:pb-[160px]"><div class="mx-auto max-w-[1440px]">${sectionTitle(study.demoVideo.heading, true)}<div class="mt-12 overflow-hidden rounded-[36px] md:mt-16 md:rounded-[56px]"><video autoplay muted loop playsinline preload="metadata" poster="${study.demoVideo.poster}" width="${study.demoVideo.width}" height="${study.demoVideo.height}" aria-label="${escapeHtml(study.demoVideo.alt)}" class="aspect-video h-auto w-full object-cover"><source src="${study.demoVideo.webmSrc}" type="video/webm" /><source src="${study.demoVideo.mp4Src}" type="video/mp4" /></video></div>${lead(study.demoVideo.caption, 'mt-8')}</div></section>`
     : '';
 
-  const whyItMattersHtml = study.whyItMatters.paragraphs
-    .map((p) => `<p class="text-lg md:text-xl text-gray-300 leading-relaxed">${escapeHtml(p)}</p>`)
-    .join('\n            ');
+  const dataHtml = (study.data ?? [])
+    .map((block) => `<section class="px-6 pb-24 md:px-12 md:pb-[160px]"><div class="mx-auto max-w-[1440px]">${sectionTitle(block.heading, true)}${block.intro ? lead(block.intro, 'mt-8 md:mt-10') : ''}${block.stats ? `<div class="mt-16 md:mt-20">${statGrid(block.stats)}</div>` : ''}${block.rows ? `<div class="mt-16 max-w-[960px] md:mt-20">${rowList(block.rows)}</div>` : ''}${block.note ? lead(block.note, 'mt-10') : ''}${block.source ? `<p class="mt-6 max-w-[720px] text-[16px] leading-normal text-gray-500">Fonte: ${escapeHtml(block.source)}</p>` : ''}</div></section>`)
+    .join('');
 
-  const servicesHtml = study.services
-    .map((service) => `<span class="text-[11px] uppercase tracking-[0.08em] text-gray-400 rounded-full border border-white/10 px-3 py-1.5">${escapeHtml(service)}</span>`)
-    .join('\n          ');
-
+  const whyItMattersHtml = study.whyItMatters.paragraphs.map((p, i) => lead(p, i > 0 ? 'mt-7' : '')).join('');
+  const servicesHtml = study.services.map((service) => `<span class="chip">${escapeHtml(service)}</span>`).join('');
+  const sourcesHtml = study.sources && study.sources.length > 0
+    ? `<div class="mt-12 max-w-[760px]"><h2 class="text-[22px]" style="letter-spacing:-0.02em">Fonti dei numeri</h2><ul class="bul mt-4">${study.sources.map((source) => `<li>${escapeHtml(source)}</li>`).join('')}</ul></div>`
+    : '';
   const ctaHtml = study.cta
-    ? `<section class="mb-16 rounded-3xl border border-cyan-400/20 bg-cyan-400/[0.05] p-8"><h2 class="text-3xl font-bold mb-4">${escapeHtml(study.cta.heading)}</h2><p class="text-gray-300 mb-6">${escapeHtml(study.cta.body)}</p><a href="${study.cta.href}" class="inline-flex rounded-full bg-white px-6 py-3 text-black font-semibold">${escapeHtml(study.cta.label)}</a></section>`
+    ? `<section class="px-6 pb-6"><div class="close"><div class="aur aur-1 opacity-80" aria-hidden="true"></div><div class="aur aur-2 opacity-80" aria-hidden="true"></div><div class="grid60" aria-hidden="true"></div><div class="relative mx-auto max-w-[1440px] px-6 py-40 text-center md:px-12 md:py-[180px]"><h2 style="font-size:clamp(3.25rem,9.5vw,10rem);letter-spacing:-0.055em;line-height:0.95">${escapeHtml(study.cta.heading)}</h2><p class="lead mx-auto mt-12 max-w-[560px] text-gray-300">${escapeHtml(study.cta.body)}</p><div class="mt-14 md:mt-20"><a href="${study.cta.href}" class="btn btn-white">${escapeHtml(study.cta.label)}</a></div></div></div></section>`
     : '';
 
   const bodyContent = `
-    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-indigo-900/10 rounded-full blur-[160px] pointer-events-none"></div>
-      <div class="max-w-4xl mx-auto relative z-10">
-        <nav aria-label="Breadcrumb" class="mb-10">
-          <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
-            <li>/</li>
-            <li><a href="${caseStudiesPath}" class="hover:text-indigo-300 transition-colors">Casi Studio</a></li>
-            <li>/</li>
-            <li class="text-gray-300">${escapeHtml(study.client)}</li>
-          </ol>
-        </nav>
-
-        <header class="mb-12">
-          <p class="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">${escapeHtml(study.kicker)}</p>
-          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">${escapeHtml(study.title)}</h1>
-          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">${escapeHtml(study.subheadline)}</p>
-        </header>
-
-        <div class="relative rounded-3xl overflow-hidden mb-14 md:mb-16 border border-white/10">
-          <img src="${study.coverImage}" srcset="${study.coverImageMobile} 836w, ${study.coverImage} 1672w" sizes="(min-width: 896px) 896px, 100vw" alt="${escapeHtml(study.coverImageAlt)}" width="${study.coverImageWidth}" height="${study.coverImageHeight}" loading="eager" fetchpriority="high" decoding="async" class="w-full h-auto object-cover" />
+    <div class="home-light relative w-full">
+    <article class="relative">
+      <header id="hero" class="relative flex min-h-[560px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[680px] md:rounded-b-[56px]">
+        <div class="aur aur-1" aria-hidden="true"></div><div class="aur aur-2" aria-hidden="true"></div><div class="aur aur-3" aria-hidden="true"></div>
+        <div class="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-20 pt-36 md:px-12 md:pt-40">
+          <nav aria-label="Breadcrumb" class="text-[16px] text-white/70"><ol class="flex flex-wrap items-center gap-2"><li><a href="/">Home</a></li><li>/</li><li><a href="${caseStudiesPath}">Casi studio</a></li><li>/</li><li class="text-white">${escapeHtml(study.client)}</li></ol></nav>
+          <p class="mt-10 text-[17px] font-medium text-purple-300">${escapeHtml(study.kicker)}</p>
+          <h1 class="h-sub mt-5 max-w-[1250px]" style="color:#fff">${escapeHtml(study.title)}</h1>
+          <p class="lead mt-10 max-w-[720px] text-gray-300">${escapeHtml(study.subheadline)}</p>
         </div>
-
-        <div class="space-y-6 mb-16 max-w-3xl">
+      </header>
+      <section class="px-6 pt-6 md:pt-8"><div class="mx-auto max-w-[1392px] overflow-hidden rounded-[36px] md:rounded-[56px]">
+        <img src="${study.coverImage}" srcset="${study.coverImageMobile} 836w, ${study.coverImage} 1672w" sizes="(min-width: 1440px) 1392px, 100vw" alt="${escapeHtml(study.coverImageAlt)}" width="${study.coverImageWidth}" height="${study.coverImageHeight}" loading="eager" fetchpriority="high" decoding="async" class="h-auto w-full object-cover" />
+      </div></section>
+      <section class="px-6 pb-24 pt-24 md:px-12 md:pb-[160px] md:pt-[120px]"><div class="mx-auto max-w-[1440px]"><div class="ml-auto max-w-[760px]">
           ${introHtml}
-        </div>
-
-        <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.challenge.heading)}</h2>
-          <div class="space-y-4 max-w-3xl">
-            ${challengeHtml}
-          </div>
-        </section>
-
-        <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.work.heading)}</h2>
-          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-8">${escapeHtml(study.work.intro)}</p>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            ${workItemsHtml}
-          </div>
-        </section>
-${demoVideoHtml}
-        <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.results.heading)}</h2>
-          <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mb-8">${escapeHtml(study.results.intro)}</p>
-          ${statsHtml ? `<div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/5 rounded-3xl overflow-hidden border border-white/5 mb-8">
-            ${statsHtml}
-          </div>` : ''}
-          <p class="text-gray-400 leading-relaxed max-w-3xl">${escapeHtml(study.results.note)}</p>
-        </section>
-
-        <section class="mb-16">
-          <h2 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">${escapeHtml(study.whyItMatters.heading)}</h2>
-          <div class="space-y-4 max-w-3xl">
-            ${whyItMattersHtml}
-          </div>
-        </section>
-
-        ${ctaHtml}
-
-        <div class="flex flex-wrap gap-3 pt-8 border-t border-white/10">
-          ${servicesHtml}
-        </div>
-      </div>
+      </div></div></section>
+      <section class="px-6 pb-24 md:px-12 md:pb-[160px]"><div class="mx-auto max-w-[1440px]">${sectionTitle(study.challenge.heading)}<div class="mt-12 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-24">${challengeHtml}</div></div></section>
+      <section class="px-6 pb-24 md:pb-[160px]"><div class="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-16 md:rounded-[56px] md:px-20 md:py-[100px]" style="background:linear-gradient(160deg,#f7f5fb 0%,#ecdffb 100%)"><div class="dots" aria-hidden="true"></div><div class="relative grid grid-cols-1 items-start gap-12 md:grid-cols-2 md:gap-24"><div>${sectionTitle(study.work.heading, true)}${lead(study.work.intro, 'mt-7 max-w-[560px] text-gray-700')}</div>${rowList(study.work.items.map((item) => ({ label: item })))}</div></div></section>
+      ${demoVideoHtml}
+      <section class="px-6 pb-24 md:px-12 md:pb-[160px]"><div class="mx-auto max-w-[1440px]">${sectionTitle(study.results.heading)}${lead(study.results.intro, 'mt-8 md:mt-10')}${study.results.stats && study.results.stats.length > 0 ? `<div class="mt-16 md:mt-20">${statGrid(study.results.stats)}</div>` : ''}${lead(study.results.note, 'mt-12')}</div></section>
+      ${dataHtml}
+      <section class="px-6 pb-24 md:px-12 md:pb-[160px]"><div class="mx-auto max-w-[1440px]">${sectionTitle(study.whyItMatters.heading)}<div class="ml-auto mt-12 max-w-[760px] md:mt-16">${whyItMattersHtml}</div></div></section>
+      <section class="px-6 pb-24 md:px-12 md:pb-[160px]"><div class="mx-auto max-w-[1440px]"><div class="flex flex-wrap gap-2.5">${servicesHtml}</div>${sourcesHtml}</div></section>
+      ${ctaHtml}
     </article>
+    </div>
   `;
 
   return generateBaseHtml({
@@ -1792,10 +1739,20 @@ function buildIndexAndBlogMds(blogPosts: any[]): void {
       ...(statLines ? [statLines, ''] : []),
       study.results.note,
       '',
+      ...(study.data ?? []).flatMap((block) => [
+        `## ${block.heading}`,
+        '',
+        ...(block.intro ? [block.intro, ''] : []),
+        ...(block.stats ? [block.stats.map((s) => `- **${s.value}** — ${s.label}`).join('\n'), ''] : []),
+        ...(block.rows ? [block.rows.map((r) => `- ${r.label}: ${r.value}`).join('\n'), ''] : []),
+        ...(block.note ? [block.note, ''] : []),
+        ...(block.source ? [`Fonte: ${block.source}`, ''] : []),
+      ]),
       `## ${study.whyItMatters.heading}`,
       '',
       study.whyItMatters.paragraphs.join('\n\n'),
       '',
+      ...(study.sources && study.sources.length > 0 ? ['## Fonti dei numeri', '', ...study.sources.map((src) => `- ${src}`), ''] : []),
     ]);
   }
 
