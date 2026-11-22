@@ -292,14 +292,14 @@ const ServerSideTracking: React.FC = () => {
         </div>
       </section>
 
-      {/* Caso reale: blocco scuro allineato a sinistra */}
+      {/* Caso reale: blocco scuro allineato a sinistra. Numeri: docs/sources/candiani-2026-11/README.md */}
       <section className="px-6 pb-32 md:pb-[240px]">
         <div className="close px-7 py-24 md:px-12 md:py-[200px]">
           <div className="aur aur-1 opacity-80" aria-hidden="true" />
           <div className="aur aur-2 opacity-80" aria-hidden="true" />
           <div className="relative mx-auto max-w-[1440px]">
-            <Reveal as="h2" style={{ fontSize: 'clamp(3rem, 11vw, 11.5rem)', letterSpacing: '-0.06em', lineHeight: 0.92 }}>Oltre un milione di segnali recuperati.</Reveal>
-            <Reveal as="p" delay={0.12} className="lead mt-14 max-w-[720px] text-gray-300">Su Candiani Denim abbiamo recuperato oltre un milione di segnali di conversione in 90 giorni, di cui 963.652 bloccati dai sistemi di tracking prevention dei browser e 69.043 dagli ad blocker.</Reveal>
+            <Reveal as="h2" style={{ fontSize: 'clamp(3rem, 11vw, 11.5rem)', letterSpacing: '-0.06em', lineHeight: 0.92 }}>752.423 segnali recuperati in 90 giorni.</Reveal>
+            <Reveal as="p" delay={0.12} className="lead mt-14 max-w-[720px] text-gray-300">Su Candiani Denim abbiamo recuperato 752.423 segnali di conversione in 90 giorni, di cui 671.779 bloccati dai sistemi di tracking prevention dei browser e 80.644 dagli ad blocker.</Reveal>
             <Reveal delay={0.2} className="mt-12">
               <a href="/casi-studio/candiani-denim-tracking-server-side" className="btn btn-white">
                 Leggi il caso studio completo

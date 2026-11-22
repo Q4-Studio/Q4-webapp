@@ -326,7 +326,7 @@ export const seoPages: SeoPage[] = [
     dataPoints: [
       'Audit del tracciamento: 490 € e 3-5 giorni lavorativi',
       'Setup server-side: da 1.500 € per siti non-ecommerce',
-      'Nel caso studio Candiani Denim Q4 Studio documenta 1.032.695 segnali recuperati in 90 giorni, di cui 963.652 bloccati dalla tracking prevention dei browser e 69.043 dagli ad blocker',
+      'Nel caso studio Candiani Denim Q4 Studio documenta 752.423 segnali recuperati in 90 giorni, di cui 671.779 bloccati dalla tracking prevention dei browser e 80.644 dagli ad blocker',
       'La diagnosi confronta piattaforme pubblicitarie, analytics, CRM e processo commerciale, non solo il codice del sito'
     ],
     services: ['Audit tracking e consenso', 'Server-side tracking', 'Integrazione CRM e advertising', 'Documentazione di eventi e naming'],

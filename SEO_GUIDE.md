@@ -198,7 +198,7 @@ Base: posizionamento "tecnico del marketing". Offerta di ingresso = tracciamento
 6. Enhanced Conversions su Google Ads: setup e primi risultati attesi — A, MOFU (quick win KD7)
 7. Quanto costa un audit di tracciamento — F, BOFU
 8. Server-side tagging: quanto costa davvero (guida prezzi 2026) — F, BOFU
-9. Caso studio: 1M+ segnali recuperati in 90 giorni (Candiani) — A, BOFU
+9. Caso studio: 752.423 segnali recuperati in 90 giorni (Candiani) — A, BOFU
 10. Automazioni WhatsApp per PMI: messaggi → lead nel CRM — C, MOFU
 11. WhatsApp Business API + CRM: guida per chi risponde a mano — C, TOFU/MOFU
 12. Agenti AI per PMI: cosa ha senso automatizzare (e cosa no) — D, TOFU
