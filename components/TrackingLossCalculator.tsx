@@ -15,7 +15,7 @@ export const BUDGET_SHARE: [number, number] = [0.18, 0.27];
 export const VISITS_SHARE: [number, number] = [0.13, 0.22];
 
 export const CALCULATOR_SOURCE =
-  'Forchette basate sul Website Tracking Checker di Stape (18–21% del budget, 13–16% delle visite, novembre 2026) e sul caso Candiani Denim, dove il server-side ha recuperato il 38,3% delle richieste in 90 giorni. È una stima: l’audit misura il dato reale del tuo sito.';
+  'Forchette basate sulle stime pubblicate da strumenti di verifica del tracciamento (18–21% del budget, 13–16% delle visite, novembre 2026) e sul caso Candiani Denim, dove il server-side ha recuperato il 38,3% delle richieste in 90 giorni. È una stima: l’audit misura il dato reale del tuo sito.';
 
 const SPEND_PRESETS = [1000, 3000, 5000, 10000, 30000];
 const VISITS_PRESETS = [10000, 50000, 100000, 500000, 2000000];

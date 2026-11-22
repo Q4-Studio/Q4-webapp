@@ -116,7 +116,7 @@ export const caseStudies: CaseStudy[] = [
     clientUrl: 'https://www.candianidenim.com/',
     datePublished: '2026-08-01',
     metaTitle: 'Candiani Denim: tracking server-side per Meta Ads | Q4 Studio',
-    description: 'Come abbiamo potenziato il tracciamento Meta di Candiani Denim con Meta Conversion API, deduplicazione eventi e server-side tagging Stape, recuperando 752.423 segnali in 90 giorni.',
+    description: 'Come abbiamo potenziato il tracciamento Meta di Candiani Denim con Meta Conversion API, deduplicazione eventi e server-side tagging, recuperando 752.423 segnali in 90 giorni.',
     category: 'Tracciamento e dati',
     kicker: 'Caso studio · Tracking server-side',
     title: 'Candiani Denim',
@@ -153,7 +153,7 @@ export const caseStudies: CaseStudy[] = [
         'Potenziamento del Pixel Meta con eventi custom',
         'Implementazione della Meta Conversion API',
         'Deduplicazione tra eventi browser e server',
-        'Configurazione server-side con Stape',
+        'Configurazione del container server-side su infrastruttura dedicata',
         'Verifica del cookie banner e della Consent Mode',
         'Controllo dei segnali disponibili prima di passare alle campagne di conversione'
       ]
@@ -166,7 +166,7 @@ export const caseStudies: CaseStudy[] = [
         { value: '80.644', label: 'richieste bloccate dagli ad blocker' },
         { value: '752.423', label: 'segnali recuperati in totale (38,3% delle richieste)' }
       ],
-      note: 'Senza la configurazione server-side questi dati sarebbero andati persi, inclusi eventi e-commerce come visualizzazioni prodotto, aggiunte al carrello, inizio checkout e acquisti. Su Meta, dal 23 ottobre al 19 novembre 2026, l’API Conversions ha registrato più conversioni rispetto al solo pixel: +9,2% sulle visualizzazioni di contenuti (ViewContent), +46,2% sulle aggiunte al carrello (AddToCart), +133,3% sugli inizi di acquisto (InitiateCheckout). Fonti: Stape Requests Analytics (22 ago–20 nov 2026) e Meta Gestione eventi (23 ott–19 nov 2026).'
+      note: 'Senza la configurazione server-side questi dati sarebbero andati persi, inclusi eventi e-commerce come visualizzazioni prodotto, aggiunte al carrello, inizio checkout e acquisti. Su Meta, dal 23 ottobre al 19 novembre 2026, l’API Conversions ha registrato più conversioni rispetto al solo pixel: +9,2% sulle visualizzazioni di contenuti (ViewContent), +46,2% sulle aggiunte al carrello (AddToCart), +133,3% sugli inizi di acquisto (InitiateCheckout). Fonti: analytics del container server-side (22 ago–20 nov 2026) e Meta Gestione eventi (23 ott–19 nov 2026).'
     },
     data: [
       {
@@ -190,7 +190,7 @@ export const caseStudies: CaseStudy[] = [
           { label: 'Purchase · 135 richieste', value: '79 recuperate (58,5%)' }
         ],
         note: 'Gli eventi vicini all’acquisto sono quelli che si perdono di più: oltre la metà degli acquisti sarebbe rimasta invisibile alle piattaforme.',
-        source: 'Stape Requests Analytics, container sGTM candianidenim.com, 22 agosto – 20 novembre 2026, tabella “Requests by client · GA4”.'
+        source: 'Analytics del container server-side di candianidenim.com, 22 agosto – 20 novembre 2026, richieste GA4 per evento.'
       },
       {
         heading: 'Dove si perdono i dati: per browser',
@@ -200,7 +200,7 @@ export const caseStudies: CaseStudy[] = [
           { label: 'Chrome (mobile e desktop) · 576K richieste', value: '8,34% recuperato dagli ad blocker' },
           { label: 'Altri (Brave, Edge, Firefox…) · 719K richieste', value: '3,56% recuperato dagli ad blocker' }
         ],
-        source: 'Stape Requests Analytics, 22 agosto – 20 novembre 2026, “Requests by browser”.'
+        source: 'Analytics del container server-side, 22 agosto – 20 novembre 2026, richieste per browser.'
       },
       {
         heading: 'Bot fuori, consenso dentro',
@@ -210,7 +210,7 @@ export const caseStudies: CaseStudy[] = [
           { value: '42,29%', label: 'delle PageView con consenso dato (150.698); 57,71% con opt-out (205.679)' },
           { value: '62,96%', label: 'degli acquisti con consenso dato (85); 37,04% con opt-out (50)' }
         ],
-        source: 'Stape Requests Analytics, 22 agosto – 20 novembre 2026, “Requests from bots” e “Requests by consent choice” (richieste GA4).'
+        source: 'Analytics del container server-side, 22 agosto – 20 novembre 2026, richieste da bot e per scelta di consenso (richieste GA4).'
       }
     ],
     whyItMatters: {
@@ -220,9 +220,9 @@ export const caseStudies: CaseStudy[] = [
       ]
     },
     sources: [
-      'Stape Requests Analytics, container sGTM candianidenim.com, periodo 90 giorni (22 agosto – 20 novembre 2026).',
+      'Analytics del container server-side di candianidenim.com, periodo 90 giorni (22 agosto – 20 novembre 2026).',
       'Meta Gestione eventi, Pixel di Candiani Denim, 23 ottobre – 19 novembre 2026.',
-      'Screenshot e valori estratti: docs/sources/candiani-2026-11 nel repository del sito.'
+      'Screenshot originali e valori estratti conservati da Q4 Studio, disponibili su richiesta.'
     ],
     cta: {
       heading: 'Quanti segnali stanno perdendo le tue campagne?',
@@ -230,7 +230,7 @@ export const caseStudies: CaseStudy[] = [
       label: 'Vedi il tracciamento e i prezzi',
       href: '/tracciamento-server-side'
     },
-    services: ['Meta Pixel', 'Meta Conversion API', 'Server-side tagging (Stape)', 'Deduplicazione eventi', 'Consent Mode']
+    services: ['Meta Pixel', 'Meta Conversion API', 'Server-side tagging', 'Deduplicazione eventi', 'Consent Mode']
   },
   {
     slug: 'gp-meccatronica-sito-web',

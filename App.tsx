@@ -25,13 +25,32 @@ const ContactPage = lazy(() => import('./components/ContactPage'));
 const AppSupport = lazy(() => import('./components/AppSupport'));
 const SeoDirectory = lazy(() => import('./components/SeoDirectory'));
 const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
-const AIAgents = lazy(() => import('./components/AIAgents'));
-const CaseStudiesIndex = lazy(() => import('./components/CaseStudiesIndex'));
-const CaseStudyPage = lazy(() => import('./components/CaseStudyPage'));
-const ServerSideTracking = lazy(() => import('./components/ServerSideTracking'));
+// Le pagine principali hanno il loader condiviso: dopo il primo paint i loro
+// chunk vengono scaricati in anticipo (vedi l'effetto di prefetch), così il
+// passaggio di pagina non lascia lo schermo bianco su reti lente.
+const loadAIAgents = () => import('./components/AIAgents');
+const loadCaseStudiesIndex = () => import('./components/CaseStudiesIndex');
+const loadCaseStudyPage = () => import('./components/CaseStudyPage');
+const loadServerSideTracking = () => import('./components/ServerSideTracking');
+const loadMetaAdvertisingB2B = () => import('./components/MetaAdvertisingB2B');
+const loadSitesWebAI = () => import('./components/SitesWebAI');
+const AIAgents = lazy(loadAIAgents);
+const CaseStudiesIndex = lazy(loadCaseStudiesIndex);
+const CaseStudyPage = lazy(loadCaseStudyPage);
+const ServerSideTracking = lazy(loadServerSideTracking);
 const TechnicalPartner = lazy(() => import('./components/TechnicalPartner'));
-const MetaAdvertisingB2B = lazy(() => import('./components/MetaAdvertisingB2B'));
-const SitesWebAI = lazy(() => import('./components/SitesWebAI'));
+const MetaAdvertisingB2B = lazy(loadMetaAdvertisingB2B);
+const SitesWebAI = lazy(loadSitesWebAI);
+
+/** Schermo di attesa mentre arriva il chunk di una pagina: fondo carta, logo e riga che scorre. */
+const PageLoader: React.FC = () => (
+  <div className="fixed inset-0 z-[60] bg-[#f7f5fb]" role="status" aria-live="polite" aria-label="Caricamento pagina">
+    <img src="/logo.webp" alt="" width={130} height={40} className="absolute top-6 left-6 h-7 w-auto brightness-0" />
+    <div className="absolute bottom-0 left-0 h-[2px] w-full overflow-hidden">
+      <div className="q4-pageloader-bar h-full w-1/3 bg-gradient-to-r from-indigo-400 via-purple-500 to-purple-700" />
+    </div>
+  </div>
+);
 
 type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'about' | 'contact' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | 'tracking' | 'sites' | 'technical-partner' | 'meta-advertising' | 'case-studies' | 'case-study' | '404';
 
@@ -62,6 +81,22 @@ const App: React.FC = () => {
   };
 
   // Chiude il menu mobile quando cambia pagina o quando il viewport supera md
+  // Prefetch dei chunk delle pagine principali quando il browser è libero.
+  useEffect(() => {
+    const run = () => {
+      [loadServerSideTracking, loadSitesWebAI, loadAIAgents, loadCaseStudiesIndex, loadCaseStudyPage, loadMetaAdvertisingB2B].forEach((load) => {
+        load().catch(() => {});
+      });
+    };
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number; cancelIdleCallback?: (id: number) => void };
+    if (w.requestIdleCallback) {
+      const id = w.requestIdleCallback(run, { timeout: 4000 });
+      return () => w.cancelIdleCallback?.(id);
+    }
+    const id = window.setTimeout(run, 2500);
+    return () => window.clearTimeout(id);
+  }, []);
+
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [currentPage]);
@@ -414,7 +449,7 @@ const App: React.FC = () => {
         {currentPage === 'home' && <HomeV2 />}
 
         <LazyPageErrorBoundary>
-        <Suspense fallback={null}>
+        <Suspense fallback={<PageLoader />}>
           {currentPage === 'blog' && (
             <>
               <Blog
