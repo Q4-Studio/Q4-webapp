@@ -1019,3 +1019,105 @@ seoPages.sort((a, b) => {
 });
 
 export const getSeoPageBySlug = (slug: string) => seoPages.find((page) => page.slug === slug);
+
+/* ------------------------------------------------------------------ */
+/* UI chiara delle risorse (mockup Risorse.html e Articolo.html).       */
+/* Testi fissi, raggruppamento dell'indice e pagine correlate stanno    */
+/* qui perché li usano sia i componenti (SeoDirectory, SeoLandingPage)  */
+/* sia scripts/prerender.ts (mirror statico e markdown).                */
+/* ------------------------------------------------------------------ */
+
+export const resourcesIndexCopy = {
+  kicker: 'Risorse',
+  title: 'Risorse su agenti AI, automazioni e tracciamento.',
+  lead: 'Ogni pagina approfondisce un intento di ricerca specifico e collega servizi, problemi, soluzioni e FAQ.',
+  metaTitle: 'Risorse su AI, Automazioni e Tecnologia per PMI B2B | Q4 Studio',
+  metaDescription: 'Risorse Q4 Studio su agenti AI, automazioni WhatsApp e CRM, centralino e chatbot intelligenti per le aziende B2B.',
+  close: {
+    title: 'Non trovi il tuo caso?',
+    lead: 'Raccontaci il problema: ti rispondiamo con il punto di partenza giusto.',
+    cta: 'Contattaci',
+  },
+};
+
+export const resourceArticleCopy = {
+  kicker: 'Risorse',
+  heroCta: 'Vedi prezzi e pacchetti',
+  directAnswer: 'Risposta diretta.',
+  profile: 'Per chi, problema, risultato.',
+  audience: 'Per chi',
+  pain: 'Problema',
+  proof: 'Risultato',
+  // Sezione non prevista dal mockup (dataPoints): titolo della UI precedente.
+  dataPoints: 'Dati e risultati.',
+  clusters: 'Approfondimenti.',
+  // Usato solo se la tabella non ha un titolo proprio.
+  comparison: 'Confronto tra approcci.',
+  services: 'Come interveniamo.',
+  faq: 'Domande frequenti',
+  related: 'Argomenti correlati.',
+  close: {
+    title: 'Vuoi capire se ha senso per il tuo processo?',
+    lead: 'Raccontaci il problema in una frase.',
+    cta: 'Parlaci del progetto',
+  },
+};
+
+/** Frase da campo dati: maiuscola iniziale e punto finale, senza doppio punto. */
+export const asSentence = (text: string): string => {
+  const trimmed = text.trim();
+  const capitalized = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+  return /[.!?]$/.test(capitalized) ? capitalized : `${capitalized}.`;
+};
+
+/** Titolo di sezione con il punto finale del mockup ("Confronto tra approcci."). */
+export const asHeading = (text: string): string => (/[.!?:]$/.test(text.trim()) ? text.trim() : `${text.trim()}.`);
+
+/** Kicker dell'hero dell'articolo: "Risorse · <hub del cluster>". */
+export const resourceKicker = (page: SeoPage): string => `${resourceArticleCopy.kicker} · ${clusterHub[page.cluster].label}`;
+
+const geoSlugs = new Set(geoPageOrder);
+/** Pagina della matrice geografica (tema × città). */
+export const isGeoSeoPage = (slug: string): boolean => geoSlugs.has(slug);
+
+/**
+ * Gruppi dell'indice /risorse: uno per pagina hub (i cluster C e D puntano
+ * entrambi a /agenti-ai e diventano un solo gruppo). Prima gli agenti AI,
+ * come nel mockup; dentro ogni gruppo prima le pagine tematiche, poi quelle
+ * geografiche, ciascuna nell'ordine di `seoPages`.
+ */
+export const resourceGroups: Array<{ id: string; hub: { path: string; label: string }; pages: SeoPage[] }> = (() => {
+  const order: SeoCluster[] = ['D', 'C', 'A'];
+  const groups: Array<{ id: string; hub: { path: string; label: string }; pages: SeoPage[] }> = [];
+  for (const cluster of order) {
+    const hub = clusterHub[cluster];
+    let group = groups.find((g) => g.hub.path === hub.path);
+    if (!group) {
+      group = { id: hub.path.replace(/^\//, ''), hub, pages: [] };
+      groups.push(group);
+    }
+  }
+  const sorted = [...seoPages.filter((p) => !isGeoSeoPage(p.slug)), ...seoPages.filter((p) => isGeoSeoPage(p.slug))];
+  for (const page of sorted) {
+    groups.find((g) => g.hub.path === clusterHub[page.cluster].path)?.pages.push(page);
+  }
+  return groups.filter((g) => g.pages.length > 0);
+})();
+
+/** Pagine dell'indice nell'ordine in cui compaiono (per ItemList e markdown). */
+export const resourcePagesInOrder: SeoPage[] = resourceGroups.flatMap((g) => g.pages);
+
+/**
+ * "Argomenti correlati": prima le altre pagine dello stesso cluster (le
+ * tematiche prima di quelle geografiche, che altrimenti riempirebbero da sole
+ * i tre posti), poi le rimanenti solo se non bastano a fare `count`.
+ */
+export const getRelatedSeoPages = (page: SeoPage, count = 3): SeoPage[] => {
+  const others = seoPages.filter((p) => p.slug !== page.slug);
+  const sameCluster = others.filter((p) => p.cluster === page.cluster);
+  return [
+    ...sameCluster.filter((p) => !isGeoSeoPage(p.slug)),
+    ...sameCluster.filter((p) => isGeoSeoPage(p.slug)),
+    ...others.filter((p) => p.cluster !== page.cluster),
+  ].slice(0, count);
+};

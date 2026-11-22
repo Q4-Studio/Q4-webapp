@@ -557,10 +557,11 @@ const App: React.FC = () => {
           )}
 
           {currentPage === 'directory' && (
-            <>
+            <div className="home-light relative w-full">
               <SeoDirectory />
-              <Footer />
-            </>
+              <ContactForm showHeader={false} tone="light" />
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
           {currentPage === 'agenti-ai' && (
@@ -598,10 +599,12 @@ const App: React.FC = () => {
           )}
 
           {currentPage === 'seo-page' && currentSeoPage && (
-            <>
+            <div className="home-light relative w-full">
               <SeoLandingPage page={currentSeoPage} />
-              <Footer />
-            </>
+              {/* L'oggetto della richiesta è la risorsa da cui arriva il contatto. */}
+              <ContactForm subject={currentSeoPage.title} showHeader={false} tone="light" />
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
           {currentPage === 'case-studies' && (
