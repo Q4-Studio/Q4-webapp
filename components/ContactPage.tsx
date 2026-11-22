@@ -1,74 +1,162 @@
 import React from 'react';
+import { Bot, Globe, Mail, MessageSquare, Search, Server } from 'lucide-react';
+import SEOHead from './SEOHead';
+import Reveal from './home2/Reveal';
+import SubHero from './home2/SubHero';
+import CloseCta from './home2/CloseCta';
+import { OkIcon, PaperBlock } from './home2/primitives';
+import { IconBox } from './ResourceCard';
+import { CompanyCard, contactPageCopy as copy } from '../data/companyPages';
+import { siteUrl } from '../data/seoPages';
+import { trackCtaClick } from '../utils/dataLayer';
+import { onInternalLink, scrollToId } from '../utils/navigate';
 
-// Versione React della pagina statica generata in scripts/prerender.ts
-// (generateContactHtml). Se cambi i testi qui, cambia anche lì: le due versioni
-// devono restare sincronizzate perché i crawler senza JS vedono la statica.
-const ContactPage: React.FC = () => (
-  <div className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
-    <main className="max-w-4xl mx-auto relative z-10 space-y-16">
-      <header>
-        <p className="text-indigo-400 text-sm tracking-[0.08em] uppercase mb-5">Contatti</p>
-        <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold leading-[1.1] tracking-[-0.03em] mb-6">
-          Parla con Q4 Studio.
-        </h1>
-        <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl">
-          Scrivici o chiamaci: rispondiamo entro un giorno lavorativo. Nessun obbligo dopo il primo contatto.
-        </p>
-      </header>
+/* ------------------------------------------------------------------ */
+/* Contatti sul sistema chiaro (mockup Contatti.html). Testi e prezzi   */
+/* da data/companyPages.ts, gli stessi del mirror statico e del         */
+/* markdown in scripts/prerender.ts. Il form vero (#contatti) e il      */
+/* footer chiaro stanno in App.tsx, subito dopo la chiusura.            */
+/* ------------------------------------------------------------------ */
 
-      <section>
-        <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Canali diretti</h2>
-        <ul className="space-y-3 text-lg text-gray-300 max-w-3xl">
-          <li>
-            Email:{' '}
-            <a href="mailto:info@q4.studio" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">info@q4.studio</a>
-          </li>
-          <li>
-            Telefono e WhatsApp:{' '}
-            <a href="tel:+393383576286" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">+39 338 357 6286</a>
-          </li>
-          <li>
-            <a href="/#contatti" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Form di contatto sul sito</a>
-            : racconta il problema in una frase, ti rispondiamo con il punto di partenza giusto.
-          </li>
-        </ul>
+type IconType = React.ComponentType<{ className?: string; strokeWidth?: number }>;
+
+const CARD_TITLE_STYLE: React.CSSProperties = { fontSize: 'clamp(1.4rem, 1.9vw, 1.9rem)', letterSpacing: '-0.035em', lineHeight: 1.08 };
+
+const goToForm = (location: string, label: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+  trackCtaClick({ cta_location: location, cta_label: label, cta_destination: '#contatti' });
+  if (scrollToId('contatti', 'center')) event.preventDefault();
+};
+
+/** Card del mockup: fondo carta, icona in alto, titolo e testo in basso; link se ha href. */
+const InfoCard: React.FC<{ card: CompanyCard; icon: IconType; delay: number; minHeight: number }> = ({ card, icon, delay, minHeight }) => {
+  const body = (
+    <>
+      <IconBox icon={icon} />
+      <div className="mt-auto">
+        <h3 style={CARD_TITLE_STYLE}>{card.title}</h3>
+        <p className="mt-3 text-base leading-[1.55]">{card.text}</p>
+      </div>
+    </>
+  );
+  return (
+    <Reveal delay={delay} className="h-full">
+      {card.href ? (
+        <a
+          href={card.href}
+          onClick={card.href.startsWith('/') ? onInternalLink(card.href) : undefined}
+          className="bc h-full gap-6 no-underline"
+          style={{ minHeight }}
+        >
+          {body}
+        </a>
+      ) : (
+        <div className="flex h-full flex-col gap-6 rounded-[32px] bg-[#f7f5fb] px-7 py-8 md:p-11" style={{ minHeight }}>
+          {body}
+        </div>
+      )}
+    </Reveal>
+  );
+};
+
+const CHANNEL_ICONS: IconType[] = [Mail, MessageSquare, Globe];
+const START_ICONS: IconType[] = [Search, Server, Bot];
+
+const ContactPage: React.FC = () => {
+  const pageUrl = `${siteUrl}/contact`;
+  const contactSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: copy.metaTitle,
+    url: pageUrl,
+    mainEntity: { '@id': `${siteUrl}/#organization` },
+  };
+
+  return (
+    <section className="relative">
+      <SEOHead title={copy.metaTitle} description={copy.metaDescription} url={pageUrl} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(contactSchema) }} />
+
+      <SubHero kicker={copy.kicker} title={copy.title} lead={copy.lead} />
+
+      {/* Come ci trovi: testo a sinistra, anteprima del form a destra. Il form
+          vero è la sezione #contatti in fondo: il bottone porta lì. */}
+      <section className="px-6 pb-24 pt-24 md:pb-[160px] md:pt-[160px]" aria-labelledby="come-ci-trovi">
+        <PaperBlock className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-24">
+          <div>
+            <Reveal as="h2" id="come-ci-trovi" className="h-l" style={{ fontSize: 'clamp(2.75rem, 5.6vw, 5.5rem)' }}>{copy.find.title}</Reveal>
+            <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">{copy.find.lead}</Reveal>
+          </div>
+          <Reveal delay={0.12}>
+            <div className="mock grid gap-[22px] bg-white p-7 md:p-11">
+              <div className="grid gap-[22px]" aria-hidden="true">
+                {copy.find.formFields.map((field, i) => (
+                  <div key={field}>
+                    <p className="mb-2.5 text-[16px] font-semibold text-[#0a0a0a]">{field}</p>
+                    <div className="rounded-2xl bg-white" style={{ height: i === copy.find.formFields.length - 1 ? 140 : 56, boxShadow: '0 0 0 1px rgba(10,10,10,.1)' }} />
+                  </div>
+                ))}
+              </div>
+              <a href="#contatti" onClick={goToForm('contact_page_preview', copy.find.formCta)} className="btn btn-dark justify-center">
+                {copy.find.formCta}
+              </a>
+            </div>
+          </Reveal>
+        </PaperBlock>
       </section>
 
-      <section>
-        <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Sede</h2>
-        <p className="text-lg text-gray-300 leading-relaxed max-w-3xl">
-          Reggio Emilia (Emilia-Romagna), Italia. Riceviamo su appuntamento. Il lavoro tecnico si fa in remoto per aziende in tutta Italia.
-        </p>
+      {/* Canali diretti */}
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]" aria-labelledby="canali-diretti">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" id="canali-diretti" className="h-l mb-16 max-w-[1100px] md:mb-[120px]">{copy.channels.title}</Reveal>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {copy.channels.items.map((card, i) => (
+              <InfoCard key={card.title} card={card} icon={CHANNEL_ICONS[i] ?? Mail} delay={i * 0.1} minHeight={260} />
+            ))}
+          </div>
+        </div>
       </section>
 
-      <section>
-        <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Cosa scrivere per ottenere una risposta utile</h2>
-        <p className="text-lg text-gray-300 leading-relaxed max-w-3xl">
-          Ci aiuta molto sapere: quale problema concreto vuoi risolvere (es. Meta conta meno conversioni delle vendite reali,
-          i lead restano senza risposta, serve un sito), quali strumenti usi già (CRM, gestionale, WhatsApp business) e i tempi
-          previsti. Con queste informazioni la prima risposta include già un&apos;indicazione di pacchetto, prezzo e tempistica.
-        </p>
+      {/* Cosa scrivere per una risposta utile */}
+      <section className="px-6 pb-24 md:pb-[160px]" aria-labelledby="cosa-scrivere">
+        <PaperBlock className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-24">
+          <div>
+            <Reveal as="h2" id="cosa-scrivere" className="h-l" style={{ fontSize: 'clamp(2.75rem, 5.6vw, 5.5rem)' }}>{copy.brief.title}</Reveal>
+            <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">{copy.brief.lead}</Reveal>
+          </div>
+          <Reveal delay={0.12}>
+            <ul className="mock m-0 list-none p-0">
+              {copy.brief.items.map((item) => (
+                <li key={item.label} className="ev flex-wrap">
+                  <OkIcon />
+                  {item.label}
+                  <em style={{ whiteSpace: 'normal', textAlign: 'right' }}>{item.hint}</em>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </PaperBlock>
       </section>
 
-      <section>
-        <h2 className="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6">Punti di partenza tipici</h2>
-        <ul className="space-y-6 max-w-3xl mb-8">
-          <li className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-gray-300"><strong className="text-white">Audit tracciamento:</strong> 490 €, 3-5 giorni lavorativi, documento finale tuo anche se non procedi.</li>
-          <li className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-gray-300"><strong className="text-white">Setup server-side:</strong> da 1.500 €, circa una giornata per siti non-ecommerce.</li>
-          <li className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-gray-300"><strong className="text-white">Automazioni e agenti AI:</strong> setup da 490 €, canone da 59 a 200 €/mese.</li>
-          <li className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-gray-300"><strong className="text-white">Siti web con AI:</strong> progetti da 2.999 €, landing page pronte in circa una settimana.</li>
-        </ul>
-        <p className="text-lg text-gray-300 leading-relaxed">
-          <a href="/tracciamento-server-side" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Prezzi tracciamento</a>
-          {' · '}
-          <a href="/agenti-ai" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Pacchetti automazioni</a>
-          {' · '}
-          <a href="/siti-web-ai" className="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Siti web</a>
-        </p>
+      {/* Punti di partenza: prezzi e tempi dai pacchetti di data/servicePages.ts */}
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]" aria-labelledby="punti-di-partenza">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" id="punti-di-partenza" className="h-l mb-16 max-w-[1100px] md:mb-[120px]">{copy.startingPoints.title}</Reveal>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {copy.startingPoints.items.map((card, i) => (
+              <InfoCard key={card.title} card={card} icon={START_ICONS[i] ?? Search} delay={i * 0.1} minHeight={280} />
+            ))}
+          </div>
+        </div>
       </section>
-    </main>
-  </div>
-);
+
+      <CloseCta
+        size="l"
+        title={copy.close.title}
+        lead={copy.close.lead}
+        cta={{ label: copy.close.cta, href: '#contatti', onClick: goToForm('contact_page', copy.close.cta) }}
+      />
+    </section>
+  );
+};
 
 export default ContactPage;

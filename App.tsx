@@ -283,7 +283,7 @@ const App: React.FC = () => {
   useEffect(() => {
     // Gira su tutte le pagine. Con #hero (home e pagine chiare con hero
     // scuro): chiaro oltre l'hero. Senza #hero: chiaro solo se la pagina è
-    // dentro .home-light, altrimenti (blog, about, privacy…) resta bianco.
+    // dentro .home-light, altrimenti (blog, supporto app…) resta bianco.
     // L'altezza dell'hero può cambiare senza scroll né resize (font che
     // arrivano, barra URL mobile): la osserviamo con un ResizeObserver,
     // agganciato appena #hero esiste. Le pagine lazy montano dopo l'effetto:
@@ -407,9 +407,11 @@ const App: React.FC = () => {
     { label: 'Blog', active: currentPage === 'blog' || currentPage === 'blog-article', onClick: () => navigateTo('blog') },
   ];
 
-  // Sfondo di html/body e theme-color: rotte chiare da data/lightRoutes.ts;
-  // privacy, supporto app e 404 restano scure anche su un path chiaro.
-  const lightDocument = isLightRoute(typeof window !== 'undefined' ? window.location.pathname : '/') && !['privacy', 'app-support', '404'].includes(currentPage);
+  // Sfondo di html/body e theme-color: rotte chiare da data/lightRoutes.ts.
+  // La privacy è chiara anche come hash (/#privacy del cookie banner, o
+  // #privacy su un path qualsiasi); supporto app e 404 restano scure anche
+  // su un path chiaro.
+  const lightDocument = (isLightRoute(typeof window !== 'undefined' ? window.location.pathname : '/') || currentPage === 'privacy') && !['app-support', '404'].includes(currentPage);
   useDocumentTheme(lightDocument);
 
   return (
@@ -528,25 +530,29 @@ const App: React.FC = () => {
             </>
           )}
 
+          {/* Privacy: nessun form (il mockup non lo prevede), solo il footer chiaro. */}
           {currentPage === 'privacy' && (
-            <>
+            <div className="home-light relative w-full">
               <Privacy />
-              <Footer />
-            </>
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
           {currentPage === 'about' && (
-            <>
+            <div className="home-light relative w-full">
               <AboutPage />
-              <Footer />
-            </>
+              <ContactForm showHeader={false} tone="light" />
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
+          {/* Contatti: il form è la sezione #contatti della pagina, dopo la chiusura. */}
           {currentPage === 'contact' && (
-            <>
+            <div className="home-light relative w-full">
               <ContactPage />
-              <Footer />
-            </>
+              <ContactForm showHeader={false} tone="light" />
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
           {currentPage === 'app-support' && (

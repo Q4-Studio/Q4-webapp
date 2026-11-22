@@ -3,6 +3,7 @@ import { caseStudies, caseStudiesIndexCopy, caseStudiesPath, CaseStudy, candiani
 import { aiAgentsFaqs, aiAgentsOffer, aiAgentsPackages, faqPageSchema, homeFaqs, homePriceRows, metaAdvertisingFaqs, priceRowText, sitesOffer, sitesWebAiFaqs, trackingFaqs, trackingOffer, trackingPackages, trackingSchemaFaqs } from '../data/servicePages.ts';
 import { CALCULATOR_EXAMPLE, CALCULATOR_LEAD, CALCULATOR_SOURCE, CALCULATOR_TITLE } from '../data/trackingCalculator.ts';
 import { DARK_BACKGROUND, LIGHT_BACKGROUND, isLightRoute } from '../data/lightRoutes.ts';
+import { aboutPageCopy, company, CompanyCard, contactPageCopy, cookieSections, LegalBlock, LegalSection, LegalText, privacyPageCopy, privacySections } from '../data/companyPages.ts';
 import { createClient } from '@supabase/supabase-js';
 import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
@@ -1012,26 +1013,56 @@ function generateTechnicalPartnerHtml(): string {
   return generateBaseHtml({ title: 'Partner tecnico white label per agenzie | Q4 Studio', description: 'Tracciamento server-side, Consent Mode, automazioni e integrazioni CRM in white label per agenzie.', canonical: `${siteUrl}/partner-tecnico`, noIndex: true, bodyContent: staticPage(body) });
 }
 
-// --- Pagine "trust anchor" (/about, /contact, /privacy) -------------------
+// --- Pagine aziendali (/about, /contact, /privacy) ------------------------
 // Le pagine di fiducia che gli agenti AI consultano per verificare che il
-// sito rappresenti un'azienda reale prima di raccomandarla. Ogni versione
-// statica qui sotto ha una controparte React (components/) con lo stesso
-// contenuto: se cambi i testi, cambia entrambe.
+// sito rappresenti un'azienda reale prima di raccomandarla. Mirror statici
+// chiari con le stesse sezioni della UI (components/AboutPage.tsx,
+// ContactPage.tsx, Privacy.tsx): testi, prezzi e testo legale arrivano da
+// data/companyPages.ts, nessuna copia a mano qui.
+
+const legalInlineHtml = (text: LegalText): string => text.map((part) => {
+  if (typeof part === 'string') return escapeHtml(part);
+  if ('b' in part) return `<strong>${escapeHtml(part.b)}</strong>`;
+  if ('a' in part) return `<a href="${escapeHtml(part.href)}" rel="noopener noreferrer">${escapeHtml(part.a)}</a>`;
+  return `<a href="mailto:${company.email}">${company.email}</a>`;
+}).join('');
+
+const legalBlockHtml = (block: LegalBlock): string => {
+  switch (block.kind) {
+    case 'p': return `<p>${legalInlineHtml(block.text)}</p>`;
+    case 'note': return `<p><em>${escapeHtml(block.text)}</em></p>`;
+    case 'list': return `<ul>${block.items.map((item) => `<li>${legalInlineHtml(item)}</li>`).join('')}</ul>`;
+    case 'cookie': return `<p><strong>${escapeHtml(block.name)}</strong></p><dl>${block.rows.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl>`;
+  }
+};
+
+const legalSectionsHtml = (sections: LegalSection[]): string =>
+  sections.map((section) => `<h3>${escapeHtml(section.title)}</h3>${section.blocks.map(legalBlockHtml).join('')}`).join('');
+
+const companyCardsHtml = (cards: CompanyCard[]): string =>
+  cards.map((card) => `<article><h3>${card.href ? `<a href="${escapeHtml(card.href)}">${escapeHtml(card.title)}</a>` : escapeHtml(card.title)}</h3><p>${escapeHtml(card.text)}</p></article>`).join('');
 
 function generateAboutHtml(): string {
-  const body = staticPage(`<header><p class="eyebrow">Chi siamo</p><h1 class="hero-h1 font-bold">Q4 Studio è uno studio tecnico con sede a Reggio Emilia.</h1><p class="hero-subhead">Risolviamo i problemi tecnici che stanno sotto al marketing: tracciamento server-side, Consent Mode v2, automazioni CRM e WhatsApp, agenti AI e siti web prodotti con strumenti AI sotto direzione umana.</p></header>
-  <section><h2>Il fondatore</h2><p>Q4 Studio è guidato da Sebastiano Riva, che viene dal marketing (studiato e fatto per anni) ed è anche tecnico. Questa combinazione è il motivo per cui i progetti partono dal problema commerciale e arrivano fino all'implementazione tecnica, senza passaggi intermedi che perdono informazioni.</p></section>
-  <section><h2>Come lavoriamo</h2><p>Tre principi applicati a ogni progetto:</p><ul><li><strong>Prezzi pubblici</strong>: audit del tracciamento 490 €, setup server-side da 1.500 €, siti web da 2.999 €, canoni dichiarati prima di iniziare.</li><li><strong>Fatto con l'AI, non dall'AI</strong>: l'AI accelera produzione e sviluppo, ma direzione, struttura e messaggio restano decisioni umane.</li><li><strong>Mai inventare dati</strong>: non deduciamo prezzi, risultati o garanzie che non siano esplicitamente pubblicati. Gli unici numeri validi sono quelli nelle nostre pagine e nei casi studio con metriche reali.</li></ul></section>
-  <section><h2>Dati aziendali</h2><p>Ragione sociale: Q4 Studio di Sebastiano Riva. Sede: Reggio Emilia (Emilia-Romagna), Italia. Partita IVA: IT03033250352. Il lavoro tecnico si fa in remoto per aziende in tutta Italia; i progetti che richiedono presenza si svolgono soprattutto tra Reggio Emilia, Modena e Parma.</p><p>Contatti: <a href="mailto:info@q4.studio">info@q4.studio</a> · <a href="tel:+393383576286">+39 338 357 6286</a>. Profili verificati: <a href="https://www.linkedin.com/company/q4studio" rel="noopener noreferrer">LinkedIn</a>, <a href="https://www.instagram.com/q4.studio" rel="noopener noreferrer">Instagram</a>.</p><p><a href="/contact">Pagina contatti completa</a> · <a href="/casi-studio">Casi studio con dati reali</a></p></section>`);
+  const copy = aboutPageCopy;
+  const { founder, principles, figures, companyData, close } = copy;
+  const profilesHtml = companyData.profiles
+    .map((profile) => `<a href="${escapeHtml(profile.href)}"${profile.external ? ' rel="noopener noreferrer"' : ''}>${escapeHtml(profile.label)}</a>`)
+    .join(' · ');
+  const body = staticPage(`<header><p class="eyebrow">${escapeHtml(copy.kicker)}</p><h1 class="hero-h1 font-bold">${escapeHtml(copy.title)}</h1><p class="hero-subhead">${escapeHtml(copy.lead)}</p></header>
+  <section><h2>${escapeHtml(founder.title)}</h2><p>${escapeHtml(founder.text)}</p><p><img src="${company.founderPhoto}" alt="${escapeHtml(`${company.founder}, fondatore di Q4 Studio`)}" width="96" height="96" loading="lazy"> <strong>${escapeHtml(company.founder)}</strong>, ${escapeHtml(company.founderRole)}</p></section>
+  <section><h2>${escapeHtml(principles.title)}</h2>${principles.items.map((item) => `<article><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.text)}</p></article>`).join('')}</section>
+  <section aria-label="Prezzi pubblici"><ul>${figures.map((figure) => `<li><strong>${escapeHtml(figure.value)}</strong> ${escapeHtml(figure.caption)}</li>`).join('')}</ul></section>
+  <section><h2>${escapeHtml(companyData.title)}</h2><p>${escapeHtml(companyData.lead)}</p><dl>${companyData.rows.map((row) => `<div><dt>${escapeHtml(row.label)}</dt><dd>${row.href ? `<a href="${escapeHtml(row.href)}">${escapeHtml(row.value)}</a>` : escapeHtml(row.value)}</dd></div>`).join('')}</dl><p>Profili verificati: ${profilesHtml}</p></section>
+  <section><h2>${escapeHtml(close.title)}</h2><p>${escapeHtml(close.lead)}</p><a href="${close.href}">${escapeHtml(close.cta)}</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`, true);
   return generateBaseHtml({
-    title: 'Chi siamo | Q4 Studio',
-    description: 'Q4 Studio è uno studio tecnico con sede a Reggio Emilia: tracciamento server-side, automazioni CRM e agenti AI per PMI italiane. P.IVA IT03033250352.',
+    title: copy.metaTitle,
+    description: copy.metaDescription,
     canonical: `${siteUrl}/about`,
     bodyContent: body,
     schema: [{
       '@context': 'https://schema.org',
       '@type': 'AboutPage',
-      name: 'Chi siamo | Q4 Studio',
+      name: copy.metaTitle,
       url: `${siteUrl}/about`,
       mainEntity: { '@id': `${siteUrl}/#organization` }
     }]
@@ -1039,20 +1070,23 @@ function generateAboutHtml(): string {
 }
 
 function generateContactHtml(): string {
-  const body = staticPage(`<header><p class="eyebrow">Contatti</p><h1 class="hero-h1 font-bold">Parla con Q4 Studio.</h1><p class="hero-subhead">Scrivici o chiamaci: rispondiamo entro un giorno lavorativo. Nessun obbligo dopo il primo contatto.</p></header>
-  <section><h2>Canali diretti</h2><ul><li>Email: <a href="mailto:info@q4.studio">info@q4.studio</a></li><li>Telefono e WhatsApp: <a href="tel:+393383576286">+39 338 357 6286</a></li><li><a href="/#contatti">Form di contatto sul sito</a>: racconta il problema in una frase, ti rispondiamo con il punto di partenza giusto.</li></ul></section>
-  <section><h2>Sede</h2><p>Reggio Emilia (Emilia-Romagna), Italia. Riceviamo su appuntamento. Il lavoro tecnico si fa in remoto per aziende in tutta Italia.</p></section>
-  <section><h2>Cosa scrivere per ottenere una risposta utile</h2><p>Ci aiuta molto sapere: quale problema concreto vuoi risolvere (es. Meta conta meno conversioni delle vendite reali, i lead restano senza risposta, serve un sito), quali strumenti usi già (CRM, gestionale, WhatsApp business) e i tempi previsti. Con queste informazioni la prima risposta include già un'indicazione di pacchetto, prezzo e tempistica.</p></section>
-  <section><h2>Punto di partenza tipici</h2><ul><li>Audit tracciamento: 490 €, 3-5 giorni lavorativi, documento finale tuo anche se non procedi.</li><li>Setup server-side: da 1.500 €, circa una giornata per siti non-ecommerce.</li><li>Automazioni e agenti AI: setup da 490 €, canone da 59 a 200 €/mese.</li><li>Siti web con AI: progetti da 2.999 €, landing page pronte in circa una settimana.</li></ul><p><a href="/tracciamento-server-side">Prezzi tracciamento</a> · <a href="/agenti-ai">Pacchetti automazioni</a> · <a href="/siti-web-ai">Siti web</a></p></section>`);
+  const copy = contactPageCopy;
+  const { find, channels, brief, startingPoints, close } = copy;
+  const body = staticPage(`<header><p class="eyebrow">${escapeHtml(copy.kicker)}</p><h1 class="hero-h1 font-bold">${escapeHtml(copy.title)}</h1><p class="hero-subhead">${escapeHtml(copy.lead)}</p></header>
+  <section><h2>${escapeHtml(find.title)}</h2><p>${escapeHtml(find.lead)}</p><a href="#contatti">${escapeHtml(find.formCta)}</a></section>
+  <section><h2>${escapeHtml(channels.title)}</h2>${companyCardsHtml(channels.items)}</section>
+  <section><h2>${escapeHtml(brief.title)}</h2><p>${escapeHtml(brief.lead)}</p><ul>${brief.items.map((item) => `<li>${escapeHtml(item.label)} (${escapeHtml(item.hint)})</li>`).join('')}</ul></section>
+  <section><h2>${escapeHtml(startingPoints.title)}</h2>${companyCardsHtml(startingPoints.items)}</section>
+  <section><h2>${escapeHtml(close.title)}</h2><p>${escapeHtml(close.lead)}</p><a href="#contatti">${escapeHtml(close.cta)}</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`, true);
   return generateBaseHtml({
-    title: 'Contatti | Q4 Studio',
-    description: 'Contatta Q4 Studio: info@q4.studio, +39 338 357 6286, form sul sito. Sede a Reggio Emilia, risposta entro un giorno lavorativo.',
+    title: copy.metaTitle,
+    description: copy.metaDescription,
     canonical: `${siteUrl}/contact`,
     bodyContent: body,
     schema: [{
       '@context': 'https://schema.org',
       '@type': 'ContactPage',
-      name: 'Contatti | Q4 Studio',
+      name: copy.metaTitle,
       url: `${siteUrl}/contact`,
       mainEntity: { '@id': `${siteUrl}/#organization` }
     }]
@@ -1060,13 +1094,13 @@ function generateContactHtml(): string {
 }
 
 function generatePrivacyStaticHtml(): string {
-  const body = staticPage(`<header><p class="eyebrow">Legale</p><h1 class="hero-h1 font-bold">Privacy &amp; Cookie Policy</h1><p class="hero-subhead">Ultimo aggiornamento: 5 Gennaio 2025. Come raccogliamo, usiamo e proteggiamo i dati personali di chi visita q4.studio.</p></header>
-  <section><h2>Privacy Policy</h2><h3>1. Titolare del Trattamento</h3><p>Q4 Studio — P.IVA 03033250352 — email <a href="mailto:info@q4.studio">info@q4.studio</a>.</p><h3>2. Dati Raccolti</h3><p>Dati di contatto (nome, cognome, email, telefono, azienda) tramite il form di contatto; dati di navigazione (indirizzo IP, browser, dispositivo, pagine visitate) tramite Google Analytics 4; cookie di terze parti di Meta Pixel per il tracciamento pubblicitario.</p><h3>3. Finalità del Trattamento</h3><p>Rispondere alle richieste di contatto e preventivi; analizzare il traffico del sito e migliorare l'esperienza utente (Google Analytics 4); campagne pubblicitarie su Meta tramite Meta Pixel; adempimenti fiscali e contabili.</p><h3>4. Base Giuridica</h3><p>Consenso dell'interessato (art. 6.1.a GDPR) per cookie analytics e marketing; esecuzione di misure precontrattuali (art. 6.1.b GDPR) per richieste di preventivo; legittimo interesse (art. 6.1.f GDPR) per analisi statistiche anonime.</p><h3>5. Conservazione dei Dati</h3><p>Dati di contatto: 24 mesi dalla richiesta. Dati analytics: 26 mesi (retention automatica GA4). Cookie: massimo 12 mesi.</p><h3>6. Diritti dell'Interessato</h3><p>Ai sensi del GDPR hai diritto di accedere ai tuoi dati, rettificarli, richiederne la cancellazione ("diritto all'oblio"), limitarne il trattamento, opporti al trattamento, richiederne la portabilità e revocare il consenso in qualsiasi momento. Per esercitarli scrivi a <a href="mailto:info@q4.studio">info@q4.studio</a>.</p></section>
-  <section><h2>Cookie Policy</h2><h3>Cosa sono i Cookie</h3><p>I cookie sono piccoli file di testo che i siti web visitati inviano al browser dell'utente, dove vengono memorizzati per essere ritrasmessi agli stessi siti alla visita successiva.</p><h3>Cookie Utilizzati</h3><p><strong>Cookie tecnici</strong> (nessun consenso richiesto): <em>cookie_consent</em>, memorizza le preferenze sui cookie, durata 12 mesi.</p><p><strong>Cookie analytics</strong> (consenso richiesto): Google Analytics 4 (_ga, _ga_*, _gid), statistiche anonime di utilizzo, durata 2 anni (_ga) e 24 ore (_gid), terza parte Google LLC.</p><p><strong>Cookie marketing</strong> (consenso richiesto): Meta Pixel (_fbp, _fbc, fr), tracciamento conversioni e remarketing su Facebook/Instagram, durata 90 giorni, terza parte Meta Platforms Inc.</p><h3>Gestione dei Cookie</h3><p>Puoi gestire le preferenze tramite il banner presente sul sito o dalle impostazioni del browser (Chrome, Firefox, Safari, Edge).</p></section>
-  <section><h2>Domande</h2><p>Per qualsiasi domanda relativa alla privacy o ai cookie scrivi a <a href="mailto:info@q4.studio">info@q4.studio</a>.</p></section>`);
+  const copy = privacyPageCopy;
+  const body = staticPage(`<header><p class="eyebrow">${escapeHtml(copy.kicker)}</p><h1 class="hero-h1 font-bold">${escapeHtml(copy.title)}</h1><p class="hero-subhead">${escapeHtml(copy.lead)} Ultimo aggiornamento: ${escapeHtml(copy.lastUpdated)}.</p></header>
+  <section><h2>${escapeHtml(copy.privacyTitle)}</h2>${legalSectionsHtml(privacySections)}</section>
+  <section><h2>${escapeHtml(copy.cookieTitle)}</h2>${legalSectionsHtml(cookieSections)}</section>`, true);
   return generateBaseHtml({
-    title: 'Privacy & Cookie Policy | Q4 Studio',
-    description: 'Privacy policy e cookie policy di Q4 Studio: dati raccolti, finalità, base giuridica, conservazione e diritti dell\'interessato ai sensi del GDPR.',
+    title: copy.metaTitle,
+    description: copy.metaDescription,
     canonical: `${siteUrl}/privacy`,
     bodyContent: body,
   });
@@ -1402,69 +1436,94 @@ function buildHomeMd(): string {
 }
 
 function buildTrustMd(): void {
-  registerMd('/about', 'Chi siamo | Q4 Studio', 'Q4 Studio è uno studio tecnico con sede a Reggio Emilia guidato da Sebastiano Riva: tracciamento server-side, automazioni CRM e agenti AI per PMI italiane.', [
-    '## Chi siamo',
+  // Stesse sezioni e titoli della UI chiara (data/companyPages.ts), senza il punto finale.
+  const mdHeading = (text: string) => text.replace(/\.$/, '');
+  const mdLegalInline = (text: LegalText): string => text.map((part) => {
+    if (typeof part === 'string') return part;
+    if ('b' in part) return `**${part.b}**`;
+    if ('a' in part) return `[${part.a}](${part.href})`;
+    return company.email;
+  }).join('');
+  const mdLegalBlock = (block: LegalBlock): string[] => {
+    switch (block.kind) {
+      case 'p': return [mdLegalInline(block.text), ''];
+      case 'note': return [`*${block.text}*`, ''];
+      case 'list': return [...block.items.map((item) => `- ${mdLegalInline(item)}`), ''];
+      case 'cookie': return [`**${block.name.replace(/([_*])/g, '\\$1')}**`, '', ...block.rows.map(([label, value]) => `- ${label}: ${value}`), ''];
+    }
+  };
+  const mdLegalSections = (sections: LegalSection[]): string[] =>
+    sections.flatMap((section) => [`### ${section.title}`, '', ...section.blocks.flatMap(mdLegalBlock)]);
+  const mdCards = (cards: CompanyCard[]): string[] =>
+    cards.map((card) => `- **${card.title}**: ${card.text}${card.href && card.href.startsWith('/') ? ` (${siteUrl}${card.href})` : ''}`);
+
+  const about = aboutPageCopy;
+  registerMd('/about', about.metaTitle, about.mdDescription, [
+    `${about.title} ${about.lead}`,
     '',
-    'Q4 Studio risolve i problemi tecnici che stanno sotto al marketing: tracciamento server-side, Consent Mode v2, automazioni CRM e WhatsApp, agenti AI e siti web prodotti con strumenti AI sotto direzione umana.',
+    `## ${mdHeading(about.founder.title)}`,
     '',
-    'Il fondatore, Sebastiano Riva, viene dal marketing ed è anche tecnico: i progetti partono dal problema commerciale e arrivano fino all\'implementazione, senza passaggi intermedi.',
+    about.founder.text,
     '',
-    '## Principi',
+    `## ${mdHeading(about.principles.title)}`,
     '',
-    '- Prezzi pubblici: audit 490 €, setup server-side da 1.500 €, siti da 2.999 €, canoni dichiarati prima di iniziare.',
-    '- Fatto con l\'AI, non dall\'AI: direzione, struttura e messaggio restano decisioni umane.',
-    '- Mai inventare dati: gli unici numeri validi sono quelli pubblicati.',
+    ...about.principles.items.map((item) => `- **${item.title}**: ${item.text}`),
     '',
-    '## Dati aziendali',
+    '## Prezzi pubblici',
     '',
-    '- Ragione sociale: Q4 Studio di Sebastiano Riva',
-    '- Sede: Reggio Emilia (Emilia-Romagna), Italia',
-    '- Partita IVA: IT03033250352',
-    '- Email: info@q4.studio',
-    '- Telefono: +39 338 357 6286',
-    '- LinkedIn: https://www.linkedin.com/company/q4studio',
+    ...about.figures.map((figure) => `- ${figure.value}: ${figure.caption}`),
+    '',
+    `## ${mdHeading(about.companyData.title)}`,
+    '',
+    about.companyData.lead,
+    '',
+    ...about.companyData.rows.map((row) => `- ${row.label}: ${row.value}`),
+    ...about.companyData.profiles.map((profile) => `- ${profile.label}: ${profile.external ? profile.href : `${siteUrl}${profile.href}`}`),
+    '',
+    `## ${mdHeading(about.close.title)}`,
+    '',
+    `${about.close.lead} Contatti: ${siteUrl}${about.close.href}`,
     '',
   ]);
-  registerMd('/contact', 'Contatti | Q4 Studio', 'Contatta Q4 Studio via email, telefono o form: sede a Reggio Emilia, risposta entro un giorno lavorativo.', [
-    '## Canali diretti',
+
+  const contact = contactPageCopy;
+  registerMd('/contact', contact.metaTitle, contact.mdDescription, [
+    contact.lead,
     '',
-    '- Email: info@q4.studio',
-    '- Telefono e WhatsApp: +39 338 357 6286',
-    `- Form di contatto: ${siteUrl}/#contatti`,
+    `## ${mdHeading(contact.find.title)}`,
     '',
-    '## Sede',
+    `${contact.find.lead} Form di contatto: ${siteUrl}/contact#contatti`,
     '',
-    'Reggio Emilia (Emilia-Romagna), Italia. Riceviamo su appuntamento. Il lavoro tecnico si fa in remoto per aziende in tutta Italia.',
+    `## ${mdHeading(contact.channels.title)}`,
     '',
-    '## Punti di partenza tipici',
+    ...mdCards(contact.channels.items),
     '',
-    '- Audit tracciamento: 490 €, 3-5 giorni lavorativi.',
-    '- Setup server-side: da 1.500 €, circa una giornata per siti non-ecommerce.',
-    '- Automazioni e agenti AI: setup da 490 €, canone da 59 a 200 €/mese.',
-    '- Siti web con AI: progetti da 2.999 €, landing page in circa una settimana.',
+    `## ${mdHeading(contact.brief.title)}`,
+    '',
+    ...contact.brief.items.map((item) => `- ${item.label} (${item.hint})`),
+    '',
+    contact.brief.lead,
+    '',
+    `## ${mdHeading(contact.startingPoints.title)}`,
+    '',
+    ...mdCards(contact.startingPoints.items),
+    '',
+    `## ${mdHeading(contact.close.title)}`,
+    '',
+    `${contact.close.lead} Form: ${siteUrl}/contact#contatti`,
     '',
   ]);
-  registerMd('/privacy', 'Privacy & Cookie Policy | Q4 Studio', 'Privacy policy e cookie policy di Q4 Studio, aggiornate al 5 gennaio 2025.', [
-    '## Privacy Policy',
+
+  const privacy = privacyPageCopy;
+  registerMd('/privacy', privacy.metaTitle, `Privacy policy e cookie policy di Q4 Studio, aggiornate al ${privacy.lastUpdated}.`, [
+    privacy.lead,
     '',
-    '**Titolare del trattamento**: Q4 Studio — P.IVA IT03033250352 — info@q4.studio.',
+    `## ${mdHeading(privacy.privacyTitle)}`,
     '',
-    '**Dati raccolti**: dati di contatto tramite il form (nome, email, telefono, azienda); dati di navigazione tramite Google Analytics 4 (IP, browser, dispositivo, pagine visitate); cookie di terze parti Meta Pixel per il tracciamento pubblicitario.',
+    ...mdLegalSections(privacySections),
+    `## ${mdHeading(privacy.cookieTitle)}`,
     '',
-    '**Finalità**: rispondere alle richieste, analizzare il traffico, campagne Meta, adempimenti fiscali.',
-    '',
-    '**Base giuridica**: consenso (art. 6.1.a GDPR) per cookie analytics e marketing; esecuzione di misure precontrattuali (art. 6.1.b GDPR) per preventivi; legittimo interesse (art. 6.1.f GDPR) per analisi anonime.',
-    '',
-    '**Conservazione**: contatti 24 mesi; analytics 26 mesi; cookie massimo 12 mesi.',
-    '',
-    '**Diritti**: accesso, rettifica, cancellazione, limitazione, opposizione, portabilità, revoca del consenso. Scrivere a info@q4.studio.',
-    '',
-    '## Cookie utilizzati',
-    '',
-    '- cookie_consent (tecnico, 12 mesi)',
-    '- Google Analytics 4 (_ga, _gid) (analytics, consenso, 2 anni / 24 ore, Google LLC)',
-    '- Meta Pixel (_fbp, _fbc, fr) (marketing, consenso, 90 giorni, Meta Platforms)',
-    '',
+    ...mdLegalSections(cookieSections),
   ]);
 }
 
