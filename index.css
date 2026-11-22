@@ -7,9 +7,9 @@ html, body {
   overflow-x: hidden;
   overscroll-behavior-x: none;
 }
-/* Bianco come html: le pagine chiare non hanno flash nero al primo paint.
-   Le pagine scure hanno il loro sfondo #050505 sulle sezioni; html/body e
-   theme-color seguono la rotta (data/lightRoutes.ts, hooks/useDocumentTheme.ts). */
+/* Bianco come html: nessun flash nero al primo paint. Tutte le pagine sono
+   sul sistema chiaro; html/body e theme-color seguono comunque la rotta da
+   un punto unico (data/lightRoutes.ts, hooks/useDocumentTheme.ts). */
 body {
   font-family: 'Inter', sans-serif;
   background-color: #ffffff;
@@ -32,9 +32,8 @@ h1, h2, h3, h4, h5, h6 {
 /* ------------------------------------------------------------------ */
 /* Scala tipografica condivisa per le hero delle pagine servizio.       */
 /* Sostituisce le taglie arbitrarie (clamp inline, 44-104px) con valori */
-/* coerenti su tutte le pagine che la adottano. Per ora applicata solo  */
-/* a ServerSideTracking, AIAgents, MetaAdvertisingB2B, TechnicalPartner */
-/* (rollout sul resto del sito rimandato volutamente).                  */
+/* coerenti. Oggi la usano solo i mirror statici di                     */
+/* scripts/prerender.ts (le pagine React usano .h-sub / .lead).         */
 /* ------------------------------------------------------------------ */
 @utility hero-h1 {
   font-size: clamp(2rem, 3.4vw, 3.5rem);
@@ -334,6 +333,40 @@ h1, h2, h3, h4, h5, h6 {
 .home-light .bar { height: 14px; border-radius: 9999px; background: #efe7fb; overflow: hidden; }
 .home-light .bar i { display: block; height: 100%; border-radius: inherit; transform-origin: left; }
 .home-light .ico { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 20px; background: #f3e8ff; color: #7e22ce; flex: none; }
+
+/* Prosa degli articoli del blog (markdown da Supabase, lib/blogMarkdown.ts):
+   corpo a 19px, colonna ~760px, titoli in inchiostro, link sottolineati
+   viola come nelle pagine aziendali. */
+.home-light .prose-light { max-width: 760px; font-size: 19px; line-height: 1.75; color: var(--body); overflow-wrap: break-word; }
+.home-light .prose-light > :first-child { margin-top: 0; }
+.home-light .prose-light p, .home-light .prose-light ul, .home-light .prose-light ol,
+.home-light .prose-light blockquote, .home-light .prose-light pre, .home-light .prose-light figure,
+.home-light .prose-light .tbl { margin: 0 0 28px; }
+.home-light .prose-light h1, .home-light .prose-light h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); letter-spacing: -0.04em; line-height: 1.08; margin: 72px 0 24px; scroll-margin-top: 112px; outline: none; }
+.home-light .prose-light h3 { font-size: clamp(1.4rem, 2vw, 1.75rem); letter-spacing: -0.03em; line-height: 1.2; margin: 48px 0 16px; scroll-margin-top: 112px; outline: none; }
+.home-light .prose-light strong { font-weight: 600; color: var(--ink); }
+.home-light .prose-light a { color: var(--ink); font-weight: 500; text-decoration: underline; text-decoration-color: #c084fc; text-underline-offset: 4px; transition: color 0.3s; }
+.home-light .prose-light a:hover { color: #7e22ce; }
+.home-light .prose-light ul, .home-light .prose-light ol { padding-left: 1.4em; display: grid; gap: 12px; }
+.home-light .prose-light ul { list-style: disc; }
+.home-light .prose-light ol { list-style: decimal; }
+.home-light .prose-light li { padding-left: 6px; }
+.home-light .prose-light li::marker { color: #a855f7; font-weight: 600; }
+.home-light .prose-light blockquote { border-radius: 24px; background: var(--paper); border-left: 4px solid #a855f7; padding: 28px 32px; color: var(--ink); }
+.home-light .prose-light blockquote > :last-child { margin-bottom: 0; }
+.home-light .prose-light code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.86em; background: #f3e8ff; color: #6b21a8; border-radius: 6px; padding: 2px 6px; }
+.home-light .prose-light pre { background: #0a0a0a; color: #f3f4f6; border-radius: 20px; padding: 24px; overflow-x: auto; font-size: 16px; line-height: 1.6; }
+.home-light .prose-light pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+.home-light .prose-light img { display: block; width: 100%; height: auto; border-radius: 24px; }
+.home-light .prose-light figcaption { margin-top: 12px; font-size: 16px; color: var(--mute); }
+.home-light .prose-light .tbl { overflow-x: auto; border-radius: 20px; box-shadow: 0 0 0 1px var(--line); }
+.home-light .prose-light table { width: 100%; border-collapse: collapse; font-size: 17px; line-height: 1.5; }
+.home-light .prose-light th { text-align: left; font-weight: 600; color: var(--ink); background: var(--paper); }
+.home-light .prose-light th, .home-light .prose-light td { padding: 14px 18px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.home-light .prose-light tr:last-child td { border-bottom: 0; }
+/* Indice dell'articolo: link a 16px (metadati, D-011), voce h3 rientrata. */
+.home-light .toc a { display: block; padding: 6px 0; font-size: 16px; line-height: 1.4; color: var(--body); text-decoration: none; transition: color 0.3s; }
+.home-light .toc a:hover { color: #7e22ce; }
 
 @media (max-width: 1000px) {
   .home-light .row { grid-template-columns: 1fr; gap: 16px; padding: 40px 0; }

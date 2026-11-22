@@ -17,6 +17,7 @@ import { captureAttribution } from './utils/attribution';
 import { trackCtaClick } from './utils/dataLayer';
 import { onInternalLink, scrollToId, scrollToTop } from './utils/navigate';
 import { isLightRoute } from './data/lightRoutes';
+import { blogIndexCopy } from './data/extraPages';
 import { useDocumentTheme } from './hooks/useDocumentTheme';
 
 const Blog = lazy(() => import('./components/Blog'));
@@ -80,8 +81,8 @@ const App: React.FC = () => {
   const [blogError, setBlogError] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   // La nav è sempre chiara (pillola bianca, voci scure). Cambia solo ciò che
-  // sta fuori dalla pillola: sopra gli hero scuri (#hero) e sulle pagine
-  // ancora scure logo, hamburger e "Contatti" sono bianchi; scorrendo oltre
+  // sta fuori dalla pillola: sopra gli hero scuri (#hero) logo, hamburger e
+  // "Contatti" sono bianchi; scorrendo oltre
   // l'hero delle pagine chiare diventano neri, perché sotto c'è il bianco. Idem
   // con il menu mobile aperto: il pannello è bianco e sta sotto la nav.
   const [navOnLight, setNavOnLight] = useState(false);
@@ -150,7 +151,7 @@ const App: React.FC = () => {
         setBlogPosts(posts);
       } catch (error) {
         console.error('Failed to fetch blog posts:', error);
-        setBlogError('Impossibile caricare gli articoli del blog. Riprova più tardi.');
+        setBlogError(blogIndexCopy.error);
       } finally {
         setIsLoadingBlog(false);
       }
@@ -282,8 +283,8 @@ const App: React.FC = () => {
 
   useEffect(() => {
     // Gira su tutte le pagine. Con #hero (home e pagine chiare con hero
-    // scuro): chiaro oltre l'hero. Senza #hero: chiaro solo se la pagina è
-    // dentro .home-light, altrimenti (blog, supporto app…) resta bianco.
+    // scuro): chiaro oltre l'hero. Senza #hero: chiaro se la pagina è
+    // dentro .home-light (oggi tutte le pagine hanno un hero scuro).
     // L'altezza dell'hero può cambiare senza scroll né resize (font che
     // arrivano, barra URL mobile): la osserviamo con un ResizeObserver,
     // agganciato appena #hero esiste. Le pagine lazy montano dopo l'effetto:
@@ -407,12 +408,10 @@ const App: React.FC = () => {
     { label: 'Blog', active: currentPage === 'blog' || currentPage === 'blog-article', onClick: () => navigateTo('blog') },
   ];
 
-  // Sfondo di html/body e theme-color: rotte chiare da data/lightRoutes.ts.
-  // La privacy è chiara anche come hash (/#privacy del cookie banner, o
-  // #privacy su un path qualsiasi); supporto app e 404 restano scure anche
-  // su un path chiaro.
-  const lightDocument = (isLightRoute(typeof window !== 'undefined' ? window.location.pathname : '/') || currentPage === 'privacy') && !['app-support', '404'].includes(currentPage);
-  useDocumentTheme(lightDocument);
+  // Sfondo di html/body e theme-color: da data/lightRoutes.ts, lo stesso
+  // elenco del prerender. Dal 2026-11-22 tutte le rotte sono chiare (anche
+  // privacy e supporto app come hash, e la 404).
+  useDocumentTheme(isLightRoute(typeof window !== 'undefined' ? window.location.pathname : '/'));
 
   return (
     <main className="w-full min-h-screen bg-white text-white selection:bg-purple-600 selection:text-white cursor-none">
@@ -426,7 +425,7 @@ const App: React.FC = () => {
       )}
       {/* Navbar fissa e chiara su tutte le pagine: pillola bianca con voci
           scure. Logo, hamburger e "Contatti" seguono `navOnLight`: bianchi
-          sopra gli hero scuri e sulle pagine ancora scure, neri una volta
+          sopra gli hero scuri, neri una volta
           superato l'hero delle pagine chiare (sotto c'è il bianco). */}
       <nav className="fixed top-0 left-0 w-full z-[70] p-6 sm:p-7 flex justify-between items-center">
         <img
@@ -509,25 +508,20 @@ const App: React.FC = () => {
         {isPending && <PageLoader delayed />}
         <Suspense fallback={<PageLoader />}>
           {currentPage === 'blog' && (
-            <>
-              <Blog
-                posts={blogPosts}
-                isLoading={isLoadingBlog}
-                error={blogError}
-                onArticleClick={(slug) => navigateTo('blog-article', slug)}
-              />
-              <Footer />
-            </>
+            <div className="home-light relative w-full">
+              <Blog posts={blogPosts} isLoading={isLoadingBlog} error={blogError} />
+              <ContactForm showHeader={false} tone="light" />
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
+          {/* Articolo: l'oggetto della richiesta è l'articolo da cui arriva il contatto. */}
           {currentPage === 'blog-article' && currentArticle && (
-            <>
-              <BlogArticle
-                post={currentArticle}
-                onBack={() => navigateTo('blog')}
-              />
-              <Footer />
-            </>
+            <div className="home-light relative w-full">
+              <BlogArticle post={currentArticle} posts={blogPosts} />
+              <ContactForm subject={currentArticle.title} showHeader={false} tone="light" />
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
           {/* Privacy: nessun form (il mockup non lo prevede), solo il footer chiaro. */}
@@ -555,11 +549,12 @@ const App: React.FC = () => {
             </div>
           )}
 
+          {/* Supporto app: ha il suo form di supporto, niente form contatti. */}
           {currentPage === 'app-support' && (
-            <>
+            <div className="home-light relative w-full">
               <AppSupport />
-              <Footer />
-            </>
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
 
           {currentPage === 'directory' && (
@@ -594,7 +589,13 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {currentPage === 'technical-partner' && <TechnicalPartner />}
+          {currentPage === 'technical-partner' && (
+            <div className="home-light relative w-full">
+              <TechnicalPartner />
+              <ContactForm subject="Partner tecnico" showHeader={false} tone="light" />
+              <Footer showCta={false} tone="light" />
+            </div>
+          )}
 
           {currentPage === 'meta-advertising' && (
             <div className="home-light relative w-full">
@@ -628,7 +629,10 @@ const App: React.FC = () => {
           )}
 
           {currentPage === '404' && (
-            <NotFound />
+            <div className="home-light relative w-full">
+              <NotFound />
+              <Footer showCta={false} tone="light" />
+            </div>
           )}
         </Suspense>
         </LazyPageErrorBoundary>

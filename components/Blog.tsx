@@ -1,222 +1,91 @@
-import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Calendar, Clock, ArrowRight, Loader2 } from 'lucide-react';
+import React from 'react';
 import { BlogPost } from '../types/blog';
 import SEOHead from './SEOHead';
+import Reveal from './home2/Reveal';
+import SubHero from './home2/SubHero';
+import CloseCta from './home2/CloseCta';
+import BlogCard from './BlogCard';
+import { blogIndexCopy as copy, blogPath } from '../data/extraPages';
+import { siteUrl } from '../data/seoPages';
+import { trackCtaClick } from '../utils/dataLayer';
+import { onInternalLink, scrollToId } from '../utils/navigate';
 
-gsap.registerPlugin(ScrollTrigger);
+/* ------------------------------------------------------------------ */
+/* Indice del blog sul sistema chiaro (nessun mockup: composto con i    */
+/* pezzi di /risorse e /casi-studio, vedi remaining-light-pages.md):    */
+/* hero scuro corto, griglia di card con copertina e chiusura. Form     */
+/* contatti e footer chiari in App.tsx. Gli articoli arrivano da App.   */
+/* ------------------------------------------------------------------ */
 
 interface BlogProps {
   posts: BlogPost[];
   isLoading: boolean;
   error: string | null;
-  onArticleClick: (slug: string) => void;
 }
 
-const Blog: React.FC<BlogProps> = ({ posts, isLoading, error, onArticleClick }) => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+const LINK_CLASS = 'text-[#0a0a0a] underline decoration-purple-400 underline-offset-4 hover:text-purple-700';
 
-  useEffect(() => {
-    if (!sectionRef.current) return;
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const ctx = gsap.context(() => {
-      if (reduced) return;
-
-      // fromTo + immediateRender:false + once: se lo ScrollTrigger non scatta
-      // (misure prese prima che il layout si assestasse) il contenuto resta
-      // visibile invece di restare bloccato a opacity 0; una volta acceso non
-      // si rispegne più tornando indietro con lo scroll.
-      gsap.fromTo(
-        titleRef.current,
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: 'power3.out',
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 75%',
-            once: true
-          }
-        }
-      );
-
-      gsap.fromTo(
-        cardsRef.current,
-        { y: 100, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          stagger: 0.2,
-          ease: 'power3.out',
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-            once: true
-          }
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+const Blog: React.FC<BlogProps> = ({ posts, isLoading, error }) => {
+  const pageUrl = `${siteUrl}${blogPath}`;
+  const { close, empty } = copy;
 
   return (
-    <section ref={sectionRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
-      {/* SEO: Dynamic meta tags for blog listing */}
-      <SEOHead
-        title="Blog Q4 Studio | Guide Meta Advertising e AI Automation"
-        description="Scopri strategie avanzate di Lead Generation B2B con Meta Ads, case study e guide pratiche su agenti AI. Il blog di Q4 Studio per far crescere il tuo business."
-        url="https://www.q4.studio/blog"
-      />
+    <section className="relative">
+      <SEOHead title={copy.metaTitle} description={copy.metaDescription} url={pageUrl} />
 
-      {/* Background gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
+      <SubHero kicker={copy.kicker} title={copy.title} lead={copy.lead} />
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
-        <div ref={titleRef} className="text-center mb-20">
-          <span className="text-indigo-500 tracking-[0.08em] mb-5 block text-sm uppercase">
-            Insights & Strategie
-          </span>
-          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">
-            Il nostro <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span>
-          </h1>
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Agenti AI.
-          </p>
+      <section className="px-6 pb-24 pt-24 md:px-12 md:pb-[160px] md:pt-[160px]" aria-labelledby="blog-articoli">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" id="blog-articoli" className="h-l" style={{ fontSize: 'clamp(2.5rem, 5vw, 5rem)' }}>{copy.listTitle}</Reveal>
+
+          {isLoading && (
+            <p role="status" className="mt-12 text-[19px] md:mt-16">{copy.loading}</p>
+          )}
+
+          {error && !isLoading && (
+            <p role="alert" className="mt-12 text-[19px] text-red-800 md:mt-16">{error}</p>
+          )}
+
+          {!isLoading && !error && posts.length > 0 && (
+            <div className="mt-12 grid grid-cols-1 gap-6 md:mt-16 md:grid-cols-2 lg:grid-cols-3">
+              {posts.map((post, i) => (
+                <BlogCard key={post.id} post={post} delay={(i % 3) * 0.1} />
+              ))}
+            </div>
+          )}
+
+          {/* Stato vuoto: Supabase non configurato o nessun articolo pubblicato. */}
+          {!isLoading && !error && posts.length === 0 && (
+            <Reveal className="bc mt-12 max-w-[760px] md:mt-16">
+              <h3 style={{ fontSize: 'clamp(1.6rem, 2.3vw, 2.4rem)', letterSpacing: '-0.04em', lineHeight: 1.05 }}>{empty.title}</h3>
+              <p className="d">
+                {empty.text}{' '}
+                {empty.links.map((link, i) => (
+                  <React.Fragment key={link.href}>
+                    {i > 0 && ' · '}
+                    <a href={link.href} onClick={onInternalLink(link.href)} className={LINK_CLASS}>{link.label}</a>
+                  </React.Fragment>
+                ))}
+              </p>
+            </Reveal>
+          )}
         </div>
+      </section>
 
-        {/* Loading State */}
-        {isLoading && (
-          <div className="flex flex-col items-center justify-center py-20">
-            <Loader2 className="w-12 h-12 text-indigo-500 animate-spin mb-4" />
-            <p className="text-gray-400 text-lg">Caricamento articoli...</p>
-          </div>
-        )}
-
-        {/* Error State */}
-        {error && !isLoading && (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="max-w-md text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/10 flex items-center justify-center">
-                <span className="text-3xl">⚠️</span>
-              </div>
-              <p className="text-red-400 text-lg mb-2">Errore</p>
-              <p className="text-gray-400">{error}</p>
-            </div>
-          </div>
-        )}
-
-        {/* Blog Posts Grid */}
-        {!isLoading && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post, index) => (
-            <div
-              key={post.id}
-              ref={(el) => { cardsRef.current[index] = el }}
-              className="group relative bg-[#0A0A0A] border border-white/5 rounded-3xl overflow-hidden hover:border-indigo-500/30 transition-all duration-500 cursor-pointer"
-              onClick={() => onArticleClick(post.slug)}
-            >
-              {/* Cover Image */}
-              <div className="relative h-56 overflow-hidden">
-                <img
-                  src={post.coverImage}
-                  alt={post.title}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent" />
-
-                {/* Category Badge */}
-                <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-indigo-500/20 backdrop-blur-sm border border-indigo-500/30">
-                  <span className="text-indigo-300 text-[11px] font-medium">{post.category}</span>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-6">
-                {/* Meta Info */}
-                <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    <span>{new Date(post.date).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>{post.readTime}</span>
-                  </div>
-                </div>
-
-                {/* Title */}
-                <h3 className="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-3 group-hover:text-indigo-300 transition-colors duration-300 line-clamp-2">
-                  {post.title}
-                </h3>
-
-                {/* Excerpt */}
-                <p className="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">
-                  {post.excerpt}
-                </p>
-
-                {/* Author & CTA */}
-                <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={post.author.image}
-                      alt={post.author.name}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-8 h-8 rounded-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=64`;
-                      }}
-                    />
-                    <span className="text-sm text-gray-500">{post.author.name}</span>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-indigo-400 text-sm font-medium group-hover:gap-3 transition-all duration-300">
-                    <span>Leggi</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Hover Line */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-            </div>
-            ))}
-          </div>
-        )}
-
-        {/* Coming Soon Message (se ci sono pochi articoli) */}
-        {!isLoading && !error && posts.length < 3 && posts.length > 0 && (
-          <div className="mt-12 text-center">
-            <p className="text-gray-500 text-sm">
-              Altri articoli in arrivo presto...
-            </p>
-          </div>
-        )}
-
-        {/* No posts message */}
-        {!isLoading && !error && posts.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="max-w-md text-center">
-              <p className="text-gray-400 text-lg">Nessun articolo disponibile al momento.</p>
-              <p className="text-gray-500 text-sm mt-2">Torna presto per nuovi contenuti!</p>
-            </div>
-          </div>
-        )}
-      </div>
+      <CloseCta
+        size="l"
+        title={close.title}
+        lead={close.lead}
+        cta={{
+          label: close.cta,
+          href: '#contatti',
+          onClick: (event) => {
+            trackCtaClick({ cta_location: 'blog_index', cta_label: close.cta, cta_destination: '#contatti' });
+            if (scrollToId('contatti', 'center')) event.preventDefault();
+          },
+        }}
+      />
     </section>
   );
 };

@@ -15,7 +15,8 @@ interface CloseCtaProps {
   /** `xl` è la misura della home, `l` quella delle pagine interne. */
   size?: 'xl' | 'l';
   lead?: string;
-  cta: { label: string; href: string; onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void };
+  /** `external`: link fuori dal sito (es. calendario), in una nuova scheda. */
+  cta: { label: string; href: string; external?: boolean; onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void };
   id?: string;
 }
 
@@ -42,6 +43,7 @@ const CloseCta: React.FC<CloseCtaProps> = ({ title, size = 'xl', lead, cta, id }
         <Reveal delay={0.2} className="mt-14 md:mt-20">
           <a
             href={cta.href}
+            {...(cta.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             onClick={(event) => {
               cta.onClick?.(event);
               // Link interno: navigazione SPA senza ricaricare l'app.

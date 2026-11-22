@@ -1,20 +1,14 @@
 import React, { useEffect } from 'react';
 import { BlogPost } from '../types/blog';
+import { blogAuthors } from '../data/extraPages';
 
 interface BlogSchemaProps {
   post: BlogPost;
 }
 
-// Dati aggiuntivi per il Person schema, per autore noto. Solo dati reali e
-// verificabili (nessun profilo personale inventato) — se un autore non è in
-// questa mappa, il Person schema resta senza jobTitle/sameAs invece di
-// fabbricare un link.
-const AUTHOR_INFO: Record<string, { jobTitle: string; sameAs: string[] }> = {
-  'Sebastiano Riva': {
-    jobTitle: 'Fondatore, Q4 Studio',
-    sameAs: ['https://www.linkedin.com/company/q4studio/about/'],
-  },
-};
+// Dati aggiuntivi del Person schema per autore noto: data/extraPages.ts
+// (gli stessi del prerender e della card autore).
+const AUTHOR_INFO = blogAuthors;
 
 /**
  * Component that injects Schema.org BlogPosting structured data

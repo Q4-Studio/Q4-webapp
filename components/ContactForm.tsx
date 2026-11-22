@@ -53,6 +53,9 @@ const tones = {
   },
 };
 
+/** Classi del form chiaro, riusate dal form di supporto app (AppSupport). */
+export const lightFormClasses = tones.light;
+
 const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, headerTitle, headerDescription, tone = 'dark' }) => {
   const light = tone === 'light';
   const t = tones[tone];
