@@ -45,6 +45,12 @@ const App: React.FC = () => {
   const [isLoadingBlog, setIsLoadingBlog] = useState(true);
   const [blogError, setBlogError] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // La nav è sempre chiara (pillola bianca, voci scure). Cambia solo ciò che
+  // sta fuori dalla pillola: sopra l'hero scuro della home e sulle pagine
+  // ancora scure logo, hamburger e "Contatti" sono bianchi; scorrendo oltre
+  // l'hero della home diventano neri, perché sotto c'è il fondo bianco. Idem
+  // con il menu mobile aperto: il pannello è bianco e sta sotto la nav.
+  const [navOnLight, setNavOnLight] = useState(false);
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
   const previousRouteRef = useRef<string | null>(null);
 
@@ -214,6 +220,25 @@ const App: React.FC = () => {
     };
   }, [blogPosts, isLoadingBlog]);
 
+  useEffect(() => {
+    if (currentPage !== 'home') {
+      setNavOnLight(false);
+      return;
+    }
+    const update = () => {
+      const hero = document.getElementById('hero');
+      const threshold = hero ? hero.offsetHeight - 80 : window.innerHeight - 80;
+      setNavOnLight(window.scrollY > threshold);
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, [currentPage]);
+
   const navigateTo = (page: Page, slug?: string) => {
     if (page === 'blog-article' && slug) {
       window.history.pushState(null, '', `/blog/${slug}`);
@@ -283,6 +308,21 @@ const App: React.FC = () => {
   const currentSeoPage = currentSeoSlug ? getSeoPageBySlug(currentSeoSlug) : null;
   const currentCaseStudy = currentCaseStudySlug ? getCaseStudyBySlug(currentCaseStudySlug) : null;
 
+  const navItemClass = (active: boolean) =>
+    `text-[15px] font-medium px-3.5 py-2 rounded-full transition-colors cursor-pointer border-0 whitespace-nowrap ${
+      active ? 'bg-[#0a0a0a] text-white' : 'bg-transparent text-gray-700 hover:bg-black/5 hover:text-[#0a0a0a]'
+    }`;
+
+  const navItems: Array<{ label: string; active: boolean; href?: string; onClick?: () => void }> = [
+    ...(currentPage !== 'home' ? [{ label: 'Home', active: false, onClick: () => navigateTo('home') }] : []),
+    { label: 'Tracciamento', active: currentPage === 'tracking', onClick: () => navigateTo('tracking') },
+    { label: 'Siti web', active: currentPage === 'sites', onClick: () => navigateTo('sites') },
+    { label: 'Agenti AI', active: currentPage === 'agenti-ai', onClick: () => navigateTo('agenti-ai') },
+    // Link reale ai casi studio: vale anche come link interno per i crawler
+    { label: 'Casi studio', active: currentPage === 'case-studies' || currentPage === 'case-study', href: caseStudiesPath },
+    { label: 'Blog', active: currentPage === 'blog' || currentPage === 'blog-article', onClick: () => navigateTo('blog') },
+  ];
+
   return (
     <main className="w-full min-h-screen bg-[#050505] text-white selection:bg-indigo-500 selection:text-white cursor-none">
       <SpeedInsights />
@@ -293,12 +333,10 @@ const App: React.FC = () => {
           noIndex={true}
         />
       )}
-      {/* Navbar overlay - simplified for immersive feel. Sempre "fixed": su
-          mobile prima non lo era (si perdeva scrollando), ma ora che esiste
-          un menu da raggiungere da ovunque deve restare ancorata come su desktop.
-          Niente più mix-blend-difference: logo/voci hanno ora sfondi propri
-          (pillola) e su blend-difference risulterebbero con colori sbagliati.
-          Tutte le pagine sono a fondo scuro, quindi restano leggibili anche senza. */}
+      {/* Navbar fissa e chiara su tutte le pagine: pillola bianca con voci
+          scure. Logo, hamburger e "Contatti" seguono `navOnLight`: bianchi
+          sopra l'hero scuro della home e sulle pagine ancora scure, neri una
+          volta superato l'hero della home (sotto c'è il bianco). */}
       <nav className="fixed top-0 left-0 w-full z-[70] p-6 sm:p-7 flex justify-between items-center">
         <img
           src="/logo.webp"
@@ -307,43 +345,32 @@ const App: React.FC = () => {
           height={40}
           loading="eager"
           fetchPriority="high"
-          className="h-10 md:h-14 w-auto cursor-pointer"
+          className={`h-10 md:h-12 w-auto cursor-pointer transition-[filter] duration-300 ${navOnLight || mobileMenuOpen ? 'brightness-0' : ''}`}
           onClick={() => navigateTo('home')}
         />
 
-        {/* Pillola centrale flottante con le voci di menu (solo desktop), centrata
+        {/* Pillola centrale chiara con le voci di menu (solo desktop), centrata
             in assoluto sulla nav indipendentemente dalla larghezza di logo/CTA */}
-        <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 rounded-full border border-white/30 bg-white/20 backdrop-blur-md px-3 py-2.5">
-          {currentPage !== 'home' && <button onClick={() => navigateTo('home')} className="text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 bg-transparent text-white/80 hover:bg-white/20 hover:text-white">HOME</button>}
-          <button onClick={() => navigateTo('tracking')} className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${currentPage === 'tracking' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'}`}>TRACCIAMENTO</button>
-          <button onClick={() => navigateTo('sites')} className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${currentPage === 'sites' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'}`}>SITI</button>
-          <button
-            onClick={() => navigateTo('agenti-ai')}
-              className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${
-              currentPage === 'agenti-ai' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
-            }`}
-          >
-            AGENTI AI
-          </button>
-          {/* Link reale ai casi studio: vale anche come link interno per i crawler */}
-          <a
-            href={caseStudiesPath}
-            className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer ${
-              currentPage === 'case-studies' || currentPage === 'case-study' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'
-            }`}
-          >
-            CASI STUDIO
-          </a>
-          <button onClick={() => navigateTo('blog')} className={`text-sm font-medium px-3 py-2.5 rounded-full transition-colors cursor-pointer border-0 ${currentPage === 'blog' || currentPage === 'blog-article' ? 'bg-white text-gray-900' : 'bg-transparent text-white/80 hover:bg-white/20 hover:text-white'}`}>BLOG</button>
+        <div className={`hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 rounded-full border bg-white/90 backdrop-blur-md px-2.5 py-2 transition-shadow duration-300 ${navOnLight ? 'border-black/10 shadow-[0_10px_40px_-20px_rgba(10,10,10,0.35)]' : 'border-white/40'}`}>
+          {navItems.map((item) =>
+            item.href ? (
+              <a key={item.label} href={item.href} className={navItemClass(item.active)}>
+                {item.label}
+              </a>
+            ) : (
+              <button key={item.label} type="button" onClick={item.onClick} className={navItemClass(item.active)}>
+                {item.label}
+              </button>
+            )
+          )}
         </div>
 
         <div className="flex items-center gap-3">
-          {/* CTA "Contatti": sempre visibile, anche su mobile — prima era
-              hidden sotto lg e raggiungibile solo aprendo il menu hamburger. */}
+          {/* CTA "Contatti": sempre visibile, anche su mobile. */}
           <a
             href="/#contatti"
             onClick={(event) => { event.preventDefault(); handleContactCtaClick('header_nav', 'Contatti'); }}
-            className="inline-flex text-sm md:text-base font-semibold px-4 py-2.5 md:px-7 md:py-3 rounded-full bg-white text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer border-0 whitespace-nowrap"
+            className={`inline-flex text-sm md:text-base font-semibold px-4 py-2.5 md:px-6 md:py-3 rounded-full transition-colors duration-300 cursor-pointer border-0 whitespace-nowrap ${navOnLight || mobileMenuOpen ? 'bg-[#0a0a0a] text-white hover:bg-purple-700' : 'bg-white text-gray-900 hover:bg-gray-100'}`}
           >
             Contatti
           </a>
@@ -356,7 +383,7 @@ const App: React.FC = () => {
             aria-label={mobileMenuOpen ? 'Chiudi menu' : 'Apri menu'}
             aria-expanded={mobileMenuOpen}
             aria-controls={MOBILE_MENU_PANEL_ID}
-            className="lg:hidden flex h-11 w-11 items-center justify-center cursor-pointer bg-transparent border-0"
+            className={`lg:hidden flex h-11 w-11 items-center justify-center cursor-pointer bg-transparent border-0 transition-colors duration-300 ${navOnLight || mobileMenuOpen ? 'text-[#0a0a0a]' : 'text-white'}`}
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>

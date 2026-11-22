@@ -83,7 +83,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     <link rel="preload" href="/logo.webp" as="image" fetchpriority="high">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Schema.org Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -97,12 +97,12 @@
       "description": "Studio tecnico per tracciamento server-side, Consent Mode, automazioni CRM e agenti AI per PMI italiane.",
       "vatID": "IT03033250352",
       "email": "info@q4.studio",
-      "telephone": "+39 375 114 6803",
+      "telephone": "+39 338 357 6286",
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "customer service",
         "email": "info@q4.studio",
-        "telephone": "+39 375 114 6803",
+        "telephone": "+39 338 357 6286",
         "availableLanguage": ["it", "en"]
       },
       "address": {
@@ -133,7 +133,7 @@
           "name": "Cos'è il tracciamento server-side, in parole semplici?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Normalmente i dati sulle conversioni vengono raccolti dal browser del visitatore, che però blocca gli script, e dagli ad blocker, che bloccano i pixel. Il tracciamento server-side sposta la raccolta su un server dedicato: i dati arrivano completi e le piattaforme pubblicitarie possono ottimizzare su informazioni reali."
+            "text": "Invece di far inviare i dati dal browser del visitatore a Meta e Google, li raccoglie un server controllato da Q4. Gli ad blocker e la tracking prevention incontrano meno ostacoli, e le piattaforme ricevono conversioni più complete."
           }
         },
         {
@@ -141,7 +141,7 @@
           "name": "Quanto costa e quanto tempo serve?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "L'audit parte da 490 €. Il setup completo da 1.500 € per un sito non-ecommerce, con tempi di circa una giornata di lavoro. Per gli ecommerce il tempo dipende da piattaforma e numero di prodotti: da una a tre giornate. Il canone di infrastruttura e monitoraggio parte da 100 €/mese."
+            "text": "L'audit parte da 490 €, il setup da 1.500 €. Un setup server-side tipico richiede circa 8 ore di lavoro."
           }
         },
         {
@@ -149,7 +149,7 @@
           "name": "Il tracciamento server-side è conforme al GDPR?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "È lo strumento che rende la conformità più gestibile, non meno: il consenso viene rispettato a monte tramite Consent Mode v2 e i dati passano da un'infrastruttura che controlliamo. Non siamo consulenti legali e non forniamo pareri: implementiamo quello che il tuo DPO o consulente privacy definisce."
+            "text": "Sì, e in più permette di ottenere più dati. Con il server-side si lavora sul dato a monte, prima che arrivi alle piattaforme, elaborandolo e anonimizzandolo. Alcuni cookie che in un setup solo client side richiederebbero un consenso specifico possono invece partire di default, e le piattaforme ricevono più informazioni: sempre in accordo con il DPO e dopo la valutazione del nostro consulente legale. A questo si aggiunge Consent Mode v2, che fa seguire i dati alle scelte di consenso dell'utente."
           }
         },
         {
@@ -157,7 +157,23 @@
           "name": "Che tipo di automazioni fate, concretamente?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Automazioni su problemi precisi, non progetti di trasformazione digitale. Per esempio: le richieste che arrivano su WhatsApp e finiscono nel CRM già strutturate, con una prima risposta automatica in meno di un minuto. Oppure un assistente sul sito che risponde alle domande frequenti anche fuori orario. Ogni pacchetto ha un prezzo di setup e un canone dichiarati."
+            "text": "Automatizziamo il CRM: il lead entra in automatico, riceve un primo contatto su WhatsApp e via email e viene seguito con follow-up programmati per 7 giorni. Il team commerciale è avvisato quando c'è qualcosa da fare, il cliente riceve le sue notifiche, e l'appuntamento finisce in calendario."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quanto costa e quanto tempo serve per un'automazione?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Le automazioni partono in due settimane. Il setup parte da 490 €, il canone va da 59 a 200 € al mese."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cos'è un agente AI e cosa può fare per la mia azienda?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Un agente AI svolge compiti ripetitivi seguendo le regole e i dati della tua azienda. Un esempio: gli ordini arrivano sia via mail sia da software diversi, e l'agente li legge, li traduce in un formato unico e li invia in automatico al gestionale dell'azienda di produzione. Più flussi, un solo canale. Lo stesso approccio vale per le vendite, il back office e l'assistenza clienti."
           }
         },
         {
@@ -165,7 +181,7 @@
           "name": "Lavorate anche con la mia agenzia?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Sì, ed è una parte importante di quello che facciamo. Molte agenzie non hanno un tecnico interno per il tracciamento server-side o per le integrazioni: lavoriamo direttamente con loro, in white label. Il cliente resta dell’agenzia."
+            "text": "Sì. Realizziamo tracciamenti e automazioni anche in white label per altre agenzie."
           }
         },
         {
@@ -173,23 +189,7 @@
           "name": "Lavorate solo in Emilia?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Il lavoro tecnico si fa in remoto, quindi seguiamo aziende in tutta Italia. Sui progetti che richiedono presenza (advertising, consulenza continuativa) lavoriamo soprattutto tra Reggio Emilia, Modena e Parma."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Come si inizia?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Con l’audit del tracciamento, che costa 490 € e dura 3-5 giorni. È il modo più economico per capire cosa non funziona senza impegnarsi su un progetto. Il documento che ne esce resta tuo anche se poi non procediamo."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Sì, se l’obiettivo non è solo il costo per lead. Ne parliamo nel dettaglio nella pagina dedicata."
+            "text": "No. La nostra sede è a Reggio Emilia, dove possiamo incontrare anche i clienti, ma siamo un team in remoto e abituati a lavorare così. Oltre il 90% dei nostri clienti è fuori dall'Emilia, e alcuni anche fuori dall'Unione Europea: ne abbiamo uno in Arabia Saudita."
           }
         }
       ]

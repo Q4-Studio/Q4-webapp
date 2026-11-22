@@ -1,36 +1,37 @@
 import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import Reveal from './home2/Reveal';
 
+/**
+ * FAQ della home. Stessi testi dello schema FAQPage in index.html e del
+ * contenuto statico in scripts/prerender.ts: se cambiano qui, cambiano lì.
+ */
 export const homeFaqs = [
-  { question: "Cos'è il tracciamento server-side, in parole semplici?", answer: 'Normalmente i dati sulle conversioni vengono raccolti dal browser del visitatore, che però blocca gli script, e dagli ad blocker, che bloccano i pixel. Il tracciamento server-side sposta la raccolta su un server dedicato: i dati arrivano completi e le piattaforme pubblicitarie possono ottimizzare su informazioni reali.' },
-  { question: 'Quanto costa e quanto tempo serve?', answer: "L'audit parte da 490 €. Il setup completo da 1.500 € per un sito non-ecommerce, con tempi di circa una giornata di lavoro. Per gli ecommerce il tempo dipende da piattaforma e numero di prodotti: da una a tre giornate. Il canone di infrastruttura e monitoraggio parte da 100 €/mese." },
-  { question: 'Il tracciamento server-side è conforme al GDPR?', answer: 'È lo strumento che rende la conformità più gestibile, non meno: il consenso viene rispettato a monte tramite Consent Mode v2 e i dati passano da un’infrastruttura che controlliamo. Non siamo consulenti legali e non forniamo pareri: implementiamo quello che il tuo DPO o consulente privacy definisce.' },
-  { question: 'Che tipo di automazioni fate, concretamente?', answer: 'Automazioni su problemi precisi, non progetti di trasformazione digitale. Per esempio: le richieste che arrivano su WhatsApp e finiscono nel CRM già strutturate, con una prima risposta automatica in meno di un minuto. Oppure un assistente sul sito che risponde alle domande frequenti anche fuori orario. Ogni pacchetto ha un prezzo di setup e un canone dichiarati.' },
-  { question: 'Lavorate anche con la mia agenzia?', answer: 'Sì, ed è una parte importante di quello che facciamo. Molte agenzie non hanno un tecnico interno per il tracciamento server-side o per le integrazioni: lavoriamo direttamente con loro, in white label. Il cliente resta dell’agenzia.' },
-  { question: 'Lavorate solo in Emilia?', answer: 'Il lavoro tecnico si fa in remoto, quindi seguiamo aziende in tutta Italia. Sui progetti che richiedono presenza (advertising, consulenza continuativa) lavoriamo soprattutto tra Reggio Emilia, Modena e Parma.' },
-  { question: 'Come si inizia?', answer: 'Con l’audit del tracciamento, che costa 490 € e dura 3-5 giorni. È il modo più economico per capire cosa non funziona senza impegnarsi su un progetto. Il documento che ne esce resta tuo anche se poi non procediamo.' },
-  { question: 'Meta Ads funziona anche per aziende B2B con cicli di vendita lunghi?', answer: 'Sì, se l’obiettivo non è solo il costo per lead. Ne parliamo nel dettaglio nella pagina dedicata.', href: '/meta-advertising-b2b' },
+  { question: "Cos'è il tracciamento server-side, in parole semplici?", answer: 'Invece di far inviare i dati dal browser del visitatore a Meta e Google, li raccoglie un server controllato da Q4. Gli ad blocker e la tracking prevention incontrano meno ostacoli, e le piattaforme ricevono conversioni più complete.' },
+  { question: 'Quanto costa e quanto tempo serve?', answer: "L'audit parte da 490 €, il setup da 1.500 €. Un setup server-side tipico richiede circa 8 ore di lavoro." },
+  { question: 'Il tracciamento server-side è conforme al GDPR?', answer: "Sì, e in più permette di ottenere più dati. Con il server-side si lavora sul dato a monte, prima che arrivi alle piattaforme, elaborandolo e anonimizzandolo. Alcuni cookie che in un setup solo client side richiederebbero un consenso specifico possono invece partire di default, e le piattaforme ricevono più informazioni: sempre in accordo con il DPO e dopo la valutazione del nostro consulente legale. A questo si aggiunge Consent Mode v2, che fa seguire i dati alle scelte di consenso dell'utente." },
+  { question: 'Che tipo di automazioni fate, concretamente?', answer: "Automatizziamo il CRM: il lead entra in automatico, riceve un primo contatto su WhatsApp e via email e viene seguito con follow-up programmati per 7 giorni. Il team commerciale è avvisato quando c'è qualcosa da fare, il cliente riceve le sue notifiche, e l'appuntamento finisce in calendario." },
+  { question: "Quanto costa e quanto tempo serve per un'automazione?", answer: 'Le automazioni partono in due settimane. Il setup parte da 490 €, il canone va da 59 a 200 € al mese.' },
+  { question: "Cos'è un agente AI e cosa può fare per la mia azienda?", answer: "Un agente AI svolge compiti ripetitivi seguendo le regole e i dati della tua azienda. Un esempio: gli ordini arrivano sia via mail sia da software diversi, e l'agente li legge, li traduce in un formato unico e li invia in automatico al gestionale dell'azienda di produzione. Più flussi, un solo canale. Lo stesso approccio vale per le vendite, il back office e l'assistenza clienti." },
+  { question: 'Lavorate anche con la mia agenzia?', answer: 'Sì. Realizziamo tracciamenti e automazioni anche in white label per altre agenzie.' },
+  { question: 'Lavorate solo in Emilia?', answer: "No. La nostra sede è a Reggio Emilia, dove possiamo incontrare anche i clienti, ma siamo un team in remoto e abituati a lavorare così. Oltre il 90% dei nostri clienti è fuori dall'Emilia, e alcuni anche fuori dall'Unione Europea: ne abbiamo uno in Arabia Saudita." },
 ];
 
 const HomeSeoContent: React.FC = () => (
-  <section id="faq" className="relative mx-auto max-w-5xl overflow-hidden px-6 py-28 text-gray-200">
-    <div className="mb-10">
-      <p className="mb-5 text-sm uppercase tracking-[0.08em] text-indigo-400">FAQ</p>
-      <h2 className="mb-6 text-[clamp(32px,5vw,64px)] font-bold leading-[1.08] tracking-[-0.035em] text-white">Domande frequenti</h2>
-      <p className="max-w-3xl text-lg leading-relaxed text-gray-400 md:text-xl">Risposte chiare su come lavoriamo, cosa costa e come si inizia.</p>
-    </div>
-    <div className="space-y-4">
-      {homeFaqs.map((faq) => (
-        <details key={faq.question} className="group rounded-3xl border border-white/10 bg-white/[0.03] px-6 py-5 open:border-indigo-400/40 open:bg-indigo-500/[0.06]">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-6">
-            <h3 className="text-xl font-semibold leading-tight text-white md:text-2xl">{faq.question}</h3>
-            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-white/10 text-indigo-300 transition-transform group-open:rotate-180"><ChevronDown className="h-5 w-5" /></span>
-          </summary>
-          <p className="mt-5 max-w-3xl leading-relaxed text-gray-300">
-            {faq.answer}{faq.href && <> <a href={faq.href} className="font-medium text-indigo-300 underline decoration-indigo-400/40 underline-offset-4 hover:text-indigo-200">Approfondisci</a></>}
-          </p>
-        </details>
-      ))}
+  <section id="faq" className="px-6 pb-32 md:px-12 md:pb-[200px]">
+    <div className="mx-auto max-w-[1440px]">
+      <Reveal as="h2" className="h-l">Domande frequenti</Reveal>
+      <Reveal delay={0.12} className="mt-20 md:mt-[120px]">
+        {homeFaqs.map((faq, i) => (
+          <details key={faq.question} className="f" open={i === 0}>
+            <summary>
+              <h3>{faq.question}</h3>
+              <span className="pl" aria-hidden="true"><Plus className="h-[18px] w-[18px]" /></span>
+            </summary>
+            <p>{faq.answer}</p>
+          </details>
+        ))}
+      </Reveal>
     </div>
   </section>
 );
