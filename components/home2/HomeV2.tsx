@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowUpRight } from 'lucide-react';
 import SEOHead from '../SEOHead';
 import Marquee from '../Marquee';
 import ContactForm from '../ContactForm';
@@ -13,8 +12,9 @@ import CandianiVisual from './CandianiVisual';
 import LeadFlow from './LeadFlow';
 import ServicesBento from './ServicesBento';
 import Process from './Process';
-import Reveal from './Reveal';
+import CloseCta from './CloseCta';
 import { trackCtaClick } from '../../utils/dataLayer';
+import { useLightDocument } from '../../hooks/useLightDocument';
 import { siteUrl } from '../../data/seoPages';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -176,38 +176,6 @@ const Preloader: React.FC<{ onDone: () => void }> = ({ onDone }) => {
 };
 
 /* ------------------------------------------------------------------ */
-/* Chiusura: blocco scuro arrotondato con aurora e griglia, titolo     */
-/* enorme e CTA verso il tracciamento.                                 */
-/* ------------------------------------------------------------------ */
-
-const FinalCTA: React.FC = () => (
-  <section className="px-6 pb-6">
-    <div className="close">
-      <div className="aur aur-1 opacity-80" aria-hidden="true" />
-      <div className="aur aur-2 opacity-80" aria-hidden="true" />
-      <div className="grid60" aria-hidden="true" />
-      <div className="relative mx-auto max-w-[1440px] px-6 py-40 text-center md:px-12 md:py-[280px]">
-        <Reveal as="h2" style={{ fontSize: 'clamp(3rem, 11.5vw, 12rem)', letterSpacing: '-0.06em', lineHeight: 0.92 }}>
-          Costruiamo
-          <br />
-          il tuo <span className="grad">vantaggio.</span>
-        </Reveal>
-        <Reveal delay={0.2} className="mt-14 md:mt-20">
-          <a
-            href="/tracciamento-server-side"
-            onClick={() => trackCtaClick({ cta_location: 'home_mid_cta', cta_label: 'Vai al tracciamento', cta_destination: '/tracciamento-server-side' })}
-            className="btn btn-white"
-          >
-            Vai al tracciamento
-            <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
-          </a>
-        </Reveal>
-      </div>
-    </div>
-  </section>
-);
-
-/* ------------------------------------------------------------------ */
 /* Home v2                                                             */
 /* ------------------------------------------------------------------ */
 
@@ -232,20 +200,7 @@ const HomeV2: React.FC = () => {
     if (!loading) ScrollTrigger.refresh();
   }, [loading]);
 
-  // La home è chiara ma html/body restano scuri (index.css) per le altre
-  // pagine: qui si schiariscono, e si ripristinano quando si cambia pagina,
-  // così l'overscroll e le aree fuori dalle sezioni non mostrano il nero.
-  useEffect(() => {
-    const { documentElement: html, body } = document;
-    const previousHtml = html.style.backgroundColor;
-    const previousBody = body.style.backgroundColor;
-    html.style.backgroundColor = '#ffffff';
-    body.style.backgroundColor = '#ffffff';
-    return () => {
-      html.style.backgroundColor = previousHtml;
-      body.style.backgroundColor = previousBody;
-    };
-  }, []);
+  useLightDocument();
 
   // Rete di sicurezza aggiuntiva: il layout può assestarsi anche dopo la fine
   // del preloader (font che finiscono di caricare e cambiano le altezze del
@@ -308,7 +263,14 @@ const HomeV2: React.FC = () => {
       <Process />
       <HomeSeoContent />
       <ContactForm showHeader={false} tone="light" />
-      <FinalCTA />
+      <CloseCta
+        title={<>Costruiamo<br />il tuo <span className="grad">vantaggio.</span></>}
+        cta={{
+          label: 'Vai al tracciamento',
+          href: '/tracciamento-server-side',
+          onClick: () => trackCtaClick({ cta_location: 'home_mid_cta', cta_label: 'Vai al tracciamento', cta_destination: '/tracciamento-server-side' }),
+        }}
+      />
       <Footer showCta={false} tone="light" />
     </div>
   );
