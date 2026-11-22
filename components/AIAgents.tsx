@@ -8,7 +8,7 @@ import { aiAgentsFaqs, aiAgentsPackages, type AIAgentsPackage } from '../data/se
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
 import { useLightDocument } from '../hooks/useLightDocument';
-import { onInternalLink } from '../utils/navigate';
+import { onInternalLink, scrollToId } from '../utils/navigate';
 
 /* ------------------------------------------------------------------ */
 /* Pagina "Agenti AI e automazioni" sul sistema chiaro (mockup         */
@@ -92,16 +92,13 @@ const AIAgents: React.FC = () => {
   useEffect(() => {
     if (window.location.hash !== '#pacchetti-automazioni') return;
     const id = window.setTimeout(() => {
-      document.getElementById('pacchetti')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToId('pacchetti');
     }, 100);
     return () => window.clearTimeout(id);
   }, []);
 
   const scrollTo = (id: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-    const target = document.getElementById(id);
-    if (!target) return;
-    event.preventDefault();
-    target.scrollIntoView({ behavior: 'smooth', block: id === 'contatti' ? 'center' : 'start' });
+    if (scrollToId(id, id === 'contatti' ? 'center' : 'start')) event.preventDefault();
   };
 
   return (

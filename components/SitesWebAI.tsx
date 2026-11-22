@@ -7,7 +7,7 @@ import { Bullets, NoteCard, OkIcon, PAPER_BG, PaperBlock } from './home2/primiti
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
 import { useLightDocument } from '../hooks/useLightDocument';
-import { onInternalLink } from '../utils/navigate';
+import { onInternalLink, scrollToId } from '../utils/navigate';
 
 /* ------------------------------------------------------------------ */
 /* Pagina "Siti web con AI" sul sistema chiaro (mockup "Siti web con   */
@@ -127,7 +127,7 @@ const SitesWebAI: React.FC = () => {
   const scrollToContact = (label: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     trackCtaClick({ cta_location: 'sites_web_ai_page', cta_label: label, cta_destination: '#contatti' });
-    document.getElementById('contatti')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    scrollToId('contatti', 'center');
   };
 
   return (

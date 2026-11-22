@@ -25,3 +25,5 @@ Numerazione progressiva delle decisioni registrate nelle spec (`docs/specs/`), i
 | D-019 | 2026-11-21 | `trackCtaClick` parte prima dell'helper di navigazione, anche con cmd/ctrl-click. | [review-43-fixes.md](specs/review-43-fixes.md) |
 | D-020 | 2026-11-21 | Nav scura dal primo pixel sulle pagine chiare senza hero; criterio: presenza di `.home-light` | [review-45-47-48-fixes.md](specs/review-45-47-48-fixes.md) |
 | D-021 | 2026-11-21 | Ciclo unico di evidenziazione `.ev` (13,5 s, 6 slot) per tutte le liste | [review-45-47-48-fixes.md](specs/review-45-47-48-fixes.md) |
+| D-022 | 2026-11-21 | Le fonti dei numeri dei clienti (screenshot, dataset ID, conteggi per evento) NON stanno nel repo pubblico: cartella `docs/sources` ignorata da git, conservata privatamente da Q4 Studio; sostituisce D-009 | [review-49-50-fixes.md](specs/review-49-50-fixes.md) |
+| D-023 | 2026-11-21 | Gli uplift Meta stanno solo nel blocco dati dedicato del caso studio, con il proprio periodo; sostituisce D-010 | [review-49-50-fixes.md](specs/review-49-50-fixes.md) |

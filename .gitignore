@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Fonti private (screenshot e dati dei clienti): mai nel repo pubblico
+docs/sources/

@@ -15,6 +15,7 @@ import { getSeoPageBySlug, resourcesPath } from './data/seoPages';
 import { getCaseStudyBySlug, caseStudiesPath } from './data/caseStudies';
 import { captureAttribution } from './utils/attribution';
 import { trackCtaClick } from './utils/dataLayer';
+import { scrollToId } from './utils/navigate';
 
 const Blog = lazy(() => import('./components/Blog'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
@@ -232,10 +233,7 @@ const App: React.FC = () => {
         // #contatti su qualsiasi path: le pagine chiare hanno il form in fondo.
         if (hash === 'contatti') {
           const scrollWhenReady = (attemptsLeft: number) => {
-            const contactSection = document.getElementById('contatti');
-            if (contactSection) {
-              contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else if (attemptsLeft > 0) {
+            if (!scrollToId('contatti') && attemptsLeft > 0) {
               setTimeout(() => scrollWhenReady(attemptsLeft - 1), 100);
             }
           };
@@ -344,10 +342,7 @@ const App: React.FC = () => {
   // un singolo setTimeout(100ms) può scattare prima che HomeV2 sia montata.
   const scrollToContact = () => {
     const trySmoothScroll = (attemptsLeft: number) => {
-      const contactForm = document.getElementById('contatti');
-      if (contactForm) {
-        contactForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      } else if (attemptsLeft > 0) {
+      if (!scrollToId('contatti', 'center') && attemptsLeft > 0) {
         setTimeout(() => trySmoothScroll(attemptsLeft - 1), 100);
       }
     };
@@ -568,6 +563,7 @@ const App: React.FC = () => {
           {currentPage === 'meta-advertising' && (
             <div className="home-light relative w-full">
               <MetaAdvertisingB2B />
+              <ContactForm subject="Advertising" showHeader={false} tone="light" />
               <Footer showCta={false} tone="light" />
             </div>
           )}

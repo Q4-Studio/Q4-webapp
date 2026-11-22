@@ -119,3 +119,19 @@ export const adBlockerFaq: Faq = {
 
 /** Ordine delle FAQ nello schema FAQPage del tracciamento. */
 export const trackingSchemaFaqs: Faq[] = [trackingFaqs[0], adBlockerFaq, ...trackingFaqs.slice(1)];
+
+/** FAQ della pagina Meta Ads B2B (mockup), usate anche da FAQPage e prerender. */
+export const metaAdvertisingFaqs: Faq[] = [
+  {
+    question: 'In pratica, cos’è la B2B Lead Generation su Meta?',
+    answer: 'È l’uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate su cliente giusto, messaggio, form, CRM e segnali di qualità.',
+  },
+  {
+    question: 'Perché collegare Meta Ads, CRM e automazioni?',
+    answer: 'Perché il CRM restituisce segnali più utili dell’invio form. Quando rientrano nel modello di ottimizzazione, le campagne cercano contatti più vicini al valore commerciale reale.',
+  },
+  {
+    question: 'Lavorate anche con Google Ads?',
+    answer: 'Sì. Lead generation e high ticket si gestiscono su Meta Ads e Google Ads, con lo stesso approccio: segnali puliti e lettura dei dati commerciali.',
+  },
+];
