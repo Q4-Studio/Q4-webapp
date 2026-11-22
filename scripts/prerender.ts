@@ -3,6 +3,8 @@ import { caseStudies, caseStudiesIndexCopy, caseStudiesPath, CaseStudy, candiani
 import { aiAgentsFaqs, aiAgentsOffer, aiAgentsPackages, faqPageSchema, homeFaqs, homePriceRows, metaAdvertisingFaqs, priceRowText, sitesOffer, sitesWebAiFaqs, trackingFaqs, trackingOffer, trackingPackages, trackingSchemaFaqs } from '../data/servicePages.ts';
 import { CALCULATOR_EXAMPLE, CALCULATOR_LEAD, CALCULATOR_SOURCE, CALCULATOR_TITLE } from '../data/trackingCalculator.ts';
 import { DARK_BACKGROUND, LIGHT_BACKGROUND, isLightRoute } from '../data/lightRoutes.ts';
+import { blogArticleCopy, blogAuthors, blogIndexCopy, blogPath, formatPostDate, notFoundCopy, relatedPosts, technicalPartnerCopy } from '../data/extraPages.ts';
+import { ArticleBlock, inlineTokens, parseArticle } from '../lib/blogMarkdown.ts';
 import { aboutPageCopy, company, CompanyCard, contactPageCopy, cookieSections, LegalBlock, LegalSection, LegalText, privacyPageCopy, privacySections } from '../data/companyPages.ts';
 import { createClient } from '@supabase/supabase-js';
 import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync, writeFileSync } from 'fs';
@@ -349,7 +351,7 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     canonical: pageUrl,
     type: 'article',
     schema: [serviceSchema, faqSchema, breadcrumbSchema],
-    bodyContent: staticPage(body, true)
+    bodyContent: staticPage(body)
   });
 }
 
@@ -394,7 +396,7 @@ function generateResourcesHtml(): string {
     description: resourcesIndexCopy.metaDescription,
     canonical: pageUrl,
     schema: [itemListSchema, breadcrumbSchema],
-    bodyContent: staticPage(body, true)
+    bodyContent: staticPage(body)
   });
 }
 
@@ -588,30 +590,37 @@ function generateCaseStudyDetailHtml(study: CaseStudy): string {
   });
 }
 
-function generateBlogIndexHtml(): string {
-  const bodyContent = `
-    <section class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none"></div>
-      <div class="max-w-7xl mx-auto relative z-10">
-        <div class="text-center mb-20">
-          <span class="text-indigo-500 tracking-[0.08em] mb-5 block text-sm uppercase">Insights & Strategie</span>
-          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">Il nostro <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Blog</span></h1>
-          <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Guide pratiche, case study e strategie avanzate per scalare il tuo business con Meta Advertising e Agenti AI.
-          </p>
-        </div>
-        <div class="flex items-center justify-center py-20">
-          <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      </div>
-    </section>
-  `;
+// Card di un articolo nel mirror statico: stessi campi di components/BlogCard.tsx.
+const blogCardHtml = (post: any): string =>
+  `<article><img src="${escapeHtml(post.coverImage)}" alt="" loading="lazy" decoding="async"><p>${escapeHtml(post.category)}</p><h3><a href="${blogPath}/${post.slug}">${escapeHtml(post.title)}</a></h3><p><time datetime="${escapeHtml(post.date)}">${escapeHtml(formatPostDate(post.date))}</time> · ${escapeHtml(post.readTime)}</p><p>${escapeHtml(post.excerpt)}</p></article>`;
+
+// Mirror statico chiaro di components/Blog.tsx: hero, card degli articoli
+// (o stato vuoto, come la UI senza Supabase), chiusura e contatti.
+function generateBlogIndexHtml(posts: any[]): string {
+  const copy = blogIndexCopy;
+  const pageUrl = `${siteUrl}${blogPath}`;
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: pageUrl },
+    ],
+  };
+  const listHtml = posts.length
+    ? `<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">${posts.map(blogCardHtml).join('')}</div>`
+    : `<h3>${escapeHtml(copy.empty.title)}</h3><p>${escapeHtml(copy.empty.text)} ${copy.empty.links.map((link) => `<a href="${link.href}">${escapeHtml(link.label)}</a>`).join(' · ')}</p>`;
+  const { close } = copy;
+  const body = `<header><p class="eyebrow">${escapeHtml(copy.kicker)}</p><h1 class="hero-h1 font-bold">${escapeHtml(copy.title)}</h1><p class="hero-subhead">${escapeHtml(copy.lead)}</p></header>
+  <section aria-labelledby="blog-articoli"><h2 id="blog-articoli">${escapeHtml(copy.listTitle)}</h2>${listHtml}</section>
+  <section><h2>${escapeHtml(close.title)}</h2><p>${escapeHtml(close.lead)}</p><a href="#contatti">${escapeHtml(close.cta)}</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`;
 
   return generateBaseHtml({
-    title: 'Blog Q4 Studio | Guide Meta Advertising e AI Automation',
-    description: 'Scopri strategie avanzate di Lead Generation B2B con Meta Ads, case study e guide pratiche su agenti AI. Il blog di Q4 Studio per far crescere il tuo business.',
-    canonical: `${siteUrl}/blog`,
-    bodyContent
+    title: copy.metaTitle,
+    description: copy.metaDescription,
+    canonical: pageUrl,
+    schema: [breadcrumbSchema],
+    bodyContent: staticPage(body)
   });
 }
 
@@ -665,103 +674,53 @@ async function fetchBlogPosts() {
   }
 }
 
-function safeArticleLink(href: string): { href: string; external: boolean } | null {
-  const value = href.trim();
-  if ((value.startsWith('/') && !value.startsWith('//')) || /^#[a-z0-9][a-z0-9_-]*$/i.test(value)) {
-    return { href: value, external: false };
-  }
-  if (value.startsWith('https://') || value.startsWith('mailto:')) {
-    return { href: value, external: value.startsWith('https://') };
-  }
-  return null;
-}
-
+// Markdown degli articoli: stesso parser di components/BlogArticle.tsx
+// (lib/blogMarkdown.ts), stessi elementi dentro .prose-light.
 function renderArticleInline(value: string): string {
-  return value
-    .split(/(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g)
-    .filter(Boolean)
-    .map((token) => {
-      if (token.startsWith('**') && token.endsWith('**')) {
-        return `<strong class="font-semibold text-white">${escapeHtml(token.slice(2, -2))}</strong>`;
-      }
-      if (token.startsWith('`') && token.endsWith('`')) {
-        return `<code>${escapeHtml(token.slice(1, -1))}</code>`;
-      }
-      const link = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
-      if (link) {
-        const destination = safeArticleLink(link[2]);
-        if (!destination) return escapeHtml(link[1]);
-        const externalAttributes = destination.external ? ' target="_blank" rel="noopener noreferrer"' : '';
-        return `<a href="${escapeHtml(destination.href)}"${externalAttributes} class="font-medium text-indigo-300 underline underline-offset-4">${escapeHtml(link[1])}</a>`;
-      }
-      return escapeHtml(token);
-    })
-    .join('');
+  return inlineTokens(value).map((token) => {
+    if (token.type === 'strong') return `<strong>${escapeHtml(token.text)}</strong>`;
+    if (token.type === 'code') return `<code>${escapeHtml(token.text)}</code>`;
+    if (token.type === 'link') {
+      const externalAttributes = token.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+      return `<a href="${escapeHtml(token.href)}"${externalAttributes}>${token.code ? `<code>${escapeHtml(token.text)}</code>` : escapeHtml(token.text)}</a>`;
+    }
+    return escapeHtml(token.text);
+  }).join('');
 }
 
-// Safe markdown renderer matching BlogArticle.tsx link rules.
-function renderMarkdown(content: string): string {
-  const lines = content.trim().split('\n');
-  const elements: string[] = [];
-  let currentOrderedList: string[] = [];
-  let currentUnorderedList: string[] = [];
-
-  // Mirrors parseArticle() in components/BlogArticle.tsx: ordered and
-  // unordered lists are tracked separately, and switching list type flushes
-  // whichever list was open.
-  const flushLists = () => {
-    if (currentOrderedList.length > 0) {
-      elements.push(`<ol class="list-decimal list-inside space-y-2 mb-6 text-gray-300">${currentOrderedList.map((item) => `<li class="leading-relaxed">${renderArticleInline(item)}</li>`).join('')}</ol>`);
-      currentOrderedList = [];
+function renderArticleBlock(block: ArticleBlock): string {
+  switch (block.type) {
+    case 'heading': {
+      const tag = block.level === 3 ? 'h3' : 'h2';
+      return `<${tag}${block.id ? ` id="${block.id}"` : ''}>${renderArticleInline(block.text)}</${tag}>`;
     }
-    if (currentUnorderedList.length > 0) {
-      elements.push(`<ul class="list-disc list-inside space-y-2 mb-6 text-gray-300">${currentUnorderedList.map((item) => `<li class="leading-relaxed">${renderArticleInline(item)}</li>`).join('')}</ul>`);
-      currentUnorderedList = [];
+    case 'list': {
+      const tag = block.ordered ? 'ol' : 'ul';
+      return `<${tag}>${block.items.map((item) => `<li>${renderArticleInline(item)}</li>`).join('')}</${tag}>`;
     }
-  };
-
-  lines.forEach((line) => {
-    if (line.startsWith('# ')) {
-      flushLists();
-      elements.push(`<h1 class="text-[clamp(28px,4.5vw,48px)] font-bold leading-[1.15] tracking-[-0.02em] mb-6 mt-8">${renderArticleInline(line.replace('# ', ''))}</h1>`);
-    } else if (line.startsWith('## ')) {
-      flushLists();
-      elements.push(`<h2 class="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em] mb-4 mt-8 text-indigo-300">${renderArticleInline(line.replace('## ', ''))}</h2>`);
-    } else if (line.startsWith('### ')) {
-      flushLists();
-      elements.push(`<h3 class="text-lg md:text-xl font-bold leading-[1.5] mb-3 mt-6 text-purple-300">${renderArticleInline(line.replace('### ', ''))}</h3>`);
-    } else if (/^\d+\.\s/.test(line)) {
-      if (currentUnorderedList.length > 0) flushLists();
-      currentOrderedList.push(line.replace(/^\d+\.\s/, ''));
-    } else if (/^[-*]\s/.test(line)) {
-      if (currentOrderedList.length > 0) flushLists();
-      currentUnorderedList.push(line.replace(/^[-*]\s/, ''));
-    } else if (line.trim() === '') {
-      flushLists();
-    } else if (line.trim() !== '') {
-      flushLists();
-      elements.push(`<p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-4">${renderArticleInline(line)}</p>`);
-    }
-  });
-
-  flushLists();
-  return elements.join('\n');
+    case 'quote':
+      return `<blockquote>${block.blocks.map(renderArticleBlock).join('')}</blockquote>`;
+    case 'image':
+      return `<figure><img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt)}" loading="lazy" decoding="async">${block.alt ? `<figcaption>${escapeHtml(block.alt)}</figcaption>` : ''}</figure>`;
+    case 'code':
+      return `<pre><code>${escapeHtml(block.text)}</code></pre>`;
+    case 'table':
+      return `<div class="tbl"><table><thead><tr>${block.header.map((cell) => `<th scope="col">${renderArticleInline(cell)}</th>`).join('')}</tr></thead><tbody>${block.rows.map((row) => `<tr>${row.map((cell) => `<td>${renderArticleInline(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+    default:
+      return `<p>${renderArticleInline(block.text)}</p>`;
+  }
 }
 
-function generateBlogArticleHtml(post: any): string {
-  const pageUrl = `${siteUrl}/blog/${post.slug}`;
-  const publishedDate = new Date(post.date).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
-  const renderedContent = renderMarkdown(post.content);
+// Mirror statico chiaro di components/BlogArticle.tsx: hero (categoria,
+// titolo, estratto, autore, data, lettura), copertina, indice, prosa,
+// card autore, articoli correlati, chiusura e contatti.
+function generateBlogArticleHtml(post: any, posts: any[]): string {
+  const pageUrl = `${siteUrl}${blogPath}/${post.slug}`;
+  const { blocks, toc } = parseArticle(post.content);
+  const author = blogAuthors[post.author.name];
+  const related = relatedPosts(post, posts);
+  const { close } = blogArticleCopy;
 
-  // Dati aggiuntivi per il Person schema, per autore noto. Mirror di
-  // AUTHOR_INFO in components/BlogSchema.tsx — solo dati reali e
-  // verificabili, nessun profilo personale inventato per autori non noti.
-  const authorInfo: Record<string, { jobTitle: string; sameAs: string[] }> = {
-    'Sebastiano Riva': {
-      jobTitle: 'Fondatore, Q4 Studio',
-      sameAs: ['https://www.linkedin.com/company/q4studio/about/'],
-    },
-  };
   const blogSchema = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -774,7 +733,7 @@ function generateBlogArticleHtml(post: any): string {
       '@type': 'Person',
       name: post.author.name,
       image: post.author.image,
-      ...(authorInfo[post.author.name] || {}),
+      ...(blogAuthors[post.author.name] || {}),
     },
     publisher: {
       '@type': 'Organization',
@@ -804,63 +763,16 @@ function generateBlogArticleHtml(post: any): string {
     ],
   };
 
-  const bodyContent = `
-    <article class="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen">
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none"></div>
-      <div class="max-w-4xl mx-auto relative z-10">
-        <nav aria-label="Breadcrumb" class="mb-8">
-          <ol class="flex items-center gap-2 text-sm text-gray-400">
-            <li><a href="/" class="hover:text-indigo-300 transition-colors">Home</a></li>
-            <li>/</li>
-            <li><a href="/blog" class="hover:text-indigo-300 transition-colors">Blog</a></li>
-            <li>/</li>
-            <li class="text-gray-300">${escapeHtml(post.title)}</li>
-          </ol>
-        </nav>
-
-        <div>
-          <div class="inline-block px-4 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/30 mb-6">
-            <span class="text-indigo-300 text-sm font-medium">${escapeHtml(post.category)}</span>
-          </div>
-
-          <h1 class="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">${escapeHtml(post.title)}</h1>
-
-          <div class="flex flex-wrap items-center gap-6 text-gray-400 mb-8 pb-8 border-b border-white/10">
-            <div class="flex items-center gap-3">
-              <img src="${post.author.image}" alt="${escapeHtml(post.author.name)}" loading="lazy" decoding="async" class="w-12 h-12 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=96'" />
-              <div>
-                <p class="text-white font-medium">${escapeHtml(post.author.name)}</p>
-                <div class="flex items-center gap-4 text-sm">
-                  <span>${publishedDate}</span>
-                  <span>${post.readTime} di lettura</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="relative h-[400px] rounded-3xl overflow-hidden mb-12">
-            <img src="${post.coverImage}" alt="${escapeHtml(post.title)}" loading="eager" fetchpriority="high" class="w-full h-full object-cover" />
-            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent"></div>
-          </div>
-        </div>
-
-        <div class="prose prose-invert prose-lg max-w-none">
-          ${renderedContent}
-        </div>
-
-        <div class="mt-16 p-8 rounded-3xl bg-gradient-to-br from-indigo-950/30 to-purple-950/30 border border-white/10">
-          <div class="flex flex-col md:flex-row items-center gap-6">
-            <img src="${post.author.image}" alt="${escapeHtml(post.author.name)}" loading="lazy" decoding="async" class="w-20 h-20 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.name)}&background=4f46e5&color=fff&size=160'" />
-            <div class="flex-1 text-center md:text-left">
-              <h3 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em] mb-2">${escapeHtml(post.author.name)}</h3>
-              <p class="text-gray-400">Vuoi approfondire queste strategie per il tuo business? Contattaci per una consulenza personalizzata.</p>
-            </div>
-            <a href="/" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all duration-300 whitespace-nowrap">Contattaci</a>
-          </div>
-        </div>
-      </div>
-    </article>
-  `;
+  const tocHtml = toc.length
+    ? `<ol>${toc.map((item) => `<li><a href="#${item.id}">${escapeHtml(item.label)}</a></li>`).join('')}</ol>`
+    : `<p>${escapeHtml(blogArticleCopy.tocEmpty)}</p>`;
+  const body = `<header><p class="eyebrow">${escapeHtml(post.category)}</p><h1 class="hero-h1 font-bold">${escapeHtml(post.title)}</h1><p class="hero-subhead">${escapeHtml(post.excerpt)}</p><p><strong>${escapeHtml(post.author.name)}</strong> · <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatPostDate(post.date))}</time> · ${escapeHtml(post.readTime)} ${escapeHtml(blogArticleCopy.readTimeSuffix)}</p></header>
+  <img src="${escapeHtml(post.coverImage)}" alt="" loading="eager" fetchpriority="high" class="aspect-video w-full rounded-[28px] object-cover">
+  <nav aria-labelledby="article-toc-title"><h2 id="article-toc-title">${escapeHtml(blogArticleCopy.tocTitle)}</h2>${tocHtml}</nav>
+  <div class="prose-light">${blocks.map(renderArticleBlock).join('\n')}</div>
+  <section aria-label="Autore"><p>${escapeHtml(blogArticleCopy.authorKicker)}</p><p><strong>${escapeHtml(post.author.name)}</strong>${author ? `, ${escapeHtml(author.jobTitle)}` : ''}</p></section>
+  ${related.length ? `<section aria-labelledby="altri-articoli"><h2 id="altri-articoli">${escapeHtml(blogArticleCopy.relatedTitle)}</h2><div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">${related.map(blogCardHtml).join('')}</div></section>` : ''}
+  <section><h2>${escapeHtml(close.title)}</h2><p>${escapeHtml(close.lead)}</p><a href="#contatti">${escapeHtml(close.cta)}</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`;
 
   return generateBaseHtml({
     title: `${post.title} | Q4 Studio Blog`,
@@ -874,7 +786,7 @@ function generateBlogArticleHtml(post: any): string {
     ogImageAlt: post.title,
     type: 'article',
     schema: [blogSchema, breadcrumbSchema],
-    bodyContent,
+    bodyContent: staticPage(body),
   });
 }
 
@@ -882,11 +794,11 @@ function generateBlogArticleHtml(post: any): string {
 // arriva con React; email e telefono sono quelli di llms.txt e dello schema.
 const STATIC_CONTACT_HTML = '<h2>Contatti</h2><p>Scrivici dal form in fondo alla pagina oppure a info@q4.studio, +39 338 357 6286.</p>';
 
-// Mirror statico: variante chiara (stesse classi .home-light del client, fondo
-// bianco, testo #0a0a0a) per le rotte di data/lightRoutes.ts, scura per le altre.
-const staticPage = (content: string, light = false) => light
-  ? `<main class="home-light min-h-screen bg-white text-[#0a0a0a] px-6 pt-36 pb-24"><div class="max-w-6xl mx-auto space-y-16">${content}</div></main>`
-  : `<main class="min-h-screen bg-[#050505] text-white px-6 pt-36 pb-24"><div class="max-w-6xl mx-auto space-y-16">${content}</div></main>`;
+// Mirror statico: stesse classi .home-light del client, fondo bianco e
+// testo #0a0a0a. Dal 2026-11-22 tutte le rotte sono chiare (D-045), la
+// variante scura non serve più.
+const staticPage = (content: string) =>
+  `<main class="home-light min-h-screen bg-white text-[#0a0a0a] px-6 pt-36 pb-24"><div class="max-w-6xl mx-auto space-y-16">${content}</div></main>`;
 
 function generateRestyledAIAgentsHtml(): string {
   // Pacchetti e FAQ da data/servicePages.ts, gli stessi di components/AIAgents.tsx.
@@ -915,7 +827,7 @@ function generateRestyledAIAgentsHtml(): string {
   };
   const aiAgentsFaqSchema = faqPageSchema(aiAgentsFaqs);
   const aiAgentsFaqHtml = aiAgentsFaqs.map((faq) => `<h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p>`).join('');
-  return generateBaseHtml({ title: 'Agenti AI e Automazioni per PMI | Q4 Studio', description: 'Automazioni WhatsApp, CRM e assistenti virtuali con tempi, setup e canoni pubblici. Soluzioni concrete per le attività ripetitive delle PMI.', canonical: `${siteUrl}/agenti-ai`, schema: [aiAgentsServiceSchema, aiAgentsBreadcrumbSchema, aiAgentsFaqSchema], bodyContent: staticPage(`<header><h1 class="hero-h1 font-bold">Automazioni concrete, su problemi che racconti in una frase.</h1><p class="hero-subhead">Assistenti sul sito, follow-up nel CRM e richieste WhatsApp già strutturate. Sai prima cosa serve, quanto tempo richiede e quanto costa.</p><a href="#pacchetti">Vedi i pacchetti</a></header><section><h2>Un problema alla volta.</h2><p>Non vendiamo progetti di "digital transformation" con output vago e tempi lunghi. Ogni pacchetto risolve un'attività specifica che oggi fa una persona a mano, con un prezzo di setup e un canone dichiarati prima di iniziare.</p><p>Se il problema che ci racconti non rientra in uno di questi tre, te lo diciamo subito: non costruiamo un pacchetto su misura solo per vendere qualcosa. Automazioni e agenti AI vengono dopo il tracciamento, non prima: senza dati affidabili su cosa funziona, automatizzare un processo rotto lo rende solo più veloce a rompersi.</p></section><section><h2>Tre passaggi.</h2><div class="grid gap-8 md:grid-cols-3"><article><span>01</span><h3>Racconto del problema</h3><p>Ci descrivi l'attività che oggi fa una persona a mano. Se non rientra in un pacchetto chiaro, te lo diciamo prima di iniziare, non a metà progetto.</p></article><article><span>02</span><h3>Setup</h3><p>Colleghiamo i sistemi che già usi (CRM, gestionale, WhatsApp) e configuriamo l'automazione sul processo reale, non su un caso generico.</p></article><article><span>03</span><h3>Canone e assistenza</h3><p>Un canone mensile copre monitoraggio e aggiornamenti quando le piattaforme cambiano le regole. Disdetta libera, nessun vincolo pluriennale.</p></article></div></section><div id="pacchetti-automazioni" aria-hidden="true"></div><section id="pacchetti"><h2>Scegli il lavoro ripetitivo da togliere al team.</h2><div class="grid gap-6">${cards}</div></section><section id="faq"><h2>Domande frequenti</h2>${aiAgentsFaqHtml}</section><section><h2>Approfondisci</h2><div class="grid gap-4 md:grid-cols-3"><a href="/tracciamento-server-side">Prima le automazioni: hai già il tracciamento a posto?</a><a href="/risorse/whatsapp-automation-lead-b2b">Automazione WhatsApp nei processi aziendali</a><a href="/risorse/second-brain-aziendale-agente-ai">Second Brain aziendale: un agente AI per la conoscenza</a></div></section><section><h2>Quale attività stai ancora facendo a mano?</h2><p>Raccontala in una frase. Ti diciamo se uno di questi pacchetti è il punto di partenza giusto.</p><a href="#contatti">Scrivici</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`, true) });
+  return generateBaseHtml({ title: 'Agenti AI e Automazioni per PMI | Q4 Studio', description: 'Automazioni WhatsApp, CRM e assistenti virtuali con tempi, setup e canoni pubblici. Soluzioni concrete per le attività ripetitive delle PMI.', canonical: `${siteUrl}/agenti-ai`, schema: [aiAgentsServiceSchema, aiAgentsBreadcrumbSchema, aiAgentsFaqSchema], bodyContent: staticPage(`<header><h1 class="hero-h1 font-bold">Automazioni concrete, su problemi che racconti in una frase.</h1><p class="hero-subhead">Assistenti sul sito, follow-up nel CRM e richieste WhatsApp già strutturate. Sai prima cosa serve, quanto tempo richiede e quanto costa.</p><a href="#pacchetti">Vedi i pacchetti</a></header><section><h2>Un problema alla volta.</h2><p>Non vendiamo progetti di "digital transformation" con output vago e tempi lunghi. Ogni pacchetto risolve un'attività specifica che oggi fa una persona a mano, con un prezzo di setup e un canone dichiarati prima di iniziare.</p><p>Se il problema che ci racconti non rientra in uno di questi tre, te lo diciamo subito: non costruiamo un pacchetto su misura solo per vendere qualcosa. Automazioni e agenti AI vengono dopo il tracciamento, non prima: senza dati affidabili su cosa funziona, automatizzare un processo rotto lo rende solo più veloce a rompersi.</p></section><section><h2>Tre passaggi.</h2><div class="grid gap-8 md:grid-cols-3"><article><span>01</span><h3>Racconto del problema</h3><p>Ci descrivi l'attività che oggi fa una persona a mano. Se non rientra in un pacchetto chiaro, te lo diciamo prima di iniziare, non a metà progetto.</p></article><article><span>02</span><h3>Setup</h3><p>Colleghiamo i sistemi che già usi (CRM, gestionale, WhatsApp) e configuriamo l'automazione sul processo reale, non su un caso generico.</p></article><article><span>03</span><h3>Canone e assistenza</h3><p>Un canone mensile copre monitoraggio e aggiornamenti quando le piattaforme cambiano le regole. Disdetta libera, nessun vincolo pluriennale.</p></article></div></section><div id="pacchetti-automazioni" aria-hidden="true"></div><section id="pacchetti"><h2>Scegli il lavoro ripetitivo da togliere al team.</h2><div class="grid gap-6">${cards}</div></section><section id="faq"><h2>Domande frequenti</h2>${aiAgentsFaqHtml}</section><section><h2>Approfondisci</h2><div class="grid gap-4 md:grid-cols-3"><a href="/tracciamento-server-side">Prima le automazioni: hai già il tracciamento a posto?</a><a href="/risorse/whatsapp-automation-lead-b2b">Automazione WhatsApp nei processi aziendali</a><a href="/risorse/second-brain-aziendale-agente-ai">Second Brain aziendale: un agente AI per la conoscenza</a></div></section><section><h2>Quale attività stai ancora facendo a mano?</h2><p>Raccontala in una frase. Ti diciamo se uno di questi pacchetti è il punto di partenza giusto.</p><a href="#contatti">Scrivici</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`) });
 }
 
 function generateServerSideTrackingHtml(): string {
@@ -956,7 +868,7 @@ function generateServerSideTrackingHtml(): string {
       { '@type': 'ListItem', position: 2, name: 'Tracciamento Server-Side', item: `${siteUrl}/tracciamento-server-side` },
     ],
   };
-  return generateBaseHtml({ title: 'Tracciamento Server-Side per Meta e Google | Q4 Studio', description: 'Recuperiamo i segnali di conversione che browser e ad blocker bloccano. Setup server-side, Consent Mode v2, Conversions API. Audit da 490 €.', canonical: `${siteUrl}/tracciamento-server-side`, schema: [trackingServiceSchema, trackingFaqSchema, trackingBreadcrumbSchema], bodyContent: staticPage(body, true) });
+  return generateBaseHtml({ title: 'Tracciamento Server-Side per Meta e Google | Q4 Studio', description: 'Recuperiamo i segnali di conversione che browser e ad blocker bloccano. Setup server-side, Consent Mode v2, Conversions API. Audit da 490 €.', canonical: `${siteUrl}/tracciamento-server-side`, schema: [trackingServiceSchema, trackingFaqSchema, trackingBreadcrumbSchema], bodyContent: staticPage(body) });
 }
 
 // Vercel serves this file with a real HTTP 404 status for any request that
@@ -969,48 +881,33 @@ function generateServerSideTrackingHtml(): string {
 // that hits a dead path gets real 404 status AND machine-readable pointers
 // (sitemap, llms.txt, key pages) so it can reroute instead of giving up.
 function generateNotFoundHtml(): string {
-  const body = `<div class="relative w-full min-h-screen bg-[#050505] text-white flex items-center justify-center overflow-hidden">
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-[150px] pointer-events-none"></div>
-    <div class="relative z-10 max-w-2xl mx-auto px-6 text-center py-24">
-      <h1 class="text-[200px] md:text-[280px] font-bold leading-none tracking-tighter mb-8" style="background:linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(99,102,241,0.8) 50%, rgba(168,85,247,0.6) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">404</h1>
-      <p class="text-2xl md:text-3xl text-gray-300 mb-4 font-light">Pagina non trovata</p>
-      <p class="text-lg text-gray-500 mb-12 max-w-md mx-auto">La pagina che stai cercando non esiste o è stata spostata. Torna alla homepage per continuare a esplorare.</p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <a href="/" class="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold">Torna alla Homepage</a>
-      </div>
-      <section aria-label="Link utili" class="mt-16 pt-10 border-t border-white/10 text-left max-w-md mx-auto">
-        <h2 class="text-lg text-gray-400 mb-4">Link utili per ripartire</h2>
-        <ul class="space-y-2 text-sm text-gray-500">
-          <li><a href="/" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Homepage</a> — panoramica di Q4 Studio</li>
-          <li><a href="/tracciamento-server-side" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Tracciamento server-side e prezzi</a></li>
-          <li><a href="/siti-web-ai" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Siti web con AI</a></li>
-          <li><a href="/agenti-ai" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Agenti AI e automazioni</a></li>
-          <li><a href="/casi-studio" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Casi studio</a></li>
-          <li><a href="/risorse" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">Risorse</a></li>
-          <li><a href="/sitemap.xml" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">sitemap.xml</a> — elenco completo degli URL pubblicati</li>
-          <li><a href="/llms.txt" class="text-indigo-300 hover:text-indigo-200 underline underline-offset-4">llms.txt</a> — guida al sito per agenti AI</li>
-        </ul>
-      </section>
-    </div>
-  </div>`;
+  const copy = notFoundCopy;
+  const body = `<header><p class="eyebrow">${escapeHtml(copy.kicker)}</p><h1 class="hero-h1 font-bold">${escapeHtml(copy.title)}</h1><p class="hero-subhead">${escapeHtml(copy.lead)}</p><a href="/">${escapeHtml(copy.home)}</a></header>
+  <section aria-labelledby="ripartire"><h2 id="ripartire">${escapeHtml(copy.linksTitle)}</h2><div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">${copy.links.map((link) => `<article><h3><a href="${link.href}">${escapeHtml(link.label)}</a></h3><p>${escapeHtml(link.text)}</p></article>`).join('')}</div>
+  <ul>${copy.machineLinks.map((link) => `<li><a href="${link.href}">${escapeHtml(link.label)}</a> — ${escapeHtml(link.text)}</li>`).join('')}</ul></section>`;
   return generateBaseHtml({
-    title: 'Pagina non trovata | Q4 Studio',
-    description: 'La pagina che stai cercando non esiste o è stata spostata.',
+    title: copy.metaTitle,
+    description: copy.metaDescription,
     canonical: `${siteUrl}/404`,
     noIndex: true,
-    bodyContent: body,
+    bodyContent: staticPage(body),
   });
 }
 
+// Mirror statico chiaro di components/TechnicalPartner.tsx: stessi testi
+// e prezzi (data/extraPages.ts, prezzi dai pacchetti del tracciamento).
 function generateTechnicalPartnerHtml(): string {
-  const body = `<header><p class="eyebrow">White label · per agenzie</p><h1 class="hero-h1 font-bold">Sono il tecnico che la tua agenzia non ha in casa.</h1><p class="hero-subhead">Tracciamento server-side, Consent Mode, automazioni, integrazioni CRM. Lavoro white label: il cliente resta tuo, io non lo contatto mai.</p></header>
-  <section><h2>Il problema che conosci</h2><p>Il cliente ti scrive che Meta dice 40 conversioni e il suo gestionale ne dice 90. Tu sai che è il tracciamento. Ma sistemare un container server-side, la Consent Mode e le Conversions API non è il lavoro per cui hai assunto il tuo team.</p><p>Così la conversazione si ripete ogni mese, e ogni mese il cliente si fida un po' meno dei numeri che gli porti.</p></section>
-  <section><h2>Come funziona</h2><p><strong>1. Mi giri il problema.</strong> Una call di trenta minuti con te, senza il cliente.</p><p><strong>2. Ti dico tempi e prezzo.</strong> Fisso, non a ore.</p><p><strong>3. Lavoro.</strong> Con i tuoi accessi o con quelli del cliente, come preferisci.</p><p><strong>4. Ti consegno.</strong> Documentazione inclusa, così il tuo team capisce cosa c'è.</p><p>Se serve, sto in call col cliente presentato come tuo tecnico. Se preferisci che non compaia, non compaio.</p></section>
-  <section><h2>La garanzia che conta</h2><p><strong>Non contatto i tuoi clienti. Non li aggiungo su LinkedIn. Non li ricontatto quando il progetto finisce.</strong> Se vuoi, lo mettiamo per scritto.</p><p>So che il rischio che ti preoccupa non è il costo: è che il fornitore tecnico diventi il tuo concorrente. Non è il mio modello: io vivo di lavoro tecnico, non di gestione clienti.</p></section>
-  <section><h2>Cosa faccio</h2><ul><li><strong>Tracciamento server-side</strong>: container, Consent Mode v2, Conversions API, Enhanced Conversions. Da 1.500 €, circa una giornata per siti non-ecommerce.</li><li><strong>Audit tracciamento</strong>: 490 €, 3-5 giorni. Utile da rivendere al cliente come primo passo.</li><li><strong>Automazioni e integrazioni</strong>: richieste inbound strutturate, follow-up, collegamenti CRM. Setup + canone.</li><li><strong>Siti e landing</strong>: quando serve il pezzo che manca.</li></ul></section>
-  <section><h2>Sul prezzo</h2><p>Non sono un freelance a basso costo, e probabilmente non ti serve. Il mio prezzo è pensato perché tu lo ricarichi: se rivendi un setup a 2.500 € e il tuo costo è 1.500 €, hai marginato mille euro su un lavoro che non sapevi fare.</p></section>
-  <section><h2>Chi sono</h2><p>Sebastiano, Reggio Emilia. Vengo dal marketing (l'ho studiato e l'ho fatto per anni) e sono tecnico. È una combinazione poco comune, ed è il motivo per cui capisco cosa ti serve senza che debba spiegarmelo due volte.</p><p>Lavoro già con un'agenzia in questo modo: ore prepagate più progetti a prezzo fisso.</p><a href="https://calendar.notion.so/meet/sebastianor/tg3rl4yct">Prenota trenta minuti</a> · <a href="mailto:sebastiano@q4.studio">Scrivimi</a></section>`;
-  return generateBaseHtml({ title: 'Partner tecnico white label per agenzie | Q4 Studio', description: 'Tracciamento server-side, Consent Mode, automazioni e integrazioni CRM in white label per agenzie.', canonical: `${siteUrl}/partner-tecnico`, noIndex: true, bodyContent: staticPage(body) });
+  const copy = technicalPartnerCopy;
+  const { book, mail, problem, process, guarantee, services, pricing, about, close } = copy;
+  const body = `<header><p class="eyebrow">${escapeHtml(copy.kicker)}</p><h1 class="hero-h1 font-bold">${escapeHtml(copy.title)}</h1><p class="hero-subhead">${escapeHtml(copy.lead)}</p><p><a href="${book.href}" rel="noopener noreferrer">${escapeHtml(book.label)}</a> · <a href="${mail.href}">${escapeHtml(mail.label)}</a></p></header>
+  <section><h2>${escapeHtml(problem.title)}</h2>${problem.paragraphs.map((text) => `<p>${escapeHtml(text)}</p>`).join('')}</section>
+  <section><h2>${escapeHtml(process.title)}</h2>${process.steps.map((step) => `<article><span>${step.n}</span><h3>${escapeHtml(step.title)}</h3><p>${escapeHtml(step.text)}</p></article>`).join('')}<p>${escapeHtml(process.note)}</p></section>
+  <section><p>${escapeHtml(guarantee.kicker)}</p><h2>${escapeHtml(guarantee.title)}</h2>${guarantee.paragraphs.map((text) => `<p>${escapeHtml(text)}</p>`).join('')}</section>
+  <section><h2>${escapeHtml(services.title)}</h2><div class="grid gap-6 md:grid-cols-2">${services.items.map((item) => `<article><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.text)}</p>${item.price ? `<p>${escapeHtml(item.priceLabel ?? '')}: <strong>${escapeHtml(item.price)}</strong>${item.timing ? `. ${escapeHtml(item.timing)}` : ''}</p>` : ''}</article>`).join('')}</div></section>
+  <section><h2>${escapeHtml(pricing.title)}</h2><p>${escapeHtml(pricing.text)}</p></section>
+  <section><h2>${escapeHtml(about.title)}</h2>${about.paragraphs.map((text) => `<p>${escapeHtml(text)}</p>`).join('')}</section>
+  <section><h2>${escapeHtml(close.title)}</h2><p>${escapeHtml(close.lead)}</p><a href="${book.href}" rel="noopener noreferrer">${escapeHtml(book.label)}</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`;
+  return generateBaseHtml({ title: copy.metaTitle, description: copy.metaDescription, canonical: `${siteUrl}${copy.path}`, noIndex: true, bodyContent: staticPage(body) });
 }
 
 // --- Pagine aziendali (/about, /contact, /privacy) ------------------------
@@ -1053,7 +950,7 @@ function generateAboutHtml(): string {
   <section><h2>${escapeHtml(principles.title)}</h2>${principles.items.map((item) => `<article><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.text)}</p></article>`).join('')}</section>
   <section aria-label="Prezzi pubblici"><ul>${figures.map((figure) => `<li><strong>${escapeHtml(figure.value)}</strong> ${escapeHtml(figure.caption)}</li>`).join('')}</ul></section>
   <section><h2>${escapeHtml(companyData.title)}</h2><p>${escapeHtml(companyData.lead)}</p><dl>${companyData.rows.map((row) => `<div><dt>${escapeHtml(row.label)}</dt><dd>${row.href ? `<a href="${escapeHtml(row.href)}">${escapeHtml(row.value)}</a>` : escapeHtml(row.value)}</dd></div>`).join('')}</dl><p>Profili verificati: ${profilesHtml}</p></section>
-  <section><h2>${escapeHtml(close.title)}</h2><p>${escapeHtml(close.lead)}</p><a href="${close.href}">${escapeHtml(close.cta)}</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`, true);
+  <section><h2>${escapeHtml(close.title)}</h2><p>${escapeHtml(close.lead)}</p><a href="${close.href}">${escapeHtml(close.cta)}</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`);
   return generateBaseHtml({
     title: copy.metaTitle,
     description: copy.metaDescription,
@@ -1077,7 +974,7 @@ function generateContactHtml(): string {
   <section><h2>${escapeHtml(channels.title)}</h2>${companyCardsHtml(channels.items)}</section>
   <section><h2>${escapeHtml(brief.title)}</h2><p>${escapeHtml(brief.lead)}</p><ul>${brief.items.map((item) => `<li>${escapeHtml(item.label)} (${escapeHtml(item.hint)})</li>`).join('')}</ul></section>
   <section><h2>${escapeHtml(startingPoints.title)}</h2>${companyCardsHtml(startingPoints.items)}</section>
-  <section><h2>${escapeHtml(close.title)}</h2><p>${escapeHtml(close.lead)}</p><a href="#contatti">${escapeHtml(close.cta)}</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`, true);
+  <section><h2>${escapeHtml(close.title)}</h2><p>${escapeHtml(close.lead)}</p><a href="#contatti">${escapeHtml(close.cta)}</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`);
   return generateBaseHtml({
     title: copy.metaTitle,
     description: copy.metaDescription,
@@ -1097,7 +994,7 @@ function generatePrivacyStaticHtml(): string {
   const copy = privacyPageCopy;
   const body = staticPage(`<header><p class="eyebrow">${escapeHtml(copy.kicker)}</p><h1 class="hero-h1 font-bold">${escapeHtml(copy.title)}</h1><p class="hero-subhead">${escapeHtml(copy.lead)} Ultimo aggiornamento: ${escapeHtml(copy.lastUpdated)}.</p></header>
   <section><h2>${escapeHtml(copy.privacyTitle)}</h2>${legalSectionsHtml(privacySections)}</section>
-  <section><h2>${escapeHtml(copy.cookieTitle)}</h2>${legalSectionsHtml(cookieSections)}</section>`, true);
+  <section><h2>${escapeHtml(copy.cookieTitle)}</h2>${legalSectionsHtml(cookieSections)}</section>`);
   return generateBaseHtml({
     title: copy.metaTitle,
     description: copy.metaDescription,
@@ -1142,7 +1039,7 @@ function generateMetaAdvertisingHtml(): string {
   <section><h2>Agenti AI sul processo sales.</h2><article><h3>Non chatbot generici</h3><p>Li disegniamo con il team, partendo da regole operative, tono di voce, CRM e punti di frizione.</p><ul><li>Qualificano e danno priorità ai contatti</li><li>Preparano il lavoro umano, non lo sostituiscono</li></ul><p>Meno tempo alla prima risposta.</p></article><article><h3>Meta Ads + agenti</h3><p>Nei progetti più maturi l’integrazione riduce i tempi di prima risposta e rende il funnel meno manuale.</p><ul><li>Routing più preciso</li><li>Meno interventi ripetitivi</li></ul><p>Funnel meno dipendente dal manuale.</p></article><article><h3>Risultati leggibili</h3><p>Metriche operative e metriche di business, valutate insieme.</p><ul><li>Confronto prima e dopo integrazione CRM</li><li>Quali campagne generano conversazioni reali</li></ul><p>Evitiamo le campagne che sembrano funzionare ma non vendono.</p></article></section>
   <section id="faq"><h2>Domande frequenti</h2>${faqHtml}</section>
   <section><h2>Il tracciamento viene prima delle campagne.</h2><p>Parti dall’audit.</p><a href="/tracciamento-server-side">Vedi il tracciamento e i prezzi</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`;
-  return generateBaseHtml({ title: 'Meta Ads B2B e Lead Generation su Facebook e Instagram | Q4 Studio', description: 'Consulenza Meta Advertising per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali dal CRM.', canonical: `${siteUrl}/meta-advertising-b2b`, schema: [faqSchema, metaAdvertisingServiceSchema, metaAdvertisingBreadcrumbSchema], bodyContent: staticPage(body, true) });
+  return generateBaseHtml({ title: 'Meta Ads B2B e Lead Generation su Facebook e Instagram | Q4 Studio', description: 'Consulenza Meta Advertising per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali dal CRM.', canonical: `${siteUrl}/meta-advertising-b2b`, schema: [faqSchema, metaAdvertisingServiceSchema, metaAdvertisingBreadcrumbSchema], bodyContent: staticPage(body) });
 }
 
 function generateSitesWebAiHtml(): string {
@@ -1182,7 +1079,7 @@ function generateSitesWebAiHtml(): string {
     description: 'Siti e landing page B2B fatti con l’AI, non dall’AI: asset su misura, motion e produzione foto-video. Progetti da 2.999 €.',
     canonical: `${siteUrl}/siti-web-ai`,
     schema: [serviceSchema, faqSchema, breadcrumbSchema],
-    bodyContent: staticPage(body, true),
+    bodyContent: staticPage(body),
   });
 }
 
@@ -1527,6 +1424,42 @@ function buildTrustMd(): void {
   ]);
 }
 
+function buildPartnerMd(): void {
+  const copy = technicalPartnerCopy;
+  const { book, mail, problem, process, guarantee, services, pricing, about, close } = copy;
+  registerMd(copy.path, copy.metaTitle, copy.lead, [
+    `## ${problem.title}`,
+    '',
+    ...problem.paragraphs.flatMap((text) => [text, '']),
+    `## ${process.title}`,
+    '',
+    ...process.steps.map((step) => `${Number(step.n)}. **${step.title}** ${step.text}`),
+    '',
+    process.note,
+    '',
+    `## ${guarantee.kicker}`,
+    '',
+    `**${guarantee.title}**`,
+    '',
+    ...guarantee.paragraphs.flatMap((text) => [text, '']),
+    `## ${services.title}`,
+    '',
+    ...services.items.map((item) => `- **${item.title}**: ${item.text}${item.price ? ` ${item.priceLabel}: ${item.price}.` : ''}${item.timing ? ` ${item.timing}` : ''}`),
+    '',
+    `## ${pricing.title}`,
+    '',
+    pricing.text,
+    '',
+    `## ${about.title}`,
+    '',
+    ...about.paragraphs.flatMap((text) => [text, '']),
+    `## ${close.title}`,
+    '',
+    `${close.lead} ${book.label}: ${book.href} · ${mail.label}: ${mail.href.replace('mailto:', '')}`,
+    '',
+  ]);
+}
+
 function buildHubMds(): void {
   // Tabella prezzi dai pacchetti di data/servicePages.ts; la nota di ogni
   // pacchetto (es. "Disdetta libera" sotto il Setup) resta sulla sua riga, come in pagina.
@@ -1737,10 +1670,14 @@ function buildIndexAndBlogMds(blogPosts: any[]): void {
 
   // Blog: indice + articoli (il contenuto Supabase è già markdown)
   const postLines = blogPosts.length
-    ? blogPosts.map((post) => `- ${post.title} (${post.date}): ${siteUrl}/blog/${post.slug}`).join('\n')
+    ? blogPosts.map((post) => `- ${post.title} (${post.category}, ${formatPostDate(post.date)}, ${post.readTime}): ${siteUrl}${blogPath}/${post.slug}`).join('\n')
     : '- Nessun articolo pubblicato al momento della build. Quando disponibili, gli articoli saranno elencati qui e raggiungibili anche in Markdown con /md/blog/<slug>.md o Accept: text/markdown.';
-  registerMd('/blog', 'Blog Q4 Studio', 'Guide pratiche, case study e strategie su Meta Advertising, tracciamento server-side e agenti AI per PMI B2B.', [
-    '## Articoli',
+  registerMd(blogPath, blogIndexCopy.mdTitle, blogIndexCopy.mdDescription, [
+    `## ${blogIndexCopy.title}`,
+    '',
+    blogIndexCopy.lead,
+    '',
+    `## ${blogIndexCopy.listTitle}`,
     '',
     postLines,
     '',
@@ -1758,9 +1695,16 @@ function buildIndexAndBlogMds(blogPosts: any[]): void {
         '',
         `> ${post.excerpt}`,
         '',
-        `Autore: ${post.author.name} · Data: ${post.date} · Lettura: ${post.readTime}`,
+        `Categoria: ${post.category} · Autore: ${post.author.name}${blogAuthors[post.author.name] ? ` (${blogAuthors[post.author.name].jobTitle})` : ''} · Data: ${formatPostDate(post.date)} · Lettura: ${post.readTime}`,
         '',
         post.content.trim(),
+        '',
+        ...(relatedPosts(post, blogPosts).length
+          ? [`## ${blogArticleCopy.relatedTitle}`, '', ...relatedPosts(post, blogPosts).map((item) => `- ${item.title}: ${siteUrl}${blogPath}/${item.slug}`), '']
+          : []),
+        `## ${blogArticleCopy.close.title}`,
+        '',
+        `${blogArticleCopy.close.lead} Contatti: ${siteUrl}/contact`,
         '',
       ].join('\n'),
     });
@@ -1837,7 +1781,7 @@ function buildIndexAndBlogMds(blogPosts: any[]): void {
   // Generate blog index page
   const blogPath = join(distDir, 'blog');
   ensureDir(blogPath);
-  const blogHtml = generateBlogIndexHtml();
+  const blogHtml = generateBlogIndexHtml(blogPosts);
   const blogStream = createWriteStream(join(blogPath, 'index.html'));
   blogStream.write(blogHtml);
   blogStream.end();
@@ -1874,7 +1818,7 @@ function buildIndexAndBlogMds(blogPosts: any[]): void {
   for (const post of blogPosts) {
     const postDir = join(distDir, 'blog', post.slug);
     ensureDir(postDir);
-    const postHtml = generateBlogArticleHtml(post);
+    const postHtml = generateBlogArticleHtml(post, blogPosts);
     const postStream = createWriteStream(join(postDir, 'index.html'));
     postStream.write(postHtml);
     postStream.end();
@@ -1918,6 +1862,7 @@ function buildIndexAndBlogMds(blogPosts: any[]): void {
   buildHomeMd();
   buildTrustMd();
   buildHubMds();
+  buildPartnerMd();
   buildIndexAndBlogMds(blogPosts);
   const mdDir = join(distDir, 'md');
   ensureDir(mdDir);

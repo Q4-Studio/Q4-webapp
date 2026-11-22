@@ -1,41 +1,141 @@
 import React from 'react';
-import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import SEOHead from './SEOHead';
-import HeroVisual, { HeroAmbient } from './HeroVisual';
+import Reveal from './home2/Reveal';
+import SubHero from './home2/SubHero';
+import CloseCta from './home2/CloseCta';
+import { PaperBlock } from './home2/primitives';
+import { technicalPartnerCopy as copy } from '../data/extraPages';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
-import { useHeroReveal } from '../hooks/useHeroReveal';
+
+/* ------------------------------------------------------------------ */
+/* Partner tecnico white label sul sistema chiaro (nessun mockup:       */
+/* composto con i pezzi delle pagine servizio, vedi                     */
+/* remaining-light-pages.md): hero scuro corto con i due CTA, problema  */
+/* in carta, passaggi a righe, garanzia, card dei servizi con i prezzi  */
+/* dei pacchetti, prezzo e chi sono, chiusura. Testi da                 */
+/* data/extraPages.ts (gli stessi del mirror statico). Form contatti e  */
+/* footer chiari in App.tsx.                                            */
+/* ------------------------------------------------------------------ */
+
+const SECTION_TITLE_STYLE: React.CSSProperties = { fontSize: 'clamp(2.5rem, 5vw, 5rem)' };
+const CARD_TITLE_STYLE: React.CSSProperties = { fontSize: 'clamp(1.6rem, 2.3vw, 2.4rem)', letterSpacing: '-0.04em', lineHeight: 1.05 };
+
+const track = (label: string, destination: string) => () =>
+  trackCtaClick({ cta_location: 'technical_partner_page', cta_label: label, cta_destination: destination });
 
 const TechnicalPartner: React.FC = () => {
-  // Ordine dello stagger d'ingresso: eyebrow, h1, sottotitolo, visual.
-  const reveal = useHeroReveal<HTMLElement>(4);
+  const { book, mail, problem, process, guarantee, services, pricing, about, close } = copy;
 
   return (
-  <article className="relative overflow-hidden bg-[#050505] px-6 pb-28 pt-32 text-white md:pt-36">
-    <SEOHead title="Partner tecnico white label per agenzie | Q4 Studio" description="Tracciamento server-side, Consent Mode, automazioni e integrazioni CRM in white label per agenzie." url={`${siteUrl}/partner-tecnico`} noIndex />
-    <div className="relative z-10 mx-auto max-w-5xl">
-      <header className="relative mb-16 md:mb-20">
-        <HeroAmbient variant="partner" side="left" />
-        <div className="relative z-10 grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-          <div>
-            <p ref={reveal(0)} className="eyebrow mb-5 text-indigo-300">White label · per agenzie</p>
-            <h1 ref={reveal(1)} className="hero-h1 mb-6 font-bold">Sono il tecnico che la tua agenzia non ha in casa.</h1>
-            <p ref={reveal(2)} className="hero-subhead text-gray-300">Tracciamento server-side, Consent Mode, automazioni, integrazioni CRM. Lavoro white label: il cliente resta tuo, io non lo contatto mai.</p>
+    <article className="relative">
+      <SEOHead title={copy.metaTitle} description={copy.metaDescription} url={`${siteUrl}${copy.path}`} noIndex />
+
+      <SubHero kicker={copy.kicker} title={copy.title} lead={copy.lead}>
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <a href={book.href} target="_blank" rel="noopener noreferrer" onClick={track(book.label, book.href)} className="btn btn-white justify-center">
+            {book.label}
+            <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+          </a>
+          <a href={mail.href} onClick={track(mail.label, mail.href)} className="btn btn-glass justify-center">
+            {mail.label}
+            <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+          </a>
+        </div>
+      </SubHero>
+
+      {/* Il problema che conosci: titolo a sinistra, testo a destra, in carta. */}
+      <section className="px-6 pb-24 pt-24 md:pb-[160px] md:pt-[160px]" aria-labelledby="partner-problema">
+        <PaperBlock className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-24">
+          <Reveal as="h2" id="partner-problema" className="h-l" style={SECTION_TITLE_STYLE}>{problem.title}</Reveal>
+          <div className="grid gap-6">
+            {problem.paragraphs.map((text, i) => (
+              <Reveal key={text} as="p" delay={i * 0.08} className="lead m-0 max-w-[620px] text-gray-700">{text}</Reveal>
+            ))}
           </div>
-          <div ref={reveal(3)}>
-            <HeroVisual variant="partner" />
+        </PaperBlock>
+      </section>
+
+      {/* Come funziona: righe numerate come i passaggi delle pagine servizio. */}
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]" aria-labelledby="partner-processo">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" id="partner-processo" className="h-l">{process.title}</Reveal>
+          <div className="mt-20 md:mt-[80px]">
+            {process.steps.map((step) => (
+              <Reveal key={step.n} as="article" className="row">
+                <span className="tm">{step.n}</span>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal as="p" className="lead mt-12 max-w-[760px] text-gray-700 md:mt-16">{process.note}</Reveal>
+        </div>
+      </section>
+
+      {/* La garanzia: blocco carta con la frase in grande. */}
+      <section className="px-6 pb-24 md:pb-[160px]" aria-labelledby="partner-garanzia">
+        <PaperBlock>
+          <Reveal as="p" className="m-0 text-[17px] font-medium text-purple-700">{guarantee.kicker}</Reveal>
+          <Reveal as="h2" id="partner-garanzia" className="mt-6 max-w-[1100px]" style={{ fontSize: 'clamp(2.25rem, 4.4vw, 4.5rem)', letterSpacing: '-0.05em', lineHeight: 1 }}>
+            {guarantee.title}
+          </Reveal>
+          <div className="mt-12 grid grid-cols-1 gap-6 md:mt-16 md:grid-cols-2 md:gap-24">
+            {guarantee.paragraphs.map((text, i) => (
+              <Reveal key={text} as="p" delay={i * 0.08} className="lead m-0 max-w-[560px] text-gray-700">{text}</Reveal>
+            ))}
+          </div>
+        </PaperBlock>
+      </section>
+
+      {/* Cosa faccio: card con prezzo e tempi dei pacchetti, se ci sono. */}
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]" aria-labelledby="partner-servizi">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" id="partner-servizi" className="h-l">{services.title}</Reveal>
+          <div className="mt-16 grid grid-cols-1 gap-6 md:mt-[100px] md:grid-cols-2">
+            {services.items.map((item, i) => (
+              <Reveal key={item.title} as="article" delay={(i % 2) * 0.1} className="bc h-full">
+                <h3 style={CARD_TITLE_STYLE}>{item.title}</h3>
+                <p className="d">{item.text}</p>
+                {item.price && (
+                  <div className="meta">
+                    <div>
+                      <small>{item.priceLabel}</small>
+                      <p className="price m-0">{item.price}</p>
+                    </div>
+                    {item.timing && <p className="m-0 max-w-[340px] text-[16px] leading-[1.5]">{item.timing}</p>}
+                  </div>
+                )}
+              </Reveal>
+            ))}
           </div>
         </div>
-      </header>
+      </section>
 
-      <section className="grid gap-10 border-t border-white/10 py-16 md:grid-cols-[0.7fr_1.3fr]"><h2 className="text-3xl font-bold">Il problema che conosci</h2><div className="space-y-5 text-lg leading-relaxed text-gray-300"><p>Il cliente ti scrive che Meta dice 40 conversioni e il suo gestionale ne dice 90. Tu sai che è il tracciamento. Ma sistemare un container server-side, la Consent Mode e le Conversions API non è il lavoro per cui hai assunto il tuo team.</p><p>Così la conversazione si ripete ogni mese, e ogni mese il cliente si fida un po&apos; meno dei numeri che gli porti.</p></div></section>
-      <section className="border-t border-white/10 py-16"><h2 className="mb-9 text-3xl font-bold">Come funziona</h2><div className="grid gap-4 md:grid-cols-2">{[['1','Mi giri il problema.','Una call di trenta minuti con te, senza il cliente.'],['2','Ti dico tempi e prezzo.','Fisso, non a ore.'],['3','Lavoro.','Con i tuoi accessi o con quelli del cliente, come preferisci.'],['4','Ti consegno.','Documentazione inclusa, così il tuo team capisce cosa c’è.']].map(([n,t,d]) => <div key={n} className="rounded-3xl border border-white/10 bg-white/[0.025] p-6"><span className="text-indigo-300">0{n}</span><h3 className="mb-2 mt-3 text-xl font-bold">{t}</h3><p className="text-gray-400">{d}</p></div>)}</div><p className="mt-7 text-lg text-gray-300">Se serve, sto in call col cliente presentato come tuo tecnico. Se preferisci che non compaia, non compaio.</p></section>
-      <section className="rounded-[2rem] border border-indigo-400/25 bg-indigo-400/[0.06] p-8 md:p-12"><p className="mb-5 text-sm uppercase tracking-[0.08em] text-indigo-300">La garanzia che conta</p><h2 className="mb-6 text-3xl font-bold leading-tight">Non contatto i tuoi clienti. Non li aggiungo su LinkedIn. Non li ricontatto quando il progetto finisce.</h2><p className="mb-5 text-gray-300">Se vuoi, lo mettiamo per scritto.</p><p className="leading-relaxed text-gray-300">So che il rischio che ti preoccupa non è il costo: è che il fornitore tecnico diventi il tuo concorrente. Non è il mio modello: io vivo di lavoro tecnico, non di gestione clienti.</p></section>
-      <section className="border-t border-white/10 py-16"><h2 className="mb-9 text-3xl font-bold">Cosa faccio</h2><ul className="space-y-5 text-lg text-gray-300">{['Tracciamento server-side: container, Consent Mode v2, Conversions API, Enhanced Conversions. Da 1.500 €, circa una giornata per siti non-ecommerce.', 'Audit tracciamento: 490 €, 3-5 giorni. Utile da rivendere al cliente come primo passo.', 'Automazioni e integrazioni: richieste inbound strutturate, follow-up, collegamenti CRM. Setup + canone.', 'Siti e landing: quando serve il pezzo che manca.'].map(item => <li key={item} className="flex gap-3"><CheckCircle2 className="mt-1 h-5 w-5 flex-shrink-0 text-indigo-300" />{item}</li>)}</ul></section>
-      <section className="grid gap-12 border-t border-white/10 py-16 md:grid-cols-2"><div><h2 className="mb-5 text-3xl font-bold">Sul prezzo</h2><p className="leading-relaxed text-gray-300">Non sono un freelance a basso costo, e probabilmente non ti serve. Il mio prezzo è pensato perché tu lo ricarichi: se rivendi un setup a 2.500 € e il tuo costo è 1.500 €, hai marginato mille euro su un lavoro che non sapevi fare.</p></div><div><h2 className="mb-5 text-3xl font-bold">Chi sono</h2><div className="space-y-4 leading-relaxed text-gray-300"><p>Sebastiano, Reggio Emilia. Vengo dal marketing (l&apos;ho studiato e l&apos;ho fatto per anni) e sono tecnico. È una combinazione poco comune, ed è il motivo per cui capisco cosa ti serve senza che debba spiegarmelo due volte.</p><p>Lavoro già con un&apos;agenzia in questo modo: ore prepagate più progetti a prezzo fisso.</p></div></div></section>
-      <div className="flex flex-col gap-4 border-t border-white/10 pt-12 sm:flex-row"><a href="https://calendar.notion.so/meet/sebastianor/tg3rl4yct" target="_blank" rel="noopener noreferrer" onClick={() => trackCtaClick({ cta_location: 'technical_partner_page', cta_label: 'Prenota trenta minuti', cta_destination: 'https://calendar.notion.so/meet/sebastianor/tg3rl4yct' })} className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-[#050505]">Prenota trenta minuti <ArrowUpRight className="h-4 w-4" /></a><a href="mailto:sebastiano@q4.studio" onClick={() => trackCtaClick({ cta_location: 'technical_partner_page', cta_label: 'Scrivimi', cta_destination: 'mailto:sebastiano@q4.studio' })} className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-7 py-4 font-semibold">Scrivimi <ArrowUpRight className="h-4 w-4" /></a></div>
-    </div>
-  </article>
+      {/* Sul prezzo / Chi sono: due colonne di testo. */}
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-20 lg:grid-cols-2 lg:gap-24">
+          <div>
+            <Reveal as="h2" className="h-l" style={SECTION_TITLE_STYLE}>{pricing.title}</Reveal>
+            <Reveal as="p" className="lead mt-8 max-w-[620px] text-gray-700">{pricing.text}</Reveal>
+          </div>
+          <div>
+            <Reveal as="h2" className="h-l" style={SECTION_TITLE_STYLE}>{about.title}</Reveal>
+            {about.paragraphs.map((text, i) => (
+              <Reveal key={text} as="p" delay={i * 0.08} className="lead mt-8 max-w-[620px] text-gray-700">{text}</Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <CloseCta
+        size="l"
+        title={close.title}
+        lead={close.lead}
+        cta={{ label: book.label, href: book.href, external: true, onClick: track(book.label, book.href) }}
+      />
+    </article>
   );
 };
 

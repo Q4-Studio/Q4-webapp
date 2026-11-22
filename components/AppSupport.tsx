@@ -1,16 +1,29 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { gsap } from 'gsap';
-import { Send, CheckCircle, AlertCircle, Smartphone, HelpCircle, MessageSquare, Mail } from 'lucide-react';
+import React, { useState } from 'react';
+import { Send, CheckCircle, AlertCircle, HelpCircle, MessageSquare, Mail } from 'lucide-react';
+import Reveal from './home2/Reveal';
+import SubHero from './home2/SubHero';
+import { PaperBlock } from './home2/primitives';
+import { IconBox } from './ResourceCard';
+import { lightFormClasses as t } from './ContactForm';
 import posthog from '../lib/posthog';
 import { Sentry } from '../lib/sentry';
 
 const SUPPORT_WEBHOOK_URL = import.meta.env.VITE_APP_SUPPORT_WEBHOOK_URL || 'https://services.leadconnectorhq.com/hooks/YoRWq5tyW2U6PsMmbr5e/webhook-trigger/124c9122-ea5c-4be6-bdbd-64927a29e776';
 
-const AppSupport: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
+const TOPICS = [
+  { icon: HelpCircle, title: 'Problemi di accesso', text: 'Difficoltà con login o password? Indica il tuo account nel messaggio.' },
+  { icon: MessageSquare, title: 'Bug o malfunzionamenti', text: 'Descrivi il problema e il dispositivo utilizzato per un supporto rapido.' },
+  { icon: Mail, title: 'Richieste generali', text: "Per qualsiasi altra domanda sull'app, il tuo team Q4 Studio è disponibile." },
+];
 
+/* ------------------------------------------------------------------ */
+/* Supporto app Q4 CRM (/#app-support, noindex) sul sistema chiaro      */
+/* (nessun mockup, vedi remaining-light-pages.md): hero scuro corto,    */
+/* tre card per tipo di richiesta e form di supporto in carta, con le   */
+/* classi del form contatti chiaro. Footer chiaro in App.tsx.           */
+/* ------------------------------------------------------------------ */
+
+const AppSupport: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,35 +33,6 @@ const AppSupport: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-
-  useEffect(() => {
-    window.scrollTo({ top: 0 });
-
-    if (!containerRef.current) return;
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const ctx = gsap.context(() => {
-      if (reduced) return;
-
-      // Animazione all'ingresso pagina (nessuno ScrollTrigger): fromTo con
-      // immediateRender:true equivale al comportamento precedente di
-      // gsap.from(...), riscritto per coerenza di stile col resto del codice.
-      gsap.fromTo(
-        headerRef.current,
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: 'power3.out', immediateRender: true }
-      );
-
-      gsap.fromTo(
-        formRef.current,
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, delay: 0.3, ease: 'power2.out', immediateRender: true }
-      );
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -99,197 +83,109 @@ const AppSupport: React.FC = () => {
     }
   };
 
+  const inputClass = t.input;
+  const labelClass = t.label;
+
   return (
-    <div ref={containerRef} className="relative pt-36 md:pt-44 pb-24 md:pb-32 px-6 bg-[#050505] text-white min-h-screen overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,160vw)] h-[min(800px,160vw)] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none" />
+    <section className="relative">
+      <SubHero
+        kicker="Supporto app"
+        title="Supporto Q4 CRM."
+        lead="Hai bisogno di aiuto con l'app Q4 CRM? Compila il modulo qui sotto e ti risponderemo il prima possibile."
+      />
 
-      <div className="max-w-4xl mx-auto relative z-10">
-        {/* Header */}
-        <div ref={headerRef} className="text-center mb-16">
-          <div className="inline-flex items-center justify-center gap-3 mb-6">
-            <Smartphone className="w-12 h-12 text-indigo-400" />
-          </div>
-          <span className="text-indigo-500 text-sm tracking-[0.08em] mb-5 block">SUPPORTO APP</span>
-          <h1 className="text-[clamp(40px,6.5vw,80px)] font-bold mb-6 leading-[1.1] tracking-[-0.03em]">
-            Supporto{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
-              Q4 CRM
-            </span>
-          </h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Hai bisogno di aiuto con l'app Q4 CRM? Siamo qui per supportarti.
-            Compila il modulo sottostante e ti risponderemo il prima possibile.
+      {/* Tre tipi di richiesta, in card come le altre pagine chiare. */}
+      <section className="px-6 pb-16 pt-24 md:px-12 md:pb-24 md:pt-[160px]" aria-label="Tipi di richiesta">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-6 lg:grid-cols-3">
+          {TOPICS.map((topic, i) => (
+            <Reveal key={topic.title} as="article" delay={i * 0.1} className="bc h-full gap-6" style={{ minHeight: 260 }}>
+              <IconBox icon={topic.icon} />
+              <div className="mt-auto">
+                <h2 style={{ fontSize: 'clamp(1.4rem, 1.9vw, 1.9rem)', letterSpacing: '-0.035em', lineHeight: 1.08 }}>{topic.title}</h2>
+                <p className="mt-3 text-[15px] leading-[1.55]">{topic.text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* Form di supporto in un blocco carta. */}
+      <section className="px-6 pb-24 md:pb-[160px]" aria-labelledby="supporto-form">
+        <PaperBlock padding="px-5 py-14 md:px-20 md:py-[100px]">
+          <h2 id="supporto-form" className="h-l" style={{ fontSize: 'clamp(2.25rem, 4.4vw, 4.5rem)' }}>Invia una richiesta di supporto.</h2>
+          <form onSubmit={handleSubmit} className="mx-auto mt-12 max-w-[960px] rounded-3xl bg-white p-6 shadow-[0_30px_70px_-30px_rgba(76,29,149,0.35)] md:mt-16 md:p-12">
+            <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div>
+                <label htmlFor="name" className={labelClass}>Nome e Cognome *</label>
+                <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required autoComplete="name" className={inputClass} placeholder="Mario Rossi" />
+              </div>
+              <div>
+                <label htmlFor="email" className={labelClass}>Email *</label>
+                <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required autoComplete="email" className={inputClass} placeholder="mario@esempio.it" />
+              </div>
+            </div>
+
+            <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div>
+                <label htmlFor="phone" className={labelClass}>Telefono</label>
+                <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} autoComplete="tel" className={inputClass} placeholder="+39 123 456 7890" />
+              </div>
+              <div>
+                <label htmlFor="subject" className={labelClass}>Tipo di problema *</label>
+                <select id="subject" name="subject" value={formData.subject} onChange={handleChange} required className={`${inputClass} appearance-none`}>
+                  <option value="" disabled>Seleziona il tipo di problema</option>
+                  <option value="Problemi di accesso">Problemi di accesso / Login</option>
+                  <option value="Bug o malfunzionamento">Bug o malfunzionamento</option>
+                  <option value="Richiesta funzionalità">Richiesta nuova funzionalità</option>
+                  <option value="Domanda sull'app">Domanda sull'app</option>
+                  <option value="Account e abbonamento">Account e abbonamento</option>
+                  <option value="Altro">Altro</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <label htmlFor="message" className={labelClass}>Descrizione del problema *</label>
+              <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                rows={5}
+                className={`${inputClass} resize-none`}
+                placeholder="Descrivi il problema in dettaglio. Se possibile includi: il dispositivo utilizzato (iPhone/Android), la versione dell'app e i passi per riprodurre il problema..."
+              />
+            </div>
+
+            {submitStatus === 'success' && (
+              <div role="status" className={`mb-6 flex items-center gap-3 rounded-xl p-4 ${t.success}`}>
+                <CheckCircle className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                <span>Richiesta inviata con successo! Il nostro team ti risponderà entro 24 ore.</span>
+              </div>
+            )}
+
+            {submitStatus === 'error' && (
+              <div role="alert" className={`mb-6 flex items-center gap-3 rounded-xl p-4 ${t.error}`}>
+                <AlertCircle className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                <span>Errore nell'invio. Riprova o contattaci direttamente tramite l'app.</span>
+              </div>
+            )}
+
+            <div className="flex justify-center">
+              <button type="submit" disabled={isSubmitting} className="btn btn-dark disabled:cursor-not-allowed disabled:opacity-50">
+                {isSubmitting ? 'Invio in corso…' : 'Invia la richiesta'}
+                {!isSubmitting && <Send className="h-5 w-5" aria-hidden="true" />}
+              </button>
+            </div>
+          </form>
+
+          <p className="mt-8 text-center text-[16px]">
+            Q4 Studio · Supporto App CRM · Il tuo team risponde entro 24 ore nei giorni lavorativi
           </p>
-        </div>
-
-        {/* FAQ quick links */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 flex items-start gap-4">
-            <HelpCircle className="w-6 h-6 text-indigo-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="font-semibold mb-1">Problemi di accesso</h3>
-              <p className="text-sm text-gray-400">Difficoltà con login o password? Indica il tuo account nel messaggio.</p>
-            </div>
-          </div>
-          <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 flex items-start gap-4">
-            <MessageSquare className="w-6 h-6 text-purple-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="font-semibold mb-1">Bug o malfunzionamenti</h3>
-              <p className="text-sm text-gray-400">Descrivi il problema e il dispositivo utilizzato per un supporto rapido.</p>
-            </div>
-          </div>
-          <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 flex items-start gap-4">
-            <Mail className="w-6 h-6 text-indigo-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="font-semibold mb-1">Richieste generali</h3>
-              <p className="text-sm text-gray-400">Per qualsiasi altra domanda sull'app, il tuo team Q4 Studio è disponibile.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Contact Form */}
-        <form ref={formRef} onSubmit={handleSubmit} className="relative bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 md:p-12">
-          {/* Background glow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-3xl -z-10" />
-
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold leading-[1.25] tracking-[-0.01em]">Invia una richiesta di supporto</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium mb-2 text-gray-300">
-                Nome e Cognome *
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
-                placeholder="Mario Rossi"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2 text-gray-300">
-                Email *
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
-                placeholder="mario@esempio.it"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium mb-2 text-gray-300">
-                Telefono
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
-                placeholder="+39 123 456 7890"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="subject" className="block text-sm font-medium mb-2 text-gray-300">
-                Tipo di problema *
-              </label>
-              <select
-                id="subject"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors appearance-none"
-              >
-                <option value="" disabled>Seleziona il tipo di problema</option>
-                <option value="Problemi di accesso">Problemi di accesso / Login</option>
-                <option value="Bug o malfunzionamento">Bug o malfunzionamento</option>
-                <option value="Richiesta funzionalità">Richiesta nuova funzionalità</option>
-                <option value="Domanda sull'app">Domanda sull'app</option>
-                <option value="Account e abbonamento">Account e abbonamento</option>
-                <option value="Altro">Altro</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="mb-8">
-            <label htmlFor="message" className="block text-sm font-medium mb-2 text-gray-300">
-              Descrizione del problema *
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              required
-              rows={5}
-              className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors resize-none"
-              placeholder="Descrivi il problema in dettaglio. Se possibile includi: il dispositivo utilizzato (iPhone/Android), la versione dell'app e i passi per riprodurre il problema..."
-            />
-          </div>
-
-          {/* Status Messages */}
-          {submitStatus === 'success' && (
-            <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-xl flex items-center gap-3 text-green-400">
-              <CheckCircle className="w-5 h-5 flex-shrink-0" />
-              <span>Richiesta inviata con successo! Il nostro team ti risponderà entro 24 ore.</span>
-            </div>
-          )}
-
-          {submitStatus === 'error' && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-3 text-red-400">
-              <AlertCircle className="w-5 h-5 flex-shrink-0" />
-              <span>Errore nell'invio. Riprova o contattaci direttamente tramite l'app.</span>
-            </div>
-          )}
-
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-medium transition-colors duration-300 rounded-full group border border-white/20 hover:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></span>
-              <span className="relative z-10 flex items-center gap-2">
-                {isSubmitting ? (
-                  <>
-                    <span className="animate-spin">⏳</span>
-                    Invio in corso...
-                  </>
-                ) : (
-                  <>
-                    Invia Richiesta
-                    <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </>
-                )}
-              </span>
-            </button>
-          </div>
-        </form>
-
-        <p className="text-center text-sm text-gray-500 mt-8">
-          Q4 Studio · Supporto App CRM · Il tuo team risponde entro 24 ore nei giorni lavorativi
-        </p>
-      </div>
-    </div>
+        </PaperBlock>
+      </section>
+    </section>
   );
 };
 
