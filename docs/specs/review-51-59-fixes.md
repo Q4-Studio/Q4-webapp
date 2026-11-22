@@ -70,9 +70,9 @@
 
 - Testo della FAQ GDPR: confermato da Q4 Studio il 2026-11-22 (unica costante `gdprFaq`).
 - FAQ sugli ad blocker: dal 2026-11-22 visibile in pagina in seconda posizione e nello schema (D-029, sostituisce D-006).
-- Posizione della nota "Disdetta libera" (oggi sotto il Setup, anche nel markdown).
-- Dicitura "segnali di conversione recuperati".
-- "Stape Partner" in `data/seoPages.ts` e `ARCHITECTURE.md` (D-018).
+- "Disdetta libera": spostata sotto Infrastruttura e lettura dati (D-031, scelta di Q4 Studio del 2026-11-22).
+- Dicitura: "segnali recuperati" in home e tracciamento (D-032, scelta di Q4 Studio del 2026-11-22).
+- "Stape Partner" e Stape nelle pagine risorse: rimossi (D-030, scelta di Q4 Studio del 2026-11-22).
 - Il numero grande "60 s" nella card della home (dal mockup) e il titolo "Primo contatto in 60 secondi".
 
 ## Verifica

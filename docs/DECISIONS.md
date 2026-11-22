@@ -21,7 +21,7 @@ Numerazione progressiva delle decisioni registrate nelle spec (`docs/specs/`), i
 | D-015 | 2026-11-21 | Parole del preloader: "Dati" e "Automazioni". | [light-preloader.md](specs/light-preloader.md) |
 | D-016 | 2026-11-21 | Calcolatore perdite: 18–27% budget e 13–22% visite; il 38,3% Candiani solo come riferimento. | [tracking-loss-calculator.md](specs/tracking-loss-calculator.md) |
 | D-017 | 2026-11-21 | Prefetch dei chunk delle pagine con `requestIdleCallback` (timeout 4 s) e fallback a timer. | [page-loading.md](specs/page-loading.md) |
-| D-018 | 2026-11-21 | Le citazioni "Stape Partner" in `data/seoPages.ts` e `ARCHITECTURE.md` restano, da decidere con Q4 Studio. | [page-loading.md](specs/page-loading.md) |
+| D-018 | 2026-11-21 | Le citazioni "Stape Partner" in `data/seoPages.ts` e `ARCHITECTURE.md` restano, da decidere con Q4 Studio. Sostituita da D-030. | [page-loading.md](specs/page-loading.md) |
 | D-019 | 2026-11-21 | `trackCtaClick` parte prima dell'helper di navigazione, anche con cmd/ctrl-click. | [review-43-fixes.md](specs/review-43-fixes.md) |
 | D-020 | 2026-11-21 | Nav scura dal primo pixel sulle pagine chiare senza hero; criterio: presenza di `.home-light` | [review-45-47-48-fixes.md](specs/review-45-47-48-fixes.md) |
 | D-021 | 2026-11-21 | Ciclo unico di evidenziazione `.ev` (13,5 s, 6 slot) per tutte le liste | [review-45-47-48-fixes.md](specs/review-45-47-48-fixes.md) |
@@ -33,3 +33,6 @@ Numerazione progressiva delle decisioni registrate nelle spec (`docs/specs/`), i
 | D-027 | 2026-11-22 | Prezzi delle card servizi in home derivati dai pacchetti (`homePriceRows`); l'etichetta "Audit da 490 €" resta quella del mockup della home anche se il pacchetto ha prezzo fisso | [review-51-59-fixes.md](specs/review-51-59-fixes.md) |
 | D-028 | 2026-11-22 | Numeri del calcolatore e dei prezzi derivati sempre con il punto delle migliaia ("5.000"), con un formatter condiviso invece di `Intl` it-IT, che sotto 10.000 non lo mette | [review-51-59-fixes.md](specs/review-51-59-fixes.md) |
 | D-029 | 2026-11-22 | La FAQ sugli ad blocker è visibile nella pagina Tracciamento (seconda posizione) e resta nello schema FAQPage; il testo della FAQ GDPR del mockup è confermato da Q4 Studio. Sostituisce D-006. | [review-51-59-fixes.md](specs/review-51-59-fixes.md) |
+| D-030 | 2026-11-22 | Nessun nome di fornitore nel copy visibile, pagine risorse comprese: i riferimenti a Stape e al programma partner in `data/seoPages.ts` diventano "infrastruttura server-side dedicata". Sostituisce D-018. | [review-51-59-fixes.md](specs/review-51-59-fixes.md) |
+| D-031 | 2026-11-22 | La nota "Disdetta libera. Nessun vincolo di durata." sta sotto il pacchetto Infrastruttura e lettura dati (canone), non sotto Setup come nel mockup. | [review-51-59-fixes.md](specs/review-51-59-fixes.md) |
+| D-032 | 2026-11-22 | Il numero recuperato di Candiani si descrive come "segnali recuperati" (sono richieste del container, non solo conversioni) in home, tracciamento, caso studio e blog. | [review-51-59-fixes.md](specs/review-51-59-fixes.md) |

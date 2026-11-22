@@ -64,7 +64,7 @@ non cambia: qui si interviene solo su `line-height` (`leading-*`) e `letter-spac
 | Small/kicker uppercase (14px e 11px) | invariata (di norma una riga) | **`tracking-[0.08em]`** (valore unico) | Prima 4 valori diversi (`0.25/0.3/0.35em`, `tracking-widest`, `tracking-wider`); un solo valore, scelto perché regge anche le etichette più strette a 375px. |
 | Small/kicker non uppercase (meta info, timestamp, testo normale) | `leading-relaxed`/default | neutro | Non è un'etichetta maiuscola: nessun tracking positivo. |
 
-**Eccezione al tracking unico** — badge "Stape Partner — Server-Side Tagging"
+**Eccezione al tracking unico** — badge partner "Server-Side Tagging"
 (`components/home2/Services2.tsx`): a 375px anche a `tracking-[0]` il testo natural
 è più largo della pillola disponibile (~253px vs ~277px). Per riportarlo su una riga
 usa `tracking-[-0.08em]`, l'unico modo entro il perimetro "solo tracking" per farlo
@@ -114,7 +114,7 @@ pensati come un unico flusso, "il form segue subito sotto" la CTA, non due
 sezioni separate).
 
 **Casi risolti con intervento di layout, non di spaziatura** (vedi anche sezioni
-sopra): le etichette delle statistiche e il badge "Stape Partner" in
+sopra): le etichette delle statistiche e il badge partner in
 `components/home2/Services2.tsx` — dettagli nel changelog del componente.
 
 ---

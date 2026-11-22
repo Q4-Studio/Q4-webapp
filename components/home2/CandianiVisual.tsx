@@ -53,7 +53,7 @@ const CandianiVisual: React.FC = () => {
               {candianiFigures.recovered}
             </p>
             <p className="lead mt-6 max-w-[420px]" style={{ color: '#0a0a0a' }}>
-              segnali di conversione recuperati in {candianiFigures.windowLabel} per{' '}
+              segnali recuperati in {candianiFigures.windowLabel} per{' '}
               <a href={CASE_STUDY_PATH} onClick={onInternalLink(CASE_STUDY_PATH)} className="underline decoration-purple-400/50 underline-offset-4 hover:decoration-purple-600">
                 Candiani Denim
               </a>.
