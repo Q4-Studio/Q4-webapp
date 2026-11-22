@@ -169,10 +169,10 @@ const AIAgents: React.FC = () => {
       </header>
 
       {/* Un problema alla volta */}
-      <section className="px-6 pb-32 pt-32 md:px-12 md:pb-[200px] md:pt-[240px]">
+      <section className="px-6 pb-24 pt-24 md:px-12 md:pb-[140px] md:pt-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l max-w-[1100px]">Un problema alla volta.</Reveal>
-          <div className="mt-20 grid grid-cols-1 gap-12 md:mt-[120px] md:grid-cols-2 md:gap-24">
+          <div className="mt-20 grid grid-cols-1 gap-12 md:mt-[80px] md:grid-cols-2 md:gap-24">
             <Reveal as="p" className="lead max-w-[560px]">Non vendiamo progetti di "digital transformation" con output vago e tempi lunghi. Ogni pacchetto risolve un'attività specifica che oggi fa una persona a mano, con un prezzo di setup e un canone dichiarati prima di iniziare.</Reveal>
             <Reveal as="p" delay={0.12} className="lead max-w-[560px]">Se il problema che ci racconti non rientra in uno di questi tre, te lo diciamo subito: non costruiamo un pacchetto su misura solo per vendere qualcosa. Automazioni e agenti AI vengono dopo il tracciamento, non prima: senza dati affidabili su cosa funziona, automatizzare un processo rotto lo rende solo più veloce a rompersi.</Reveal>
           </div>
@@ -180,10 +180,10 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* Tre passaggi */}
-      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">Tre passaggi.</Reveal>
-          <div className="mt-20 md:mt-[120px]">
+          <div className="mt-20 md:mt-[80px]">
             {process.map((step) => (
               <Reveal key={step.n} as="article" className="row">
                 <span className="tm">{step.n}</span>
@@ -196,11 +196,11 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* Pacchetti: bento a tre colonne sfalsate */}
-      <section id="pacchetti" className="scroll-mt-24 px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section id="pacchetti" className="scroll-mt-24 px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l max-w-[1100px]">Scegli il lavoro ripetitivo da togliere al team.</Reveal>
 
-          <div className="mt-20 flex flex-col gap-6 md:mt-[120px] md:flex-row md:items-start">
+          <div className="mt-20 flex flex-col gap-6 md:mt-[80px] md:flex-row md:items-start">
             {/* Colonna 1: assistente virtuale */}
             <div className="flex min-w-0 flex-1 flex-col">
               <Reveal as="article" className="bc" style={{ minHeight: 760, paddingBottom: 120, background: 'linear-gradient(170deg, #f7f5fb 0%, #efe7fb 100%)' }}>
@@ -260,10 +260,10 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section id="faq" className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">Domande frequenti</Reveal>
-          <Reveal delay={0.12} className="mt-20 md:mt-[120px]">
+          <Reveal delay={0.12} className="mt-20 md:mt-[80px]">
             {aiAgentsFaqs.map((faq, i) => (
               <details key={faq.question} className="f" open={i === 0}>
                 <summary>
@@ -278,10 +278,10 @@ const AIAgents: React.FC = () => {
       </section>
 
       {/* Approfondisci */}
-      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+      <section className="px-6 pb-24 md:px-12 md:pb-[160px]">
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">Approfondisci</Reveal>
-          <div className="mt-20 md:mt-[120px]">
+          <div className="mt-20 md:mt-[80px]">
             {related.map((item) => (
               <Reveal key={item.href} as="div" className="row">
                 <span className="tm">{item.tag}</span>

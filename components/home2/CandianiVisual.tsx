@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Reveal from './Reveal';
@@ -16,7 +16,9 @@ const CASE_STUDY_PATH = '/casi-studio/candiani-denim-tracking-server-side';
 const CandianiVisual: React.FC = () => {
   const pathRef = useRef<SVGPathElement>(null);
 
-  useEffect(() => {
+  // useLayoutEffect + immediateRender: il tracciato parte nascosto prima del
+  // primo paint, invece di comparire intero e poi ridisegnarsi.
+  useLayoutEffect(() => {
     const path = pathRef.current;
     if (!path) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -27,7 +29,7 @@ const CandianiVisual: React.FC = () => {
       {
         strokeDashoffset: 0,
         ease: 'none',
-        immediateRender: false,
+        immediateRender: true,
         scrollTrigger: { trigger: path, start: 'top 90%', end: 'top 35%', scrub: 0.4 },
       }
     );
@@ -38,7 +40,7 @@ const CandianiVisual: React.FC = () => {
   }, []);
 
   return (
-    <section id="casi" className="px-6 pb-32 md:pb-[240px]">
+    <section id="casi" className="px-6 pb-24 md:pb-[160px]">
       <div
         className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 pt-16 md:rounded-[56px] md:px-20 md:pt-[120px]"
         style={{ background: 'linear-gradient(160deg, #f7f5fb 0%, #ecdffb 100%)' }}

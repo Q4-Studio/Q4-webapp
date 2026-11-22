@@ -29,7 +29,7 @@ const CloseCta: React.FC<CloseCtaProps> = ({ title, size = 'xl', lead, cta, id }
       <div className="aur aur-1 opacity-80" aria-hidden="true" />
       <div className="aur aur-2 opacity-80" aria-hidden="true" />
       <div className="grid60" aria-hidden="true" />
-      <div className={`relative mx-auto max-w-[1440px] px-6 py-40 text-center md:px-12 ${size === 'xl' ? 'md:py-[280px]' : 'md:py-[260px]'}`}>
+      <div className={`relative mx-auto max-w-[1440px] px-6 py-40 text-center md:px-12 ${size === 'xl' ? 'md:py-[100px]' : 'md:py-[180px]'}`}>
         <Reveal as="h2" style={TITLE_STYLE[size]}>
           {title}
         </Reveal>

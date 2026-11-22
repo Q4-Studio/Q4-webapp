@@ -194,7 +194,7 @@ function generateBaseHtml(options: {
     : '';
 
   return `<!DOCTYPE html>
-<html lang="it" class="bg-[#050505]">
+<html lang="it" class="bg-white">
 <head>
 ${GTM_HEAD}
 
@@ -219,7 +219,7 @@ ${GTM_HEAD}
   <meta name="twitter:description" content="${escapeHtml(description)}" />
   <meta name="twitter:image" content="${resolvedOgImage}" />
   <meta name="twitter:image:alt" content="${escapeHtml(resolvedOgImageAlt)}" />
-  <meta name="theme-color" content="#050505" />
+  <meta name="theme-color" content="#ffffff" />
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
