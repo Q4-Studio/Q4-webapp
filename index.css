@@ -193,9 +193,11 @@ h1, h2, h3, h4, h5, h6 {
   padding: 44px;
   display: flex;
   flex-direction: column;
-  transition: transform 0.8s var(--ease-out), box-shadow 0.6s;
+  /* `translate` (non `transform`): Reveal anima transform con GSAP sullo
+     stesso elemento, così hover e ingresso non si pestano i piedi. */
+  transition: translate 0.8s var(--ease-out), box-shadow 0.6s;
 }
-.home-light .bc:hover { transform: translateY(-8px); box-shadow: 0 40px 80px -40px rgba(126, 34, 206, 0.45); }
+.home-light .bc:hover { translate: 0 -8px; box-shadow: 0 40px 80px -40px rgba(126, 34, 206, 0.45); }
 .home-light .bc h3 { font-size: clamp(1.875rem, 2.8vw, 2.875rem); letter-spacing: -0.04em; line-height: 1.02; }
 .home-light .bc p.d { font-size: 19px; line-height: 1.6; margin-top: 14px; }
 .home-light .ov { margin: -56px 28px 0; position: relative; z-index: 2; outline: 8px solid #fff; box-shadow: 0 40px 70px -40px rgba(76, 29, 149, 0.45); }

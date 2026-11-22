@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { trackCtaClick } from '../../utils/dataLayer';
+import { onInternalLink } from '../../utils/navigate';
 
 /* ------------------------------------------------------------------ */
 /* Hero della home chiara: blocco scuro con angoli arrotondati in      */
@@ -54,11 +55,6 @@ const HeroBackgroundVideo: React.FC = () => {
 const LINE_1 = ['Il', 'tuo', 'marketing', 'funziona', 'a', 'metà,'];
 const LINE_2 = ['e', 'il', 'problema', 'è', 'tecnico.'];
 
-const goTo = (path: string) => {
-  window.history.pushState(null, '', path);
-  window.dispatchEvent(new Event('popstate'));
-};
-
 const Hero2: React.FC = () => {
   // Ritardi come nel mockup: 80 ms tra una parola e l'altra, una pausa più
   // lunga tra le due righe, i CTA per ultimi.
@@ -98,9 +94,8 @@ const Hero2: React.FC = () => {
             href="/tracciamento-server-side"
             className="btn btn-white"
             onClick={(e) => {
-              e.preventDefault();
               trackCtaClick({ cta_location: 'home_hero', cta_label: 'Vedi il tracciamento e i prezzi', cta_destination: '/tracciamento-server-side' });
-              goTo('/tracciamento-server-side');
+              onInternalLink('/tracciamento-server-side')(e);
             }}
           >
             Vedi il tracciamento e i prezzi
@@ -109,10 +104,7 @@ const Hero2: React.FC = () => {
           <a
             href="/casi-studio/candiani-denim-tracking-server-side"
             className="btn btn-glass"
-            onClick={(e) => {
-              e.preventDefault();
-              goTo('/casi-studio/candiani-denim-tracking-server-side');
-            }}
+            onClick={onInternalLink('/casi-studio/candiani-denim-tracking-server-side')}
           >
             Leggi il caso studio
           </a>

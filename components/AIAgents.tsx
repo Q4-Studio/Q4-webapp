@@ -6,6 +6,7 @@ import CloseCta from './home2/CloseCta';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
 import { useLightDocument } from '../hooks/useLightDocument';
+import { onInternalLink } from '../utils/navigate';
 
 /* ------------------------------------------------------------------ */
 /* Pagina "Agenti AI e automazioni" sul sistema chiaro (mockup         */
@@ -285,7 +286,7 @@ const AIAgents: React.FC = () => {
             {related.map((item) => (
               <Reveal key={item.href} as="div" className="row">
                 <span className="tm">{item.tag}</span>
-                <h3><a href={item.href} className="no-underline hover:text-purple-700">{item.title}</a></h3>
+                <h3><a href={item.href} onClick={onInternalLink(item.href)} className="no-underline hover:text-purple-700">{item.title}</a></h3>
                 <p>{item.desc}</p>
               </Reveal>
             ))}

@@ -5,6 +5,7 @@ import SEOHead from './SEOHead';
 import Reveal from './home2/Reveal';
 import { trackCaseStudyClick } from '../utils/dataLayer';
 import { useLightDocument } from '../hooks/useLightDocument';
+import { onInternalLink } from '../utils/navigate';
 
 /* ------------------------------------------------------------------ */
 /* Indice dei casi studio sul sistema chiaro: hero scuro corto e card  */
@@ -65,7 +66,10 @@ const CaseStudiesIndex: React.FC = () => {
             <Reveal key={study.slug} as="article" delay={i * 0.1} className="bc p-0 md:p-0" style={{ padding: 0 }}>
               <a
                 href={`${caseStudiesPath}/${study.slug}`}
-                onClick={() => trackCaseStudyClick({ case_study_slug: study.slug, case_study_client: study.client, cta_location: 'case_studies_index' })}
+                onClick={(e) => {
+                  trackCaseStudyClick({ case_study_slug: study.slug, case_study_client: study.client, cta_location: 'case_studies_index' });
+                  onInternalLink(`${caseStudiesPath}/${study.slug}`)(e);
+                }}
                 className="group flex h-full flex-col no-underline"
               >
                 <img

@@ -22,12 +22,42 @@ interface ContactFormProps {
   tone?: 'dark' | 'light';
 }
 
+// Classi per tono: ogni colore della variante chiara/scura sta qui.
+const tones = {
+  light: {
+    section: 'bg-white text-[#0a0a0a]',
+    form: 'bg-[#f7f5fb] border border-black/5',
+    input: 'w-full px-4 py-3 bg-white border border-black/10 rounded-xl text-[#0a0a0a] placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors',
+    label: 'block text-sm font-medium mb-2 text-gray-700',
+    subjectBox: 'border-purple-600/20 bg-purple-600/[0.05]',
+    subjectLabel: 'text-purple-700',
+    subjectValue: 'text-[#0a0a0a]',
+    // Messaggi leggibili su fondo chiaro (i -400 su tinta chiara stavano a ~2:1).
+    success: 'bg-green-50 border border-green-200 text-green-800',
+    error: 'bg-red-50 border border-red-200 text-red-800',
+    submit: 'bg-[#0a0a0a] text-white border-0',
+    mailLink: 'text-purple-700 hover:text-purple-900 transition-colors',
+  },
+  dark: {
+    section: 'bg-[#050505] text-white',
+    form: 'bg-[#0A0A0A] border border-white/10',
+    input: 'w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors',
+    label: 'block text-sm font-medium mb-2 text-gray-300',
+    subjectBox: 'border-cyan-400/20 bg-cyan-400/[0.06]',
+    subjectLabel: 'text-cyan-300',
+    subjectValue: 'text-white',
+    success: 'bg-green-500/10 border border-green-500/30 text-green-400',
+    error: 'bg-red-500/10 border border-red-500/30 text-red-400',
+    submit: 'border border-white/20 hover:border-transparent',
+    mailLink: 'text-indigo-400 hover:text-indigo-300 transition-colors',
+  },
+};
+
 const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, headerTitle, headerDescription, tone = 'dark' }) => {
   const light = tone === 'light';
-  const inputClass = light
-    ? 'w-full px-4 py-3 bg-white border border-black/10 rounded-xl text-[#0a0a0a] placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors'
-    : 'w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors';
-  const labelClass = light ? 'block text-sm font-medium mb-2 text-gray-700' : 'block text-sm font-medium mb-2 text-gray-300';
+  const t = tones[tone];
+  const inputClass = t.input;
+  const labelClass = t.label;
   const sectionRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({
@@ -68,7 +98,9 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
           immediateRender: false,
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 80%",
+            // "top bottom": lo stato spento viene applicato quando la sezione
+            // è ancora fuori schermo, niente lampo visibile → nascosto.
+            start: "top bottom",
             once: true
           }
         }
@@ -186,7 +218,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
   };
 
   return (
-    <section id="contatti" ref={sectionRef} className={`${showHeader ? 'py-32' : 'pt-4 pb-32'} scroll-mt-28 px-6 ${light ? 'bg-white text-[#0a0a0a]' : 'bg-[#050505] text-white'}`}>
+    <section id="contatti" ref={sectionRef} className={`${showHeader ? 'py-32' : 'pt-4 pb-32'} scroll-mt-28 px-6 ${t.section}`}>
       <div className="max-w-4xl mx-auto">
         {showHeader && (
           <div className="text-center mb-16">
@@ -200,14 +232,14 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
           </div>
         )}
 
-        <form ref={formRef} onSubmit={handleSubmit} className={`relative rounded-3xl p-8 md:p-12 ${light ? 'bg-[#f7f5fb] border border-black/5' : 'bg-[#0A0A0A] border border-white/10'}`}>
+        <form ref={formRef} onSubmit={handleSubmit} className={`relative rounded-3xl p-8 md:p-12 ${t.form}`}>
           {/* Background glow */}
           {!light && <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-3xl -z-10" />}
 
           {subject && (
-            <div className="mb-8 rounded-2xl border border-cyan-400/20 bg-cyan-400/[0.06] px-5 py-4">
-              <span className="block text-[11px] uppercase tracking-[0.08em] text-cyan-300">Richiesta</span>
-              <strong className={`mt-1 block text-lg ${light ? 'text-[#0a0a0a]' : 'text-white'}`}>{subject}</strong>
+            <div className={`mb-8 rounded-2xl border px-5 py-4 ${t.subjectBox}`}>
+              <span className={`block text-[11px] uppercase tracking-[0.08em] ${t.subjectLabel}`}>Richiesta</span>
+              <strong className={`mt-1 block text-lg ${t.subjectValue}`}>{subject}</strong>
             </div>
           )}
 
@@ -296,14 +328,14 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
 
           {/* Status Messages */}
           {submitStatus === 'success' && (
-            <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-xl flex items-center gap-3 text-green-400">
+            <div className={`mb-6 p-4 rounded-xl flex items-center gap-3 ${t.success}`}>
               <CheckCircle className="w-5 h-5" />
               <span>Messaggio inviato con successo! Ti contatteremo presto.</span>
             </div>
           )}
 
           {submitStatus === 'error' && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-3 text-red-400">
+            <div className={`mb-6 p-4 rounded-xl flex items-center gap-3 ${t.error}`}>
               <AlertCircle className="w-5 h-5" />
               <span>Errore nell'invio. Riprova o contattaci direttamente via email.</span>
             </div>
@@ -313,7 +345,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-medium transition-colors duration-300 rounded-full group disabled:opacity-50 disabled:cursor-not-allowed ${light ? 'bg-[#0a0a0a] text-white border-0' : 'border border-white/20 hover:border-transparent'}`}
+              className={`relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-medium transition-colors duration-300 rounded-full group disabled:opacity-50 disabled:cursor-not-allowed ${t.submit}`}
             >
               <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></span>
               <span className="relative z-10 flex items-center gap-2">
@@ -336,7 +368,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
         <p className="text-center text-sm text-gray-500 mt-8">
           Oppure scrivici direttamente a{' '}
           {email && (
-            <a href={`mailto:${email}`} className={light ? 'text-purple-700 hover:text-purple-900 transition-colors' : 'text-indigo-400 hover:text-indigo-300 transition-colors'}>
+            <a href={`mailto:${email}`} className={t.mailLink}>
               {email}
             </a>
           )}

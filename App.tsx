@@ -259,15 +259,30 @@ const App: React.FC = () => {
       setNavOnLight(false);
       return;
     }
-    const update = () => {
+    // L'altezza dell'hero può cambiare senza scroll né resize (font che
+    // arrivano, barra URL mobile): la osserviamo con un ResizeObserver,
+    // agganciato appena #hero esiste (la home può montare dopo l'effetto).
+    let cancelled = false;
+    let observedHero: HTMLElement | null = null;
+    const resizeObserver = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => update()) : null;
+    function update() {
+      if (cancelled) return;
       const hero = document.getElementById('hero');
+      if (hero && resizeObserver && hero !== observedHero) {
+        if (observedHero) resizeObserver.unobserve(observedHero);
+        resizeObserver.observe(hero);
+        observedHero = hero;
+      }
       const threshold = hero ? hero.offsetHeight - 80 : window.innerHeight - 80;
       setNavOnLight(window.scrollY > threshold);
-    };
+    }
     update();
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
+    document.fonts?.ready.then(update).catch(() => {});
     return () => {
+      cancelled = true;
+      resizeObserver?.disconnect();
       window.removeEventListener('scroll', update);
       window.removeEventListener('resize', update);
     };

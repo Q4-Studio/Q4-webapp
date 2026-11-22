@@ -40,7 +40,19 @@ const Reveal: React.FC<RevealProps> = ({ children, className, style, as = 'div',
       done = true;
       observer.disconnect();
       window.clearTimeout(failSafe);
-      tween = gsap.to(el, { y: 0, opacity: 1, duration: 1.1, delay, ease: 'power3.out', overwrite: true });
+      tween = gsap.to(el, {
+        y: 0,
+        opacity: 1,
+        duration: 1.1,
+        delay,
+        ease: 'power3.out',
+        overwrite: true,
+        // A fine ingresso togliamo gli stili inline: un transform residuo
+        // vincerebbe sull'hover CSS delle card (.bc).
+        onComplete: () => {
+          gsap.set(el, { clearProps: 'opacity,transform' });
+        },
+      });
     };
 
     const observer = new IntersectionObserver(

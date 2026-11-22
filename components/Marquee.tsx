@@ -20,8 +20,24 @@ interface MarqueeProps {
   tone?: 'dark' | 'light';
 }
 
+// Classi per tono: ogni colore della variante chiara/scura sta qui.
+const tones = {
+  light: {
+    container: 'bg-white pt-24 pb-10',
+    caption: 'sr-only',
+    logo: 'brightness-0 opacity-35 hover:opacity-100',
+    fade: 'from-white',
+  },
+  dark: {
+    container: 'bg-[#050505] py-20 border-y border-white/5',
+    caption: 'text-gray-500',
+    logo: 'grayscale opacity-40 hover:opacity-80 hover:grayscale-0',
+    fade: 'from-[#050505]',
+  },
+};
+
 const Marquee: React.FC<MarqueeProps> = ({ tone = 'dark' }) => {
-  const light = tone === 'light';
+  const t = tones[tone];
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -55,7 +71,9 @@ const Marquee: React.FC<MarqueeProps> = ({ tone = 'dark' }) => {
           immediateRender: false,
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top 85%",
+            // "top bottom": lo stato spento viene applicato quando il blocco
+            // è ancora fuori schermo, niente lampo visibile → nascosto.
+            start: "top bottom",
             once: true
           }
         }
@@ -88,15 +106,15 @@ const Marquee: React.FC<MarqueeProps> = ({ tone = 'dark' }) => {
   }, []);
 
   return (
-    <div ref={containerRef} className={`w-full overflow-hidden ${light ? 'bg-white pt-24 pb-10' : 'bg-[#050505] py-20 border-y border-white/5'}`}>
+    <div ref={containerRef} className={`w-full overflow-hidden ${t.container}`}>
         <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
-            <p className={`text-sm uppercase tracking-[0.08em] ${light ? 'sr-only' : 'text-gray-500'}`}>Aziende che ci hanno già scelto</p>
+            <p className={`text-sm uppercase tracking-[0.08em] ${t.caption}`}>Aziende che ci hanno già scelto</p>
         </div>
       <div className="relative w-full overflow-hidden">
         <div ref={trackRef} className="flex whitespace-nowrap gap-16 md:gap-24 items-center">
             {/* Render logos twice for seamless loop */}
             {[...logos, ...logos, ...logos].map((logo, index) => (
-                <div key={index} className={`flex-shrink-0 h-12 md:h-14 flex items-center transition-all duration-300 cursor-default ${light ? 'brightness-0 opacity-35 hover:opacity-100' : 'grayscale opacity-40 hover:opacity-80 hover:grayscale-0'}`}>
+                <div key={index} className={`flex-shrink-0 h-12 md:h-14 flex items-center transition-all duration-300 cursor-default ${t.logo}`}>
                     <img
                         src={logo.path}
                         alt={logo.name}
@@ -109,8 +127,8 @@ const Marquee: React.FC<MarqueeProps> = ({ tone = 'dark' }) => {
         </div>
         
         {/* Gradients to fade edges */}
-        <div className={`absolute top-0 left-0 w-32 h-full bg-gradient-to-r to-transparent z-10 ${light ? 'from-white' : 'from-[#050505]'}`}></div>
-        <div className={`absolute top-0 right-0 w-32 h-full bg-gradient-to-l to-transparent z-10 ${light ? 'from-white' : 'from-[#050505]'}`}></div>
+        <div className={`absolute top-0 left-0 w-32 h-full bg-gradient-to-r to-transparent z-10 ${t.fade}`}></div>
+        <div className={`absolute top-0 right-0 w-32 h-full bg-gradient-to-l to-transparent z-10 ${t.fade}`}></div>
       </div>
     </div>
   );
