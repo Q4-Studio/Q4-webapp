@@ -103,8 +103,8 @@ const ServicesBento: React.FC = () => (
             <PriceRow items={[{ label: 'Setup da', value: '490 €' }, { label: 'Canone', value: '59–200 €/mese' }]} />
             <CardLink href="/agenti-ai" label="Vedi le automazioni" />
             <div className="mock relative" style={{ marginTop: 'auto' }}>
-              <div className="ev"><OkIcon />Nuovo lead nel CRM<em>T+2 s</em></div>
-              <div className="ev"><OkIcon />WhatsApp ed email al lead<em>T+60 s</em></div>
+              <div className="ev"><OkIcon />Nuovo lead nel CRM<em>2 secondi</em></div>
+              <div className="ev"><OkIcon />WhatsApp ed email al lead<em>60 secondi</em></div>
               <div className="ev"><OkIcon />Team commerciale avvisato<em>notifica</em></div>
               <div className="ev">
                 <span className="ok" aria-hidden="true"><Calendar className="h-3 w-3" strokeWidth={2.5} /></span>

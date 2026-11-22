@@ -7,10 +7,10 @@ import Reveal from './Reveal';
 /* ------------------------------------------------------------------ */
 
 const steps = [
-  { time: 'T+0', title: 'Il lead entra dal feed', desc: 'Modulo Meta compilato dal contatto.' },
-  { time: 'T+2 s', title: 'Nel CRM prima che tu lo veda', desc: 'Scheda creata e assegnata in automatico.' },
-  { time: 'T+60 s', title: 'Primo contatto in 60 secondi', desc: 'Messaggio WhatsApp inviato al lead.' },
-  { time: 'T+90 s', title: 'Il lead diventa un dossier', desc: "Dati dell'azienda arricchiti senza lavoro manuale." },
+  { time: 'Subito', title: 'Il lead entra dal feed', desc: 'Modulo Meta compilato dal contatto.' },
+  { time: '2 secondi', title: 'Nel CRM prima che tu lo veda', desc: 'Scheda creata e assegnata in automatico.' },
+  { time: '60 secondi', title: 'Primo contatto in 60 secondi', desc: 'Messaggio WhatsApp inviato al lead.' },
+  { time: '90 secondi', title: 'Il lead diventa un dossier', desc: "Dati dell'azienda arricchiti senza lavoro manuale." },
   { time: '7 giorni', title: 'Ogni lead viene seguito. Sempre.', desc: 'Follow-up programmato fino alla risposta.' },
 ];
 
