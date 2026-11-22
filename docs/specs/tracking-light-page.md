@@ -1,6 +1,6 @@
 # Pagina Tracciamento sul sistema chiaro
 
-**Data:** 2026-11-21 · **Decisioni:** D-XXX-i (registrata qui sotto) · **Riferimento:** mockup "Tracciamento server-side" (export HTML consegnato da Q4 Studio) · **Dipende da:** [agenti-ai-light-page](./agenti-ai-light-page.md) (PR #45) per `CloseCta`, `useLightDocument` e le classi `.h-sub`, `.bul`, `.meta`.
+**Data:** 2026-11-21 · **Decisioni:** D-006 · **Riferimento:** mockup "Tracciamento server-side" (export HTML consegnato da Q4 Studio) · **Dipende da:** [agenti-ai-light-page](./agenti-ai-light-page.md) (PR #45) per `CloseCta`, `useLightDocument` e le classi `.h-sub`, `.bul`, `.meta`.
 
 ## Obiettivo
 
@@ -16,7 +16,7 @@ La pagina `/tracciamento-server-side` passa al sistema chiaro seguendo il mockup
 
 ## Decisioni
 
-- **D-XXX-i** La domanda "Come recuperare i dati di conversione bloccati dagli ad blocker?" non è tra le FAQ del mockup ma resta nello schema FAQPage: `scripts/verify-agentic.mjs` la richiede e la risposta è la sezione visibile con lo stesso titolo. Se Q4 Studio preferisce lo schema identico alle FAQ visibili, va aggiornato anche il verificatore.
+- **D-006** La domanda "Come recuperare i dati di conversione bloccati dagli ad blocker?" non è tra le FAQ del mockup ma resta nello schema FAQPage: `scripts/verify-agentic.mjs` la richiede e la risposta è la sezione visibile con lo stesso titolo. Se Q4 Studio preferisce lo schema identico alle FAQ visibili, va aggiornato anche il verificatore.
 
 ## File e interfacce
 

@@ -1,6 +1,6 @@
 # Pagina Siti web sul sistema chiaro
 
-**Data:** 2026-11-21 · **Decisioni:** D-XXX-j (registrata qui sotto) · **Riferimento:** mockup "Siti web con AI" (export HTML consegnato da Q4 Studio) · **Dipende da:** [tracking-light-page](./tracking-light-page.md) (PR #47).
+**Data:** 2026-11-21 · **Decisioni:** D-007 · **Riferimento:** mockup "Siti web con AI" (export HTML consegnato da Q4 Studio) · **Dipende da:** [tracking-light-page](./tracking-light-page.md) (PR #47).
 
 ## Obiettivo
 
@@ -15,7 +15,7 @@ La pagina `/siti-web-ai` passa al sistema chiaro seguendo il mockup, sezione per
 
 ## Decisioni
 
-- **D-XXX-j** Implementazione del componente delegata a Claude Opus su richiesta di Q4 Studio; CSS, routing, prerender, spec, verifica e PR a cura della sessione principale. Il vecchio mock del browser animato con GSAP e l'immagine hero di GP Meccatronica non sono nel mockup e vengono rimossi dalla pagina (restano nel caso studio).
+- **D-007** Implementazione del componente delegata a Claude Opus su richiesta di Q4 Studio; CSS, routing, prerender, spec, verifica e PR a cura della sessione principale. Il vecchio mock del browser animato con GSAP e l'immagine hero di GP Meccatronica non sono nel mockup e vengono rimossi dalla pagina (restano nel caso studio).
 
 ## File e interfacce
 

@@ -1,6 +1,6 @@
 # Casi studio sul sistema chiaro e caso Candiani arricchito
 
-**Data:** 2026-11-21 · **Decisioni:** D-XXX-p, D-XXX-q · **Richiesta:** Q4 Studio: allineare colori, font, dimensioni e stili del template dei casi studio al sistema chiaro (senza mockup: il contenuto è semplice) e arricchire il caso Candiani con i dati di `docs/sources/candiani-2026-11`.
+**Data:** 2026-11-21 · **Decisioni:** D-013, D-014 · **Richiesta:** Q4 Studio: allineare colori, font, dimensioni e stili del template dei casi studio al sistema chiaro (senza mockup: il contenuto è semplice) e arricchire il caso Candiani con i dati di `docs/sources/candiani-2026-11`.
 
 ## Comportamento
 
@@ -12,8 +12,8 @@
 
 ## Decisioni
 
-- **D-XXX-p** Il template dei casi studio è composto con i pezzi già approvati delle altre pagine chiare, senza mockup dedicato, su indicazione di Q4 Studio.
-- **D-XXX-q** Nei blocchi dati i totali "recuperate" per evento sono la somma di ad blocker e tracking prevention del README delle fonti, con la percentuale sul totale delle richieste dell'evento; ogni blocco dichiara strumento, periodo e tabella di origine.
+- **D-013** Il template dei casi studio è composto con i pezzi già approvati delle altre pagine chiare, senza mockup dedicato, su indicazione di Q4 Studio.
+- **D-014** Nei blocchi dati i totali "recuperate" per evento sono la somma di ad blocker e tracking prevention del README delle fonti, con la percentuale sul totale delle richieste dell'evento; ogni blocco dichiara strumento, periodo e tabella di origine.
 
 ## File
 

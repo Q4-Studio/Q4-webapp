@@ -1,6 +1,6 @@
 # Correzioni dalla review della PR #43
 
-**Data:** 2026-11-21 · **Decisioni:** D-XXX-v · **Richiesta:** Q4 Studio ha ricevuto una review esterna della PR #43 con 10 rilievi; le correzioni vanno in cima alla pila (questo ramo), perché i rilievi 2 e 3 (Reveal, grafico Candiani) erano già risolti in #51 e il codice toccato vive nei rami successivi. Correzioni applicate da Claude Opus su richiesta.
+**Data:** 2026-11-21 · **Decisioni:** D-019 · **Richiesta:** Q4 Studio ha ricevuto una review esterna della PR #43 con 10 rilievi; le correzioni vanno in cima alla pila (questo ramo), perché i rilievi 2 e 3 (Reveal, grafico Candiani) erano già risolti in #51 e il codice toccato vive nei rami successivi. Correzioni applicate da Claude Opus su richiesta.
 
 ## Cosa cambia
 
@@ -16,7 +16,7 @@
 
 ## Decisioni
 
-- **D-XXX-v** I click tracciati (`trackCtaClick`) partono prima dell'helper di navigazione, così contano anche con cmd/ctrl-click, come prima.
+- **D-019** I click tracciati (`trackCtaClick`) partono prima dell'helper di navigazione, così contano anche con cmd/ctrl-click, come prima.
 
 ## Verifica
 

@@ -1,8 +1,9 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowUpRight, Calendar, Check } from 'lucide-react';
+import { ArrowUpRight, Calendar } from 'lucide-react';
 import Reveal from './Reveal';
+import { OkIcon } from './primitives';
 import { onInternalLink } from '../../utils/navigate';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -47,12 +48,6 @@ const Counter: React.FC<{ to: number; className?: string }> = ({ to, className }
   return <span ref={ref} className={className}>{to}</span>;
 };
 
-const OkIcon: React.FC = () => (
-  <span className="ok" aria-hidden="true">
-    <Check className="h-3 w-3" strokeWidth={3} />
-  </span>
-);
-
 const PriceRow: React.FC<{ items: Array<{ label: string; value: string }> }> = ({ items }) => (
   <div className="mt-9 flex flex-wrap gap-10">
     {items.map((item) => (
@@ -76,7 +71,7 @@ const ServicesBento: React.FC = () => (
     <div className="mx-auto max-w-[1440px]">
       <Reveal as="h2" className="h-l max-w-[1100px]">Tre servizi, un unico sistema.</Reveal>
 
-      <div className="mt-20 flex flex-col gap-6 md:mt-[80px] md:flex-row md:items-start">
+      <div className="mt-20 flex flex-col gap-6 md:mt-[80px] lg:flex-row lg:items-start">
         {/* Colonna 1: tracciamento */}
         <div className="flex min-w-0 flex-1 flex-col">
           <Reveal as="article" className="bc" style={{ minHeight: 660, paddingBottom: 110, background: 'linear-gradient(170deg, #f7f5fb 0%, #efe7fb 100%)' }}>
@@ -101,7 +96,7 @@ const ServicesBento: React.FC = () => (
         </div>
 
         {/* Colonna 2: automazioni */}
-        <div className="flex min-w-0 flex-1 flex-col md:mt-[120px]">
+        <div className="flex min-w-0 flex-1 flex-col lg:mt-[120px]">
           <Reveal as="article" id="agenti" delay={0.12} className="bc" style={{ minHeight: 660, paddingBottom: 110, background: 'linear-gradient(150deg, #f7f5fb 0%, #ecdffb 100%)' }}>
             <h3>Automazioni e agenti AI</h3>
             <p className="d">Il CRM lavora da solo: contatto su WhatsApp ed email, follow-up, notifiche al team commerciale e al cliente. Partono in due settimane.</p>
@@ -128,7 +123,7 @@ const ServicesBento: React.FC = () => (
         </div>
 
         {/* Colonna 3: siti e advertising */}
-        <div className="flex min-w-0 flex-1 flex-col md:mt-10">
+        <div className="flex min-w-0 flex-1 flex-col lg:mt-10">
           <Reveal as="article" delay={0.2} className="bc" style={{ minHeight: 540, paddingBottom: 110 }}>
             <h3>Siti web con AI</h3>
             <p className="d">Veloci, e misurabili fin dal primo giorno.</p>
@@ -145,9 +140,9 @@ const ServicesBento: React.FC = () => (
               <div className="mt-2.5 h-2.5 w-[48%] rounded-md bg-gray-100" />
             </div>
           </Reveal>
-          <Reveal as="article" className="bc ov justify-end text-white" style={{ minHeight: 340, background: '#050505' }}>
+          <Reveal as="article" className="bc ov dark-block justify-end text-white" style={{ minHeight: 340, background: '#050505' }}>
             <div className="aur" aria-hidden="true" style={{ width: 420, height: 420, background: 'rgba(147,51,234,.45)', right: -120, top: -160, filter: 'blur(90px)' }} />
-            <h3 className="relative" style={{ color: '#fff' }}>Advertising</h3>
+            <h3 className="relative">Advertising</h3>
             <p className="d relative text-gray-300">Campagne Google Ads e Meta Ads che partono da dati tracciati bene, per lead generation e servizi high ticket.</p>
             <a href="/meta-advertising-b2b" onClick={onInternalLink('/meta-advertising-b2b')} className="relative mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-purple-300">
               Approfondisci

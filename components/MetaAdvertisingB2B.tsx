@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight, Bot, ChartColumn, Database, Layers, MessageSq
 import SEOHead from './SEOHead';
 import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
+import { Bullets, NoteCard, PAPER_BG, PaperBlock } from './home2/primitives';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
 import { useLightDocument } from '../hooks/useLightDocument';
@@ -64,7 +65,7 @@ const HERO_WORDS = ['Meta', 'Ads', 'B2B,', 'con', 'il', 'tracciamento', 'fatto',
 
 const figures = [
   { value: '2', desc: 'Piattaforme: Meta Ads e Google Ads, con lo stesso approccio.', delay: 0 },
-  { value: '3', desc: 'Segnali di qualità verso l’algoritmo: domanda qualificante, risposta, stage commerciale.', delay: 0.12 },
+  { value: '3', desc: 'Segnali di qualità verso l’algoritmo: domanda qualificante, risposta, stage commerciale.', delay: 0.1 },
   { value: '3', desc: 'KPI di business: clienti, appuntamenti, opportunità. Non il costo per contatto.', delay: 0.2 },
 ];
 
@@ -89,8 +90,6 @@ const flow = [
   { icon: ChartColumn, title: 'Ottimizzazione', desc: 'L’algoritmo cerca chi compra.', delay: 0.12 },
 ];
 
-const PAPER_BG = 'linear-gradient(160deg, #f7f5fb 0%, #ecdffb 100%)';
-
 type IconType = React.ComponentType<{ className?: string; strokeWidth?: number }>;
 
 const IconBox: React.FC<{ icon: IconType }> = ({ icon: Icon }) => (
@@ -104,15 +103,7 @@ const AgentCard: React.FC<{ icon: IconType; title: string; desc: string; items: 
     <div style={{ marginBottom: 28 }}><IconBox icon={icon} /></div>
     <h3>{title}</h3>
     <p className="d">{desc}</p>
-    <ul className="bul">
-      {items.map((item) => <li key={item}>{item}</li>)}
-    </ul>
-  </Reveal>
-);
-
-const NoteCard: React.FC<{ text: string; delay?: number }> = ({ text, delay }) => (
-  <Reveal as="article" delay={delay} className="bc ov justify-center" style={{ minHeight: 220, background: '#f7f5fb' }}>
-    <p className="d m-0 font-medium" style={{ color: '#0a0a0a', marginTop: 0 }}>{text}</p>
+    <Bullets items={items} />
   </Reveal>
 );
 
@@ -151,24 +142,31 @@ const MetaAdvertisingB2B: React.FC = () => {
 
       {/* Hero scuro: id="hero" fa restare bianchi logo e hamburger della nav
           finché non si scorre oltre (vedi App.tsx). */}
-      <header id="hero" className="relative flex min-h-[640px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[780px] md:rounded-b-[56px]">
+      <header id="hero" className="dark-block relative flex min-h-[640px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[780px] md:rounded-b-[56px]">
         <div className="aur aur-1" aria-hidden="true" />
         <div className="aur aur-2" aria-hidden="true" />
         <div className="aur aur-3" aria-hidden="true" />
         <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.15) 50%, rgba(5,5,5,.75) 100%)' }} />
         <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-24 pt-36 md:px-12 md:pt-40">
-          <h1 className="h-sub max-w-[1250px] text-white" style={{ color: '#fff' }}>
+          <h1 className="h-sub max-w-[1250px]">
             {HERO_WORDS.map((word, i) => (
               <React.Fragment key={`${word}-${i}`}>
                 <span className="w" style={{ animationDelay: `${(0.15 + i * 0.07).toFixed(2)}s` }}>{word}</span>{' '}
               </React.Fragment>
             ))}
           </h1>
-          <p className="w lead mt-12 max-w-[640px] text-gray-300" style={{ animationDelay: '1.05s' }}>
+          <p className="w-block lead mt-12 max-w-[640px] text-gray-300" style={{ animationDelay: '1.05s' }}>
             Le campagne B2B funzionano quando l’obiettivo non è il costo per contatto ma la probabilità che quel contatto diventi cliente. Per questo l’algoritmo deve ricevere segnali corretti, ed è la parte che quasi nessuno sistema prima di aumentare il budget.
           </p>
-          <div className="w mt-12" style={{ animationDelay: '1.20s' }}>
-            <a href="#metodo" onClick={scrollToMethod} className="btn btn-white">
+          <div className="w-block mt-12" style={{ animationDelay: '1.20s' }}>
+            <a
+              href="#metodo"
+              onClick={(event) => {
+                trackCtaClick({ cta_location: 'meta_advertising_b2b_page', cta_label: 'Vedi il metodo', cta_destination: '#metodo' });
+                scrollToMethod(event);
+              }}
+              className="btn btn-white"
+            >
               Vedi il metodo
               <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
             </a>
@@ -219,18 +217,15 @@ const MetaAdvertisingB2B: React.FC = () => {
 
       {/* Il costo per contatto: blocco carta arrotondato con il funnel */}
       <section className="px-6 pb-24 md:pb-[160px]">
-        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[100px]" style={{ background: PAPER_BG }}>
-          <div className="dots" aria-hidden="true" />
-          <div className="relative grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
-            <div>
-              <Reveal as="h2" className="h-l" style={{ fontSize: 'clamp(2.75rem, 5.6vw, 5.5rem)' }}>Il costo per contatto non dice chi compra.</Reveal>
-              <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">Ottimizzare sul costo per lead porta volume, ma non dice quanti contatti diventano clienti. Noi allineiamo campagne e CRM su eventi come domande qualificanti completate, risposta del prospect e avanzamento nello stage commerciale: sono i segnali ad alta intenzione a cui l’algoritmo dà sempre più valore.</Reveal>
-            </div>
-            <Reveal delay={0.12}>
-              <FunnelMock />
-            </Reveal>
+        <PaperBlock className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
+          <div>
+            <Reveal as="h2" className="h-l" style={{ fontSize: 'clamp(2.75rem, 5.6vw, 5.5rem)' }}>Il costo per contatto non dice chi compra.</Reveal>
+            <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">Ottimizzare sul costo per lead porta volume, ma non dice quanti contatti diventano clienti. Noi allineiamo campagne e CRM su eventi come domande qualificanti completate, risposta del prospect e avanzamento nello stage commerciale: sono i segnali ad alta intenzione a cui l’algoritmo dà sempre più valore.</Reveal>
           </div>
-        </div>
+          <Reveal delay={0.12}>
+            <FunnelMock />
+          </Reveal>
+        </PaperBlock>
       </section>
 
       {/* Dal click al segnale: cinque passaggi in fila, in colonna sotto lg */}
@@ -263,7 +258,7 @@ const MetaAdvertisingB2B: React.FC = () => {
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">Agenti AI sul processo sales.</Reveal>
 
-          <div className="mt-20 flex flex-col gap-6 md:mt-[80px] md:flex-row md:items-start">
+          <div className="mt-20 flex flex-col gap-6 md:mt-[80px] lg:flex-row lg:items-start">
             <div className="flex min-w-0 flex-1 flex-col">
               <AgentCard
                 icon={Bot}
@@ -272,10 +267,10 @@ const MetaAdvertisingB2B: React.FC = () => {
                 items={['Qualificano e danno priorità ai contatti', 'Preparano il lavoro umano, non lo sostituiscono']}
                 background={PAPER_BG}
               />
-              <NoteCard text="Meno tempo alla prima risposta." />
+              <NoteCard text="Meno tempo alla prima risposta." minHeight={220} />
             </div>
 
-            <div className="flex min-w-0 flex-1 flex-col md:mt-[120px]">
+            <div className="flex min-w-0 flex-1 flex-col lg:mt-[120px]">
               <AgentCard
                 icon={RefreshCw}
                 title="Meta Ads + agenti"
@@ -284,13 +279,13 @@ const MetaAdvertisingB2B: React.FC = () => {
                 background="linear-gradient(150deg, #f7f5fb 0%, #efe7fb 100%)"
                 delay={0.12}
               />
-              <Reveal as="article" delay={0.12} className="bc ov justify-end text-white" style={{ minHeight: 260, background: '#050505' }}>
+              <Reveal as="article" delay={0.12} className="bc ov dark-block justify-end text-white" style={{ minHeight: 260, background: '#050505' }}>
                 <div className="aur" aria-hidden="true" style={{ width: 360, height: 360, background: 'rgba(147,51,234,.5)', right: -100, top: -140, filter: 'blur(80px)' }} />
                 <p className="d relative text-gray-300" style={{ marginTop: 0 }}>Funnel meno dipendente dal manuale.</p>
               </Reveal>
             </div>
 
-            <div className="flex min-w-0 flex-1 flex-col md:mt-10">
+            <div className="flex min-w-0 flex-1 flex-col lg:mt-10">
               <AgentCard
                 icon={ChartColumn}
                 title="Risultati leggibili"
@@ -299,7 +294,7 @@ const MetaAdvertisingB2B: React.FC = () => {
                 background="#f7f5fb"
                 delay={0.2}
               />
-              <NoteCard text="Evitiamo le campagne che sembrano funzionare ma non vendono." delay={0.2} />
+              <NoteCard text="Evitiamo le campagne che sembrano funzionare ma non vendono." delay={0.2} minHeight={220} />
             </div>
           </div>
         </div>

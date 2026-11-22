@@ -1,6 +1,6 @@
 # Preloader sul sistema chiaro
 
-**Data:** 2026-11-21 · **Decisioni:** D-XXX-r · **Richiesta:** Q4 Studio: aggiornare il loader della home con i testi e i colori nuovi.
+**Data:** 2026-11-21 · **Decisioni:** D-015 · **Richiesta:** Q4 Studio: aggiornare il loader della home con i testi e i colori nuovi.
 
 ## Comportamento
 
@@ -8,7 +8,7 @@
 
 ## Decisioni
 
-- **D-XXX-r** Le parole del preloader sono "Dati" e "Automazioni" (proposta accettata da Q4 Studio): sono i due tempi del lavoro raccontati dalla home chiara. Si cambiano in `PRELOADER_WORDS`.
+- **D-015** Le parole del preloader sono "Dati" e "Automazioni" (proposta accettata da Q4 Studio): sono i due tempi del lavoro raccontati dalla home chiara. Si cambiano in `PRELOADER_WORDS`.
 
 ## File
 

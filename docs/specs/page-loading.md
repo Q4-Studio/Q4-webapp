@@ -1,6 +1,6 @@
 # Caricamento delle pagine interne e riferimenti ai fornitori
 
-**Data:** 2026-11-21 · **Decisioni:** D-XXX-t, D-XXX-u · **Richiesta:** Q4 Studio, dopo le prove da iPhone: pagine bianche e testi in ritardo nel passaggio tra pagine; non nominare le tecnologie usate (Stape) nei testi del sito.
+**Data:** 2026-11-21 · **Decisioni:** D-017, D-018 · **Richiesta:** Q4 Studio, dopo le prove da iPhone: pagine bianche e testi in ritardo nel passaggio tra pagine; non nominare le tecnologie usate (Stape) nei testi del sito.
 
 ## Comportamento
 
@@ -10,8 +10,8 @@
 
 ## Decisioni
 
-- **D-XXX-t** Prefetch dei chunk con `requestIdleCallback` (timeout 4 s) e fallback a un timer: non pesa sul primo paint e precede il click dell'utente.
-- **D-XXX-u** Le pagine di risorse locali (`data/seoPages.ts`) e `ARCHITECTURE.md` citano già "Stape Partner" da prima di questo lavoro: non toccate, da decidere con Q4 Studio.
+- **D-017** Prefetch dei chunk con `requestIdleCallback` (timeout 4 s) e fallback a un timer: non pesa sul primo paint e precede il click dell'utente.
+- **D-018** Le pagine di risorse locali (`data/seoPages.ts`) e `ARCHITECTURE.md` citano già "Stape Partner" da prima di questo lavoro: non toccate, da decidere con Q4 Studio.
 
 ## File
 
