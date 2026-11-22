@@ -5,8 +5,8 @@ import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
 import { Bullets, NoteCard, OkIcon, PAPER_BG, PaperBlock } from './home2/primitives';
 import { siteUrl } from '../data/seoPages';
+import { faqPageSchema, sitesOffer, sitesStartingPrice, sitesWebAiFaqs as faqs } from '../data/servicePages';
 import { trackCtaClick } from '../utils/dataLayer';
-import { useLightDocument } from '../hooks/useLightDocument';
 import { onInternalLink, scrollToId } from '../utils/navigate';
 
 /* ------------------------------------------------------------------ */
@@ -17,26 +17,6 @@ import { onInternalLink, scrollToId } from '../utils/navigate';
 /* reveal allo scroll via <Reveal>.                                    */
 /* ------------------------------------------------------------------ */
 
-/** FAQ del mockup: stessi testi del contenuto statico in scripts/prerender.ts. */
-const faqs = [
-  {
-    question: 'Il sito viene generato automaticamente dall’AI?',
-    answer: 'No. L’AI accelera parti della produzione, ma direzione, struttura, messaggio, scelte visive e controllo finale restano umani. È fatto con l’AI, non dall’AI.',
-  },
-  {
-    question: 'Quanto costa un sito web con Q4 Studio?',
-    answer: 'I progetti partono da 2.999 €. Il preventivo dipende dal tipo di sito, dai contenuti e dalla produzione necessaria: definiamo il progetto prima di iniziare.',
-  },
-  {
-    question: 'Quanto tempo serve per una landing page?',
-    answer: 'Una landing page può essere pronta in una settimana. Per siti più articolati, tempi e fasi vengono definiti sul progetto.',
-  },
-  {
-    question: 'Potete occuparvi anche di foto e video reali?',
-    answer: 'Sì. Quando il progetto lo richiede, la produzione di foto e video reali può rientrare nella realizzazione, insieme ad asset creati con l’AI, video animati e sezioni con animazioni allo scroll.',
-  },
-];
-
 const serviceSchema = {
   '@context': 'https://schema.org',
   '@type': 'Service',
@@ -45,14 +25,10 @@ const serviceSchema = {
   provider: { '@type': 'Organization', name: 'Q4 Studio', url: siteUrl },
   areaServed: 'IT',
   url: `${siteUrl}/siti-web-ai`,
-  offers: { '@type': 'Offer', priceCurrency: 'EUR', price: '2999', description: 'Prezzo di partenza' },
+  offers: sitesOffer,
 };
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faqs.map((faq) => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })),
-};
+const faqSchema = faqPageSchema(faqs);
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -66,7 +42,7 @@ const breadcrumbSchema = {
 const HERO_WORDS = ['Fatto', 'con', 'l’AI,', 'non', 'dall’AI.'];
 
 const figures = [
-  { value: '2.999 €', desc: 'Prezzo di partenza dei progetti. Il preventivo si definisce sul progetto.', delay: 0 },
+  { value: sitesStartingPrice, desc: 'Prezzo di partenza dei progetti. Il preventivo si definisce sul progetto.', delay: 0 },
   { value: '7 giorni', desc: 'Per una landing page, quando serve portare online un’offerta.', delay: 0.1 },
   { value: '3 fasi', desc: 'Direzione, produzione, consegna. Non un modulo da compilare.', delay: 0.2 },
   { value: '1 referente', desc: 'Una persona sola che valida le scelte, senza rincorrere pareri.', delay: 0.3 },
@@ -122,7 +98,6 @@ const BrowserMock: React.FC = () => (
 );
 
 const SitesWebAI: React.FC = () => {
-  useLightDocument();
 
   const scrollToContact = (label: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();

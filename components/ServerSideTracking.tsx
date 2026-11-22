@@ -7,11 +7,10 @@ import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
 import TrackingLossCalculator from './TrackingLossCalculator';
 import { Bullets, NoteCard, OkIcon, PaperBlock } from './home2/primitives';
-import { trackingFaqs, trackingOfferPrice, trackingPackages, trackingSchemaFaqs, type TrackingPackage } from '../data/servicePages';
+import { trackingFaqs, trackingOffer, trackingPackages, trackingSchemaFaqs, type TrackingPackage } from '../data/servicePages';
 import { siteUrl } from '../data/seoPages';
 import { candianiFigures } from '../data/caseStudies';
 import { trackCtaClick } from '../utils/dataLayer';
-import { useLightDocument } from '../hooks/useLightDocument';
 import { onInternalLink, scrollToId } from '../utils/navigate';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -35,7 +34,7 @@ const serviceSchema = {
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Pacchetti tracciamento server-side',
-    itemListElement: trackingPackages.map((pack) => ({ '@type': 'Offer', name: pack.title, price: trackingOfferPrice(pack) })),
+    itemListElement: trackingPackages.map(trackingOffer),
   },
 };
 
@@ -134,7 +133,6 @@ const PackageColumn: React.FC<{ pack: TrackingPackage; offset?: string; delay?: 
 const DOC_LINK = 'relative underline decoration-white/40 underline-offset-4 hover:text-white';
 
 const ServerSideTracking: React.FC = () => {
-  useLightDocument();
 
   const scrollTo = (id: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (scrollToId(id, id === 'contatti' ? 'center' : 'start')) event.preventDefault();

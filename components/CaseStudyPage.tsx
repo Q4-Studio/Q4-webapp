@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import { CaseStudy, CaseStudyDataBlock, CaseStudyDemoVideo, CaseStudyStat, caseStudiesPath, siteUrl } from '../data/caseStudies';
+import { CaseStudy, CaseStudyDataBlock, CaseStudyDataRow, CaseStudyDemoVideo, CaseStudyStat, caseStudiesPath, siteUrl } from '../data/caseStudies';
 import SEOHead from './SEOHead';
 import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
 import { OkIcon, PaperBlock } from './home2/primitives';
 import { trackCtaClick } from '../utils/dataLayer';
-import { useLightDocument } from '../hooks/useLightDocument';
 import { onInternalLink } from '../utils/navigate';
 
 interface CaseStudyPageProps {
@@ -15,6 +14,7 @@ interface CaseStudyPageProps {
 /* ------------------------------------------------------------------ */
 /* Pagina del caso studio sul sistema chiaro: hero scuro con aurora,   */
 /* immagine di copertina, intro, sfida, lavoro (lista .ev), video,     */
+/* righe dati in <dl class="dr">,                                       */
 /* risultato (tre numeri grandi), blocchi dati aggiuntivi, perché      */
 /* conta, chiusura scura con CTA, servizi e fonti. Un solo template    */
 /* per tutti i casi studio: il contenuto arriva da data/caseStudies.ts */
@@ -66,16 +66,29 @@ const StatGrid: React.FC<{ stats: CaseStudyStat[] }> = ({ stats }) => (
   </div>
 );
 
-/** Righe etichetta → valore nel mock bianco (come la lista eventi della home). */
-const RowList: React.FC<{ rows: Array<{ label: string; value: string }> }> = ({ rows }) => (
+/** Elenco delle attività nel mock bianco (come la lista eventi della home). */
+const WorkList: React.FC<{ items: string[] }> = ({ items }) => (
   <Reveal delay={0.12} className="mock">
-    {rows.map((row) => (
-      <div key={row.label} className="ev">
+    {items.map((item) => (
+      <div key={item} className="ev">
         <OkIcon />
-        {row.label}
-        {row.value && <em>{row.value}</em>}
+        {item}
       </div>
     ))}
+  </Reveal>
+);
+
+/** Righe dati etichetta → valore: <dl> nel mock bianco, senza icona né evidenziazione ciclica. */
+const DataRows: React.FC<{ rows: CaseStudyDataRow[] }> = ({ rows }) => (
+  <Reveal delay={0.12} className="mock">
+    <dl className="dr">
+      {rows.map((row) => (
+        <div key={row.label}>
+          <dt>{row.label}</dt>
+          <dd>{row.value}</dd>
+        </div>
+      ))}
+    </dl>
   </Reveal>
 );
 
@@ -85,7 +98,7 @@ const DataBlock: React.FC<{ block: CaseStudyDataBlock }> = ({ block }) => (
       <SectionTitle small>{block.heading}</SectionTitle>
       {block.intro && <Lead className="mt-8 md:mt-10">{block.intro}</Lead>}
       {block.stats && <div className="mt-16 md:mt-20"><StatGrid stats={block.stats} /></div>}
-      {block.rows && <div className="mt-16 max-w-[960px] md:mt-20"><RowList rows={block.rows} /></div>}
+      {block.rows && <div className="mt-16 max-w-[960px] md:mt-20"><DataRows rows={block.rows} /></div>}
       {block.note && <Lead delay={0.12} className="mt-10">{block.note}</Lead>}
       {block.source && <Reveal as="p" delay={0.16} className="mt-6 max-w-[720px] text-[16px] leading-normal text-gray-500">Fonte: {block.source}</Reveal>}
     </div>
@@ -93,7 +106,6 @@ const DataBlock: React.FC<{ block: CaseStudyDataBlock }> = ({ block }) => (
 );
 
 const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
-  useLightDocument();
   const pageUrl = `${siteUrl}${caseStudiesPath}/${study.slug}`;
   const ogImage = `${siteUrl}${study.ogImage}`;
 
@@ -137,7 +149,7 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
         <div className="aur aur-3" aria-hidden="true" />
         <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.15) 50%, rgba(5,5,5,.75) 100%)' }} />
         <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-20 pt-36 md:px-12 md:pt-40">
-          <nav aria-label="Breadcrumb" className="w-block text-[16px] text-white/70" style={{ animationDelay: '0.1s' }}>
+          <nav aria-label="Breadcrumb" className="w-block text-[17px] text-white/70" style={{ animationDelay: '0.1s' }}>
             <ol className="flex flex-wrap items-center gap-2">
               <li><a href="/" onClick={onInternalLink('/')} className="hover:text-white">Home</a></li>
               <li aria-hidden="true">/</li>
@@ -214,7 +226,7 @@ const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ study }) => {
             <SectionTitle small>{study.work.heading}</SectionTitle>
             <Lead className="mt-7 max-w-[560px] text-gray-700">{study.work.intro}</Lead>
           </div>
-          <RowList rows={study.work.items.map((item) => ({ label: item, value: '' }))} />
+          <WorkList items={study.work.items} />
         </PaperBlock>
       </section>
 

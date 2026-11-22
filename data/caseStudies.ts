@@ -110,16 +110,29 @@ export interface CaseStudy {
 export const siteUrl = 'https://www.q4.studio';
 export const caseStudiesPath = '/casi-studio';
 
-// Fonte dei numeri Candiani: le fonti private di Q4 Studio (cartella docs/sources, non versionata):
-// Stape Requests Analytics, 90 giorni fino al 20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026.
+// Fonte dei numeri Candiani: fonti originali di Q4 Studio conservate fuori dal
+// repository (D-022, D-024): Requests Analytics del container server-side,
+// 90 giorni fino al 20 nov 2026; Meta Gestione eventi, 23 ott–19 nov 2026.
 // Aggiornare prima lì, poi qui: pagine, home e prerender leggono questi valori.
+const candianiWindowLabel = '90 giorni';
+const candianiWindowEnd = '20 novembre 2026';
 export const candianiFigures = {
   recovered: '752.423',
   trackingPrevention: '671.779',
   adBlockers: '80.644',
   requests: '1.966.768',
   share: '38,3%',
-  windowLabel: '90 giorni',
+  windowLabel: candianiWindowLabel,
+  windowEnd: candianiWindowEnd,
+  /** "90 giorni fino al 20 novembre 2026": finestra dei dati del container, usata in fonti e testi. */
+  window: `${candianiWindowLabel} fino al ${candianiWindowEnd}`,
+};
+
+/** Testi dell'hero dell'indice casi studio: componente e mirror statico del prerender. */
+export const caseStudiesIndexCopy = {
+  kicker: 'Casi studio',
+  title: 'Progetti reali, dati reali.',
+  lead: 'Come lavoriamo con i clienti Q4 Studio: cosa abbiamo trovato, cosa abbiamo costruito e cosa è cambiato, con i numeri veri di ogni progetto.',
 };
 
 export const caseStudies: CaseStudy[] = [
@@ -174,7 +187,7 @@ export const caseStudies: CaseStudy[] = [
     },
     results: {
       heading: 'Il risultato',
-      intro: `In ${candianiFigures.windowLabel}, fino al 20 novembre 2026, su ${candianiFigures.requests} richieste gestite dal container server-side, il tracciamento server-side ha recuperato:`,
+      intro: `In ${candianiFigures.windowLabel}, fino al ${candianiFigures.windowEnd}, su ${candianiFigures.requests} richieste gestite dal container server-side, il tracciamento server-side ha recuperato:`,
       stats: [
         { value: candianiFigures.trackingPrevention, label: 'recuperate dalla tracking prevention dei browser' },
         { value: candianiFigures.adBlockers, label: 'recuperate dagli ad blocker' },
@@ -195,7 +208,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         heading: 'Cosa recupera, evento per evento',
-        intro: 'Richieste GA4 passate dal container in 90 giorni e quante di queste il browser o un ad blocker avrebbero bloccato (somma di tracking prevention e ad blocker).',
+        intro: `Richieste GA4 passate dal container in ${candianiFigures.windowLabel} e quante di queste il browser o un ad blocker avrebbero bloccato (somma di tracking prevention e ad blocker).`,
         rows: [
           { label: 'PageView · 356.380 richieste', value: '146.310 recuperate (41,1%)' },
           { label: 'ViewItem · 132.729 richieste', value: '55.955 recuperate (42,2%)' },
@@ -204,7 +217,7 @@ export const caseStudies: CaseStudy[] = [
           { label: 'Purchase · 135 richieste', value: '79 recuperate (58,5%)' }
         ],
         note: 'Gli eventi vicini all’acquisto sono quelli che si perdono di più: oltre la metà degli acquisti sarebbe rimasta invisibile alle piattaforme.',
-        source: 'Analytics del container server-side di candianidenim.com, 90 giorni fino al 20 novembre 2026, richieste GA4 per evento.'
+        source: `Analytics del container server-side di candianidenim.com, ${candianiFigures.window}, richieste GA4 per evento.`
       },
       {
         heading: 'Dove si perdono i dati: per browser',
@@ -214,7 +227,7 @@ export const caseStudies: CaseStudy[] = [
           { label: 'Chrome (mobile e desktop) · 576K richieste', value: '8,34% recuperato dagli ad blocker' },
           { label: 'Altri (Brave, Edge, Firefox…) · 719K richieste', value: '3,56% recuperato dagli ad blocker' }
         ],
-        source: 'Analytics del container server-side, 90 giorni fino al 20 novembre 2026, richieste per browser.'
+        source: `Analytics del container server-side, ${candianiFigures.window}, richieste per browser.`
       },
       {
         heading: 'Bot fuori, consenso dentro',
@@ -224,7 +237,7 @@ export const caseStudies: CaseStudy[] = [
           { value: '42,29%', label: 'delle PageView con consenso dato (150.698); 57,71% con opt-out (205.679)' },
           { value: '62,96%', label: 'degli acquisti con consenso dato (85); 37,04% con opt-out (50)' }
         ],
-        source: 'Analytics del container server-side, 90 giorni fino al 20 novembre 2026, richieste da bot e per scelta di consenso (richieste GA4).'
+        source: `Analytics del container server-side, ${candianiFigures.window}, richieste da bot e per scelta di consenso (richieste GA4).`
       }
     ],
     whyItMatters: {
@@ -234,7 +247,7 @@ export const caseStudies: CaseStudy[] = [
       ]
     },
     sources: [
-      'Analytics del container server-side di candianidenim.com, periodo di 90 giorni fino al 20 novembre 2026.',
+      `Analytics del container server-side di candianidenim.com, periodo di ${candianiFigures.window}.`,
       'Meta Gestione eventi, Pixel di Candiani Denim, 23 ottobre – 19 novembre 2026.',
       'Screenshot originali e valori estratti conservati da Q4 Studio, disponibili su richiesta.'
     ],

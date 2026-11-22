@@ -7,9 +7,12 @@ html, body {
   overflow-x: hidden;
   overscroll-behavior-x: none;
 }
+/* Bianco come html: le pagine chiare non hanno flash nero al primo paint.
+   Le pagine scure hanno il loro sfondo #050505 sulle sezioni; html/body e
+   theme-color seguono la rotta (data/lightRoutes.ts, hooks/useDocumentTheme.ts). */
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #050505;
+  background-color: #ffffff;
   color: #ffffff;
 }
 h1, h2, h3, h4, h5, h6 {
@@ -105,8 +108,8 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1;
 }
 .home-light .disp { letter-spacing: -0.05em; }
-/* Soglia di leggibilità: niente testo sotto i 15px nelle pagine chiare. */
-.home-light .text-xs, .home-light .text-\[13px\] { font-size: 16px; line-height: 1.5; }
+/* Soglia di leggibilità: niente testo sotto i 16px nelle pagine chiare. */
+.home-light .text-xs, .home-light .text-\[11px\], .home-light .text-\[13px\] { font-size: 16px; line-height: 1.5; }
 .home-light .text-sm, .home-light .text-\[15px\], .home-light .text-base, .home-light .text-\[14px\] { font-size: 19px; line-height: 1.55; }
 .home-light .h-xl { font-size: clamp(2.75rem, 8.8vw, 9rem); letter-spacing: -0.055em; line-height: 0.95; }
 .home-light .h-l { font-size: clamp(2.5rem, 7.2vw, 7.25rem); letter-spacing: -0.05em; line-height: 0.98; }
@@ -169,6 +172,10 @@ h1, h2, h3, h4, h5, h6 {
 .home-light .scroll-cue { width: 1px; height: 64px; background: linear-gradient(#fff, transparent); transform-origin: top; animation: q4-cue 2.2s ease-in-out infinite; }
 @keyframes q4-pageloader { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
 .q4-pageloader-bar { animation: q4-pageloader 1.2s ease-in-out infinite; }
+/* Loader dei cambi rotta in transizione: invisibile per 150 ms, poi
+   compare; se la pagina arriva prima non si vede mai. */
+@keyframes q4-pageloader-in { from { opacity: 0; } to { opacity: 1; } }
+.q4-pageloader-delayed { opacity: 0; animation: q4-pageloader-in 0.2s ease-out 0.15s forwards; }
 @media (prefers-reduced-motion: reduce) { .q4-pageloader-bar { animation: none; width: 100%; } }
 @keyframes q4-cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
 
@@ -231,7 +238,26 @@ h1, h2, h3, h4, h5, h6 {
    cioè dentro lo slot di 2.25s (16.67%): nessuna sovrapposizione. */
 @keyframes q4-hl { 0%, 16%, 100% { background: transparent; } 4%, 12% { background: rgba(168, 85, 247, 0.1); } }
 .home-light .ev .ok { flex: none; width: 22px; height: 22px; border-radius: 50%; background: #9333ea; display: grid; place-items: center; color: #fff; }
-.home-light .ev em { margin-left: auto; font-style: normal; font-size: 14px; color: var(--mute); }
+.home-light .ev em { margin-left: auto; font-style: normal; font-size: 16px; color: var(--mute); white-space: nowrap; }
+
+/* Righe dati dei casi studio (<dl class="dr"> dentro .mock): etichetta a
+   sinistra, valore in grassetto a destra, niente icona né animazione. */
+.home-light .dr { margin: 0; }
+.home-light .dr > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 24px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.home-light .dr > div:last-child { border-bottom: 0; }
+.home-light .dr dt { font-weight: 500; }
+.home-light .dr dd { margin: 0 0 0 auto; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
 
 /* Tile del processo */
 .home-light .tile { position: relative; aspect-ratio: 4 / 5; border-radius: 32px; overflow: hidden; background: #0a0a0a; color: #fff; }
@@ -321,4 +347,14 @@ h1, h2, h3, h4, h5, h6 {
 @media (prefers-reduced-motion: reduce) {
   .home-light *, .home-light *::before, .home-light *::after { animation: none !important; transition: none !important; }
   .home-light .w, .home-light .w-block { opacity: 1 !important; transform: none !important; }
+}
+
+/* Stampa: i blocchi con reveal (Reveal mette data-reveal) e le parole
+   dell'hero non devono restare nascosti se la pagina si stampa prima
+   che entrino in viewport. */
+@media print {
+  .home-light [data-reveal], .home-light .w, .home-light .w-block {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

@@ -4,10 +4,9 @@ import SEOHead from './SEOHead';
 import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
 import { Bullets, OkIcon } from './home2/primitives';
-import { aiAgentsFaqs, aiAgentsPackages, type AIAgentsPackage } from '../data/servicePages';
+import { aiAgentsFaqs, aiAgentsOffer, aiAgentsPackages, type AIAgentsPackage } from '../data/servicePages';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
-import { useLightDocument } from '../hooks/useLightDocument';
 import { onInternalLink, scrollToId } from '../utils/navigate';
 
 /* ------------------------------------------------------------------ */
@@ -28,7 +27,7 @@ const serviceSchema = {
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Pacchetti automazioni AI',
-    itemListElement: aiAgentsPackages.map((pack) => ({ '@type': 'Offer', name: pack.title, price: pack.price })),
+    itemListElement: aiAgentsPackages.map(aiAgentsOffer),
   },
 };
 
@@ -86,7 +85,6 @@ const TimingCard: React.FC<{ timing: string; delay?: number }> = ({ timing, dela
 const [assistant, crm, whatsapp] = aiAgentsPackages;
 
 const AIAgents: React.FC = () => {
-  useLightDocument();
 
   // Alias della vecchia ancora: #pacchetti-automazioni ora è #pacchetti.
   useEffect(() => {

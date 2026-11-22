@@ -75,7 +75,7 @@ const Process: React.FC = () => (
               {step.shape}
             </div>
             <h3 className="mt-8" style={{ fontSize: 'clamp(2rem, 3vw, 3rem)' }}>{step.title}</h3>
-            <p className="mt-3.5 max-w-[380px] text-[17px] leading-[1.65]">{step.desc}</p>
+            <p className="mt-3.5 max-w-[380px] text-[19px] leading-[1.65]">{step.desc}</p>
           </Reveal>
         ))}
       </div>

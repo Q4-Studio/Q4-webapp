@@ -75,7 +75,7 @@ dimensione.
 **Elementi esclusi dall'unificazione del tracking** (lasciati con i loro valori
 originali, non sono etichette maiuscole ma letture numeriche/tecniche in stile
 "console" — `tabular-nums`, orari, contatori step):
-- `components/home2/Pipeline2.tsx`: il contatore `0{active+1}/05` (`tracking-widest tabular-nums`) e il badge dell'orario `step.time` / `s.time` (es. "T+0 s", `tracking-[0.2em]`).
+- `components/home2/LeadFlow.tsx`: l'etichetta del tempo di ogni riga (`.tm`, es. "Subito", "2 secondi", "7 giorni"), scritta in parole e senza tracking dedicato (sostituisce `Pipeline2.tsx` e i badge "T+0 s", componente rimosso).
 - `components/home2/Agents2.tsx`: il nome dello scenario nel terminale mock (es. "q4-agent · preventivi", `tracking-[0.2em]`, minuscolo per estetica da riga di comando).
 
 **Elementi con `leading-none` lasciati invariati** (etichette/numeri brevi e

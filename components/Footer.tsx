@@ -6,6 +6,7 @@ import MagneticButton from './MagneticButton';
 import { OBFUSCATED, decode } from '../utils/obfuscate';
 import { caseStudiesPath } from '../data/caseStudies';
 import { trackCtaClick } from '../utils/dataLayer';
+import { onInternalLink } from '../utils/navigate';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -203,43 +204,35 @@ const Footer: React.FC<FooterProps> = ({ showCta = true, tone = 'dark' }) => {
             <div>
                 <h4 className={`font-bold text-lg mb-4 ${t.heading}`}>Servizi</h4>
                 <ul className="space-y-2">
-                    <li><a href="/tracciamento-server-side" className={link}>Tracciamento server-side</a></li>
-                    <li><a href="/siti-web-ai" className={link}>Siti web con AI</a></li>
-                    <li
-                        className={`${link} cursor-pointer`}
-                        onClick={() => {
-                            window.history.pushState(null, '', '/agenti-ai');
-                            window.dispatchEvent(new Event('popstate'));
-                        }}
-                    >
-                        Agenti AI
-                    </li>
+                    <li><a href="/tracciamento-server-side" onClick={onInternalLink('/tracciamento-server-side')} className={link}>Tracciamento server-side</a></li>
+                    <li><a href="/siti-web-ai" onClick={onInternalLink('/siti-web-ai')} className={link}>Siti web con AI</a></li>
+                    <li><a href="/agenti-ai" onClick={onInternalLink('/agenti-ai')} className={link}>Agenti AI</a></li>
                     <li>
-                        <a href={caseStudiesPath} className={link}>
+                        <a href={caseStudiesPath} onClick={onInternalLink(caseStudiesPath)} className={link}>
                             Casi Studio
                         </a>
                     </li>
-                    <li><a href="/meta-advertising-b2b" className={link}>Meta Advertising B2B</a></li>
+                    <li><a href="/meta-advertising-b2b" onClick={onInternalLink('/meta-advertising-b2b')} className={link}>Meta Advertising B2B</a></li>
                 </ul>
             </div>
             <div>
                 <h4 className={`font-bold text-lg mb-4 ${t.heading}`}>Esplora</h4>
                 <ul className="space-y-2">
                     <li>
-                        <a href="/blog" className={link}>Blog</a>
+                        <a href="/blog" onClick={onInternalLink('/blog')} className={link}>Blog</a>
                     </li>
                     <li>
-                        <a href="/risorse" className={link}>
+                        <a href="/risorse" onClick={onInternalLink('/risorse')} className={link}>
                             Risorse
                         </a>
                     </li>
                     <li>
-                        <a href="/about" className={link}>
+                        <a href="/about" onClick={onInternalLink('/about')} className={link}>
                             Chi siamo
                         </a>
                     </li>
                     <li>
-                        <a href="/contact" className={link}>
+                        <a href="/contact" onClick={onInternalLink('/contact')} className={link}>
                             Contatti
                         </a>
                     </li>
@@ -247,7 +240,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true, tone = 'dark' }) => {
                     {/* Link reale alla pagina /privacy (prerenderata): i crawler
                         senza JS la raggiungono dal footer, come le altre voci. */}
                     <li>
-                        <a href="/privacy" className={link}>
+                        <a href="/privacy" onClick={onInternalLink('/privacy')} className={link}>
                             Privacy & Cookie Policy
                         </a>
                     </li>

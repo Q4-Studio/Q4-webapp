@@ -5,6 +5,7 @@ import { ArrowUpRight, Calendar } from 'lucide-react';
 import Reveal from './Reveal';
 import { OkIcon } from './primitives';
 import { onInternalLink } from '../../utils/navigate';
+import { homePriceRows } from '../../data/servicePages';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,8 +14,11 @@ gsap.registerPlugin(ScrollTrigger);
 /* tracciamento + "8 ore", automazioni + "60 s", siti + advertising.   */
 /* ------------------------------------------------------------------ */
 
-/** Numero che conta da 0 al valore quando entra in viewport. */
-const Counter: React.FC<{ to: number; className?: string }> = ({ to, className }) => {
+/**
+ * Numero che conta da 0 al valore quando entra in viewport. Lo span animato
+ * è aria-hidden; lo screen reader legge il valore finale (`srText`) in sr-only.
+ */
+const Counter: React.FC<{ to: number; srText: string; className?: string }> = ({ to, srText, className }) => {
   const ref = useRef<HTMLSpanElement>(null);
 
   // useLayoutEffect: lo 0 va scritto prima del primo paint, altrimenti si
@@ -45,7 +49,12 @@ const Counter: React.FC<{ to: number; className?: string }> = ({ to, className }
   }, [to]);
 
   // Valore finale già nel markup: leggibile anche senza JavaScript.
-  return <span ref={ref} className={className}>{to}</span>;
+  return (
+    <>
+      <span ref={ref} className={className} aria-hidden="true">{to}</span>
+      <span className="sr-only">{srText}</span>
+    </>
+  );
 };
 
 const PriceRow: React.FC<{ items: Array<{ label: string; value: string }> }> = ({ items }) => (
@@ -77,7 +86,7 @@ const ServicesBento: React.FC = () => (
           <Reveal as="article" className="bc" style={{ minHeight: 660, paddingBottom: 110, background: 'linear-gradient(170deg, #f7f5fb 0%, #efe7fb 100%)' }}>
             <h3>Tracciamento e dati</h3>
             <p className="d">Audit del setup attuale, container server-side, eventi documentati e segnali che tornano alle campagne. Un setup server-side tipico richiede 8 ore.</p>
-            <PriceRow items={[{ label: 'Audit da', value: '490 €' }, { label: 'Setup da', value: '1.500 €' }]} />
+            <PriceRow items={homePriceRows.tracking} />
             <CardLink href="/tracciamento-server-side" label="Pacchetti e prezzi" />
             <div className="mock relative mt-auto pt-0" style={{ marginTop: 'auto' }}>
               <div className="ev"><OkIcon />Lead · Conversions API<em>inviato</em></div>
@@ -88,8 +97,8 @@ const ServicesBento: React.FC = () => (
           </Reveal>
           <Reveal as="article" className="bc ov items-center justify-center text-center text-white" style={{ minHeight: 300, background: 'linear-gradient(160deg, #9333ea, #6366f1)' }}>
             <p className="disp" style={{ fontSize: 'clamp(4.5rem, 7vw, 7rem)', letterSpacing: '-0.06em', color: '#fff' }}>
-              <Counter to={8} />
-              <span className="ml-1.5" style={{ fontSize: '.4em' }}>ore</span>
+              <Counter to={8} srText="8 ore" />
+              <span className="ml-1.5" style={{ fontSize: '.4em' }} aria-hidden="true">ore</span>
             </p>
             <p className="mt-3 font-medium text-white">per un setup server-side tipico</p>
           </Reveal>
@@ -100,7 +109,7 @@ const ServicesBento: React.FC = () => (
           <Reveal as="article" id="agenti" delay={0.12} className="bc" style={{ minHeight: 660, paddingBottom: 110, background: 'linear-gradient(150deg, #f7f5fb 0%, #ecdffb 100%)' }}>
             <h3>Automazioni e agenti AI</h3>
             <p className="d">Il CRM lavora da solo: contatto su WhatsApp ed email, follow-up, notifiche al team commerciale e al cliente. Partono in due settimane.</p>
-            <PriceRow items={[{ label: 'Setup da', value: '490 €' }, { label: 'Canone', value: '59–200 €/mese' }]} />
+            <PriceRow items={homePriceRows.automations} />
             <CardLink href="/agenti-ai" label="Vedi le automazioni" />
             <div className="mock relative" style={{ marginTop: 'auto' }}>
               <div className="ev"><OkIcon />Nuovo lead nel CRM<em>2 secondi</em></div>
@@ -115,8 +124,8 @@ const ServicesBento: React.FC = () => (
           <Reveal as="article" className="bc ov items-center justify-center text-center" style={{ minHeight: 300, background: '#f7f5fb' }}>
             <div className="dots" aria-hidden="true" />
             <p className="disp relative" style={{ fontSize: 'clamp(4.5rem, 7vw, 7rem)', letterSpacing: '-0.06em' }}>
-              <Counter to={60} className="grad" />
-              <span className="grad ml-1" style={{ fontSize: '.4em' }}>s</span>
+              <Counter to={60} srText="60 secondi" className="grad" />
+              <span className="grad ml-1" style={{ fontSize: '.4em' }} aria-hidden="true">s</span>
             </p>
             <p className="relative mt-3 font-medium" style={{ color: '#0a0a0a' }}>primo contatto con il lead</p>
           </Reveal>
@@ -127,7 +136,7 @@ const ServicesBento: React.FC = () => (
           <Reveal as="article" delay={0.2} className="bc" style={{ minHeight: 540, paddingBottom: 110 }}>
             <h3>Siti web con AI</h3>
             <p className="d">Veloci, e misurabili fin dal primo giorno.</p>
-            <p className="price pt-7">da 2.999 €</p>
+            <p className="price pt-7">{homePriceRows.sites}</p>
             <CardLink href="/siti-web-ai" label="Come lavoriamo sui siti" />
             <div className="mock px-4 pb-5 pt-4" style={{ marginTop: 'auto' }} aria-hidden="true">
               <div className="mb-3.5 flex gap-1.5">

@@ -31,3 +31,12 @@ export const scrollToId = (id: string, block: ScrollLogicalPosition = 'start'): 
   target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block });
   return true;
 };
+
+/**
+ * Torna in cima alla pagina. `smooth` chiede lo scorrimento morbido, che con
+ * prefers-reduced-motion diventa un salto (come scrollToId).
+ */
+export const scrollToTop = (smooth = false): void => {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: 0, behavior: smooth && !reduced ? 'smooth' : 'auto' });
+};

@@ -328,14 +328,14 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
 
           {/* Status Messages */}
           {submitStatus === 'success' && (
-            <div className={`mb-6 p-4 rounded-xl flex items-center gap-3 ${t.success}`}>
+            <div role="status" className={`mb-6 p-4 rounded-xl flex items-center gap-3 ${t.success}`}>
               <CheckCircle className="w-5 h-5" />
               <span>Messaggio inviato con successo! Ti contatteremo presto.</span>
             </div>
           )}
 
           {submitStatus === 'error' && (
-            <div className={`mb-6 p-4 rounded-xl flex items-center gap-3 ${t.error}`}>
+            <div role="alert" className={`mb-6 p-4 rounded-xl flex items-center gap-3 ${t.error}`}>
               <AlertCircle className="w-5 h-5" />
               <span>Errore nell'invio. Riprova o contattaci direttamente via email.</span>
             </div>
