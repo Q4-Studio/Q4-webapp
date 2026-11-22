@@ -273,7 +273,7 @@ const SitesWebAI: React.FC = () => {
           <Reveal as="h2" className="h-l max-w-[1100px]">Tre fasi, non un modulo da compilare.</Reveal>
           <div className="mt-20 grid grid-cols-1 gap-6 md:mt-[80px] md:grid-cols-3">
             {phases.map((phase) => (
-              <Reveal key={phase.title} delay={phase.delay} className="flex min-h-[360px] flex-col gap-7 rounded-[32px] bg-[#f7f5fb] px-7 py-8 md:p-11">
+              <Reveal key={phase.title} delay={phase.delay} className="bc static min-h-[360px] gap-7">
                 <IconBox icon={phase.icon} />
                 <div className="mt-auto">
                   <h3 style={{ fontSize: 'clamp(1.6rem, 2.3vw, 2.4rem)', letterSpacing: '-0.04em', lineHeight: 1.05 }}>{phase.title}</h3>

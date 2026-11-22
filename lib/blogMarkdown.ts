@@ -76,7 +76,15 @@ export const inlineTokens = (value: string): InlineToken[] => value
   });
 
 const tableCells = (line: string): string[] => line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((cell) => cell.trim());
-const isTableDivider = (line: string): boolean => /^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?$/.test(line.trim());
+/**
+ * Riga divisoria di una tabella: contiene almeno un `|` e solo celle di
+ * trattini (con i due punti dell'allineamento). Un `---` nudo non lo è: resta
+ * una riga orizzontale/paragrafo, anche sotto una riga che contiene `|`.
+ */
+const isTableDivider = (line: string): boolean => {
+  const value = line.trim();
+  return value.includes('|') && /^[\s|:-]+$/.test(value) && tableCells(value).every((cell) => /^:?-+:?$/.test(cell));
+};
 
 const parseBlocks = (lines: string[], toc: TocItem[] | null, headingCounts: Map<string, number>): ArticleBlock[] => {
   const blocks: ArticleBlock[] = [];
@@ -117,13 +125,20 @@ const parseBlocks = (lines: string[], toc: TocItem[] | null, headingCounts: Map<
       continue;
     }
 
-    // Tabella: riga di intestazione seguita dalla riga di separazione.
+    // Tabella: riga di intestazione con `|` seguita dalla riga divisoria. Le
+    // righe proseguono finché iniziano con `|`; se l'intestazione non ha il
+    // `|` iniziale, finché hanno `|` e lo stesso numero di celle. Un paragrafo
+    // con `|` dopo la tabella non ne fa parte.
     if (line.includes('|') && i + 1 < lines.length && isTableDivider(lines[i + 1])) {
       flushList();
       const header = tableCells(line);
+      const leadingPipe = line.startsWith('|');
+      const isRow = (value: string) => (leadingPipe
+        ? value.startsWith('|')
+        : value.includes('|') && tableCells(value).length === header.length);
       const rows: string[][] = [];
       i += 2;
-      while (i < lines.length && lines[i].trim().includes('|')) {
+      while (i < lines.length && isRow(lines[i].trim())) {
         rows.push(tableCells(lines[i]));
         i += 1;
       }

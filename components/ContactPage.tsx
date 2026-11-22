@@ -50,7 +50,7 @@ const InfoCard: React.FC<{ card: CompanyCard; icon: IconType; delay: number; min
           {body}
         </a>
       ) : (
-        <div className="flex h-full flex-col gap-6 rounded-[32px] bg-[#f7f5fb] px-7 py-8 md:p-11" style={{ minHeight }}>
+        <div className="bc static h-full gap-6" style={{ minHeight }}>
           {body}
         </div>
       )}
@@ -63,18 +63,12 @@ const START_ICONS: IconType[] = [Search, Server, Bot];
 
 const ContactPage: React.FC = () => {
   const pageUrl = `${siteUrl}/contact`;
-  const contactSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'ContactPage',
-    name: copy.metaTitle,
-    url: pageUrl,
-    mainEntity: { '@id': `${siteUrl}/#organization` },
-  };
+  // Schema JSON-LD solo nello <head> del mirror statico (scripts/prerender.ts): qui
+  // un secondo blocco identico finirebbe nel DOM dopo il mount (D-052).
 
   return (
     <section className="relative">
       <SEOHead title={copy.metaTitle} description={copy.metaDescription} url={pageUrl} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(contactSchema) }} />
 
       <SubHero kicker={copy.kicker} title={copy.title} lead={copy.lead} />
 

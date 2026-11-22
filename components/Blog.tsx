@@ -57,7 +57,7 @@ const Blog: React.FC<BlogProps> = ({ posts, isLoading, error }) => {
 
           {/* Stato vuoto: Supabase non configurato o nessun articolo pubblicato. */}
           {!isLoading && !error && posts.length === 0 && (
-            <Reveal className="bc mt-12 max-w-[760px] md:mt-16">
+            <Reveal className="bc static mt-12 max-w-[760px] md:mt-16">
               <h3 style={{ fontSize: 'clamp(1.6rem, 2.3vw, 2.4rem)', letterSpacing: '-0.04em', lineHeight: 1.05 }}>{empty.title}</h3>
               <p className="d">
                 {empty.text}{' '}

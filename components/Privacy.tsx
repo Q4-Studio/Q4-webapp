@@ -78,7 +78,7 @@ const LegalRows: React.FC<{ id: string; title: string; sections: LegalSection[] 
 const Privacy: React.FC = () => (
   <section className="relative">
     <SEOHead title={copy.metaTitle} description={copy.metaDescription} url={`${siteUrl}/privacy`} />
-    <SubHero kicker={copy.kicker} title={copy.title} lead={`${copy.lead} Ultimo aggiornamento: ${copy.lastUpdated}.`} />
+    <SubHero kicker={copy.kicker} title={copy.title} lead={copy.heroLead} />
     <div className="pt-24 md:pt-[200px]">
       <LegalRows id="privacy-policy" title={copy.privacyTitle} sections={privacySections} />
       <LegalRows id="cookie-policy" title={copy.cookieTitle} sections={cookieSections} />

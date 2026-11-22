@@ -1,8 +1,9 @@
 import React from 'react';
-import { resourceGroups, resourcePagesInOrder, resourcesIndexCopy, resourcesPath, siteUrl } from '../data/seoPages';
+import { resourceGroups, resourcesIndexCopy, resourcesPath, siteUrl } from '../data/seoPages';
 import SEOHead from './SEOHead';
 import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
+import SubHero from './home2/SubHero';
 import ResourceCard from './ResourceCard';
 import { trackCtaClick } from '../utils/dataLayer';
 import { scrollToId } from '../utils/navigate';
@@ -14,60 +15,18 @@ import { scrollToId } from '../utils/navigate';
 /* Form contatti e footer chiari stanno in App.tsx.                     */
 /* ------------------------------------------------------------------ */
 
-const TITLE_WORDS = resourcesIndexCopy.title.split(' ');
-
 const SeoDirectory: React.FC = () => {
   const pageUrl = `${siteUrl}${resourcesPath}`;
 
-  const itemListSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: 'Risorse Q4 Studio',
-    itemListElement: resourcePagesInOrder.map((page, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: page.title,
-      url: `${pageUrl}/${page.slug}`
-    }))
-  };
-
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Risorse', item: pageUrl }
-    ]
-  };
-
+  // Schema JSON-LD solo nello <head> del mirror statico (scripts/prerender.ts): qui
+  // un secondo blocco identico finirebbe nel DOM dopo il mount (D-052).
   const { close } = resourcesIndexCopy;
 
   return (
     <section className="relative">
       <SEOHead title={resourcesIndexCopy.metaTitle} description={resourcesIndexCopy.metaDescription} url={pageUrl} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-      {/* Hero scuro corto: id="hero" tiene bianchi logo e hamburger della nav. */}
-      <header id="hero" className="dark-block relative flex min-h-[520px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[640px] md:rounded-b-[56px]">
-        <div className="aur aur-1" aria-hidden="true" />
-        <div className="aur aur-2" aria-hidden="true" />
-        <div className="aur aur-3" aria-hidden="true" />
-        <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.15) 50%, rgba(5,5,5,.75) 100%)' }} />
-        <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-20 pt-36 md:px-12 md:pb-24 md:pt-40">
-          <p className="w-block text-[17px] font-medium text-purple-300" style={{ animationDelay: '0.05s' }}>{resourcesIndexCopy.kicker}</p>
-          <h1 className="h-sub mt-8 max-w-[1250px]">
-            {TITLE_WORDS.map((word, i) => (
-              <React.Fragment key={`${word}-${i}`}>
-                <span className="w" style={{ animationDelay: `${(0.15 + i * 0.07).toFixed(2)}s` }}>{word}</span>{' '}
-              </React.Fragment>
-            ))}
-          </h1>
-          <p className="w-block lead mt-12 max-w-[640px] text-gray-300" style={{ animationDelay: '0.84s' }}>
-            {resourcesIndexCopy.lead}
-          </p>
-        </div>
-      </header>
+      <SubHero kicker={resourcesIndexCopy.kicker} title={resourcesIndexCopy.title} lead={resourcesIndexCopy.lead} />
 
       {/* Card raggruppate per pagina hub: intestazione h2 per gruppo, h3 per risorsa. */}
       <div className="px-6 pb-24 pt-24 md:px-12 md:pb-[160px] md:pt-[160px]">
