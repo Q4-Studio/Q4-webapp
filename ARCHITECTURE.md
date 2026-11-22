@@ -209,34 +209,40 @@ D:\-- MAIN\- Progetti\Q4\Web Q4\
 **Responsabilità**: Homepage ufficiale (compone Hero2, Manifesto2, Pipeline2, Agents2, Services2, Marquee, HomeSeoContent, ContactForm, Footer)
 
 ### 3. Blog.tsx
-**Responsabilità**: Lista articoli blog con card grid
+**Responsabilità**: indice del blog sul sistema chiaro: hero corto (`SubHero`), griglia di `BlogCard` e chiusura. Form contatti e footer chiari in App.tsx.
 
 **Props**:
 ```typescript
 interface BlogProps {
-  posts: BlogPost[];        // Array articoli da Supabase
-  isLoading: boolean;       // Loading state
-  error: string | null;     // Error message
-  onArticleClick: (slug: string) => void;
+  posts: BlogPost[];        // Articoli da Supabase (caricati da App.tsx)
+  isLoading: boolean;       // Caricamento in corso
+  error: string | null;     // Messaggio d'errore
 }
 ```
+I link agli articoli sono `<a href>` con `onInternalLink` (niente callback `onArticleClick`).
 
 **Stati UI**:
-- Loading: Spinner con Loader2 icon
-- Error: Messaggio errore con retry
-- Empty: Nessun articolo disponibile
-- Success: Grid 3 colonne con cards
+- Loading: riga di testo `role="status"` (niente spinner)
+- Error: riga di testo `role="alert"` (niente retry)
+- Empty: card con link a risorse e casi studio (Supabase non configurato o nessun articolo)
+- Success: griglia di card (1/2/3 colonne)
 
 ### 4. BlogArticle.tsx
-**Responsabilità**: Render singolo articolo
+**Responsabilità**: singolo articolo sul sistema chiaro
+
+**Props**: `post: BlogPost` e `posts: BlogPost[]` (tutti gli articoli, per i correlati).
 
 **Features**:
-- Markdown renderer custom (H1, H2, H3, bold, liste)
-- Cover image full-width
-- Author info + meta (data, tempo lettura)
-- Back to blog button
-- CTA autore a fine articolo
-- Auto-scroll to top al mount
+- Markdown analizzato da `lib/blogMarkdown.ts` (titoli con id, liste, citazioni, codice, immagini, tabelle), lo stesso parser del mirror statico
+- Hero corto (`SubHero`) con categoria come chip, autore, data e tempo di lettura
+- Indice dei titoli in card sticky; i click aggiornano l'hash e Indietro/Avanti tornano al titolo (App.tsx)
+- Card autore, articoli correlati (`relatedPosts`), chiusura; il form contatti generico segue in App.tsx
+
+### Dati e testi condivisi
+- `lib/blogMarkdown.ts`: parser markdown degli articoli, unico per `BlogArticle.tsx` e `scripts/prerender.ts`; controllato da `scripts/verify-blog-markdown.ts` (gira in `npm run build`).
+- `data/extraPages.ts`: testi di blog (indice e articolo), partner tecnico e 404; `formatPostDate`, `relatedPosts`, autori.
+- `data/companyPages.ts`: recapiti e dati legali (`company`, usati anche da footer, form e schema Organization del prerender), testi di contatti, chi siamo e privacy.
+- `data/servicePages.ts`: pacchetti, prezzi derivati (`priceWithFrom`, `automationsPricing`, `homePriceRows`) e FAQ delle pagine servizio.
 
 ### 5. ContactForm.tsx
 **Responsabilità**: Form contatti con validazione

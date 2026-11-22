@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
-import { OBFUSCATED, decode } from '../utils/obfuscate';
+import { company } from '../data/companyPages';
 import { getAttribution, getGaClientId, getGaSessionId } from '../utils/attribution';
 import { pushDataLayerEvent } from '../utils/dataLayer';
 import posthog from '../lib/posthog';
@@ -72,11 +72,8 @@ const ContactForm: React.FC<ContactFormProps> = ({ showHeader = true, subject, h
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [email, setEmail] = useState('');
-
-  useEffect(() => {
-    setEmail(decode(OBFUSCATED.email));
-  }, []);
+  // Email da `company` (data/companyPages.ts), la stessa di schema e pagine aziendali.
+  const { email } = company;
 
   useEffect(() => {
     if (!sectionRef.current) return;

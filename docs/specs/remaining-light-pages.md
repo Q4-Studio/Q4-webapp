@@ -35,7 +35,7 @@ Ogni punto è una scelta fatta senza un mockup. Va confermata o corretta da Q4 S
 
 ### C. App e rotte
 - C1 `App.tsx`: blog, articolo, partner, supporto app e 404 dentro `.home-light` con `Footer tone="light"`; `ContactForm` chiaro su blog (nessun oggetto), articolo (oggetto = titolo), partner (oggetto "Partner tecnico"); supporto e 404 senza form. Errore del blog da `blogIndexCopy.error`.
-- C2 `data/lightRoutes.ts`: `/blog`, `/partner-tecnico` e il prefisso `/blog/` tra le rotte chiare; `UNLISTED_ROUTES_LIGHT = true` rende chiare anche le rotte non elencate (404, hash `#privacy`/`#app-support`), quindi `isLightRoute` vale sempre true. `lightDocument` in App è sparito: `useDocumentTheme(isLightRoute(path))`. La struttura e `DARK_BACKGROUND` restano per poter tornare indietro su una rotta. (D-045)
+- C2 `data/lightRoutes.ts`: `/blog`, `/partner-tecnico` e il prefisso `/blog/` tra le rotte chiare; `UNLISTED_ROUTES_LIGHT = true` rende chiare anche le rotte non elencate (404, hash `#privacy`/`#app-support`), quindi `isLightRoute` vale sempre true. `lightDocument` in App è sparito: `useDocumentTheme(isLightRoute(path))`. La struttura e `DARK_BACKGROUND` restano per poter tornare indietro su una rotta. (D-045) Superato da D-054: `data/lightRoutes.ts`, `useDocumentTheme` e il ramo scuro del prerender sono stati rimossi (review-62-64-fixes.md).
 
 ### D. Prerender e markdown (`scripts/prerender.ts`, `vercel.json`)
 - D1 `staticPage` ha solo la variante chiara (la scura non ha più chiamanti).
@@ -45,9 +45,9 @@ Ogni punto è una scelta fatta senza un mockup. Va confermata o corretta da Q4 S
 - D5 Markdown: `/md/blog.md` con titolo, lead e articoli (categoria, data, lettura); `/md/blog/<slug>.md` con categoria e ruolo dell'autore, correlati e chiusura; nuovo `/md/partner-tecnico.md` con la sua route `Accept: text/markdown` in `vercel.json`. La 404 non ha markdown: non è una pagina di contenuto (ha già i link a sitemap.xml e llms.txt).
 
 ## Decisioni
-- D-045 Nessuna rotta scura: `isLightRoute` sempre true tramite `UNLISTED_ROUTES_LIGHT`, struttura mantenuta.
+- D-045 Nessuna rotta scura: `isLightRoute` sempre true tramite `UNLISTED_ROUTES_LIGHT`, struttura mantenuta. Sostituita da D-054 (struttura rimossa).
 - D-046 Hero e chiusura del blog con testi nuovi; meta SEO invariati; niente filtri.
-- D-047 Articolo: niente "Torna al blog" né CTA nella card autore; categoria come chip nell'hero.
+- D-047 Articolo: niente "Torna al blog" né CTA nella card autore; categoria come chip nell'hero. Form generico senza oggetto da D-055.
 - D-048 Partner tecnico: tolta l'illustrazione `HeroVisual`, prezzi dai pacchetti, nuova chiusura con CTA al calendario e form con oggetto.
 - D-049 Supporto app e 404 senza form contatti; 404 con 6 card e link per agenti.
 - D-050 Dati e parser markdown del blog condivisi tra React e prerender.

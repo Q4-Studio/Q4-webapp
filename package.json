@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "vite",
     "dev:blog-preview": "vite --host 127.0.0.1 --port 3000",
-    "build": "vite build && tsx scripts/prerender.ts && node scripts/verify-gtm-output.mjs && node scripts/verify-agentic.mjs",
+    "build": "tsx scripts/verify-blog-markdown.ts && vite build && tsx scripts/prerender.ts && node scripts/verify-gtm-output.mjs && node scripts/verify-agentic.mjs",
     "preview": "vite preview",
+    "verify:blog-markdown": "tsx scripts/verify-blog-markdown.ts",
     "optimize:images": "node scripts/optimize-images.mjs",
     "indexnow:ping": "node scripts/indexnow-ping.mjs"
   },

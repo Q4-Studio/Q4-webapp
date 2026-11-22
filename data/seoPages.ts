@@ -1076,9 +1076,14 @@ export const asHeading = (text: string): string => (/[.!?:]$/.test(text.trim()) 
 /** Kicker dell'hero dell'articolo: "Risorse · <hub del cluster>". */
 export const resourceKicker = (page: SeoPage): string => `${resourceArticleCopy.kicker} · ${clusterHub[page.cluster].label}`;
 
-const geoSlugs = new Set(geoPageOrder);
+/** Tema e città di ogni pagina della matrice geografica (`<tema>-<città>`). */
+const geoParts = new Map<string, { topic: string; city: string }>(
+  geoTopics.flatMap((topic) => geoCities.map((city) => [`${topic.slug}-${city.slug}`, { topic: topic.slug, city: city.slug }] as const))
+);
 /** Pagina della matrice geografica (tema × città). */
-export const isGeoSeoPage = (slug: string): boolean => geoSlugs.has(slug);
+export const isGeoSeoPage = (slug: string): boolean => geoParts.has(slug);
+/** Tema di una pagina geografica (slug senza la città), `undefined` per le tematiche. */
+export const geoTopicSlug = (slug: string): string | undefined => geoParts.get(slug)?.topic;
 
 /**
  * Gruppi dell'indice /risorse: uno per pagina hub (i cluster C e D puntano
@@ -1108,16 +1113,25 @@ export const resourceGroups: Array<{ id: string; hub: { path: string; label: str
 export const resourcePagesInOrder: SeoPage[] = resourceGroups.flatMap((g) => g.pages);
 
 /**
- * "Argomenti correlati": prima le altre pagine dello stesso cluster (le
- * tematiche prima di quelle geografiche, che altrimenti riempirebbero da sole
- * i tre posti), poi le rimanenti solo se non bastano a fare `count`.
+ * "Argomenti correlati", in ordine di priorità:
+ * 1. pagine geografiche: stesso tema in altre città, poi stessa città con
+ *    altri temi dello stesso hub;
+ * 2. pagine tematiche dello stesso hub, a partire da quella che segue la
+ *    pagina corrente (così le tematiche non ricevono tutte le stesse tre);
+ * 3. le altre pagine dello stesso hub, poi il resto.
+ * La pagina corrente non compare mai.
  */
 export const getRelatedSeoPages = (page: SeoPage, count = 3): SeoPage[] => {
+  const hubPath = clusterHub[page.cluster].path;
   const others = seoPages.filter((p) => p.slug !== page.slug);
-  const sameCluster = others.filter((p) => p.cluster === page.cluster);
-  return [
-    ...sameCluster.filter((p) => !isGeoSeoPage(p.slug)),
-    ...sameCluster.filter((p) => isGeoSeoPage(p.slug)),
-    ...others.filter((p) => p.cluster !== page.cluster),
-  ].slice(0, count);
+  const sameHub = others.filter((p) => clusterHub[p.cluster].path === hubPath);
+  const geo = geoParts.get(page.slug);
+  const sameTopic = geo ? sameHub.filter((p) => geoParts.get(p.slug)?.topic === geo.topic) : [];
+  const sameCity = geo ? sameHub.filter((p) => geoParts.get(p.slug)?.city === geo.city) : [];
+  // Tematiche dello stesso hub ruotate sulla posizione della pagina corrente.
+  const thematic = seoPages.filter((p) => !isGeoSeoPage(p.slug) && clusterHub[p.cluster].path === hubPath);
+  const start = Math.max(0, thematic.findIndex((p) => p.slug === page.slug) + 1);
+  const rotatedThematic = [...thematic.slice(start), ...thematic.slice(0, start)].filter((p) => p.slug !== page.slug);
+  const ordered = [...sameTopic, ...sameCity, ...rotatedThematic, ...sameHub, ...others];
+  return ordered.filter((p, i) => ordered.findIndex((q) => q.slug === p.slug) === i).slice(0, count);
 };

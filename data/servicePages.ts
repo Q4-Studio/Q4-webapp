@@ -132,6 +132,16 @@ export const trackingPackages: TrackingPackage[] = ([
   { title: 'Infrastruttura e lettura dati', price: '100 €/mese', priceFrom: true, timing: 'Il container resta attivo e monitorato nel tempo.', items: ['Container monitorato, con alert se qualcosa si interrompe', 'Aggiornamenti quando le piattaforme cambiano le regole', 'Report mensile con la lettura dei dati, non solo i numeri'], note: 'Disdetta libera. Nessun vincolo di durata.' },
 ] as TrackingPackageInput[]).map((pack) => ({ ...pack, priceLabel: pack.priceFrom ? 'Prezzo da' : 'Prezzo' }));
 
+/** Pacchetto del tracciamento per titolo (non per posizione nell'elenco). */
+export const trackingPackage = (title: 'Audit tracciamento' | 'Setup server-side' | 'Infrastruttura e lettura dati'): TrackingPackage => {
+  const pack = trackingPackages.find((p) => p.title === title);
+  if (!pack) throw new Error(`Pacchetto tracciamento mancante: ${title}`);
+  return pack;
+};
+
+/** Prezzo con il "da" dei prezzi di partenza: "da 1.500 €" oppure "490 €". */
+export const priceWithFrom = (pack: Pick<TrackingPackage, 'price' | 'priceFrom'>): string => (pack.priceFrom ? `da ${pack.price}` : pack.price);
+
 /**
  * Offer schema.org di un pacchetto tracciamento: `price` numerico per i
  * prezzi fissi, `priceSpecification.minPrice` per quelli "da …".
@@ -164,17 +174,28 @@ export const sitesOffer = {
  * Prezzi delle card servizi in home, derivati dai pacchetti: tracciamento
  * (audit e setup), automazioni (setup minimo e forchetta dei canoni), siti.
  */
-const [trackingAudit, trackingSetup] = trackingPackages;
+const trackingAudit = trackingPackage('Audit tracciamento');
+const trackingSetup = trackingPackage('Setup server-side');
 const setupAmounts = aiAgentsPackages.map((pack) => euroAmount(pack.setup.value));
 const feeAmounts = aiAgentsPackages.map((pack) => euroAmount(pack.fee.value));
+/**
+ * Prezzi derivati dei pacchetti automazioni: setup minimo ("490 €") e
+ * forchetta dei canoni ("59" e "200", senza unità). Usati dalla home e
+ * dalle pagine aziendali (data/companyPages.ts).
+ */
+export const automationsPricing = {
+  setupFrom: formatEuro(Math.min(...setupAmounts)),
+  feeMin: formatNumber(Math.min(...feeAmounts)),
+  feeMax: formatNumber(Math.max(...feeAmounts)),
+};
 export const homePriceRows = {
   tracking: [
-    { label: 'Audit da', value: trackingAudit!.price }, // dicitura del mockup della home (D-027)
-    { label: trackingSetup!.priceFrom ? 'Setup da' : 'Setup', value: trackingSetup!.price },
+    { label: 'Audit da', value: trackingAudit.price }, // dicitura del mockup della home (D-027)
+    { label: trackingSetup.priceFrom ? 'Setup da' : 'Setup', value: trackingSetup.price },
   ] as PriceItem[],
   automations: [
-    { label: 'Setup da', value: formatEuro(Math.min(...setupAmounts)) },
-    { label: 'Canone', value: `${formatNumber(Math.min(...feeAmounts))}–${formatNumber(Math.max(...feeAmounts))} €/mese` },
+    { label: 'Setup da', value: automationsPricing.setupFrom },
+    { label: 'Canone', value: `${automationsPricing.feeMin}–${automationsPricing.feeMax} €/mese` },
   ] as PriceItem[],
   sites: `da ${sitesStartingPrice}`,
 };

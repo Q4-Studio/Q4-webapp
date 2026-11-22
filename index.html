@@ -85,44 +85,8 @@
     <link rel="preload" href="/logo.webp" as="image" fetchpriority="high">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Schema.org Structured Data (JSON-LD) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": ["Organization", "ProfessionalService"],
-      "name": "Q4 Studio",
-      "url": "https://www.q4.studio",
-      "logo": "https://www.q4.studio/logo.png",
-      "image": "https://www.q4.studio/logo.png",
-      "description": "Studio tecnico per tracciamento server-side, Consent Mode, automazioni CRM e agenti AI per PMI italiane.",
-      "vatID": "IT03033250352",
-      "email": "info@q4.studio",
-      "telephone": "+39 338 357 6286",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "contactType": "customer service",
-        "email": "info@q4.studio",
-        "telephone": "+39 338 357 6286",
-        "availableLanguage": ["it", "en"]
-      },
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Reggio Emilia",
-        "addressRegion": "Emilia-Romagna",
-        "addressCountry": "IT"
-      },
-      "areaServed": [
-        "IT",
-        { "@type": "City", "name": "Reggio Emilia" },
-        { "@type": "City", "name": "Verona" }
-      ],
-      "sameAs": [
-        "https://www.facebook.com/q4studio",
-        "https://www.instagram.com/q4.studio",
-        "https://www.linkedin.com/company/q4studio"
-      ]
-    }
-    </script>
+    <!-- Schema Organization: lo aggiunge scripts/prerender.ts in dist/index.html
+         (e in ogni pagina prerenderata) da `company` di data/companyPages.ts. -->
     <!-- Schema FAQPage della home: lo aggiunge scripts/prerender.ts in dist/index.html
          da `homeFaqs` (data/servicePages.ts), la stessa costante delle FAQ visibili. -->
 

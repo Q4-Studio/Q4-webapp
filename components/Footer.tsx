@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, Instagram, Linkedin, Phone, Mail } from 'lucide-react';
 import MagneticButton from './MagneticButton';
-import { OBFUSCATED, decode } from '../utils/obfuscate';
+import { company } from '../data/companyPages';
 import { caseStudiesPath } from '../data/caseStudies';
 import { trackCtaClick } from '../utils/dataLayer';
 import { onInternalLink } from '../utils/navigate';
@@ -55,13 +55,9 @@ const Footer: React.FC<FooterProps> = ({ showCta = true, tone = 'dark' }) => {
   const buttonWrapperRef = useRef<HTMLDivElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-
-  useEffect(() => {
-    setPhone(decode(OBFUSCATED.phone));
-    setEmail(decode(OBFUSCATED.email));
-  }, []);
+  // Recapiti, P.IVA, sede e profili da `company` (data/companyPages.ts), gli
+  // stessi dello schema Organization e delle pagine aziendali (D-053).
+  const { phone, email } = company;
 
   useEffect(() => {
     if (!footerRef.current) return;
@@ -170,7 +166,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true, tone = 'dark' }) => {
                 </p>
                 <div className="flex flex-col gap-2 mt-4 mb-4">
                   {phone && (
-                    <a href={`tel:${phone.replace(/\s/g, '')}`} className={`flex items-center gap-2 justify-center md:justify-start ${t.contact} transition-colors`}>
+                    <a href={company.phoneHref} className={`flex items-center gap-2 justify-center md:justify-start ${t.contact} transition-colors`}>
                       <Phone className="w-4 h-4 flex-shrink-0" />
                       <span>{phone}</span>
                     </a>
@@ -184,7 +180,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true, tone = 'dark' }) => {
                 </div>
                 <div className="flex gap-4 mt-6 justify-center md:justify-start">
                     <a
-                        href="https://www.instagram.com/q4.studio"
+                        href={company.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:scale-110 ${t.social}`}
@@ -192,7 +188,7 @@ const Footer: React.FC<FooterProps> = ({ showCta = true, tone = 'dark' }) => {
                         <Instagram className="w-5 h-5" />
                     </a>
                     <a
-                        href="https://www.linkedin.com/company/q4studio/about/"
+                        href={company.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:scale-110 ${t.social}`}
@@ -249,8 +245,8 @@ const Footer: React.FC<FooterProps> = ({ showCta = true, tone = 'dark' }) => {
         </div>
         
         <div ref={bottomRef} className={`w-full flex flex-col md:flex-row justify-between items-center gap-2 mt-20 text-[11px] ${t.bottom}`}>
-            <span>© {new Date().getFullYear()} Q4 Studio. Tutti i diritti riservati. • P.I. 03033250352</span>
-            <span>Reggio Emilia</span>
+            <span>© {new Date().getFullYear()} Q4 Studio. Tutti i diritti riservati. • P.I. {company.vatNumber}</span>
+            <span>{company.city}</span>
         </div>
       </div>
     </footer>

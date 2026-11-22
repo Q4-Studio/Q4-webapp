@@ -1,4 +1,4 @@
-import { aiAgentsPackages, euroAmount, formatEuro, formatNumber, sitesStartingPrice, trackingPackages } from './servicePages';
+import { automationsPricing, priceWithFrom, sitesStartingPrice, trackingPackage } from './servicePages';
 
 /* ------------------------------------------------------------------ */
 /* Testi e dati delle pagine aziendali chiare: /contact (Contatti.html), */
@@ -15,24 +15,31 @@ export const company = {
   city: 'Reggio Emilia',
   region: 'Emilia-Romagna',
   vatId: 'IT03033250352',
-  /** P.IVA senza prefisso paese, come nel testo legale della privacy. */
-  vatNumber: '03033250352',
+  /** P.IVA senza prefisso paese (testo legale della privacy, footer), derivata da `vatId`. */
+  get vatNumber(): string {
+    return this.vatId.replace(/^IT/, '');
+  },
   email: 'info@q4.studio',
   phone: '+39 338 357 6286',
   phoneHref: 'tel:+393383576286',
   linkedin: 'https://www.linkedin.com/company/q4studio',
   instagram: 'https://www.instagram.com/q4.studio',
+  facebook: 'https://www.facebook.com/q4studio',
   founder: 'Sebastiano Riva',
   founderRole: 'Fondatore, Q4 Studio',
   /** Foto del fondatore già pubblicata in public/team (sezione team della vecchia home). */
   founderPhoto: '/team/sebastiano.webp',
 };
 
-const [trackingAudit, trackingSetup] = trackingPackages;
-const setupAmounts = aiAgentsPackages.map((pack) => euroAmount(pack.setup.value));
-const feeAmounts = aiAgentsPackages.map((pack) => euroAmount(pack.fee.value));
-/** "Da 1.500 €" per i prezzi "da", "490 €" per quelli fissi. */
-const priceText = (price: string, from: boolean) => (from ? `Da ${price}` : price);
+const trackingAudit = trackingPackage('Audit tracciamento');
+const trackingSetup = trackingPackage('Setup server-side');
+/** "Da 1.500 €" per i prezzi "da", "490 €" per quelli fissi (inizio frase). */
+const priceText = (pack: Parameters<typeof priceWithFrom>[0]) => {
+  const text = priceWithFrom(pack);
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+/** Didascalia della fila di cifre: il "da" sta nella didascalia, non nel valore. */
+const priceKind = (pack: Parameters<typeof priceWithFrom>[0]) => (pack.priceFrom ? 'prezzo di partenza' : 'prezzo fisso');
 const sentence = (text: string) => (/[.!?]$/.test(text.trim()) ? text.trim() : `${text.trim()}.`);
 
 /* --------------------------------- Contatti ------------------------------- */
@@ -79,18 +86,18 @@ export const contactPageCopy = {
     title: 'Punti di partenza.',
     items: [
       {
-        title: trackingAudit!.title,
-        text: `${priceText(trackingAudit!.price, trackingAudit!.priceFrom)}, ${trackingAudit!.timing}. Il documento resta tuo anche se non procedi.`,
+        title: trackingAudit.title,
+        text: `${priceText(trackingAudit)}, ${trackingAudit.timing}. Il documento resta tuo anche se non procedi.`,
         href: '/tracciamento-server-side',
       },
       {
-        title: trackingSetup!.title,
-        text: `${priceText(trackingSetup!.price, trackingSetup!.priceFrom)}. ${sentence(trackingSetup!.timing)}`,
+        title: trackingSetup.title,
+        text: `${priceText(trackingSetup)}. ${sentence(trackingSetup.timing)}`,
         href: '/tracciamento-server-side',
       },
       {
         title: 'Automazioni e agenti AI',
-        text: `Setup da ${formatEuro(Math.min(...setupAmounts))}, canone da ${formatNumber(Math.min(...feeAmounts))} a ${formatNumber(Math.max(...feeAmounts))} €/mese.`,
+        text: `Setup da ${automationsPricing.setupFrom}, canone da ${automationsPricing.feeMin} a ${automationsPricing.feeMax} €/mese.`,
         href: '/agenti-ai',
       },
     ] as CompanyCard[],
@@ -120,7 +127,7 @@ export const aboutPageCopy = {
     items: [
       {
         title: 'Prezzi pubblici',
-        text: `Audit del tracciamento ${trackingAudit!.price}, setup server-side ${trackingSetup!.priceFrom ? 'da ' : ''}${trackingSetup!.price}, siti web da ${sitesStartingPrice}. Canoni dichiarati prima di iniziare.`,
+        text: `Audit del tracciamento ${priceWithFrom(trackingAudit)}, setup server-side ${priceWithFrom(trackingSetup)}, siti web da ${sitesStartingPrice}. Canoni dichiarati prima di iniziare.`,
       },
       {
         title: 'Fatto con l’AI, non dall’AI',
@@ -134,8 +141,8 @@ export const aboutPageCopy = {
   },
   /** Fila di cifre sotto i principi: i tre prezzi pubblici di partenza. */
   figures: [
-    { value: trackingAudit!.price, caption: `Audit del tracciamento, ${trackingAudit!.timing}.` },
-    { value: trackingSetup!.price, caption: `Setup server-side, ${trackingSetup!.priceFrom ? 'prezzo di partenza' : 'prezzo fisso'}.` },
+    { value: trackingAudit.price, caption: `Audit del tracciamento, ${trackingAudit.priceFrom ? `${priceKind(trackingAudit)}, ` : ''}${trackingAudit.timing}.` },
+    { value: trackingSetup.price, caption: `Setup server-side, ${priceKind(trackingSetup)}.` },
     { value: sitesStartingPrice, caption: 'Siti web con AI, prezzo di partenza.' },
   ],
   companyData: {
@@ -187,6 +194,10 @@ export const privacyPageCopy = {
   title: 'Privacy & Cookie Policy.',
   lastUpdated: '5 gennaio 2025',
   lead: 'Come raccogliamo, usiamo e proteggiamo i dati personali di chi visita q4.studio.',
+  /** Lead dell'hero con la data di aggiornamento (componente e mirror statico). */
+  get heroLead(): string {
+    return `${this.lead} Ultimo aggiornamento: ${this.lastUpdated}.`;
+  },
   privacyTitle: 'Privacy Policy.',
   cookieTitle: 'Cookie Policy.',
 };
@@ -351,8 +362,3 @@ export const cookieSections: LegalSection[] = [
     ],
   },
 ];
-
-/** Testo semplice di un frammento legale (per markdown e controlli). */
-export const legalPlainText = (text: LegalText): string =>
-  text.map((part) => (typeof part === 'string' ? part : 'b' in part ? part.b : 'a' in part ? part.a : company.email)).join('');
-

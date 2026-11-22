@@ -94,7 +94,12 @@ const BlogArticle: React.FC<BlogArticleProps> = ({ post, posts }) => {
 
   // Link diretto a una sezione (/blog/slug#titolo): ci scorriamo dopo il render.
   useEffect(() => {
-    const targetId = decodeURIComponent(window.location.hash.slice(1));
+    let targetId = '';
+    try {
+      targetId = decodeURIComponent(window.location.hash.slice(1));
+    } catch {
+      return; // hash malformato (es. `#%E0`): nessuna sezione da raggiungere
+    }
     if (!targetId || targetId === 'contatti') return;
     const frame = window.requestAnimationFrame(() => {
       document.getElementById(targetId)?.scrollIntoView({ behavior: 'auto', block: 'start' });

@@ -14,6 +14,7 @@ import {
 import SEOHead from './SEOHead';
 import Reveal from './home2/Reveal';
 import CloseCta from './home2/CloseCta';
+import SubHero from './home2/SubHero';
 import { OkIcon, PaperBlock } from './home2/primitives';
 import ResourceCard, { IconBox } from './ResourceCard';
 import { trackCtaClick } from '../utils/dataLayer';
@@ -36,44 +37,9 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
   const pageUrl = `${siteUrl}${resourcesPath}/${page.slug}`;
   const hub = clusterHub[page.cluster];
   const relatedPages = getRelatedSeoPages(page);
-  const titleWords = page.title.split(' ');
-  const leadDelay = 0.15 + titleWords.length * 0.07 + 0.2;
 
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: page.title,
-    description: page.description,
-    provider: {
-      '@type': 'Organization',
-      name: 'Q4 Studio',
-      url: siteUrl
-    },
-    areaServed: 'IT',
-    url: pageUrl,
-    mainEntityOfPage: pageUrl
-  };
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: page.faqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer
-      }
-    }))
-  };
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Risorse', item: `${siteUrl}${resourcesPath}` },
-      { '@type': 'ListItem', position: 3, name: page.title, item: pageUrl }
-    ]
-  };
+  // Schema JSON-LD solo nello <head> del mirror statico (scripts/prerender.ts): qui
+  // un secondo blocco identico finirebbe nel DOM dopo il mount (D-052).
 
   const profile = [
     { icon: Users, title: copy.audience, text: page.audience },
@@ -84,44 +50,21 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
   return (
     <article className="relative">
       <SEOHead title={page.metaTitle} description={page.description} url={pageUrl} type="article" />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-      {/* Hero scuro corto: id="hero" tiene bianchi logo e hamburger della nav. */}
-      <header id="hero" className="dark-block relative flex min-h-[560px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[680px] md:rounded-b-[56px]">
-        <div className="aur aur-1" aria-hidden="true" />
-        <div className="aur aur-2" aria-hidden="true" />
-        <div className="aur aur-3" aria-hidden="true" />
-        <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.15) 50%, rgba(5,5,5,.75) 100%)' }} />
-        <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-20 pt-36 md:px-12 md:pb-24 md:pt-40">
-          <p className="w-block text-[17px] font-medium text-purple-300" style={{ animationDelay: '0.05s' }}>{resourceKicker(page)}</p>
-          <h1 className="h-sub mt-8 max-w-[1250px]">
-            {titleWords.map((word, i) => (
-              <React.Fragment key={`${word}-${i}`}>
-                <span className="w" style={{ animationDelay: `${(0.15 + i * 0.07).toFixed(2)}s` }}>{word}</span>{' '}
-              </React.Fragment>
-            ))}
-          </h1>
-          <p className="w-block lead mt-12 max-w-[640px] text-gray-300" style={{ animationDelay: `${leadDelay.toFixed(2)}s` }}>
-            {page.description}
-          </p>
-          {/* Link spoke→hub: ogni risorsa porta alla pagina di offerta del suo cluster. */}
-          <div className="w-block mt-12" style={{ animationDelay: `${(leadDelay + 0.15).toFixed(2)}s` }}>
-            <a
-              href={hub.path}
-              onClick={(event) => {
-                trackCtaClick({ cta_location: 'resource_page_hero', cta_label: copy.heroCta, cta_destination: hub.path });
-                onInternalLink(hub.path)(event);
-              }}
-              className="btn btn-white"
-            >
-              {copy.heroCta}
-              <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
-            </a>
-          </div>
-        </div>
-      </header>
+      <SubHero kicker={resourceKicker(page)} title={page.title} lead={page.description} minHeightClass="min-h-[560px] md:min-h-[680px]">
+        {/* Link spoke→hub: ogni risorsa porta alla pagina di offerta del suo cluster. */}
+        <a
+          href={hub.path}
+          onClick={(event) => {
+            trackCtaClick({ cta_location: 'resource_page_hero', cta_label: copy.heroCta, cta_destination: hub.path });
+            onInternalLink(hub.path)(event);
+          }}
+          className="btn btn-white"
+        >
+          {copy.heroCta}
+          <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+        </a>
+      </SubHero>
 
       {/* Risposta diretta: blocco carta con la risposta in una card bianca. */}
       <section className="px-6 pb-24 pt-24 md:pb-[160px] md:pt-[160px]">
@@ -144,7 +87,7 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
           <Reveal as="h2" className="h-l max-w-[1100px]">{copy.profile}</Reveal>
           <div className="mt-16 grid grid-cols-1 gap-6 md:mt-[120px] lg:grid-cols-3">
             {profile.map((item, i) => (
-              <Reveal key={item.title} delay={i * 0.1} className="flex min-h-[360px] flex-col gap-7 rounded-[32px] bg-[#f7f5fb] px-7 py-8 md:p-11">
+              <Reveal key={item.title} delay={i * 0.1} className="bc static min-h-[360px] gap-7">
                 <IconBox icon={item.icon} />
                 <div className="mt-auto">
                   <h3 style={CARD_TITLE_STYLE}>{item.title}</h3>
@@ -229,15 +172,17 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
             <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">{asSentence(page.solution)}</Reveal>
           </div>
           <Reveal delay={0.12}>
-            <div className="mock">
+            {/* Righe ferme (`.ev.static`): niente evidenziazione ciclica, che
+                nel mockup della home simula eventi in arrivo, non passaggi. */}
+            <ol className="mock m-0 list-none p-0">
               {page.services.map((service, i) => (
-                <div key={service} className="ev">
+                <li key={service} className="ev static">
                   <OkIcon />
                   {service}
                   <em>{i + 1}</em>
-                </div>
+                </li>
               ))}
-            </div>
+            </ol>
           </Reveal>
         </PaperBlock>
       </section>

@@ -16,9 +16,10 @@ import { getCaseStudyBySlug, caseStudiesPath } from './data/caseStudies';
 import { captureAttribution } from './utils/attribution';
 import { trackCtaClick } from './utils/dataLayer';
 import { onInternalLink, scrollToId, scrollToTop } from './utils/navigate';
-import { isLightRoute } from './data/lightRoutes';
 import { blogIndexCopy } from './data/extraPages';
-import { useDocumentTheme } from './hooks/useDocumentTheme';
+
+/** Hash che sono rotte (pagine aperte come `/#privacy`), non sezioni da raggiungere. */
+const HASH_ROUTES = new Set(['', 'home', 'privacy', 'app-support', '404', 'contatti']);
 
 const Blog = lazy(() => import('./components/Blog'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
@@ -256,7 +257,15 @@ const App: React.FC = () => {
       // articoli. Scorriamo in alto solo quando cambia davvero l'URL, altrimenti
       // un aggiornamento dati riporterebbe l'utente in cima mentre legge.
       if (previousRouteRef.current !== route) {
+        const previousPath = previousRouteRef.current?.split('#')[0];
         previousRouteRef.current = route;
+        // Id della sezione nell'hash; un hash malformato (`%E0`) vale come nessuno.
+        let targetId = '';
+        try {
+          targetId = decodeURIComponent(hash);
+        } catch {
+          targetId = '';
+        }
         // #contatti su qualsiasi path: le pagine chiare hanno il form in fondo.
         if (hash === 'contatti') {
           const scrollWhenReady = (attemptsLeft: number) => {
@@ -265,6 +274,9 @@ const App: React.FC = () => {
             }
           };
           setTimeout(() => scrollWhenReady(20), 100);
+        } else if (previousPath === path && targetId && !HASH_ROUTES.has(hash) && scrollToId(targetId)) {
+          // Cambia solo l'hash sullo stesso path (Indietro/Avanti tra i titoli
+          // dell'indice dell'articolo): si va alla sezione, non in cima.
         } else {
           window.scrollTo({ top: 0 });
         }
@@ -408,11 +420,6 @@ const App: React.FC = () => {
     { label: 'Blog', active: currentPage === 'blog' || currentPage === 'blog-article', onClick: () => navigateTo('blog') },
   ];
 
-  // Sfondo di html/body e theme-color: da data/lightRoutes.ts, lo stesso
-  // elenco del prerender. Dal 2026-11-22 tutte le rotte sono chiare (anche
-  // privacy e supporto app come hash, e la 404).
-  useDocumentTheme(isLightRoute(typeof window !== 'undefined' ? window.location.pathname : '/'));
-
   return (
     <main className="w-full min-h-screen bg-white text-white selection:bg-purple-600 selection:text-white cursor-none">
       <SpeedInsights />
@@ -515,11 +522,12 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {/* Articolo: l'oggetto della richiesta è l'articolo da cui arriva il contatto. */}
+          {/* Articolo: form generico, senza oggetto. `subject` rende la richiesta
+              una "service inquiry" negli analytics, e un articolo non è un servizio (D-055). */}
           {currentPage === 'blog-article' && currentArticle && (
             <div className="home-light relative w-full">
               <BlogArticle post={currentArticle} posts={blogPosts} />
-              <ContactForm subject={currentArticle.title} showHeader={false} tone="light" />
+              <ContactForm showHeader={false} tone="light" />
               <Footer showCta={false} tone="light" />
             </div>
           )}

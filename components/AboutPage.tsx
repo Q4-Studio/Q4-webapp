@@ -23,19 +23,13 @@ const LINK_CLASS = 'text-[#0a0a0a] underline decoration-purple-400 underline-off
 
 const AboutPage: React.FC = () => {
   const pageUrl = `${siteUrl}/about`;
-  const aboutSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'AboutPage',
-    name: copy.metaTitle,
-    url: pageUrl,
-    mainEntity: { '@id': `${siteUrl}/#organization` },
-  };
+  // Schema JSON-LD solo nello <head> del mirror statico (scripts/prerender.ts): qui
+  // un secondo blocco identico finirebbe nel DOM dopo il mount (D-052).
   const { founder, principles, figures, companyData, close } = copy;
 
   return (
     <section className="relative">
       <SEOHead title={copy.metaTitle} description={copy.metaDescription} url={pageUrl} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema) }} />
 
       <SubHero kicker={copy.kicker} title={copy.title} lead={copy.lead} />
 
@@ -72,7 +66,7 @@ const AboutPage: React.FC = () => {
           <Reveal as="h2" id="principi" className="h-l max-w-[1100px]">{principles.title}</Reveal>
           <div className="mt-16 grid grid-cols-1 gap-6 md:mt-[120px] lg:grid-cols-3">
             {principles.items.map((item, i) => (
-              <Reveal key={item.title} delay={i * 0.1} className="flex min-h-[320px] flex-col gap-7 rounded-[32px] bg-[#f7f5fb] px-7 py-8 md:min-h-[360px] md:p-11">
+              <Reveal key={item.title} delay={i * 0.1} className="bc static min-h-[320px] gap-7 md:min-h-[360px]">
                 <IconBox icon={PRINCIPLE_ICONS[i] ?? FileText} />
                 <div className="mt-auto">
                   <h3 style={CARD_TITLE_STYLE}>{item.title}</h3>

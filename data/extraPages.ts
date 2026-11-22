@@ -1,6 +1,6 @@
 import { caseStudiesPath } from './caseStudies';
 import { resourcesPath } from './seoPages';
-import { trackingPackages } from './servicePages';
+import { euroAmount, formatEuro, trackingPackage } from './servicePages';
 
 /* ------------------------------------------------------------------ */
 /* Testi delle pagine chiare senza mockup del cliente: blog (indice e   */
@@ -12,7 +12,11 @@ import { trackingPackages } from './servicePages';
 /* docs/specs/remaining-light-pages.md, da confermare con Q4 Studio.    */
 /* ------------------------------------------------------------------ */
 
-const [trackingAudit, trackingSetup] = trackingPackages;
+const trackingAudit = trackingPackage('Audit tracciamento');
+const trackingSetup = trackingPackage('Setup server-side');
+/** Esempio di rivendita del partner: il margine si ricava dal prezzo del setup. */
+const PARTNER_RESALE_EXAMPLE = 2500;
+const partnerMargin = PARTNER_RESALE_EXAMPLE - euroAmount(trackingSetup.price);
 
 /* ----------------------------------- Blog ---------------------------------- */
 
@@ -68,7 +72,9 @@ export const blogAuthors: Record<string, { jobTitle: string; sameAs: string[] }>
 
 /** "2026-08-18" → "18 agosto 2026" (o "18 ago 2026" con `short`). */
 export const formatPostDate = (date: string, short = false): string =>
-  new Date(date).toLocaleDateString('it-IT', { day: 'numeric', month: short ? 'short' : 'long', year: 'numeric' });
+  // timeZone UTC: "2026-01-05" è letto come mezzanotte UTC; formattato nel fuso
+  // locale diventerebbe il 4 gennaio a ovest di Greenwich.
+  new Date(date).toLocaleDateString('it-IT', { day: 'numeric', month: short ? 'short' : 'long', year: 'numeric', timeZone: 'UTC' });
 
 interface RelatedCandidate { slug: string; category: string; date: string }
 
@@ -130,7 +136,7 @@ export const technicalPartnerCopy = {
   },
   pricing: {
     title: 'Sul prezzo.',
-    text: `Non sono un freelance a basso costo, e probabilmente non ti serve. Il mio prezzo è pensato perché tu lo ricarichi: se rivendi un setup a 2.500 € e il tuo costo è ${trackingSetup.price}, hai marginato mille euro su un lavoro che non sapevi fare.`,
+    text: `Non sono un freelance a basso costo, e probabilmente non ti serve. Il mio prezzo è pensato perché tu lo ricarichi: se rivendi un setup a ${formatEuro(PARTNER_RESALE_EXAMPLE)} e il tuo costo è ${trackingSetup.price}, hai marginato ${formatEuro(partnerMargin)} su un lavoro che non sapevi fare.`,
   },
   about: {
     title: 'Chi sono.',
