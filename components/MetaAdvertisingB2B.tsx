@@ -1,81 +1,341 @@
 import React from 'react';
-import { ArrowRight, BarChart3, GitBranch, Target } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Bot, ChartColumn, Database, Layers, MessageSquare, Plus, RefreshCw, Search, Server, Target } from 'lucide-react';
 import SEOHead from './SEOHead';
-import HeroVisual, { HeroAmbient } from './HeroVisual';
+import Reveal from './home2/Reveal';
+import CloseCta from './home2/CloseCta';
 import { siteUrl } from '../data/seoPages';
 import { trackCtaClick } from '../utils/dataLayer';
-import { useHeroReveal } from '../hooks/useHeroReveal';
+import { useLightDocument } from '../hooks/useLightDocument';
 
+/* ------------------------------------------------------------------ */
+/* Pagina "Meta Ads B2B" sul sistema chiaro (mockup "Meta Ads B2B"):   */
+/* hero scuro con aurora, manifesto, tre cifre, metodo, blocco carta   */
+/* con il funnel, flusso dal click al segnale, bento agenti AI, FAQ e  */
+/* chiusura verso il tracciamento. Classi .home-light in index.css;    */
+/* reveal allo scroll via <Reveal>.                                    */
+/* ------------------------------------------------------------------ */
+
+/** FAQ del mockup (anche nello schema FAQPage). */
 export const metaAdvertisingFaqs = [
-  { question: "In pratica, cos'è la B2B Lead Generation su Meta?", answer: "È l'uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate sul profilo del cliente giusto, messaggio, form, CRM e segnali di qualità." },
-  { question: 'Perché collegare Meta Ads, CRM e automazioni?', answer: "Perché il CRM restituisce segnali più utili dell'invio form. Quando questi dati rientrano nel modello di ottimizzazione, le campagne possono cercare contatti più vicini al valore commerciale reale." },
+  {
+    question: 'In pratica, cos’è la B2B Lead Generation su Meta?',
+    answer: 'È l’uso strategico di Facebook e Instagram Ads per acquisire contatti aziendali qualificati, con campagne progettate su cliente giusto, messaggio, form, CRM e segnali di qualità.',
+  },
+  {
+    question: 'Perché collegare Meta Ads, CRM e automazioni?',
+    answer: 'Perché il CRM restituisce segnali più utili dell’invio form. Quando rientrano nel modello di ottimizzazione, le campagne cercano contatti più vicini al valore commerciale reale.',
+  },
+  {
+    question: 'Lavorate anche con Google Ads?',
+    answer: 'Sì. Lead generation e high ticket si gestiscono su Meta Ads e Google Ads, con lo stesso approccio: segnali puliti e lettura dei dati commerciali.',
+  },
 ];
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: metaAdvertisingFaqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Meta Advertising B2B Lead Generation',
+  description: 'Consulenza Meta Ads per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali CRM.',
+  provider: { '@type': 'Organization', name: 'Q4 Studio', url: siteUrl },
+  areaServed: 'IT',
+  url: `${siteUrl}/meta-advertising-b2b`,
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Meta Advertising B2B', item: `${siteUrl}/meta-advertising-b2b` },
+  ],
+};
+
+const HERO_WORDS = ['Meta', 'Ads', 'B2B,', 'con', 'il', 'tracciamento', 'fatto', 'bene', 'a', 'monte.'];
+
+const figures = [
+  { value: '2', desc: 'Piattaforme: Meta Ads e Google Ads, con lo stesso approccio.', delay: 0 },
+  { value: '3', desc: 'Segnali di qualità verso l’algoritmo: domanda qualificante, risposta, stage commerciale.', delay: 0.12 },
+  { value: '3', desc: 'KPI di business: clienti, appuntamenti, opportunità. Non il costo per contatto.', delay: 0.2 },
+];
+
+const method = [
+  { icon: Search, title: 'Diagnosi prima delle campagne', desc: 'Audit di funnel, audience, offerta e gestione lead prima di aumentare budget o test creativi.', delay: 0 },
+  { icon: Layers, title: 'Sistema, non singola ads', desc: 'Campagne, CRM e follow-up progettati insieme per ridurre dispersione e tempi morti.', delay: 0.12 },
+  { icon: ChartColumn, title: 'Governance dei KPI', desc: 'Misuriamo contatti che diventano clienti, appuntamenti e opportunità, non solo costo per contatto.', delay: 0.2 },
+];
+
+const funnel = [
+  { label: 'Contatti', width: '100%', background: '#c4b5fd' },
+  { label: 'Qualificati', width: '72%', background: '#a78bfa' },
+  { label: 'Appuntamenti', width: '46%', background: '#9333ea' },
+  { label: 'Clienti', width: '26%', background: '#581c87' },
+];
+
+const flow = [
+  { icon: Target, title: 'Annuncio', desc: 'Meta o Google, sul cliente giusto.', delay: 0 },
+  { icon: MessageSquare, title: 'Form qualificante', desc: 'Domande che filtrano.', delay: 0.12 },
+  { icon: Database, title: 'CRM', desc: 'Instradamento e follow-up.', delay: 0.2 },
+  { icon: Server, title: 'Server-side', desc: 'Eventi di qualità inviati.', delay: 0 },
+  { icon: ChartColumn, title: 'Ottimizzazione', desc: 'L’algoritmo cerca chi compra.', delay: 0.12 },
+];
+
+const PAPER_BG = 'linear-gradient(160deg, #f7f5fb 0%, #ecdffb 100%)';
+
+type IconType = React.ComponentType<{ className?: string; strokeWidth?: number }>;
+
+const IconBox: React.FC<{ icon: IconType }> = ({ icon: Icon }) => (
+  <span className="ico" aria-hidden="true">
+    <Icon className="h-7 w-7" strokeWidth={1.7} />
+  </span>
+);
+
+const AgentCard: React.FC<{ icon: IconType; title: string; desc: string; items: string[]; background: string; delay?: number }> = ({ icon, title, desc, items, background, delay }) => (
+  <Reveal as="article" delay={delay} className="bc" style={{ minHeight: 640, paddingBottom: 110, background }}>
+    <div style={{ marginBottom: 28 }}><IconBox icon={icon} /></div>
+    <h3>{title}</h3>
+    <p className="d">{desc}</p>
+    <ul className="bul">
+      {items.map((item) => <li key={item}>{item}</li>)}
+    </ul>
+  </Reveal>
+);
+
+const NoteCard: React.FC<{ text: string; delay?: number }> = ({ text, delay }) => (
+  <Reveal as="article" delay={delay} className="bc ov justify-center" style={{ minHeight: 220, background: '#f7f5fb' }}>
+    <p className="d m-0 font-medium" style={{ color: '#0a0a0a', marginTop: 0 }}>{text}</p>
+  </Reveal>
+);
+
+const FunnelMock: React.FC = () => (
+  <div className="mock p-7 md:p-9">
+    <p className="mb-6 text-[13px] text-gray-500">Schema illustrativo del funnel</p>
+    {funnel.map((step) => (
+      <div key={step.label} className="mb-3.5 flex items-center gap-4">
+        <div
+          className="flex h-14 items-center whitespace-nowrap rounded-2xl px-5 text-[15px] font-semibold text-white"
+          style={{ width: step.width, background: step.background }}
+        >
+          {step.label}
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 const MetaAdvertisingB2B: React.FC = () => {
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: metaAdvertisingFaqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-    })),
-  };
-  const serviceSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: 'Meta Advertising B2B Lead Generation',
-    description: 'Consulenza Meta Ads per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali CRM.',
-    provider: { '@type': 'Organization', name: 'Q4 Studio', url: siteUrl },
-    areaServed: 'IT',
-    url: `${siteUrl}/meta-advertising-b2b`,
-  };
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Meta Advertising B2B', item: `${siteUrl}/meta-advertising-b2b` },
-    ],
+  useLightDocument();
+
+  const scrollToMethod = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const target = document.getElementById('metodo');
+    if (!target) return;
+    event.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  // Ordine dello stagger d'ingresso: eyebrow, h1, sottotitolo, visual.
-  const reveal = useHeroReveal<HTMLElement>(4);
+  return (
+    <article className="relative">
+      <SEOHead title="Meta Ads B2B e Lead Generation su Facebook e Instagram | Q4 Studio" description="Consulenza Meta Advertising per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali dal CRM." url={`${siteUrl}/meta-advertising-b2b`} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-  return <article className="relative overflow-hidden bg-[#050505] px-6 pb-28 pt-32 text-white md:pt-36">
-    <SEOHead title="Meta Ads B2B e Lead Generation su Facebook e Instagram | Q4 Studio" description="Consulenza Meta Advertising per aziende B2B: campagne orientate alla qualità del contatto, tracciamento server-side e segnali dal CRM." url={`${siteUrl}/meta-advertising-b2b`} />
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-    <div className="mx-auto max-w-6xl">
-      <header className="relative mb-16 md:mb-20">
-        <HeroAmbient variant="meta" />
-        <div className="relative z-10 grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-          <div>
-            <p ref={reveal(0)} className="eyebrow mb-5 text-blue-300">Meta Advertising · B2B</p>
-            <h1 ref={reveal(1)} className="hero-h1 mb-6 font-bold">Meta Ads B2B, con il tracciamento fatto bene a monte.</h1>
-            <div ref={reveal(2)} className="hero-subhead space-y-4 text-gray-300">
-              <p>Le campagne Meta per il B2B funzionano quando l&apos;obiettivo non è il costo per contatto ma la probabilità che quel contatto diventi cliente. Perché questo succeda, l&apos;algoritmo deve ricevere segnali corretti: ed è la parte che quasi nessuno sistema prima di aumentare il budget.</p>
-              <p>Seguiamo un numero limitato di progetti Meta B2B, di norma per aziende con cui lavoriamo già sul lato tecnico.</p>
-            </div>
-          </div>
-          <div ref={reveal(3)}>
-            <HeroVisual variant="meta" />
+      {/* Hero scuro: id="hero" fa restare bianchi logo e hamburger della nav
+          finché non si scorre oltre (vedi App.tsx). */}
+      <header id="hero" className="relative flex min-h-[640px] flex-col overflow-hidden rounded-b-[36px] bg-[#050505] text-white md:min-h-[780px] md:rounded-b-[56px]">
+        <div className="aur aur-1" aria-hidden="true" />
+        <div className="aur aur-2" aria-hidden="true" />
+        <div className="aur aur-3" aria-hidden="true" />
+        <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.15) 50%, rgba(5,5,5,.75) 100%)' }} />
+        <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-24 pt-36 md:px-12 md:pt-40">
+          <h1 className="h-sub max-w-[1250px] text-white" style={{ color: '#fff' }}>
+            {HERO_WORDS.map((word, i) => (
+              <React.Fragment key={`${word}-${i}`}>
+                <span className="w" style={{ animationDelay: `${(0.15 + i * 0.07).toFixed(2)}s` }}>{word}</span>{' '}
+              </React.Fragment>
+            ))}
+          </h1>
+          <p className="w lead mt-12 max-w-[640px] text-gray-300" style={{ animationDelay: '1.05s' }}>
+            Le campagne B2B funzionano quando l’obiettivo non è il costo per contatto ma la probabilità che quel contatto diventi cliente. Per questo l’algoritmo deve ricevere segnali corretti, ed è la parte che quasi nessuno sistema prima di aumentare il budget.
+          </p>
+          <div className="w mt-12" style={{ animationDelay: '1.20s' }}>
+            <a href="#metodo" onClick={scrollToMethod} className="btn btn-white">
+              Vedi il metodo
+              <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+            </a>
           </div>
         </div>
       </header>
 
-      <section className="rounded-[2rem] border border-white/10 bg-white/[0.025] p-7 md:p-10"><div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]"><div><p className="mb-5 text-sm uppercase tracking-[0.08em] text-indigo-300">Metodo</p><h2 className="section-h2 font-bold">Consulenza B2B Lead Generation su Meta</h2></div><div className="space-y-5 text-lg leading-relaxed text-gray-300"><p>La B2B Lead Generation su Meta è un sistema di acquisizione contatti pensato per trasformare Facebook e Instagram in canali di crescita misurabile anche per aziende con cicli di vendita complessi. Il nostro ruolo non è comportarci da agenzia che esegue campagne a volume, ma da consulenti che affiancano marketing e sales nella costruzione di un funnel più leggibile, tracciabile e sostenibile.</p><p>Partiamo dall&apos;analisi del processo commerciale: chi è il cliente giusto, proposta di valore, segmentazione, creatività, domande qualificanti, instradamento al CRM e tempi di risposta ai contatti. Poi traduciamo questa diagnosi in una struttura Meta Ads che ottimizza per qualità del contatto e probabilità di diventare cliente, non solo per costo per contatto.</p></div></div><div className="mt-10 grid gap-5 md:grid-cols-3">{[[Target,'Diagnosi prima delle campagne','Audit di funnel, audience, offerta e gestione lead prima di aumentare budget o test creativi.'],[GitBranch,'Sistema, non singola ads','Campagne, CRM e follow-up vengono progettati insieme per ridurre dispersione e tempi morti.'],[BarChart3,'Governance dei KPI','Misuriamo contatti che diventano davvero clienti, appuntamenti e opportunità generate, non solo il costo per contatto e numeri di facciata.']].map(([Icon,title,text]) => { const I = Icon as typeof Target; return <div key={String(title)} className="rounded-3xl border border-white/10 bg-[#080808] p-6"><I className="mb-5 h-7 w-7 text-indigo-300" /><h3 className="mb-4 text-xl font-semibold">{String(title)}</h3><p className="leading-relaxed text-gray-400">{String(text)}</p></div>; })}</div></section>
+      {/* Manifesto */}
+      <section className="px-6 pb-32 pt-32 md:px-12 md:pb-[200px] md:pt-[240px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l max-w-[1200px]">Non campagne a volume. Un sistema leggibile.</Reveal>
+          <div className="ml-auto mt-20 max-w-[640px] md:mt-[120px]">
+            <Reveal as="p" className="lead max-w-[560px]">Lavoriamo su lead generation e high ticket, con Meta Ads e Google Ads. Il nostro ruolo è affiancare marketing e sales nella costruzione di un funnel tracciabile e sostenibile, anche per cicli di vendita complessi.</Reveal>
+            <Reveal as="p" delay={0.12} className="lead mt-7 max-w-[560px]">Partiamo dal processo commerciale: cliente giusto, proposta di valore, segmentazione, creatività, domande qualificanti, instradamento al CRM e tempi di risposta.</Reveal>
+          </div>
+        </div>
+      </section>
 
-      <section className="mt-6 grid gap-6 lg:grid-cols-2"><article className="rounded-[2rem] border border-white/10 bg-blue-950/20 p-7 md:p-9"><p className="mb-5 text-sm uppercase tracking-[0.08em] text-blue-300">Meta Ads Advisory</p><h2 className="mb-6 text-3xl font-bold">Meta Ads orientate alla qualità</h2><div className="space-y-4 text-lg leading-relaxed text-gray-300"><p>Lavoriamo come consulenti operativi sulle campagne Meta B2B: audit account, architettura delle campagne, piano test creativo, tracking server-side e lettura dei dati commerciali. L&apos;obiettivo è aiutare il team a capire cosa sta generando opportunità reali e cosa sta solo gonfiando il volume dei lead.</p><p>L&apos;algoritmo di Meta dà sempre più valore ai segnali di conversione ad alta intenzione. Per questo allineiamo campagne e CRM su eventi come completamento di domande qualificanti, risposta del prospect e progressione nello stage commerciale.</p></div></article><article className="rounded-[2rem] border border-white/10 bg-purple-950/20 p-7 md:p-9"><p className="mb-5 text-sm uppercase tracking-[0.08em] text-purple-300">AI Process Consulting</p><h2 className="mb-6 text-3xl font-bold">Agenti AI sul processo sales</h2><div className="space-y-4 text-lg leading-relaxed text-gray-300"><p>Gli Agenti AI non sono chatbot generici. Li disegniamo insieme al team, partendo da regole operative, tono di voce, CRM e punti di frizione nel processo commerciale. Il risultato è un supporto che qualifica, prioritizza e prepara il lavoro umano invece di sostituirlo.</p><p>Nei progetti più maturi, l&apos;integrazione Meta Ads + Agenti AI riduce i tempi di prima risposta, aumenta la precisione nel routing e rende il funnel meno dipendente da interventi manuali ripetitivi.</p></div></article></section>
+      {/* Tre cifre */}
+      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-12 md:grid-cols-3 md:gap-6">
+          {figures.map((figure) => (
+            <Reveal key={figure.desc} delay={figure.delay} className="py-2 pl-8" style={{ borderLeft: '1px solid rgba(10,10,10,.12)' }}>
+              <p className="disp" style={{ fontSize: 'clamp(3rem, 6vw, 6.5rem)', letterSpacing: '-0.06em' }}>{figure.value}</p>
+              <p className="mt-4 max-w-[240px] text-[15px] leading-normal">{figure.desc}</p>
+            </Reveal>
+          ))}
+        </div>
+      </section>
 
-      <section className="mt-6 rounded-[2rem] border border-white/10 bg-white/[0.025] p-7 md:p-10"><p className="mb-5 text-sm uppercase tracking-[0.08em] text-cyan-300">Misurazione</p><h2 className="mb-6 section-h2 font-bold">Risultati misurabili, leggibili dal team</h2><div className="max-w-4xl space-y-5 text-lg leading-relaxed text-gray-300"><p>Ogni attività viene valutata su metriche operative e metriche di business. Questo approccio evita il classico problema delle campagne che sembrano funzionare ma non producono vendite.</p><p>Nei progetti B2B monitoriamo nel tempo quanti contatti diventano davvero clienti e confrontiamo i dati prima e dopo integrazione CRM, instradamento e automazioni. Quando i segnali sono più puliti, il team capisce meglio quali campagne generano conversazioni commerciali reali e quali portano solo volume.</p></div></section>
+      {/* Il metodo */}
+      <section id="metodo" className="scroll-mt-24 px-6 pb-32 md:px-12 md:pb-[240px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l max-w-[1100px]">Il metodo.</Reveal>
+          <div className="mt-20 grid grid-cols-1 gap-6 md:mt-[120px] md:grid-cols-3">
+            {method.map((item) => (
+              <Reveal key={item.title} delay={item.delay} className="flex min-h-[360px] flex-col gap-7 rounded-[32px] bg-[#f7f5fb] px-7 py-8 md:p-11">
+                <IconBox icon={item.icon} />
+                <div className="mt-auto">
+                  <h3 style={{ fontSize: 'clamp(1.6rem, 2.3vw, 2.4rem)', letterSpacing: '-0.04em', lineHeight: 1.05 }}>{item.title}</h3>
+                  <p className="mt-3.5 text-base leading-[1.6]">{item.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      <section className="mt-16"><p className="mb-5 text-sm uppercase tracking-[0.08em] text-blue-300">FAQ</p><h2 className="mb-9 section-h2 font-bold">Domande frequenti su Meta Ads B2B</h2><div className="space-y-4">{metaAdvertisingFaqs.map((faq) => <details key={faq.question} className="rounded-3xl border border-white/10 bg-white/[0.025] p-6"><summary className="cursor-pointer text-xl font-semibold">{faq.question}</summary><p className="mt-4 max-w-3xl leading-relaxed text-gray-300">{faq.answer}</p></details>)}</div></section>
+      {/* Il costo per contatto: blocco carta arrotondato con il funnel */}
+      <section className="px-6 pb-32 md:pb-[240px]">
+        <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[36px] px-7 py-20 md:rounded-[56px] md:px-20 md:py-[140px]" style={{ background: PAPER_BG }}>
+          <div className="dots" aria-hidden="true" />
+          <div className="relative grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
+            <div>
+              <Reveal as="h2" className="h-l" style={{ fontSize: 'clamp(2.75rem, 5.6vw, 5.5rem)' }}>Il costo per contatto non dice chi compra.</Reveal>
+              <Reveal as="p" className="lead mt-7 max-w-[560px] text-gray-700">Ottimizzare sul costo per lead porta volume, ma non dice quanti contatti diventano clienti. Noi allineiamo campagne e CRM su eventi come domande qualificanti completate, risposta del prospect e avanzamento nello stage commerciale: sono i segnali ad alta intenzione a cui l’algoritmo dà sempre più valore.</Reveal>
+            </div>
+            <Reveal delay={0.12}>
+              <FunnelMock />
+            </Reveal>
+          </div>
+        </div>
+      </section>
 
-      <section className="mt-16 rounded-[2.5rem] border border-blue-400/20 bg-blue-400/[0.05] p-8 text-center md:p-14"><h2 className="mb-7 section-h2 font-bold">Il tracciamento viene prima delle campagne. Parti dall&apos;audit.</h2><a href="/tracciamento-server-side" onClick={() => trackCtaClick({ cta_location: 'meta_advertising_b2b_page', cta_label: 'Vedi il tracciamento e i prezzi', cta_destination: '/tracciamento-server-side' })} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-[#050505]">Vedi il tracciamento e i prezzi <ArrowRight className="h-4 w-4" /></a></section>
-    </div>
-  </article>;
+      {/* Dal click al segnale: cinque passaggi in fila, in colonna sotto lg */}
+      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l max-w-[1100px]">Dal click al segnale.</Reveal>
+          <div className="mt-20 flex flex-col items-center gap-3 md:mt-[120px] lg:flex-row lg:items-start">
+            {flow.map((step, i) => (
+              <React.Fragment key={step.title}>
+                {i > 0 && (
+                  <div className="flex-none rotate-90 text-[#a855f7] lg:mt-[18px] lg:rotate-0" aria-hidden="true">
+                    <ArrowRight className="h-[30px] w-[30px]" strokeWidth={1.7} />
+                  </div>
+                )}
+                <Reveal delay={step.delay} className="flex min-w-0 flex-1 flex-col items-center gap-5 text-center">
+                  <IconBox icon={step.icon} />
+                  <div>
+                    <p className="text-xl font-semibold" style={{ color: '#0a0a0a', letterSpacing: '-0.02em' }}>{step.title}</p>
+                    <p className="mt-2 text-sm leading-normal">{step.desc}</p>
+                  </div>
+                </Reveal>
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Agenti AI sul processo sales: bento a tre colonne sfalsate */}
+      <section className="px-6 pb-32 md:px-12 md:pb-[240px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l">Agenti AI sul processo sales.</Reveal>
+
+          <div className="mt-20 flex flex-col gap-6 md:mt-[120px] md:flex-row md:items-start">
+            <div className="flex min-w-0 flex-1 flex-col">
+              <AgentCard
+                icon={Bot}
+                title="Non chatbot generici"
+                desc="Li disegniamo con il team, partendo da regole operative, tono di voce, CRM e punti di frizione."
+                items={['Qualificano e danno priorità ai contatti', 'Preparano il lavoro umano, non lo sostituiscono']}
+                background={PAPER_BG}
+              />
+              <NoteCard text="Meno tempo alla prima risposta." />
+            </div>
+
+            <div className="flex min-w-0 flex-1 flex-col md:mt-[120px]">
+              <AgentCard
+                icon={RefreshCw}
+                title="Meta Ads + agenti"
+                desc="Nei progetti più maturi l’integrazione riduce i tempi di prima risposta e rende il funnel meno manuale."
+                items={['Routing più preciso', 'Meno interventi ripetitivi']}
+                background="linear-gradient(150deg, #f7f5fb 0%, #efe7fb 100%)"
+                delay={0.12}
+              />
+              <Reveal as="article" delay={0.12} className="bc ov justify-end text-white" style={{ minHeight: 260, background: '#050505' }}>
+                <div className="aur" aria-hidden="true" style={{ width: 360, height: 360, background: 'rgba(147,51,234,.5)', right: -100, top: -140, filter: 'blur(80px)' }} />
+                <p className="d relative text-gray-300" style={{ marginTop: 0 }}>Funnel meno dipendente dal manuale.</p>
+              </Reveal>
+            </div>
+
+            <div className="flex min-w-0 flex-1 flex-col md:mt-10">
+              <AgentCard
+                icon={ChartColumn}
+                title="Risultati leggibili"
+                desc="Metriche operative e metriche di business, valutate insieme."
+                items={['Confronto prima e dopo integrazione CRM', 'Quali campagne generano conversazioni reali']}
+                background="#f7f5fb"
+                delay={0.2}
+              />
+              <NoteCard text="Evitiamo le campagne che sembrano funzionare ma non vendono." delay={0.2} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="px-6 pb-32 md:px-12 md:pb-[240px]">
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal as="h2" className="h-l">Domande frequenti</Reveal>
+          <Reveal delay={0.12} className="mt-20 md:mt-[120px]">
+            {metaAdvertisingFaqs.map((faq, i) => (
+              <details key={faq.question} className="f" open={i === 0}>
+                <summary>
+                  <h3>{faq.question}</h3>
+                  <span className="pl" aria-hidden="true"><Plus className="h-[18px] w-[18px]" /></span>
+                </summary>
+                <p>{faq.answer}</p>
+              </details>
+            ))}
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Chiusura: il CTA del mockup porta alla pagina del tracciamento. */}
+      <CloseCta
+        size="l"
+        title="Il tracciamento viene prima delle campagne."
+        lead="Parti dall’audit."
+        cta={{
+          label: 'Vedi il tracciamento e i prezzi',
+          href: '/tracciamento-server-side',
+          onClick: () => trackCtaClick({ cta_location: 'meta_advertising_b2b_page', cta_label: 'Vedi il tracciamento e i prezzi', cta_destination: '/tracciamento-server-side' }),
+        }}
+      />
+    </article>
+  );
 };
 
 export default MetaAdvertisingB2B;
