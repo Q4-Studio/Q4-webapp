@@ -79,23 +79,30 @@ const Marquee: React.FC<MarqueeProps> = ({ tone = 'dark' }) => {
         }
       );
 
-      // 2. Infinite Scroll Animation
+      // 2. Loop infinito
+      // Tre set identici (gap reso come padding finale di ogni set): un set è
+      // esattamente 1/3 della traccia, quindi xPercent -100/3 chiude il giro
+      // senza misurare larghezze (prima scrollWidth / 3 al mount, sbagliato
+      // finché le immagini lazy non erano caricate).
       if (trackRef.current) {
-        const track = trackRef.current;
+        const loop = gsap.to(trackRef.current, {
+          xPercent: -100 / 3,
+          duration: 30,
+          ease: "none",
+          repeat: -1,
+          paused: true
+        });
 
-        // Calculate the width of one set of logos (we rendered 3 sets)
-        const singleSetWidth = track.scrollWidth / 3;
-
-        // Animate seamlessly
-        gsap.fromTo(track,
-          { x: 0 },
-          {
-            x: -singleSetWidth,
-            duration: 30,
-            ease: "none",
-            repeat: -1
-          }
-        );
+        // Il loop gira solo quando il blocco è nel viewport.
+        const st = ScrollTrigger.create({
+          trigger: containerRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          onToggle: (self) => (self.isActive ? loop.play() : loop.pause())
+        });
+        // onToggle scatta già alla creazione se il blocco è in viewport; la
+        // riga sotto è solo una rete di sicurezza, non un secondo percorso.
+        if (st.isActive) loop.play();
       }
     }, containerRef);
 
@@ -111,18 +118,29 @@ const Marquee: React.FC<MarqueeProps> = ({ tone = 'dark' }) => {
             <p className={`text-sm uppercase tracking-[0.08em] ${t.caption}`}>Aziende che ci hanno già scelto</p>
         </div>
       <div className="relative w-full overflow-hidden">
-        <div ref={trackRef} className="flex whitespace-nowrap gap-16 md:gap-24 items-center">
-            {/* Tre copie dei loghi per il loop continuo: solo la prima è letta
-                dagli screen reader, le copie 2 e 3 sono decorative. */}
-            {[...logos, ...logos, ...logos].map((logo, index) => (
-                <div key={index} className={`flex-shrink-0 h-12 md:h-14 flex items-center transition-all duration-300 cursor-default ${t.logo}`} aria-hidden={index >= logos.length ? true : undefined}>
-                    <img
-                        src={logo.path}
-                        alt={index >= logos.length ? '' : logo.name}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-full w-auto object-contain"
-                    />
+        <div ref={trackRef} className="flex w-max whitespace-nowrap" style={{ willChange: 'transform' }}>
+            {/* w-max: la traccia è larga quanto il contenuto, così xPercent
+                -100/3 vale esattamente un set (non un terzo del viewport).
+                Tre set identici per il loop continuo: solo il primo è letto
+                dagli screen reader, i set 2 e 3 sono decorativi. */}
+            {[0, 1, 2].map((copy) => (
+                <div key={copy} className="flex shrink-0 items-center gap-16 md:gap-24 pr-16 md:pr-24" aria-hidden={copy > 0 ? true : undefined}>
+                    {logos.map((logo) => (
+                        <div key={logo.name} className={`flex-shrink-0 h-12 md:h-14 flex items-center transition-all duration-300 cursor-default ${t.logo}`}>
+                            <img
+                                src={logo.path}
+                                alt={copy > 0 ? '' : logo.name}
+                                // Dimensioni intrinseche (tutti i loghi sono 200×60): la
+                                // larghezza del set è nota prima del caricamento, così la
+                                // traccia non si allarga a immagini arrivate e il loop non salta.
+                                width={200}
+                                height={60}
+                                loading="lazy"
+                                decoding="async"
+                                className="h-full w-auto object-contain"
+                            />
+                        </div>
+                    ))}
                 </div>
             ))}
         </div>

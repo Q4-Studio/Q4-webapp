@@ -6,7 +6,7 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
   children, 
   className = "", 
   onClick, 
-  strength = 30 
+  strength = 0.4 
 }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
@@ -16,28 +16,53 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
     const text = textRef.current;
     if (!button || !text) return;
 
+    // Con "riduci movimento" attivo il bottone resta fermo: nessun ascoltatore.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // quickTo: un solo tween riutilizzato per proprietà, invece di crearne
+    // due nuovi a ogni mousemove.
+    const quick = { duration: 1, ease: "power3.out" };
+    const buttonX = gsap.quickTo(button, "x", quick);
+    const buttonY = gsap.quickTo(button, "y", quick);
+    const textX = gsap.quickTo(text, "x", quick);
+    const textY = gsap.quickTo(text, "y", quick);
+
+    let leaveTween: gsap.core.Tween | null = null;
+
     const handleMouseMove = (e: MouseEvent) => {
+      // Il tween elastico del rientro scriverebbe x/y dopo i quickTo (è stato
+      // creato dopo): va fermato appena il mouse torna sul bottone. In quel
+      // caso i quickTo ripartono dal valore letto dal DOM, non dall'ultimo
+      // valore interno (altrimenti il bottone salta al punto da cui era uscito).
+      const fromLeave = leaveTween !== null;
+      leaveTween?.kill();
+      leaveTween = null;
+      const currentX = gsap.getProperty(button, 'x') as number;
+      const currentY = gsap.getProperty(button, 'y') as number;
+
+      // Centro a riposo: il rect è già traslato dal bottone stesso, quindi si
+      // toglie lo spostamento corrente, altrimenti l'attrazione si auto-smorza.
       const rect = button.getBoundingClientRect();
-      const x = e.clientX - (rect.left + rect.width / 2);
-      const y = e.clientY - (rect.top + rect.height / 2);
+      const x = e.clientX - (rect.left + rect.width / 2 - currentX);
+      const y = e.clientY - (rect.top + rect.height / 2 - currentY);
 
-      gsap.to(button, {
-        x: x * 0.4,
-        y: y * 0.4,
-        duration: 1,
-        ease: "power3.out"
-      });
-
-      gsap.to(text, {
-        x: x * 0.1,
-        y: y * 0.1,
-        duration: 1,
-        ease: "power3.out"
-      });
+      // strength è il fattore del bottone; il testo si muove di un quarto.
+      if (fromLeave) {
+        buttonX(x * strength, currentX);
+        buttonY(y * strength, currentY);
+        textX(x * (strength / 4), gsap.getProperty(text, 'x') as number);
+        textY(y * (strength / 4), gsap.getProperty(text, 'y') as number);
+        return;
+      }
+      buttonX(x * strength);
+      buttonY(y * strength);
+      textX(x * (strength / 4));
+      textY(y * (strength / 4));
     };
 
     const handleMouseLeave = () => {
-      gsap.to([button, text], {
+      leaveTween?.kill();
+      leaveTween = gsap.to([button, text], {
         x: 0,
         y: 0,
         duration: 1,
@@ -51,6 +76,9 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
     return () => {
       button.removeEventListener("mousemove", handleMouseMove);
       button.removeEventListener("mouseleave", handleMouseLeave);
+      leaveTween?.kill();
+      gsap.killTweensOf([button, text]);
+      gsap.set([button, text], { clearProps: 'transform' });
     };
   }, [strength]);
 

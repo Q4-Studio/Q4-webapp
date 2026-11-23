@@ -24,5 +24,6 @@ export interface MagneticButtonProps {
   children: ReactNode;
   className?: string;
   onClick?: () => void;
+  /** Fattore di spostamento verso il mouse: il bottone si muove di `strength`, il testo di `strength / 4`. Default 0.4. */
   strength?: number;
 }
