@@ -31,14 +31,29 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
 
     const handleMouseMove = (e: MouseEvent) => {
       // Il tween elastico del rientro scriverebbe x/y dopo i quickTo (è stato
-      // creato dopo): va fermato appena il mouse torna sul bottone.
+      // creato dopo): va fermato appena il mouse torna sul bottone. In quel
+      // caso i quickTo ripartono dal valore letto dal DOM, non dall'ultimo
+      // valore interno (altrimenti il bottone salta al punto da cui era uscito).
+      const fromLeave = leaveTween !== null;
       leaveTween?.kill();
       leaveTween = null;
+      const currentX = gsap.getProperty(button, 'x') as number;
+      const currentY = gsap.getProperty(button, 'y') as number;
+
+      // Centro a riposo: il rect è già traslato dal bottone stesso, quindi si
+      // toglie lo spostamento corrente, altrimenti l'attrazione si auto-smorza.
       const rect = button.getBoundingClientRect();
-      const x = e.clientX - (rect.left + rect.width / 2);
-      const y = e.clientY - (rect.top + rect.height / 2);
+      const x = e.clientX - (rect.left + rect.width / 2 - currentX);
+      const y = e.clientY - (rect.top + rect.height / 2 - currentY);
 
       // strength è il fattore del bottone; il testo si muove di un quarto.
+      if (fromLeave) {
+        buttonX(x * strength, currentX);
+        buttonY(y * strength, currentY);
+        textX(x * (strength / 4), gsap.getProperty(text, 'x') as number);
+        textY(y * (strength / 4), gsap.getProperty(text, 'y') as number);
+        return;
+      }
       buttonX(x * strength);
       buttonY(y * strength);
       textX(x * (strength / 4));

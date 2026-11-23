@@ -48,18 +48,26 @@ const CustomCursor: React.FC = () => {
     // montati dopo un cambio pagina della SPA (prima querySelectorAll al mount).
     // La scala deriva solo da dove sta il puntatore adesso: così elementi
     // interattivi annidati e link smontati da una navigazione (nessun mouseout)
-    // non lasciano il cursore ingrandito.
+    // non lasciano il cursore ingrandito: si riallinea al primo movimento.
     const handleMouseOver = (e: MouseEvent) => {
       const target = (e.target as Element | null)?.closest?.(INTERACTIVE);
       scaleTo(target ? 1.5 : 1);
     };
 
+    // Puntatore uscito dalla finestra (relatedTarget nullo): nessun mouseover
+    // arriverà, il cursore torna a scala 1 qui.
+    const handleMouseOut = (e: MouseEvent) => {
+      if (!e.relatedTarget) scaleTo(1);
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseover', handleMouseOver);
+    document.addEventListener('mouseout', handleMouseOut);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseover', handleMouseOver);
+      document.removeEventListener('mouseout', handleMouseOut);
       gsap.killTweensOf([cursor, follower]);
     };
   }, []);

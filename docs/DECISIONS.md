@@ -64,3 +64,4 @@ Numerazione progressiva delle decisioni registrate nelle spec (`docs/specs/`), i
 | D-058 | 2026-11-22 | Passaggi in righe ferme `.ev.static` (senza ciclo di evidenziazione) e card carta non cliccabili in `.bc.static` (senza hover). Precisa D-021. | [review-62-64-fixes.md](specs/review-62-64-fixes.md) |
 | D-059 | 2026-11-23 | Nessun `@gsap/react`: `gsap.context()` + `revert()` in `useEffect` resta il pattern del sito (ammesso dalla skill ufficiale GSAP); `gsap.quickTo` per tutto ciò che segue il mouse. | [gsap-pass.md](specs/gsap-pass.md) |
 | D-060 | 2026-11-23 | `will-change: transform` solo sugli elementi in movimento continuo (cursore, traccia del marquee), non sui blocchi `[data-reveal]`. | [gsap-pass.md](specs/gsap-pass.md) |
+| D-061 | 2026-11-23 | `MagneticButton.strength` è un fattore di spostamento (default 0.4), non più il vecchio default 30 che non era usato: cambia l'unità della prop, nessun chiamante la passa. | [gsap-pass.md](specs/gsap-pass.md) |

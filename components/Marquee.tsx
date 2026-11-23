@@ -130,6 +130,11 @@ const Marquee: React.FC<MarqueeProps> = ({ tone = 'dark' }) => {
                             <img
                                 src={logo.path}
                                 alt={copy > 0 ? '' : logo.name}
+                                // Dimensioni intrinseche (tutti i loghi sono 200×60): la
+                                // larghezza del set è nota prima del caricamento, così la
+                                // traccia non si allarga a immagini arrivate e il loop non salta.
+                                width={200}
+                                height={60}
                                 loading="lazy"
                                 decoding="async"
                                 className="h-full w-auto object-contain"
