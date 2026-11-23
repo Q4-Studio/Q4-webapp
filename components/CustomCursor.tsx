@@ -32,9 +32,17 @@ const CustomCursor: React.FC = () => {
 
     const INTERACTIVE = 'a, button, [role="button"], .cursor-pointer';
 
-    // Scala con quickTo come il movimento: un solo tween riutilizzato, niente
-    // allocazioni a ogni passaggio sopra un elemento.
-    const scaleTo = gsap.quickTo([cursor, follower], 'scale', { duration: 0.3, ease: 'power2.out' });
+    // Niente quickTo per la scala: GSAP spezza `scale` in scaleX/scaleY e il
+    // setter di quickTo non trova la proprietà (verificato nel browser). Un
+    // tween solo quando lo stato cambia, con overwrite per non far litigare
+    // ingresso e uscita rapidi.
+    let enlarged = false;
+    const scaleTo = (scale: number) => {
+      const next = scale > 1;
+      if (next === enlarged) return;
+      enlarged = next;
+      gsap.to([cursor, follower], { scale, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
+    };
 
     // Un solo ascoltatore delegato su document: funziona anche con i link
     // montati dopo un cambio pagina della SPA (prima querySelectorAll al mount).
