@@ -30,6 +30,10 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
     let leaveTween: gsap.core.Tween | null = null;
 
     const handleMouseMove = (e: MouseEvent) => {
+      // Il tween elastico del rientro scriverebbe x/y dopo i quickTo (è stato
+      // creato dopo): va fermato appena il mouse torna sul bottone.
+      leaveTween?.kill();
+      leaveTween = null;
       const rect = button.getBoundingClientRect();
       const x = e.clientX - (rect.left + rect.width / 2);
       const y = e.clientY - (rect.top + rect.height / 2);

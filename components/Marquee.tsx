@@ -100,8 +100,8 @@ const Marquee: React.FC<MarqueeProps> = ({ tone = 'dark' }) => {
           end: "bottom top",
           onToggle: (self) => (self.isActive ? loop.play() : loop.pause())
         });
-        // Stato iniziale esplicito: non dipendiamo dal fatto che onToggle
-        // scatti già alla creazione se il blocco è visibile.
+        // onToggle scatta già alla creazione se il blocco è in viewport; la
+        // riga sotto è solo una rete di sicurezza, non un secondo percorso.
         if (st.isActive) loop.play();
       }
     }, containerRef);

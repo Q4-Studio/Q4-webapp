@@ -32,42 +32,26 @@ const CustomCursor: React.FC = () => {
 
     const INTERACTIVE = 'a, button, [role="button"], .cursor-pointer';
 
-    const scaleTo = (scale: number) => {
-      gsap.to([cursor, follower], {
-        scale,
-        duration: 0.3,
-        ease: 'power2.out',
-        overwrite: 'auto'
-      });
-    };
+    // Scala con quickTo come il movimento: un solo tween riutilizzato, niente
+    // allocazioni a ogni passaggio sopra un elemento.
+    const scaleTo = gsap.quickTo([cursor, follower], 'scale', { duration: 0.3, ease: 'power2.out' });
 
     // Un solo ascoltatore delegato su document: funziona anche con i link
     // montati dopo un cambio pagina della SPA (prima querySelectorAll al mount).
+    // La scala deriva solo da dove sta il puntatore adesso: così elementi
+    // interattivi annidati e link smontati da una navigazione (nessun mouseout)
+    // non lasciano il cursore ingrandito.
     const handleMouseOver = (e: MouseEvent) => {
       const target = (e.target as Element | null)?.closest?.(INTERACTIVE);
-      if (!target) return;
-      // Passaggio tra figli dello stesso elemento interattivo: niente da fare.
-      const from = e.relatedTarget as Node | null;
-      if (from && target.contains(from)) return;
-      scaleTo(1.5);
-    };
-
-    const handleMouseOut = (e: MouseEvent) => {
-      const target = (e.target as Element | null)?.closest?.(INTERACTIVE);
-      if (!target) return;
-      const to = e.relatedTarget as Node | null;
-      if (to && target.contains(to)) return;
-      scaleTo(1);
+      scaleTo(target ? 1.5 : 1);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseover', handleMouseOver);
-    document.addEventListener('mouseout', handleMouseOut);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseover', handleMouseOver);
-      document.removeEventListener('mouseout', handleMouseOut);
       gsap.killTweensOf([cursor, follower]);
     };
   }, []);
