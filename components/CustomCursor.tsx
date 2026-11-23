@@ -15,62 +15,60 @@ const CustomCursor: React.FC = () => {
 
     if (!cursor || !follower) return;
 
-    let mouseX = 0;
-    let mouseY = 0;
+    // quickTo: un tween riutilizzato per proprietà invece di due tween nuovi
+    // a ogni mousemove.
+    const cursorX = gsap.quickTo(cursor, 'x', { duration: 0.1, ease: 'power2.out' });
+    const cursorY = gsap.quickTo(cursor, 'y', { duration: 0.1, ease: 'power2.out' });
+    const followerX = gsap.quickTo(follower, 'x', { duration: 0.5, ease: 'power2.out' });
+    const followerY = gsap.quickTo(follower, 'y', { duration: 0.5, ease: 'power2.out' });
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-
-      // Cursor principale (segue direttamente)
-      gsap.to(cursor, {
-        x: mouseX,
-        y: mouseY,
-        duration: 0.1,
-        ease: 'power2.out'
-      });
-
-      // Follower (segue con ritardo per effetto smooth)
-      gsap.to(follower, {
-        x: mouseX,
-        y: mouseY,
-        duration: 0.5,
-        ease: 'power2.out'
-      });
+      // Cursore principale (segue direttamente) e follower (con ritardo)
+      cursorX(e.clientX);
+      cursorY(e.clientY);
+      followerX(e.clientX);
+      followerY(e.clientY);
     };
 
-    const handleMouseEnter = () => {
+    const INTERACTIVE = 'a, button, [role="button"], .cursor-pointer';
+
+    const scaleTo = (scale: number) => {
       gsap.to([cursor, follower], {
-        scale: 1.5,
+        scale,
         duration: 0.3,
-        ease: 'power2.out'
+        ease: 'power2.out',
+        overwrite: 'auto'
       });
     };
 
-    const handleMouseLeave = () => {
-      gsap.to([cursor, follower], {
-        scale: 1,
-        duration: 0.3,
-        ease: 'power2.out'
-      });
+    // Un solo ascoltatore delegato su document: funziona anche con i link
+    // montati dopo un cambio pagina della SPA (prima querySelectorAll al mount).
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = (e.target as Element | null)?.closest?.(INTERACTIVE);
+      if (!target) return;
+      // Passaggio tra figli dello stesso elemento interattivo: niente da fare.
+      const from = e.relatedTarget as Node | null;
+      if (from && target.contains(from)) return;
+      scaleTo(1.5);
     };
 
-    // Aggiungi event listeners
+    const handleMouseOut = (e: MouseEvent) => {
+      const target = (e.target as Element | null)?.closest?.(INTERACTIVE);
+      if (!target) return;
+      const to = e.relatedTarget as Node | null;
+      if (to && target.contains(to)) return;
+      scaleTo(1);
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
-
-    // Seleziona elementi interattivi
-    const interactiveElements = document.querySelectorAll('a, button, [role="button"], .cursor-pointer');
-    interactiveElements.forEach(el => {
-      el.addEventListener('mouseenter', handleMouseEnter);
-      el.addEventListener('mouseleave', handleMouseLeave);
-    });
+    document.addEventListener('mouseover', handleMouseOver);
+    document.addEventListener('mouseout', handleMouseOut);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      interactiveElements.forEach(el => {
-        el.removeEventListener('mouseenter', handleMouseEnter);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-      });
+      document.removeEventListener('mouseover', handleMouseOver);
+      document.removeEventListener('mouseout', handleMouseOut);
+      gsap.killTweensOf([cursor, follower]);
     };
   }, []);
 
@@ -86,7 +84,8 @@ const CustomCursor: React.FC = () => {
         className="fixed top-0 left-0 w-2 h-2 bg-indigo-500 rounded-full pointer-events-none z-[10000] mix-blend-difference"
         style={{
           transform: 'translate(-50%, -50%)',
-          boxShadow: '0 0 10px 2px rgba(99, 102, 241, 0.6)'
+          boxShadow: '0 0 10px 2px rgba(99, 102, 241, 0.6)',
+          willChange: 'transform'
         }}
       />
 
@@ -95,7 +94,8 @@ const CustomCursor: React.FC = () => {
         ref={followerRef}
         className="fixed top-0 left-0 w-8 h-8 border border-indigo-400/50 rounded-full pointer-events-none z-[10000] mix-blend-difference"
         style={{
-          transform: 'translate(-50%, -50%)'
+          transform: 'translate(-50%, -50%)',
+          willChange: 'transform'
         }}
       />
     </>
