@@ -15,7 +15,7 @@
 ## Decisioni
 
 - **D-062** Il caso Candiani apre con le quote del fondo del funnel (acquisti, inizi di checkout), il 38,3% sul totale delle richieste resta come terza cifra. Numeri sempre da `candianiFigures` e dalla copia privata delle fonti.
-- **D-063** Il +133% di Meta è presentato come già deduplicato: è la definizione della metrica di Meta ("conversioni aggiuntive registrate dall'API Conversions rispetto al solo pixel") e la deduplicazione per `event_id` è tra i lavori fatti. Bloccante prima del merge: solo la configurazione del container dice se gli eventi con opt-out (31% dei BeginCheckout) vengono inoltrati a Meta. Se sono bloccati, la nota lo dichiara e il caso è più forte; se sono inoltrati, una parte del +133% è traffico senza consenso e la nota deve dirlo.
+- **D-063** Il +133% di Meta è presentato come già deduplicato (definizione della metrica di Meta, `event_id` condiviso). Il tag Conversions API del container è su "Send data always" per scelta di Q4 Studio: il copy non afferma nulla sul filtro di consenso verso Meta, e la sezione consenso dice solo che il container registra la scelta di ogni richiesta.
 
 ## File
 

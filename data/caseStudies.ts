@@ -236,7 +236,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         heading: 'Bot fuori, consenso dentro',
-        intro: 'Il container filtra il traffico dei bot prima che arrivi alle piattaforme e fa seguire ai dati le scelte di consenso dell’utente (Consent Mode v2).',
+        intro: 'Il container filtra il traffico dei bot prima che arrivi alle piattaforme e registra per ogni richiesta la scelta di consenso dell’utente (Consent Mode v2), così si sa quanta parte del traffico ha detto sì.',
         stats: [
           { value: '17,84%', label: 'delle richieste GA (245.945 su 1.378.470) riconosciute come bot e scartate' },
           { value: '42,29%', label: 'delle PageView con consenso dato (150.698); 57,71% con opt-out (205.679)' },
