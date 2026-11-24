@@ -207,7 +207,7 @@ export const caseStudies: CaseStudy[] = [
           { value: '+46,2%', label: 'aggiunte al carrello (AddToCart), su 1.934 eventi' },
           { value: '+133,3%', label: 'inizi di acquisto (InitiateCheckout), su 1.236 eventi' }
         ],
-        note: 'Le percentuali sono al netto della deduplicazione: pixel e server inviano lo stesso evento con lo stesso identificativo, Meta scarta il doppione e conta solo gli eventi che dal browser non erano mai arrivati. Non è traffico contato due volte.',
+        note: 'Le percentuali sono al netto della deduplicazione: pixel e server inviano lo stesso evento con lo stesso identificativo, Meta scarta il doppione e conta solo gli eventi che dal browser non erano mai arrivati. Non è traffico contato due volte. Sui 1.236 inizi di acquisto del periodo, circa 530 li ha visti il pixel e circa 706 sono arrivati solo dal server: senza l’API Conversions, Meta avrebbe ottimizzato su meno della metà dei checkout reali.',
         source: 'Meta Gestione eventi, Pixel di Candiani Denim, 23 ottobre – 19 novembre 2026: “conversioni aggiuntive registrate dall’API Conversions rispetto al solo pixel”.'
       },
       {
@@ -242,7 +242,7 @@ export const caseStudies: CaseStudy[] = [
           { value: '42,29%', label: 'delle PageView con consenso dato (150.698); 57,71% con opt-out (205.679)' },
           { value: '62,96%', label: 'degli acquisti con consenso dato (85); 37,04% con opt-out (50)' }
         ],
-        note: 'Se dopo il filtro i numeri di Analytics scendono, è perché prima erano gonfiati: le sessioni e i tassi di conversione tornano a descrivere persone. Gli ordini e il fatturato non cambiano.',
+        note: 'Il traffico dei bot è raddoppiato da fine ottobre, con l’avvio delle campagne: il filtro serve proprio quando si inizia a pagare per le visite. Se dopo il filtro i numeri di Analytics scendono, è perché prima erano gonfiati: le sessioni e i tassi di conversione tornano a descrivere persone. Gli ordini e il fatturato non cambiano.',
         source: `Analytics del container server-side, ${candianiFigures.window}, richieste da bot e per scelta di consenso (richieste GA4).`
       }
     ],
