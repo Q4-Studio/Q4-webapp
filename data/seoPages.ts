@@ -604,6 +604,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'agente-vocale-ai-aziende',
+    image: resourceImage('agente-vocale-ai-aziende', "Una cornetta del telefono da cui parte un'onda vocale che diventa una fila di schede ordinate: la chiamata trascritta e salvata"),
     cluster: 'D',
     lastModified: '2026-08-09',
     title: 'Agente Vocale AI per Aziende',
@@ -642,6 +643,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'centralino-ai',
+    image: resourceImage('centralino-ai', 'Un nodo centrale che smista le richieste verso telefono, chat, calendario, cartella, email e orario di risposta'),
     cluster: 'D',
     lastModified: '2026-08-09',
     title: 'Centralino AI per Aziende',
@@ -897,6 +899,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'tracking-server-side-deduplicazione-eventi',
+    image: resourceImage('tracking-server-side-deduplicazione-eventi', 'Due condotti, uno dal browser e uno dal server, che confluiscono in un nodo: ne esce un solo evento e il doppione viene scartato'),
     cluster: 'A',
     lastModified: '2026-08-09',
     title: 'Tracking Server-Side e Deduplicazione degli Eventi',

@@ -50,6 +50,15 @@ const RES_OUT_DIR = 'public/risorse';
 const RES_OG = { width: 1200, height: 630 };
 const RES_WIDE = { width: 1600, height: 900 };
 
+// Cover degli articoli del blog: sorgente 1536x1024 in assets/blog-src/<slug>.png,
+// mai referenziata. Il blog usa un solo URL (cover_image su Supabase) sia per la
+// cover 16:9 in pagina sia per og:image, quindi si genera un unico JPG 1600x900 in
+// public/blog/<slug>.jpg; il valore da salvare su Supabase è l'URL assoluto
+// https://www.q4.studio/blog/<slug>.jpg (i crawler social non seguono path relativi).
+const BLOG_SRC_DIR = 'assets/blog-src';
+const BLOG_OUT_DIR = 'public/blog';
+const BLOG_COVER = { width: 1600, height: 900 };
+
 // Larghezza massima lato client per la cover (container max-w-4xl = 896px CSS,
 // quindi 1672px full-size copre un display retino a ~1.86x senza sprecare byte).
 const MOBILE_WIDTH = 836;
@@ -145,9 +154,34 @@ async function processResource(pngPath) {
   return results;
 }
 
+async function processBlogCover(pngPath) {
+  const name = basename(pngPath, extname(pngPath));
+  const srcStat = statSync(pngPath);
+  const srcMeta = await sharp(pngPath).metadata();
+  console.log(`\n${name}.png — sorgente ${srcMeta.width}x${srcMeta.height}, ${formatBytes(srcStat.size)}`);
+
+  const outPath = join(BLOG_OUT_DIR, `${name}.jpg`);
+  await sharp(pngPath)
+    .resize({ ...BLOG_COVER, fit: 'cover', position: 'centre' })
+    .jpeg({ quality: 86, chromaSubsampling: '4:4:4' })
+    .toFile(outPath);
+  const stat = statSync(outPath);
+  const meta = await sharp(outPath).metadata();
+  console.log(`  -> ${outPath}  ${meta.width}x${meta.height}  ${formatBytes(stat.size)}`);
+  return [outPath];
+}
+
 async function main() {
   mkdirSync(OUT_DIR, { recursive: true });
   mkdirSync(RES_OUT_DIR, { recursive: true });
+  mkdirSync(BLOG_OUT_DIR, { recursive: true });
+
+  const blogPngs = existsSync(BLOG_SRC_DIR)
+    ? readdirSync(BLOG_SRC_DIR).filter((f) => extname(f).toLowerCase() === '.png').map((f) => join(BLOG_SRC_DIR, f))
+    : [];
+  for (const png of blogPngs) {
+    await processBlogCover(png);
+  }
 
   const resourcePngs = existsSync(RES_SRC_DIR)
     ? readdirSync(RES_SRC_DIR).filter((f) => extname(f).toLowerCase() === '.png').map((f) => join(RES_SRC_DIR, f))
