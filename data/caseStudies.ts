@@ -122,6 +122,9 @@ export const candianiFigures = {
   adBlockers: '80.644',
   requests: '1.966.768',
   share: '38,3%',
+  /** Quota di acquisti e inizi di checkout (richieste GA4) che browser o ad blocker avrebbero bloccato. */
+  purchaseShare: '58,5%',
+  checkoutShare: '45,6%',
   windowLabel: candianiWindowLabel,
   windowEnd: candianiWindowEnd,
   /** "90 giorni fino al 20 novembre 2026": finestra dei dati del container, usata in fonti e testi. */
@@ -141,7 +144,7 @@ export const caseStudies: CaseStudy[] = [
     client: 'Candiani Denim',
     clientUrl: 'https://www.candianidenim.com/',
     datePublished: '2026-08-01',
-    dateModified: '2026-11-21',
+    dateModified: '2026-11-24',
     metaTitle: 'Candiani Denim: tracking server-side per Meta Ads | Q4 Studio',
     description: `Come abbiamo potenziato il tracciamento Meta di Candiani Denim con Meta Conversion API, deduplicazione eventi e server-side tagging, recuperando ${candianiFigures.recovered} segnali in ${candianiFigures.windowLabel}.`,
     category: 'Tracciamento e dati',
@@ -187,23 +190,24 @@ export const caseStudies: CaseStudy[] = [
     },
     results: {
       heading: 'Il risultato',
-      intro: `In ${candianiFigures.windowLabel}, fino al ${candianiFigures.windowEnd}, su ${candianiFigures.requests} richieste gestite dal container server-side, il tracciamento server-side ha recuperato:`,
+      intro: `In ${candianiFigures.windowLabel}, fino al ${candianiFigures.windowEnd}, oltre la metà degli acquisti e quasi metà degli inizi di checkout non sarebbero mai arrivati alle piattaforme su cui Candiani compra pubblicità. Il tracciamento server-side li ha recuperati:`,
       stats: [
-        { value: candianiFigures.trackingPrevention, label: 'recuperate dalla tracking prevention dei browser' },
-        { value: candianiFigures.adBlockers, label: 'recuperate dagli ad blocker' },
-        { value: candianiFigures.recovered, label: `segnali recuperati in totale (${candianiFigures.share} delle richieste)` }
+        { value: candianiFigures.purchaseShare, label: 'degli acquisti recuperati (79 su 135)' },
+        { value: candianiFigures.checkoutShare, label: 'degli inizi di checkout recuperati (523 su 1.148)' },
+        { value: candianiFigures.recovered, label: `segnali recuperati in totale su ${candianiFigures.requests} richieste (${candianiFigures.share}): ${candianiFigures.trackingPrevention} dalla tracking prevention dei browser, ${candianiFigures.adBlockers} dagli ad blocker` }
       ],
-      note: 'Senza la configurazione server-side questi dati sarebbero andati persi, inclusi eventi e-commerce come visualizzazioni prodotto, aggiunte al carrello, inizio checkout e acquisti.'
+      note: 'Per chi gestisce le campagne vuol dire una cosa semplice: senza il server-side, l’algoritmo di Meta e Google avrebbe ottimizzato su metà degli acquisti veri.'
     },
     data: [
       {
         heading: 'Più conversioni per Meta, evento per evento',
-        intro: 'Con l’API Conversions attiva accanto al pixel, Meta registra più conversioni di quante ne vedrebbe dal solo browser. Più si scende nel funnel, più il recupero pesa.',
+        intro: 'Con l’API Conversions attiva accanto al pixel, Meta registra più conversioni di quante ne vedrebbe dal solo browser. Più si scende nel funnel, più il recupero pesa: per ogni 100 inizi di acquisto visti dal pixel, dal server ne sono arrivati altri 133.',
         stats: [
           { value: '+9,2%', label: 'visualizzazioni di contenuti (ViewContent), su 97.652 eventi' },
           { value: '+46,2%', label: 'aggiunte al carrello (AddToCart), su 1.934 eventi' },
           { value: '+133,3%', label: 'inizi di acquisto (InitiateCheckout), su 1.236 eventi' }
         ],
+        note: 'Le percentuali sono al netto della deduplicazione: pixel e server inviano lo stesso evento con lo stesso identificativo, Meta scarta il doppione e conta solo gli eventi che dal browser non erano mai arrivati. Non è traffico contato due volte. Sui 1.236 inizi di acquisto del periodo, circa 530 li ha visti il pixel e circa 706 sono arrivati solo dal server: senza l’API Conversions, Meta avrebbe ottimizzato su meno della metà dei checkout reali.',
         source: 'Meta Gestione eventi, Pixel di Candiani Denim, 23 ottobre – 19 novembre 2026: “conversioni aggiuntive registrate dall’API Conversions rispetto al solo pixel”.'
       },
       {
@@ -214,9 +218,10 @@ export const caseStudies: CaseStudy[] = [
           { label: 'ViewItem · 132.729 richieste', value: '55.955 recuperate (42,2%)' },
           { label: 'AddToCart · 1.591 richieste', value: '687 recuperate (43,2%)' },
           { label: 'BeginCheckout · 1.148 richieste', value: '523 recuperate (45,6%)' },
-          { label: 'Purchase · 135 richieste', value: '79 recuperate (58,5%)' }
+          { label: 'Purchase · 135 richieste', value: '79 recuperate (58,5%)' },
+          { label: 'SignUp (invio modulo) · 5.198 richieste', value: '2.329 recuperate (44,8%)' }
         ],
-        note: 'Gli eventi vicini all’acquisto sono quelli che si perdono di più: oltre la metà degli acquisti sarebbe rimasta invisibile alle piattaforme.',
+        note: 'Gli eventi vicini all’acquisto sono quelli che si perdono di più. Vale anche fuori dall’e-commerce: l’iscrizione (SignUp) è un invio di modulo come la richiesta di contatto di un sito B2B, e si perde nella stessa misura.',
         source: `Analytics del container server-side di candianidenim.com, ${candianiFigures.window}, richieste GA4 per evento.`
       },
       {
@@ -231,19 +236,20 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         heading: 'Bot fuori, consenso dentro',
-        intro: 'Il container filtra il traffico dei bot prima che arrivi alle piattaforme e fa seguire ai dati le scelte di consenso dell’utente (Consent Mode v2).',
+        intro: 'Il container filtra il traffico dei bot prima che arrivi alle piattaforme e registra per ogni richiesta la scelta di consenso dell’utente (Consent Mode v2), così si sa quanta parte del traffico ha detto sì.',
         stats: [
           { value: '17,84%', label: 'delle richieste GA (245.945 su 1.378.470) riconosciute come bot e scartate' },
           { value: '42,29%', label: 'delle PageView con consenso dato (150.698); 57,71% con opt-out (205.679)' },
           { value: '62,96%', label: 'degli acquisti con consenso dato (85); 37,04% con opt-out (50)' }
         ],
+        note: 'Il traffico dei bot è raddoppiato da fine ottobre, con l’avvio delle campagne: il filtro serve proprio quando si inizia a pagare per le visite. Se dopo il filtro i numeri di Analytics scendono, è perché prima erano gonfiati: le sessioni e i tassi di conversione tornano a descrivere persone. Gli ordini e il fatturato non cambiano.',
         source: `Analytics del container server-side, ${candianiFigures.window}, richieste da bot e per scelta di consenso (richieste GA4).`
       }
     ],
     whyItMatters: {
       heading: 'Perché conta',
       paragraphs: [
-        'Ogni segnale non tracciato è un’informazione che l’algoritmo non ha. Su un budget pubblicitario a cinque cifre, ottimizzare su dati parziali significa pagare per raggiungere le persone sbagliate.'
+        'Ogni segnale non tracciato è un’informazione che l’algoritmo non ha. Se metà degli acquisti non arriva alla piattaforma su cui stai facendo offerte, l’algoritmo ottimizza su metà della realtà. Su un budget pubblicitario a cinque cifre, significa pagare per raggiungere le persone sbagliate.'
       ]
     },
     sources: [
