@@ -208,7 +208,7 @@ const AIAgents: React.FC = () => {
               <TimingCard timing={crm.timing} delay={0.12} />
             </div>
 
-            {/* Colonna 3: richieste WhatsApp + pilot */}
+            {/* Colonna 3: richieste WhatsApp + sconto caso studio */}
             <div className="flex min-w-0 flex-1 flex-col lg:mt-10">
               <Reveal as="article" delay={0.2} className="bc" style={{ minHeight: 760, paddingBottom: 120 }}>
                 <h3>{whatsapp.title}</h3>
@@ -225,16 +225,17 @@ const AIAgents: React.FC = () => {
                 <Bullets items={whatsapp.requirements} />
                 <Meta pack={whatsapp} />
               </Reveal>
-              {/* Offerta di lancio: setup scontato per i primi due clienti, con
-                  prezzo, condizioni e tempi separati così che si leggano a colpo d'occhio. */}
+              {/* Sconto caso studio: setup ridotto in cambio del racconto del progetto,
+                  con prezzo, condizioni e tempi separati così che si leggano a colpo d'occhio.
+                  Niente "offerta di lancio" o "primi clienti": non deve sembrare un servizio nuovo. */}
               {whatsapp.pilot && (
                 <Reveal as="article" delay={0.2} className="bc ov dark-block justify-end text-white" style={{ minHeight: 300, background: '#050505' }}>
                   <div className="aur" aria-hidden="true" style={{ width: 360, height: 360, background: 'rgba(147,51,234,.5)', right: -100, top: -140, filter: 'blur(80px)' }} />
-                  <p className="relative m-0 text-[17px] font-medium text-purple-300">Offerta di lancio</p>
+                  <p className="relative m-0 text-[17px] font-medium text-purple-300">{whatsapp.pilot.title}</p>
                   <h3 className="relative mt-3" style={{ fontSize: 'clamp(1.5rem, 2vw, 2rem)' }}>
-                    {whatsapp.pilot.title}: setup a {whatsapp.pilot.setup} invece di {whatsapp.pilot.listSetup}
+                    Setup a {whatsapp.pilot.setup} invece di {whatsapp.pilot.listSetup} se raccontiamo il tuo progetto
                   </h3>
-                  <p className="d relative text-gray-300" style={{ marginTop: 18 }}>In cambio chiediamo due cose:</p>
+                  <p className="d relative text-gray-300" style={{ marginTop: 18 }}>Cosa chiediamo in cambio:</p>
                   <ul className="relative mt-3 list-none space-y-2.5 p-0 text-[19px] leading-[1.5] text-white">
                     {whatsapp.pilot.terms.map((term) => (
                       <li key={term} className="flex gap-3"><OkIcon />{term}</li>
