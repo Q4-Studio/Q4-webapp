@@ -116,7 +116,12 @@ const Comparison: React.FC = () => (
   </Reveal>
 );
 
-const PackageColumn: React.FC<{ pack: TrackingPackage; offset?: string; delay?: number; children: React.ReactNode; background?: string }> = ({ pack, offset = '', delay = 0, children, background }) => (
+/**
+ * Colonna del bento pacchetti: card del pacchetto e, sotto, la nota del
+ * pacchetto (`pack.note`, da data/servicePages.ts) oppure `children`.
+ * Nessuna card vuota se il pacchetto non ha nota.
+ */
+const PackageColumn: React.FC<{ pack: TrackingPackage; offset?: string; delay?: number; children?: React.ReactNode; background?: string }> = ({ pack, offset = '', delay = 0, children, background }) => (
   <div className={`flex min-w-0 flex-1 flex-col ${offset}`}>
     <Reveal as="article" delay={delay} className="bc" style={{ minHeight: 700, paddingBottom: 120, background }}>
       <h3>{pack.title}</h3>
@@ -126,7 +131,7 @@ const PackageColumn: React.FC<{ pack: TrackingPackage; offset?: string; delay?: 
         <div><small>{pack.priceLabel}</small><p className="price">{pack.price}</p></div>
       </div>
     </Reveal>
-    {children}
+    {pack.note ? <NoteCard text={pack.note} delay={delay} /> : children}
   </div>
 );
 
@@ -240,14 +245,12 @@ const ServerSideTracking: React.FC = () => {
         <div className="mx-auto max-w-[1440px]">
           <Reveal as="h2" className="h-l">I pacchetti.</Reveal>
           <div className="mt-20 flex flex-col gap-6 md:mt-[80px] lg:flex-row lg:items-start">
-            <PackageColumn pack={trackingPackages[0]} background="linear-gradient(170deg, #f7f5fb 0%, #efe7fb 100%)">
-              <NoteCard text={trackingPackages[0].note!} />
-            </PackageColumn>
+            {/* Audit + nota documento; Setup + card scura con la documentazione
+                ufficiale; Infrastruttura + nota disdetta (D-031: la nota sta
+                sotto il canone, non sotto Setup come nel mockup). */}
+            <PackageColumn pack={trackingPackages[0]} background="linear-gradient(170deg, #f7f5fb 0%, #efe7fb 100%)" />
             <PackageColumn pack={trackingPackages[1]} offset="lg:mt-[120px]" delay={0.12} background="linear-gradient(150deg, #f7f5fb 0%, #ecdffb 100%)">
-              <NoteCard text={trackingPackages[1].note!} delay={0.12} />
-            </PackageColumn>
-            <PackageColumn pack={trackingPackages[2]} offset="lg:mt-10" delay={0.2}>
-              <Reveal as="article" delay={0.2} className="bc ov dark-block justify-end text-white" style={{ minHeight: 300, background: '#050505' }}>
+              <Reveal as="article" delay={0.12} className="bc ov dark-block justify-end text-white" style={{ minHeight: 300, background: '#050505' }}>
                 <div className="aur" aria-hidden="true" style={{ width: 360, height: 360, background: 'rgba(147,51,234,.5)', right: -100, top: -140, filter: 'blur(80px)' }} />
                 <p className="d relative text-gray-300" style={{ marginTop: 0 }}>
                   Documentazione ufficiale:{' '}
@@ -257,6 +260,7 @@ const ServerSideTracking: React.FC = () => {
                 </p>
               </Reveal>
             </PackageColumn>
+            <PackageColumn pack={trackingPackages[2]} offset="lg:mt-10" delay={0.2} />
           </div>
         </div>
       </section>
