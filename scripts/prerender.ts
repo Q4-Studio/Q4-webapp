@@ -276,7 +276,8 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     },
     areaServed: 'IT',
     url: pageUrl,
-    mainEntityOfPage: pageUrl
+    mainEntityOfPage: pageUrl,
+    ...(page.image ? { image: `${siteUrl}${page.image.og}` } : {})
   };
 
   const faqSchema = {
@@ -345,7 +346,10 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     canonical: pageUrl,
     type: 'article',
     schema: [serviceSchema, faqSchema, breadcrumbSchema],
-    bodyContent: staticPage(body)
+    bodyContent: staticPage(body),
+    // Illustrazione della guida (1200x630 JPG, vedi scripts/optimize-images.mjs);
+    // senza, resta l'og-image.jpg generica del sito.
+    ...(page.image ? { ogImage: `${siteUrl}${page.image.og}`, ogImageWidth: 1200, ogImageHeight: 630, ogImageAlt: page.image.alt } : {})
   });
 }
 

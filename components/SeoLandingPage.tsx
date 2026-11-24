@@ -49,7 +49,7 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
 
   return (
     <article className="relative">
-      <SEOHead title={page.metaTitle} description={page.description} url={pageUrl} type="article" />
+      <SEOHead title={page.metaTitle} description={page.description} url={pageUrl} type="article" {...(page.image ? { image: `${siteUrl}${page.image.og}`, imageWidth: 1200, imageHeight: 630 } : {})} />
 
       <SubHero kicker={resourceKicker(page)} title={page.title} lead={page.description} minHeightClass="min-h-[560px] md:min-h-[680px]">
         {/* Link spoke→hub: ogni risorsa porta alla pagina di offerta del suo cluster. */}

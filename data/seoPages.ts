@@ -46,7 +46,20 @@ export interface SeoPage {
     question: string;
     answer: string;
   }>;
+  /**
+   * Illustrazione della guida, generata da scripts/optimize-images.mjs a partire
+   * da assets/risorse-src/<slug>.png: `og` è il JPG 1200x630 per og:image e
+   * schema, `wide` il WebP 16:9 per un uso in pagina. Alt in italiano.
+   */
+  image?: { og: string; wide: string; alt: string };
 }
+
+/** Percorsi delle varianti generate per la guida `slug` (vedi scripts/optimize-images.mjs). */
+export const resourceImage = (slug: string, alt: string): NonNullable<SeoPage['image']> => ({
+  og: `/risorse/${slug}-og.jpg`,
+  wide: `/risorse/${slug}.webp`,
+  alt,
+});
 
 // Data reale di ultima modifica per le pagine bespoke/indice (home, offerta,
 // indici). Aggiornare a mano quando si cambia il contenuto della pagina
@@ -518,6 +531,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'agenti-ai-per-lead-generation',
+    image: resourceImage('agenti-ai-per-lead-generation', 'Un nastro trasportatore con schede che avanzano, due piccoli agenti AI che le spingono e una cassetta di arrivo'),
     cluster: 'D',
     lastModified: '2026-08-09',
     title: 'Agenti AI per i Processi Commerciali e Operativi',
@@ -811,6 +825,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'whatsapp-automation-lead-b2b',
+    image: resourceImage('whatsapp-automation-lead-b2b', 'Tre messaggi WhatsApp disordinati che passano attraverso una lente e diventano righe ordinate collegate a un database'),
     cluster: 'C',
     lastModified: '2026-08-09',
     title: 'Automazione WhatsApp nei Processi Aziendali',
@@ -967,6 +982,7 @@ export const seoPages: SeoPage[] = [
   },
   {
     slug: 'second-brain-aziendale-agente-ai',
+    image: resourceImage('second-brain-aziendale-agente-ai', "Una sfera luminosa fatta di documenti e cartelle collegati tra loro, la conoscenza dell'azienda interrogabile da un agente AI"),
     cluster: 'D',
     lastModified: '2026-08-09',
     title: 'Second Brain Aziendale: un Agente AI per la Conoscenza dell\'Azienda',
