@@ -33,11 +33,22 @@
  * Rilancio: sicuro da rieseguire, sovrascrive sempre le varianti generate.
  */
 import sharp from 'sharp';
-import { readdirSync, statSync, mkdirSync } from 'fs';
+import { readdirSync, statSync, mkdirSync, existsSync } from 'fs';
 import { join, basename, extname } from 'path';
 
 const SRC_DIR = 'assets/case-studies-src';
 const OUT_DIR = 'public/case-studies';
+
+// Illustrazioni delle guide /risorse: sorgente 1536x1024 (ChatGPT Images, 3:2)
+// in assets/risorse-src/<slug>.png, mai referenziata. Per ogni sorgente:
+//   - public/risorse/<slug>-og.jpg   1200x630 (1,91:1) per og:image/twitter:image
+//   - public/risorse/<slug>.webp     1600x900 (16:9) per un eventuale uso in pagina
+// Il ritaglio è centrato: le immagini sono generate con il soggetto al centro e
+// il 12% sopra e sotto libero proprio per reggere entrambi i formati.
+const RES_SRC_DIR = 'assets/risorse-src';
+const RES_OUT_DIR = 'public/risorse';
+const RES_OG = { width: 1200, height: 630 };
+const RES_WIDE = { width: 1600, height: 900 };
 
 // Larghezza massima lato client per la cover (container max-w-4xl = 896px CSS,
 // quindi 1672px full-size copre un display retino a ~1.86x senza sprecare byte).
@@ -105,8 +116,45 @@ async function processSource(pngPath) {
   return results;
 }
 
+async function processResource(pngPath) {
+  const name = basename(pngPath, extname(pngPath));
+  const srcStat = statSync(pngPath);
+  const srcMeta = await sharp(pngPath).metadata();
+  console.log(`\n${name}.png — sorgente ${srcMeta.width}x${srcMeta.height}, ${formatBytes(srcStat.size)}`);
+
+  const results = [];
+  const ogPath = join(RES_OUT_DIR, `${name}-og.jpg`);
+  await sharp(pngPath)
+    .resize({ ...RES_OG, fit: 'cover', position: 'centre' })
+    .jpeg({ quality: 88, chromaSubsampling: '4:4:4' })
+    .toFile(ogPath);
+  results.push(ogPath);
+
+  const widePath = join(RES_OUT_DIR, `${name}.webp`);
+  await sharp(pngPath)
+    .resize({ ...RES_WIDE, fit: 'cover', position: 'centre' })
+    .webp({ quality: 84, effort: 6 })
+    .toFile(widePath);
+  results.push(widePath);
+
+  for (const file of results) {
+    const stat = statSync(file);
+    const meta = await sharp(file).metadata();
+    console.log(`  -> ${file}  ${meta.width}x${meta.height}  ${formatBytes(stat.size)}`);
+  }
+  return results;
+}
+
 async function main() {
   mkdirSync(OUT_DIR, { recursive: true });
+  mkdirSync(RES_OUT_DIR, { recursive: true });
+
+  const resourcePngs = existsSync(RES_SRC_DIR)
+    ? readdirSync(RES_SRC_DIR).filter((f) => extname(f).toLowerCase() === '.png').map((f) => join(RES_SRC_DIR, f))
+    : [];
+  for (const png of resourcePngs) {
+    await processResource(png);
+  }
 
   const pngFiles = readdirSync(SRC_DIR)
     .filter((f) => extname(f).toLowerCase() === '.png')

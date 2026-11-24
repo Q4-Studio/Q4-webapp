@@ -35,6 +35,7 @@ const CARD_TITLE_STYLE: React.CSSProperties = { fontSize: 'clamp(1.6rem, 2.3vw, 
 
 const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
   const pageUrl = `${siteUrl}${resourcesPath}/${page.slug}`;
+  const image = page.image;
   const hub = clusterHub[page.cluster];
   const relatedPages = getRelatedSeoPages(page);
 
@@ -49,7 +50,7 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
 
   return (
     <article className="relative">
-      <SEOHead title={page.metaTitle} description={page.description} url={pageUrl} type="article" />
+      <SEOHead title={page.metaTitle} description={page.description} url={pageUrl} type="article" {...(page.image ? { image: `${siteUrl}${page.image.og}`, imageWidth: 1200, imageHeight: 630 } : {})} />
 
       <SubHero kicker={resourceKicker(page)} title={page.title} lead={page.description} minHeightClass="min-h-[560px] md:min-h-[680px]">
         {/* Link spoke→hub: ogni risorsa porta alla pagina di offerta del suo cluster. */}
@@ -66,8 +67,25 @@ const SeoLandingPage: React.FC<SeoLandingPageProps> = ({ page }) => {
         </a>
       </SubHero>
 
+      {/* Illustrazione della guida (non prevista dal mockup Articolo.html, aggiunta
+          su richiesta 2026-11-24): copertina 2:1 che esce dal fondo dell'hero, più
+          stretta del contenitore di pagina per non dominare la risposta diretta. */}
+      {image && (
+        <figure className="relative z-[2] mx-auto -mt-8 mb-0 max-w-[1120px] px-6 md:-mt-12 md:px-12">
+          <img
+            src={image.wide}
+            alt={image.alt}
+            width={1600}
+            height={900}
+            fetchPriority="high"
+            className="aspect-[2/1] w-full rounded-[28px] object-cover md:rounded-[40px]"
+            style={{ outline: '8px solid #fff', boxShadow: '0 40px 70px -40px rgba(76, 29, 149, 0.45)' }}
+          />
+        </figure>
+      )}
+
       {/* Risposta diretta: blocco carta con la risposta in una card bianca. */}
-      <section className="px-6 pb-24 pt-24 md:pb-[160px] md:pt-[160px]">
+      <section className={image ? 'px-6 pb-24 pt-16 md:pb-[160px] md:pt-[120px]' : 'px-6 pb-24 pt-24 md:pb-[160px] md:pt-[160px]'}>
         <PaperBlock className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-24">
           <div>
             <Reveal as="h2" className="h-l" style={{ fontSize: 'clamp(2.5rem, 5vw, 5rem)' }}>{copy.directAnswer}</Reveal>

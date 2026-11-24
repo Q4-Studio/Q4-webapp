@@ -68,14 +68,18 @@ const Meta: React.FC<{ pack: AIAgentsPackage }> = ({ pack }) => (
   </div>
 );
 
-/** "2 settimane" → "2": il numero grande, "settimane" in piccolo accanto. */
+/** "2 settimane" → "2": il numero grande, "settimane" in piccolo accanto.
+ *  Il tracking negativo del display è in em del <p>: ereditato come px dallo
+ *  span piccolo schiacciava "settimane". Con background-clip: text il
+ *  tracking negativo taglia anche l'ultimo glifo, da cui il padding destro. */
 const TimingCard: React.FC<{ timing: string; delay?: number }> = ({ timing, delay }) => {
   const value = timing.replace(/\s*settimane$/, '');
   return (
     <Reveal as="article" delay={delay} className="bc ov items-center justify-center text-center" style={{ minHeight: 240, background: '#f7f5fb' }}>
       <div className="dots" aria-hidden="true" />
-      <p className="disp relative" style={{ fontSize: 'clamp(3.5rem, 5vw, 5rem)', letterSpacing: '-0.06em' }}>
-        <span className="grad">{value}</span> <span className="grad" style={{ fontSize: '.4em' }}>settimane</span>
+      <p className="disp relative" style={{ fontSize: 'clamp(3.5rem, 5vw, 5rem)', letterSpacing: '-0.04em' }}>
+        <span className="grad" style={{ paddingRight: '0.08em' }}>{value}</span>
+        <span className="grad" style={{ fontSize: '.4em', letterSpacing: '-0.01em', paddingRight: '0.1em' }}>settimane</span>
       </p>
       <p className="relative mt-2.5 font-medium" style={{ color: '#0a0a0a' }}>per il setup</p>
     </Reveal>
@@ -204,7 +208,7 @@ const AIAgents: React.FC = () => {
               <TimingCard timing={crm.timing} delay={0.12} />
             </div>
 
-            {/* Colonna 3: richieste WhatsApp + pilot */}
+            {/* Colonna 3: richieste WhatsApp + sconto caso studio */}
             <div className="flex min-w-0 flex-1 flex-col lg:mt-10">
               <Reveal as="article" delay={0.2} className="bc" style={{ minHeight: 760, paddingBottom: 120 }}>
                 <h3>{whatsapp.title}</h3>
@@ -221,11 +225,25 @@ const AIAgents: React.FC = () => {
                 <Bullets items={whatsapp.requirements} />
                 <Meta pack={whatsapp} />
               </Reveal>
-              <Reveal as="article" delay={0.2} className="bc ov dark-block justify-end text-white" style={{ minHeight: 300, background: '#050505' }}>
-                <div className="aur" aria-hidden="true" style={{ width: 360, height: 360, background: 'rgba(147,51,234,.5)', right: -100, top: -140, filter: 'blur(80px)' }} />
-                <h3 className="relative" style={{ fontSize: 'clamp(1.5rem, 2vw, 2rem)' }}>Pilot pubblico</h3>
-                <p className="d relative text-gray-300" style={{ marginTop: 10 }}>Tempi: {whatsapp.timing}. {whatsapp.pilot}</p>
-              </Reveal>
+              {/* Sconto caso studio: setup ridotto in cambio del racconto del progetto,
+                  con prezzo, condizioni e tempi separati così che si leggano a colpo d'occhio.
+                  Niente "offerta di lancio" o "primi clienti": non deve sembrare un servizio nuovo. */}
+              {whatsapp.pilot && (
+                <Reveal as="article" delay={0.2} className="bc ov dark-block justify-end text-white" style={{ minHeight: 300, background: '#050505' }}>
+                  <div className="aur" aria-hidden="true" style={{ width: 360, height: 360, background: 'rgba(147,51,234,.5)', right: -100, top: -140, filter: 'blur(80px)' }} />
+                  <p className="relative m-0 text-[17px] font-medium text-purple-300">{whatsapp.pilot.title}</p>
+                  <h3 className="relative mt-3" style={{ fontSize: 'clamp(1.5rem, 2vw, 2rem)' }}>
+                    Setup a {whatsapp.pilot.setup} invece di {whatsapp.pilot.listSetup} se raccontiamo il tuo progetto
+                  </h3>
+                  <p className="d relative text-gray-300" style={{ marginTop: 18 }}>Cosa chiediamo in cambio:</p>
+                  <ul className="relative mt-3 list-none space-y-2.5 p-0 text-[19px] leading-[1.5] text-white">
+                    {whatsapp.pilot.terms.map((term) => (
+                      <li key={term} className="flex gap-3"><OkIcon />{term}</li>
+                    ))}
+                  </ul>
+                  <p className="relative mt-6 border-t border-white/15 pt-5 text-[17px] text-gray-300">Tempi di setup: {whatsapp.timing}, gli stessi del prezzo pieno.</p>
+                </Reveal>
+              )}
             </div>
           </div>
         </div>

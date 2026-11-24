@@ -276,7 +276,8 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     },
     areaServed: 'IT',
     url: pageUrl,
-    mainEntityOfPage: pageUrl
+    mainEntityOfPage: pageUrl,
+    ...(page.image ? { image: `${siteUrl}${page.image.og}` } : {})
   };
 
   const faqSchema = {
@@ -345,7 +346,10 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     canonical: pageUrl,
     type: 'article',
     schema: [serviceSchema, faqSchema, breadcrumbSchema],
-    bodyContent: staticPage(body)
+    bodyContent: staticPage(body),
+    // Illustrazione della guida (1200x630 JPG, vedi scripts/optimize-images.mjs);
+    // senza, resta l'og-image.jpg generica del sito.
+    ...(page.image ? { ogImage: `${siteUrl}${page.image.og}`, ogImageWidth: 1200, ogImageHeight: 630, ogImageAlt: page.image.alt } : {})
   });
 }
 
@@ -801,7 +805,7 @@ const staticPage = (content: string) =>
 
 function generateRestyledAIAgentsHtml(): string {
   // Pacchetti e FAQ da data/servicePages.ts, gli stessi di components/AIAgents.tsx.
-  const cards = aiAgentsPackages.map((pack) => `<article class="rounded-3xl border border-black/10 p-8"><h3 class="text-3xl font-bold mb-5">${escapeHtml(pack.title)}</h3><p><strong>Il problema:</strong> ${escapeHtml(pack.problem)}</p>${pack.description ? `<p class="mt-4"><strong>Cosa fa:</strong> ${escapeHtml(pack.description)}</p>` : ''}${pack.actions ? `<p class="mt-4"><strong>Cosa fa</strong></p><ul>${pack.actions.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}<p class="mt-4"><strong>Cosa serve da te</strong></p><ul>${pack.requirements.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul><p class="mt-4"><strong>Tempi:</strong> ${escapeHtml(pack.timing)}</p><p class="mt-4 text-xl font-bold">${escapeHtml(pack.price)}</p>${pack.pilot ? `<p><strong>Pilot pubblico.</strong> ${escapeHtml(pack.pilot)}</p>` : ''}</article>`).join('');
+  const cards = aiAgentsPackages.map((pack) => `<article class="rounded-3xl border border-black/10 p-8"><h3 class="text-3xl font-bold mb-5">${escapeHtml(pack.title)}</h3><p><strong>Il problema:</strong> ${escapeHtml(pack.problem)}</p>${pack.description ? `<p class="mt-4"><strong>Cosa fa:</strong> ${escapeHtml(pack.description)}</p>` : ''}${pack.actions ? `<p class="mt-4"><strong>Cosa fa</strong></p><ul>${pack.actions.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}<p class="mt-4"><strong>Cosa serve da te</strong></p><ul>${pack.requirements.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul><p class="mt-4"><strong>Tempi:</strong> ${escapeHtml(pack.timing)}</p><p class="mt-4 text-xl font-bold">${escapeHtml(pack.price)}</p>${pack.pilot ? `<p><strong>${escapeHtml(pack.pilot.title)}.</strong> ${escapeHtml(pack.pilot.text)}</p>` : ''}</article>`).join('');
   const aiAgentsServiceSchema = {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -1534,7 +1538,7 @@ function buildHubMds(): void {
     ...aiAgentsPackages.flatMap((pack) => [
       `### ${pack.title}`,
       '',
-      `${pack.problem} Tempi: ${pack.timing}. ${pack.price}.${pack.pilot ? ` Pilot: ${pack.pilot}` : ''}`,
+      `${pack.problem} Tempi: ${pack.timing}. ${pack.price}.${pack.pilot ? ` ${pack.pilot.text}` : ''}`,
       '',
     ]),
     faqSection(aiAgentsFaqs),
