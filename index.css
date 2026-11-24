@@ -239,7 +239,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Percentuali sul ciclo da 13.5s: accesa 0.54–1.62s, spenta entro 2.16s,
    cioè dentro lo slot di 2.25s (16.67%): nessuna sovrapposizione. */
 @keyframes q4-hl { 0%, 16%, 100% { background: transparent; } 4%, 12% { background: rgba(168, 85, 247, 0.1); } }
-.home-light .ev .ok { flex: none; width: 22px; height: 22px; border-radius: 50%; background: #9333ea; display: grid; place-items: center; color: #fff; }
+.home-light .ok { flex: none; width: 22px; height: 22px; border-radius: 50%; background: #9333ea; display: grid; place-items: center; color: #fff; }
 /* Righe ferme (passaggi di un elenco, non eventi in arrivo): niente ciclo. */
 .home-light .ev.static { animation: none; }
 .home-light .ev em { margin-left: auto; font-style: normal; font-size: 16px; color: var(--mute); white-space: nowrap; }

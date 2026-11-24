@@ -44,8 +44,20 @@ export interface AIAgentsPackage {
   fee: PriceItem;
   /** Stringa per lo schema Offer, derivata da setup e canone. */
   price: string;
-  /** Testo del pilot pubblico, senza i tempi (stanno in `timing`). */
-  pilot?: string;
+  /** Offerta per i primi clienti: setup scontato in cambio di caso studio e feedback. */
+  pilot?: AIAgentsPilot;
+}
+
+export interface AIAgentsPilot {
+  /** Titolo leggibile dal cliente, es. "Per i primi due clienti". */
+  title: string;
+  /** Setup scontato e prezzo di listino, es. "490 €" e "990 €". */
+  setup: string;
+  listSetup: string;
+  /** Cosa chiediamo in cambio, un punto per riga. */
+  terms: string[];
+  /** Frase completa per mirror statico, markdown e schema (senza i tempi, che stanno in `timing`). */
+  text: string;
 }
 
 type AIAgentsPackageInput = Omit<AIAgentsPackage, 'price'>;
@@ -82,7 +94,13 @@ export const aiAgentsPackages: AIAgentsPackage[] = [
     timing: '4–6 settimane',
     setup: { label: 'Setup', value: '990 €' },
     fee: { label: 'Canone', value: '200 €/mese' },
-    pilot: 'Per i primi due clienti il setup costa 490 € invece di 990 €, in cambio del diritto di raccontare il progetto come caso studio e di una call di feedback dopo il primo mese.',
+    pilot: {
+      title: 'Per i primi due clienti',
+      setup: '490 €',
+      listSetup: '990 €',
+      terms: ['Possiamo raccontare il progetto come caso studio', 'Una call di feedback dopo il primo mese'],
+      text: 'Per i primi due clienti il setup costa 490 € invece di 990 €, in cambio del diritto di raccontare il progetto come caso studio e di una call di feedback dopo il primo mese.',
+    },
   },
 ].map(withPrice);
 
