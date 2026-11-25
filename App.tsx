@@ -13,6 +13,7 @@ import { BlogPost } from './types/blog';
 import { getBlogPosts, isSupabaseConfigured } from './lib/supabase';
 import { getSeoPageBySlug, resourcesPath } from './data/seoPages';
 import { getCaseStudyBySlug, caseStudiesPath } from './data/caseStudies';
+import { clientsPath } from './data/clientsPage';
 import { captureAttribution } from './utils/attribution';
 import { trackCtaClick } from './utils/dataLayer';
 import { onInternalLink, scrollToId, scrollToTop } from './utils/navigate';
@@ -44,6 +45,8 @@ const CaseStudiesIndex = lazy(loadCaseStudiesIndex);
 const CaseStudyPage = lazy(loadCaseStudyPage);
 const ServerSideTracking = lazy(loadServerSideTracking);
 const TechnicalPartner = lazy(() => import('./components/TechnicalPartner'));
+// Clienti: solo dal footer, niente prefetch.
+const ClientsPage = lazy(() => import('./components/ClientsPage'));
 const MetaAdvertisingB2B = lazy(loadMetaAdvertisingB2B);
 const SitesWebAI = lazy(loadSitesWebAI);
 
@@ -70,7 +73,7 @@ const PageLoader: React.FC<{ delayed?: boolean }> = ({ delayed }) => (
   </div>
 );
 
-type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'about' | 'contact' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | 'tracking' | 'sites' | 'technical-partner' | 'meta-advertising' | 'case-studies' | 'case-study' | '404';
+type Page = 'home' | 'blog' | 'blog-article' | 'privacy' | 'about' | 'contact' | 'app-support' | 'directory' | 'seo-page' | 'agenti-ai' | 'tracking' | 'sites' | 'technical-partner' | 'meta-advertising' | 'case-studies' | 'case-study' | 'clients' | '404';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -185,6 +188,8 @@ const App: React.FC = () => {
         setCurrentPage('technical-partner');
       } else if (path === '/meta-advertising-b2b') {
         setCurrentPage('meta-advertising');
+      } else if (path === clientsPath) {
+        setCurrentPage('clients');
       } else if (path === '/agenti-ai') {
         setCurrentPage('agenti-ai');
         setCurrentSeoSlug('');
@@ -593,6 +598,15 @@ const App: React.FC = () => {
             <div className="home-light relative w-full">
               <SitesWebAI />
               <ContactForm subject="Sito web AI" showHeader={false} tone="light" />
+              <Footer showCta={false} tone="light" />
+            </div>
+          )}
+
+          {/* Clienti: pagina del footer, form generico e footer chiaro come le altre. */}
+          {currentPage === 'clients' && (
+            <div className="home-light relative w-full">
+              <ClientsPage />
+              <ContactForm showHeader={false} tone="light" />
               <Footer showCta={false} tone="light" />
             </div>
           )}

@@ -4,6 +4,7 @@ import { aiAgentsFaqs, aiAgentsOffer, aiAgentsPackages, faqPageSchema, homeFaqs,
 import { CALCULATOR_EXAMPLE, CALCULATOR_LEAD, CALCULATOR_SOURCE, CALCULATOR_TITLE } from '../data/trackingCalculator.ts';
 import { blogArticleCopy, blogAuthors, blogIndexCopy, blogPath, formatPostDate, notFoundCopy, relatedPosts, technicalPartnerCopy } from '../data/extraPages.ts';
 import { ArticleBlock, inlineTokens, parseArticle } from '../lib/blogMarkdown.ts';
+import { clientHref, clients, clientsCopy, clientsPath } from '../data/clientsPage.ts';
 import { aboutPageCopy, company, CompanyCard, contactPageCopy, cookieSections, LegalBlock, LegalSection, LegalText, privacyPageCopy, privacySections } from '../data/companyPages.ts';
 import { createClient } from '@supabase/supabase-js';
 import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync, writeFileSync } from 'fs';
@@ -913,6 +914,27 @@ function generateTechnicalPartnerHtml(): string {
   return generateBaseHtml({ title: copy.metaTitle, description: copy.metaDescription, canonical: `${siteUrl}${copy.path}`, noIndex: true, bodyContent: staticPage(body) });
 }
 
+// Mirror statico di components/ClientsPage.tsx: stessi testi e stesso
+// elenco (data/clientsPage.ts); i loghi restano al client, qui nome e lavoro.
+function generateClientsHtml(): string {
+  const copy = clientsCopy;
+  const items = clients
+    .map((c) => `<li>${c.caseStudy ? `<a href="${clientHref(c)}">${escapeHtml(c.name)}</a>` : escapeHtml(c.name)} — ${escapeHtml(c.work)}</li>`)
+    .join('');
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Clienti', item: `${siteUrl}${clientsPath}` },
+    ],
+  };
+  const body = `<header><h1 class="hero-h1 font-bold">${escapeHtml(copy.title)}</h1><p class="hero-subhead">${escapeHtml(copy.lead)}</p><a href="#contatti">${escapeHtml(copy.heroCta)}</a></header>
+  <section><h2>${escapeHtml(copy.listTitle)}</h2><ul>${items}</ul><p>${escapeHtml(copy.nextCard.title)} <a href="#contatti">${escapeHtml(copy.nextCard.cta)}</a></p></section>
+  <section><h2>${escapeHtml(copy.close.title)}</h2><p>${escapeHtml(copy.close.lead)}</p><a href="#contatti">${escapeHtml(copy.close.cta)}</a></section><section id="contatti" aria-label="Contatti">${STATIC_CONTACT_HTML}</section>`;
+  return generateBaseHtml({ title: copy.metaTitle, description: copy.metaDescription, canonical: `${siteUrl}${clientsPath}`, schema: [breadcrumbSchema], bodyContent: staticPage(body) });
+}
+
 // --- Pagine aziendali (/about, /contact, /privacy) ------------------------
 // Le pagine di fiducia che gli agenti AI consultano per verificare che il
 // sito rappresenti un'azienda reale prima di raccomandarla. Mirror statici
@@ -1161,6 +1183,7 @@ Le tre offerte principali sono tracciamento e dati, siti web con AI, automazioni
 - Caso studio Candiani Denim: ${siteUrl}${caseStudiesPath}/candiani-denim-tracking-server-side
 - Caso studio GP Meccatronica: ${siteUrl}${caseStudiesPath}/gp-meccatronica-sito-web
 - Risorse: ${siteUrl}${resourcesPath}
+- Clienti: ${siteUrl}${clientsPath}
 - Chi siamo: ${siteUrl}/about
 - Contatti: ${siteUrl}/contact
 - Privacy e cookie: ${siteUrl}/privacy
@@ -1233,6 +1256,7 @@ function generateSitemap(blogPosts: any[] = []): string {
     { loc: `${siteUrl}${caseStudiesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: pageLastModified['/casi-studio'] },
     { loc: `${siteUrl}${resourcesPath}`, priority: '0.9', changefreq: 'weekly', lastmod: pageLastModified['/risorse'] },
     { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'weekly', lastmod: pageLastModified['/blog'] },
+    { loc: `${siteUrl}${clientsPath}`, priority: '0.5', changefreq: 'monthly', lastmod: pageLastModified['/clienti'] },
     { loc: `${siteUrl}/about`, priority: '0.5', changefreq: 'yearly', lastmod: buildDate },
     { loc: `${siteUrl}/contact`, priority: '0.5', changefreq: 'yearly', lastmod: buildDate },
     { loc: `${siteUrl}/privacy`, priority: '0.3', changefreq: 'yearly', lastmod: buildDate },
@@ -1553,6 +1577,19 @@ function buildHubMds(): void {
   ]);
 }
 
+// Markdown di /clienti: elenco clienti con il lavoro svolto (data/clientsPage.ts).
+function buildClientsMd(): void {
+  registerMd(clientsPath, clientsCopy.metaTitle, clientsCopy.metaDescription, [
+    `${clientsCopy.lead}\n`,
+    `## ${clientsCopy.listTitle}`,
+    '',
+    clients.map((c) => `- ${c.name} — ${c.work}${c.caseStudy ? `: ${siteUrl}${clientHref(c)}` : ''}`).join('\n'),
+    '',
+    `${clientsCopy.close.title} ${clientsCopy.close.lead} Contatti: ${company.email} · ${company.phone} · ${siteUrl}/contact`,
+    '',
+  ]);
+}
+
 function buildIndexAndBlogMds(blogPosts: any[]): void {
   // Indice casi studio
   const studyLines = caseStudies
@@ -1807,6 +1844,7 @@ function buildIndexAndBlogMds(blogPosts: any[]): void {
     { path: 'siti-web-ai', html: generateSitesWebAiHtml() },
     { path: 'partner-tecnico', html: generateTechnicalPartnerHtml() },
     { path: 'meta-advertising-b2b', html: generateMetaAdvertisingHtml() },
+    { path: 'clienti', html: generateClientsHtml() },
     // Pagine "trust anchor": gli agenti AI le consultano per verificare che il
     // sito rappresenti un'azienda reale prima di raccomandarla.
     { path: 'about', html: generateAboutHtml() },
@@ -1869,6 +1907,7 @@ function buildIndexAndBlogMds(blogPosts: any[]): void {
   buildTrustMd();
   buildHubMds();
   buildPartnerMd();
+  buildClientsMd();
   buildIndexAndBlogMds(blogPosts);
   const mdDir = join(distDir, 'md');
   ensureDir(mdDir);
