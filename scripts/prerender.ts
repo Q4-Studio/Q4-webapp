@@ -330,7 +330,15 @@ function generateLandingPageHtml(page: typeof seoPages[0]): string {
     .map((p) => `<article><h3><a href="${resourcesPath}/${p.slug}">${escapeHtml(p.title)}</a></h3><p>${escapeHtml(p.description)}</p></article>`)
     .join('');
 
+  // Stessa copertina che SeoLandingPage mostra sotto l'hero (2:1, max 1120px):
+  // nel markup statico serve a crawler e no-JS e permette al browser di partire
+  // con il download prima dell'idratazione.
+  const coverHtml = page.image
+    ? `<figure class="mx-auto max-w-[1120px]"><img src="${page.image.wide}" alt="${escapeHtml(page.image.alt)}" width="1600" height="900" loading="eager" fetchpriority="high" decoding="async" class="aspect-[2/1] w-full rounded-[28px] object-cover md:rounded-[40px]"></figure>`
+    : '';
+
   const body = `<header><p class="eyebrow">${escapeHtml(resourceKicker(page))}</p><h1 class="hero-h1 font-bold">${escapeHtml(page.title)}</h1><p class="hero-subhead">${escapeHtml(page.description)}</p><a href="${hub.path}">${escapeHtml(copy.heroCta)}</a></header>
+  ${coverHtml}
   <section><h2>${escapeHtml(copy.directAnswer)}</h2><p>${escapeHtml(page.directAnswer)}</p></section>
   <section><h2>${escapeHtml(copy.profile)}</h2>${profileHtml}</section>
   ${dataPointsHtml}
