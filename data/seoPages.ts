@@ -72,6 +72,7 @@ export const pageLastModified: Record<string, string> = {
   '/siti-web-ai': '2026-08-09',
   '/meta-advertising-b2b': '2026-11-21',
   '/partner-tecnico': '2026-08-07',
+  '/clienti': '2026-11-25',
   '/casi-studio': '2026-08-05',
   '/risorse': '2026-08-26',
   '/blog': '2026-08-07',

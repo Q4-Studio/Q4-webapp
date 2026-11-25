@@ -5,6 +5,7 @@ import { ArrowUpRight, Instagram, Linkedin, Phone, Mail } from 'lucide-react';
 import MagneticButton from './MagneticButton';
 import { company } from '../data/companyPages';
 import { caseStudiesPath } from '../data/caseStudies';
+import { clientsPath } from '../data/clientsPage';
 import { trackCtaClick } from '../utils/dataLayer';
 import { onInternalLink } from '../utils/navigate';
 
@@ -225,6 +226,12 @@ const Footer: React.FC<FooterProps> = ({ showCta = true, tone = 'dark' }) => {
                     <li>
                         <a href="/about" onClick={onInternalLink('/about')} className={link}>
                             Chi siamo
+                        </a>
+                    </li>
+                    {/* Clienti sta solo qui, non nel menu principale. */}
+                    <li>
+                        <a href={clientsPath} onClick={onInternalLink(clientsPath)} className={link}>
+                            Clienti
                         </a>
                     </li>
                     <li>

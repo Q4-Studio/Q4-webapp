@@ -10,7 +10,8 @@ import React from 'react';
 /* ------------------------------------------------------------------ */
 
 interface SubHeroProps {
-  kicker: React.ReactNode;
+  /** Riga viola sopra il titolo; assente nei mockup che non la prevedono (Clienti). */
+  kicker?: React.ReactNode;
   title: string;
   lead: React.ReactNode;
   children?: React.ReactNode;
@@ -28,8 +29,8 @@ const SubHero: React.FC<SubHeroProps> = ({ kicker, title, lead, children, minHei
       <div className="aur aur-3" aria-hidden="true" />
       <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.15) 50%, rgba(5,5,5,.75) 100%)' }} />
       <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-6 pb-20 pt-36 md:px-12 md:pb-24 md:pt-40">
-        <div className="w-block text-[17px] font-medium text-purple-300" style={{ animationDelay: '0.05s' }}>{kicker}</div>
-        <h1 className="h-sub mt-8 max-w-[1250px]">
+        {kicker && <div className="w-block text-[17px] font-medium text-purple-300" style={{ animationDelay: '0.05s' }}>{kicker}</div>}
+        <h1 className={`h-sub max-w-[1250px] ${kicker ? 'mt-8' : ''}`}>
           {words.map((word, i) => (
             <React.Fragment key={`${word}-${i}`}>
               <span className="w" style={{ animationDelay: `${(0.15 + i * 0.07).toFixed(2)}s` }}>{word}</span>{' '}

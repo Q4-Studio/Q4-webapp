@@ -55,6 +55,12 @@
       "permanent": false
     },
     {
+      "source": "/clienti",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/md/clienti.md",
+      "permanent": false
+    },
+    {
       "source": "/casi-studio",
       "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
       "destination": "/md/casi-studio.md",

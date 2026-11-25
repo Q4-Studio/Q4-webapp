@@ -5,7 +5,7 @@ interface RevealProps {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  as?: 'div' | 'section' | 'article' | 'p' | 'h2' | 'h3' | 'span';
+  as?: 'div' | 'section' | 'article' | 'p' | 'h2' | 'h3' | 'span' | 'li';
   /** Ritardo in secondi, per scalare più blocchi vicini (rv2/rv3 del mockup). */
   delay?: number;
   id?: string;
