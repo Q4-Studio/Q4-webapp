@@ -396,9 +396,16 @@ h1, h2, h3, h4, h5, h6 {
 .home-light .cl > li { display: grid; min-width: 0; }
 .home-light .cl > li > .ct { width: 100%; min-height: 100%; }
 /* Touch: niente hover, l'etichetta resta visibile e il logo sta già in alto. */
+/* Touch: niente hover, quindi la fascia sta sempre in vista. Non più
+   sovrapposta al logo: entra nel flusso sotto l'area del logo (che tiene il
+   4/3 da sola) e la card cresce quanto serve, anche con etichette lunghe. */
 @media (hover: none) {
-  .home-light .ct .lab { translate: none; }
-  .home-light .ct .lgw { transform: translateY(-20px); }
+  .home-light .ct { aspect-ratio: auto; grid-template-rows: 1fr auto; }
+  .home-light .ct .lgw { aspect-ratio: 4 / 3; height: auto; transform: none; }
+  /* Fascia a tutta larghezza in fondo; l'area del logo assorbe l'altezza in
+     più quando la card accanto ha un'etichetta su due righe. */
+  .home-light .ct .lab { position: static; translate: none; width: 100%; align-self: end; }
+  .home-light .ct-cta { grid-template-rows: 1fr; }
 }
 @media (max-width: 1000px) {
   /* minmax(0, 1fr): senza, il testo della card scura allarga la sua colonna. */

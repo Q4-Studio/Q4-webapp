@@ -5,7 +5,7 @@ import Reveal from './home2/Reveal';
 import SubHero from './home2/SubHero';
 import CloseCta from './home2/CloseCta';
 import { ErgoottoLogo, MorinatLogo, QORLogo, TrenoveLogo } from './clients/ClientLogos';
-import { clients, clientsCopy as copy, clientsPath, type Client } from '../data/clientsPage';
+import { clientHref, clients, clientsCopy as copy, clientsPath, type Client } from '../data/clientsPage';
 import { siteUrl } from '../data/seoPages';
 import { trackCaseStudyClick, trackCtaClick } from '../utils/dataLayer';
 import { onInternalLink, scrollToId } from '../utils/navigate';
@@ -65,19 +65,19 @@ const ClientCard: React.FC<{ client: Client }> = ({ client }) => {
       <span className="sr-only">{client.name}</span>
       <div className="lab">
         <span>{client.work}</span>
-        {client.href && <ArrowUpRight aria-hidden="true" />}
+        {client.caseStudy && <ArrowUpRight aria-hidden="true" />}
       </div>
     </>
   );
 
-  if (client.href) {
-    const href = client.href;
+  if (client.caseStudy) {
+    const href = clientHref(client);
     return (
       <a
         href={href}
         className="ct"
         onClick={(event) => {
-          trackCaseStudyClick({ case_study_slug: href.split('/').pop() ?? '', case_study_client: client.name, cta_location: CTA_LOCATION });
+          trackCaseStudyClick({ case_study_slug: client.caseStudy, case_study_client: client.name, cta_location: CTA_LOCATION });
           onInternalLink(href)(event);
         }}
       >
@@ -85,13 +85,10 @@ const ClientCard: React.FC<{ client: Client }> = ({ client }) => {
       </a>
     );
   }
-  // Card senza link: raggiungibile da tastiera, così l'etichetta compare
-  // anche senza mouse (come il tabindex del mockup).
-  return (
-    <div className="ct" tabIndex={0}>
-      {inner}
-    </div>
-  );
+  // Card senza link: non è focusabile (il tabindex del mockup creava fermate
+  // di tabulazione senza azione); nome ed etichetta sono comunque nel DOM
+  // per gli screen reader, e su touch la fascia è sempre in vista.
+  return <div className="ct">{inner}</div>;
 };
 
 const ClientsPage: React.FC = () => (
@@ -110,11 +107,11 @@ const ClientsPage: React.FC = () => (
         <Reveal as="h2" id="clienti-elenco" className="h-l mb-16 max-w-[1100px] md:mb-[120px]">{copy.listTitle}</Reveal>
         <ul className="cl m-0 list-none p-0">
           {clients.map((client, i) => (
-            <Reveal key={client.name} as="li" delay={(i % 3) * 0.1}>
+            <Reveal key={client.name} as="li" delay={(i % 4) * 0.1}>
               <ClientCard client={client} />
             </Reveal>
           ))}
-          <Reveal as="li" delay={(clients.length % 3) * 0.1}>
+          <Reveal as="li" delay={(clients.length % 4) * 0.1}>
             <a href="#contatti" onClick={scrollToContact(copy.nextCard.cta)} className="ct ct-cta">
               <div className="flex h-full w-full flex-col justify-between gap-5 text-left">
                 <span className="disp">{copy.nextCard.title}</span>

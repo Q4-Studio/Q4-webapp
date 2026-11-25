@@ -1,4 +1,4 @@
-import { caseStudiesPath } from './caseStudies';
+import { caseStudiesPath, getCaseStudyBySlug } from './caseStudies';
 
 /* ------------------------------------------------------------------ */
 /* Testi e clienti della pagina /clienti (mockup "Clienti" di Q4       */
@@ -20,9 +20,17 @@ export interface Client {
    */
   logo?: { src: string; width: number; height: number; widthPercent: number; dark?: boolean };
   vector?: 'qor' | 'trenove' | 'ergootto' | 'morinat';
-  /** Caso studio pubblicato: la card diventa un link. */
-  href?: string;
+  /** Slug di un caso studio pubblicato (data/caseStudies.ts): la card diventa un link. */
+  caseStudy?: string;
 }
+
+/** Percorso del caso studio di un cliente; uno slug sconosciuto ferma la build (prerender). */
+export const clientHref = (client: Client): string => {
+  if (!client.caseStudy || !getCaseStudyBySlug(client.caseStudy)) {
+    throw new Error(`Clienti: caso studio "${client.caseStudy}" non trovato per ${client.name}`);
+  }
+  return `${caseStudiesPath}/${client.caseStudy}`;
+};
 
 const raster = (slug: string, width: number, height: number, widthPercent: number, dark = false): Client['logo'] => ({
   src: `/clienti/${slug}.webp`,
@@ -33,10 +41,10 @@ const raster = (slug: string, width: number, height: number, widthPercent: numbe
 });
 
 export const clients: Client[] = [
-  { name: 'Candiani Denim', work: 'Tracking & Advertising', logo: raster('candiani-denim', 640, 269, 50), href: `${caseStudiesPath}/candiani-denim-tracking-server-side` },
+  { name: 'Candiani Denim', work: 'Tracking & Advertising', logo: raster('candiani-denim', 640, 269, 50), caseStudy: 'candiani-denim-tracking-server-side' },
   { name: 'Laika', work: 'LinkedIn & Advertising', logo: raster('laika', 640, 89, 52) },
   { name: 'QOR', work: 'Social Media & Advertising', vector: 'qor' },
-  { name: 'GP Meccatronica', work: 'Rebranding & Sito Web', logo: raster('gp-meccatronica', 720, 148, 58), href: `${caseStudiesPath}/gp-meccatronica-sito-web` },
+  { name: 'GP Meccatronica', work: 'Rebranding & Sito Web', logo: raster('gp-meccatronica', 720, 148, 58), caseStudy: 'gp-meccatronica-sito-web' },
   { name: 'MES Connettori', work: 'LinkedIn & Sviluppo Web', logo: raster('mes-connettori', 640, 308, 50) },
   { name: 'Trenove', work: 'Ufficio Marketing Esterno', vector: 'trenove' },
   { name: 'STC', work: 'LinkedIn & Sviluppo Web', logo: raster('stc', 300, 229, 36) },

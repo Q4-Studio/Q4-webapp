@@ -4,7 +4,7 @@ import { aiAgentsFaqs, aiAgentsOffer, aiAgentsPackages, faqPageSchema, homeFaqs,
 import { CALCULATOR_EXAMPLE, CALCULATOR_LEAD, CALCULATOR_SOURCE, CALCULATOR_TITLE } from '../data/trackingCalculator.ts';
 import { blogArticleCopy, blogAuthors, blogIndexCopy, blogPath, formatPostDate, notFoundCopy, relatedPosts, technicalPartnerCopy } from '../data/extraPages.ts';
 import { ArticleBlock, inlineTokens, parseArticle } from '../lib/blogMarkdown.ts';
-import { clients, clientsCopy, clientsPath } from '../data/clientsPage.ts';
+import { clientHref, clients, clientsCopy, clientsPath } from '../data/clientsPage.ts';
 import { aboutPageCopy, company, CompanyCard, contactPageCopy, cookieSections, LegalBlock, LegalSection, LegalText, privacyPageCopy, privacySections } from '../data/companyPages.ts';
 import { createClient } from '@supabase/supabase-js';
 import { createWriteStream, mkdirSync, existsSync, copyFileSync, readFileSync, writeFileSync } from 'fs';
@@ -919,7 +919,7 @@ function generateTechnicalPartnerHtml(): string {
 function generateClientsHtml(): string {
   const copy = clientsCopy;
   const items = clients
-    .map((c) => `<li>${c.href ? `<a href="${c.href}">${escapeHtml(c.name)}</a>` : escapeHtml(c.name)} — ${escapeHtml(c.work)}</li>`)
+    .map((c) => `<li>${c.caseStudy ? `<a href="${clientHref(c)}">${escapeHtml(c.name)}</a>` : escapeHtml(c.name)} — ${escapeHtml(c.work)}</li>`)
     .join('');
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
@@ -1577,18 +1577,20 @@ function buildHubMds(): void {
   ]);
 }
 
-function buildIndexAndBlogMds(blogPosts: any[]): void {
-  // Clienti
+// Markdown di /clienti: elenco clienti con il lavoro svolto (data/clientsPage.ts).
+function buildClientsMd(): void {
   registerMd(clientsPath, clientsCopy.metaTitle, clientsCopy.metaDescription, [
     `${clientsCopy.lead}\n`,
     `## ${clientsCopy.listTitle}`,
     '',
-    clients.map((c) => `- ${c.name} — ${c.work}${c.href ? `: ${siteUrl}${c.href}` : ''}`).join('\n'),
+    clients.map((c) => `- ${c.name} — ${c.work}${c.caseStudy ? `: ${siteUrl}${clientHref(c)}` : ''}`).join('\n'),
     '',
     `${clientsCopy.close.title} ${clientsCopy.close.lead} Contatti: ${company.email} · ${company.phone} · ${siteUrl}/contact`,
     '',
   ]);
+}
 
+function buildIndexAndBlogMds(blogPosts: any[]): void {
   // Indice casi studio
   const studyLines = caseStudies
     .map((s) => `- ${s.client} — ${s.subheadline}: ${siteUrl}${caseStudiesPath}/${s.slug}`)
@@ -1905,6 +1907,7 @@ function buildIndexAndBlogMds(blogPosts: any[]): void {
   buildTrustMd();
   buildHubMds();
   buildPartnerMd();
+  buildClientsMd();
   buildIndexAndBlogMds(blogPosts);
   const mdDir = join(distDir, 'md');
   ensureDir(mdDir);
